@@ -4,7 +4,7 @@
 <link>https://door.aiseed.dev/</link>
 <description>扉と鍵の話を、層に分けて書く</description>
 <language>ja</language>
-<lastBuildDate>Fri, 09 Oct 2026 09:55:50 +0900</lastBuildDate>
+<lastBuildDate>Sat, 10 Oct 2026 06:08:43 +0900</lastBuildDate>
 <item>
 <title>Matterとは何か</title>
 <link>https://door.aiseed.dev/guide/matter/</link>
@@ -30,11 +30,35 @@
 <description>電子錠とリーダーとコントローラーを備えた扉が満たすべき六つの条件を解説します。ローカルで動作すること、錠を交換できること、リーダーを交換できること、記録を手元に置くこと、認証を一社に依存しないこと、認証手段を複数持つこと。あわせて、報道されているAppleの顔認証ドアホンを、事実と未確認情報に分けて整理します。</description>
 </item>
 <item>
+<title>玄関まわりの技術を層に分けて見る</title>
+<link>https://door.aiseed.dev/guide/layers/</link>
+<guid>https://door.aiseed.dev/guide/layers/</guid>
+<category>解説</category>
+<pubDate>Thu, 17 Sep 2026 00:00:00 +0900</pubDate>
+<description>玄関まわりの技術を、扉の製造、電子錠、扉のコントローラ、ドアホン、スマートフォン、周辺機器、通信規格、鍵の発行、業務システムとの連携、業務システム、管理者の11層に分けて整理します。Apple、Google、Amazonの参入後に、どの層が買えばすむ部品になり、どの層に人の責任と収益が残るかを説明します。</description>
+</item>
+<item>
+<title>扉のコントローラの仕様と参照実装を公開する</title>
+<link>https://door.aiseed.dev/guide/open-specification/</link>
+<guid>https://door.aiseed.dev/guide/open-specification/</guid>
+<category>解説</category>
+<pubDate>Thu, 17 Sep 2026 00:00:00 +0900</pubDate>
+<description>扉側コントローラの仕様と、Pythonによる参照実装を公開します。仕様は「何を満たすか」だけを番号付きで書き、認証制度や会費は設けません。ローカルで動作すること、認証と監査を含むAPI、認証を一社に集中させないことを中核に据えます。扉メーカーからは料金を取らず、鍵の発行と業務システムとの連携で事業を成り立たせます。</description>
+</item>
+<item>
 <title>情報サイト「デジタルドア」を開設しました</title>
 <link>https://door.aiseed.dev/blog/start/</link>
 <guid>https://door.aiseed.dev/blog/start/</guid>
 <category>ブログ</category>
 <pubDate>Thu, 17 Sep 2026 00:00:00 +0900</pubDate>
 <description>電子錠、ドアホン、扉のコントローラ、鍵の発行、通信規格(Aliro、Matter)など、扉と鍵に関する技術情報を解説するサイトを開設しました。解説記事、ブログ、AIが収集して編集者が選ぶニュースの三本立てです。</description>
+</item>
+<item>
+<title>大企業でもアプリを直せない構造がある</title>
+<link>https://door.aiseed.dev/blog/apps-that-cannot-be-fixed/</link>
+<guid>https://door.aiseed.dev/blog/apps-that-cannot-be-fixed/</guid>
+<category>ブログ</category>
+<pubDate>Thu, 17 Sep 2026 00:00:00 +0900</pubDate>
+<description>Google Playに公開されているトヨタの「デジタルキー」アプリは、評価1.5(188件)です。利用者の声を整理すると、ローカルで動作しないため物理鍵を手放せないこと、認証が一社に集中していること、そして不具合が半年直らない構造が見えます。利用者、アプリ開発者、製品開発者の間の対話をAIで改善できるという考えを書きます。</description>
 </item>
 </channel></rss>

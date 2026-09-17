@@ -7,25 +7,25 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'">
 
 
-<title>{{ title }} — {{ series }} | デジタルドア</title>
-<meta name="description" content="{{ description }}">
-<link rel="canonical" href="{{ canonical_url }}">
-{% if hreflang_ja %}<link rel="alternate" hreflang="ja" href="{{ hreflang_ja }}">{% endif %}
-{% if hreflang_en %}<link rel="alternate" hreflang="en" href="{{ hreflang_en }}">{% endif %}
-<link rel="alternate" hreflang="x-default" href="{{ hreflang_ja or canonical_url }}">
+<title>扉のコントローラの仕様と参照実装を公開する — 解説 | デジタルドア</title>
+<meta name="description" content="扉側コントローラの仕様と、Pythonによる参照実装を公開します。仕様は「何を満たすか」だけを番号付きで書き、認証制度や会費は設けません。ローカルで動作すること、認証と監査を含むAPI、認証を一社に集中させないことを中核に据えます。扉メーカーからは料金を取らず、鍵の発行と業務システムとの連携で事業を成り立たせます。">
+<link rel="canonical" href="https://door.aiseed.dev/guide/open-specification/">
+<link rel="alternate" hreflang="ja" href="https://door.aiseed.dev/guide/open-specification/">
+
+<link rel="alternate" hreflang="x-default" href="https://door.aiseed.dev/guide/open-specification/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="デジタルドア">
 <meta property="og:locale" content="ja_JP">
-<meta property="og:title" content="{{ title }}">
-<meta property="og:description" content="{{ description }}">
-<meta property="og:url" content="{{ canonical_url }}">
-<meta property="og:image" content="{{ og_image }}">
-<meta property="article:section" content="{{ series }}">
-<meta property="article:published_time" content="{{ date }}">
+<meta property="og:title" content="扉のコントローラの仕様と参照実装を公開する">
+<meta property="og:description" content="扉側コントローラの仕様と、Pythonによる参照実装を公開します。仕様は「何を満たすか」だけを番号付きで書き、認証制度や会費は設けません。ローカルで動作すること、認証と監査を含むAPI、認証を一社に集中させないことを中核に据えます。扉メーカーからは料金を取らず、鍵の発行と業務システムとの連携で事業を成り立たせます。">
+<meta property="og:url" content="https://door.aiseed.dev/guide/open-specification/">
+<meta property="og:image" content="https://door.aiseed.dev/images/og-default.jpg">
+<meta property="article:section" content="解説">
+<meta property="article:published_time" content="2026.09.17">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{{ title }}">
-<meta name="twitter:description" content="{{ description }}">
-<meta name="twitter:image" content="{{ og_image }}">
+<meta name="twitter:title" content="扉のコントローラの仕様と参照実装を公開する">
+<meta name="twitter:description" content="扉側コントローラの仕様と、Pythonによる参照実装を公開します。仕様は「何を満たすか」だけを番号付きで書き、認証制度や会費は設けません。ローカルで動作すること、認証と監査を含むAPI、認証を一社に集中させないことを中核に据えます。扉メーカーからは料金を取らず、鍵の発行と業務システムとの連携で事業を成り立たせます。">
+<meta name="twitter:image" content="https://door.aiseed.dev/images/og-default.jpg">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="alternate" type="application/rss+xml" title="デジタルドア" href="/feed.xml">
 <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
@@ -797,45 +797,69 @@ article img {
   *, *::before, *::after { animation: none !important; transition: none !important; opacity: 1 !important; }
 }
 </style>
-{% if has_form %}
-<link rel="stylesheet" href="/css/form.css?v={{ asset_version }}">
-{% endif %}
+
 </head>
 
-<body{% if chapter_toc_html %} class="has-toc"{% endif %}>
+<body>
 
 <div class="container">
 
   <!-- MASTHEAD(ホーム › シリーズ目次) -->
   <header class="masthead">
-    <div class="masthead-left"><a href="/" class="masthead-home">デジタルドア</a><span class="masthead-sep">›</span><a href="{{ series_index_url }}">{{ series }}</a></div>
-    <div class="masthead-right">{{ masthead_right }}</div>
+    <div class="masthead-left"><a href="/" class="masthead-home">デジタルドア</a><span class="masthead-sep">›</span><a href="/guide/">解説</a></div>
+    <div class="masthead-right">No. 05 / 解説</div>
   </header>
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-meta">{{ hero_meta }}</div>
+    <div class="hero-meta">解説 № 05 · 2026</div>
 
-    <h1 class="hero-title">{% if title_html %}{{ title_html | safe }}{% else %}{{ title }}{% endif %}</h1>
+    <h1 class="hero-title">扉のコントローラの仕様と参照実装を公開する</h1>
 
-    {% if subtitle %}<p class="hero-subtitle">{{ subtitle }}</p>{% endif %}
+    <p class="hero-subtitle">認証制度ではなく実用の仕様として。Matterが届かない業務用の扉のために</p>
 
     <div class="hero-byline">
-      <span>{{ date }}</span>
-      {% if other_lang_url %}<span><a href="{{ other_lang_url }}" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">🌐 {{ other_lang_label }}</a></span>{% endif %}
+      <span>2026.09.17</span>
+      
     </div>
   </section>
 
   <!-- SERIES TOC(全章一覧・現在の章をハイライト) -->
-  {{ chapter_toc_html | safe }}
+  
 
   <!-- ARTICLE BODY -->
   <article>
-    {{ content_html | safe }}
+    <p>このサイトを運営するaiseedは、扉側のコントローラの仕様と参照実装を公開しています。この記事では、何を公開するか、どのような性格の物か、仕様の中核に何を置くかを説明します。</p>
+<h2>公開する物</h2>
+<ul>
+<li>仕様。何を満たすかだけを、番号を付けて書いた文書です。本文は <a href="https://github.com/aiseed-dev/digitaldoor/blob/main/docs/">https://github.com/aiseed-dev/digitaldoor/blob/main/docs/</a>扉コントローラ仕様書.md[扉コントローラ仕様書]にあります。</li>
+<li>参照実装。Pythonで動作するコードです。扉の判断、監査記録、HTTP APIを含みます。同じリポジトリの <code>digitalkey/door/</code> にあります。</li>
+<li>テスト。「この入力に対してこの出力」という形式で書かれています。テストが通れば、仕様を満たしていると言えます。</li>
+</ul>
+<p>日本語を優先し、英語版は後から用意します。日本の扉メーカー、錠メーカー、電気工事の技術者、学生が、同じ言葉で開発できるようにするためです。</p>
+<h2>どのような性格の物か</h2>
+<p>Matterと同じ位置づけで、Matterが対象としていない業務用の扉を対象にします。現在の業務用の入退室管理システムは高価で、ソフトウェアの使い勝手も良くありません。発注するのは総務や設備部門で、使うのは現場であり、仕様は制御盤メーカーの独自形式で、修正のたびに見積もりが必要だからです。公開仕様と動作する参照実装があれば、価格は下がり、ソフトウェアは直せる物になります。</p>
+<p>認証制度ではなく、実用のための仕様です。認証の仕組み、会費、商標は設けません。満たしているかどうかは、公開されたテストを自分で実行すれば分かります。プログラミング言語のPythonが広まったのと同じ形で、無料で、読める形で、動く物とともに置き、使う人が追加していく方式です。</p>
+<p>責任を負う文書ではありません。利用者の要望を整理して扉メーカーに伝える要望書です。責任は、扉に組み込んで認定を取る扉メーカー、鍵を発行する事業者、その建物を運営する管理者が持ちます。したがって、扉メーカーからは料金を取りません。aiseedの収益は、鍵の発行と業務システムとの連携から得ます。</p>
+<p>仕様は「何を満たすか」だけを書き、今後も追加していきます。追加するときは、要求ごとに理由、テスト手順、日付を添えます。既存の番号は変えません。仕様を満たす側は、どの番号を満たすかを申告します。「どう作るか」は書かないため、扉メーカーは仕様の中で自由に工夫できます。</p>
+<h2>仕様の中核</h2>
+<p><strong>セキュリティを含めて自由に使えるAPI。</strong> 業務システムから、プラットフォーム企業のアカウントを経由せずに扉へ直接アクセスできること。呼び出し側は認証され、権限で区切られること。扉で起きたことはすべて署名付きで記録され、改ざんを検出できること。火災や停電時の動作は扉が持ち、外部からの呼び出しで上書きできないこと。</p>
+<p><strong>ローカルで動作すること。</strong> 認証の判定、施錠と解錠、火災・停電・避難時の動作、監査記録、失効の適用、非常手段は、外部との通信がなくても動作します。通信が切れても、扉は最後に受け取った資格情報と失効リストで判定を続けます。扉の出来事は構内で完結し、外部に送信する範囲は事業者が決めます。これがなければ物理鍵は廃止できず、電子錠は追加の機器のままです。</p>
+<p><strong>認証を一社に集中させないこと。</strong> 一社のサーバーが認証を握る構造では、障害、撤退、侵害、値上げ、差し押さえのリスクがその一点に集まります。扉が自ら判定し、発行者は署名付きの資格情報を渡すだけで、解錠のたびに呼び出されない形にします。監査記録は扉側と台帳側の二か所に別々に残します。</p>
+<p><strong>複数の認証手段。</strong> 扉は互いに独立した二つ以上の経路で資格情報を受け取ります。Aliroはこの冗長化に適しています。</p>
+<p>将来は、カメラ、マイク、センサー、Aliroリーダーの情報を扉の中で組み合わせて判断できるようにします。組み合わせの規則は事業者が決めます。</p>
+<h2>扉メーカーとの関係</h2>
+<p>扉メーカーは仕様を書く側ではなく、仕様に適合する側です。扉と認定に専念でき、囲い込みの疑いを受けません。公開仕様の中で工夫できる部分は、防火戸への組み込み方、標準錠との組み合わせでの認定、配線経路の自己診断の測定値、接点の信頼性、価格と納期です。</p>
+<h2>対話の相手</h2>
+<p>この仕様があれば、三つの相手と共通の言葉で話せます。事業者(民泊の経営者、管理組合、企業)には「要望をこう整理した」と。設備工事会社には「独自仕様の制御盤の価格は、公開仕様に置き換われば消える。残るのは据付と建物全体の統合であり、それは正当な仕事である」と。AppleとGoogleには「家庭用はあなたたちの規格で開いた。業務用の扉には、あなたたちのアプリの外から呼べる、認証と監査を含むAPIが必要だ。仕様と動作する実装はここにある」と。</p>
+
   </article>
 
   <!-- CHAPTER NAV(前後の記事) -->
-  {% if nav_html %}{{ nav_html | safe }}{% endif %}
+  <nav class="chapter-nav">
+  <a href="/guide/layers/" rel="prev">&larr; 前: 玄関まわりの技術を層に分けて見る</a>
+  <a href="/guide/">目次 &rarr;</a>
+</nav>
 
   <!-- FOOTER(サイト内メニュー+奥付) -->
   <footer class="site-footer">
@@ -864,8 +888,8 @@ article img {
     </nav>
     <div class="colophon">
       <div class="colophon-mark">§</div>
-      {{ colophon_label }}<br>
-      Tokushima · {{ date }}<br>
+      解説 05<br>
+      Tokushima · 2026.09.17<br>
       <a href="/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">デジタルドア</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">CC BY 4.0</a>
     </div>
   </footer>
@@ -900,9 +924,6 @@ article img {
   }
 </script>
 
-{% if has_form %}
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-<script src="/js/form-render.js?v={{ asset_version }}" defer></script>
-{% endif %}
+
 </body>
 </html>

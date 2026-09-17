@@ -7,25 +7,25 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'">
 
 
-<title>{{ title }} — {{ series }} | デジタルドア</title>
-<meta name="description" content="{{ description }}">
-<link rel="canonical" href="{{ canonical_url }}">
-{% if hreflang_ja %}<link rel="alternate" hreflang="ja" href="{{ hreflang_ja }}">{% endif %}
-{% if hreflang_en %}<link rel="alternate" hreflang="en" href="{{ hreflang_en }}">{% endif %}
-<link rel="alternate" hreflang="x-default" href="{{ hreflang_ja or canonical_url }}">
+<title>玄関まわりの技術を層に分けて見る — 解説 | デジタルドア</title>
+<meta name="description" content="玄関まわりの技術を、扉の製造、電子錠、扉のコントローラ、ドアホン、スマートフォン、周辺機器、通信規格、鍵の発行、業務システムとの連携、業務システム、管理者の11層に分けて整理します。Apple、Google、Amazonの参入後に、どの層が買えばすむ部品になり、どの層に人の責任と収益が残るかを説明します。">
+<link rel="canonical" href="https://door.aiseed.dev/guide/layers/">
+<link rel="alternate" hreflang="ja" href="https://door.aiseed.dev/guide/layers/">
+
+<link rel="alternate" hreflang="x-default" href="https://door.aiseed.dev/guide/layers/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="デジタルドア">
 <meta property="og:locale" content="ja_JP">
-<meta property="og:title" content="{{ title }}">
-<meta property="og:description" content="{{ description }}">
-<meta property="og:url" content="{{ canonical_url }}">
-<meta property="og:image" content="{{ og_image }}">
-<meta property="article:section" content="{{ series }}">
-<meta property="article:published_time" content="{{ date }}">
+<meta property="og:title" content="玄関まわりの技術を層に分けて見る">
+<meta property="og:description" content="玄関まわりの技術を、扉の製造、電子錠、扉のコントローラ、ドアホン、スマートフォン、周辺機器、通信規格、鍵の発行、業務システムとの連携、業務システム、管理者の11層に分けて整理します。Apple、Google、Amazonの参入後に、どの層が買えばすむ部品になり、どの層に人の責任と収益が残るかを説明します。">
+<meta property="og:url" content="https://door.aiseed.dev/guide/layers/">
+<meta property="og:image" content="https://door.aiseed.dev/images/og-default.jpg">
+<meta property="article:section" content="解説">
+<meta property="article:published_time" content="2026.09.17">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{{ title }}">
-<meta name="twitter:description" content="{{ description }}">
-<meta name="twitter:image" content="{{ og_image }}">
+<meta name="twitter:title" content="玄関まわりの技術を層に分けて見る">
+<meta name="twitter:description" content="玄関まわりの技術を、扉の製造、電子錠、扉のコントローラ、ドアホン、スマートフォン、周辺機器、通信規格、鍵の発行、業務システムとの連携、業務システム、管理者の11層に分けて整理します。Apple、Google、Amazonの参入後に、どの層が買えばすむ部品になり、どの層に人の責任と収益が残るかを説明します。">
+<meta name="twitter:image" content="https://door.aiseed.dev/images/og-default.jpg">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="alternate" type="application/rss+xml" title="デジタルドア" href="/feed.xml">
 <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
@@ -797,45 +797,171 @@ article img {
   *, *::before, *::after { animation: none !important; transition: none !important; opacity: 1 !important; }
 }
 </style>
-{% if has_form %}
-<link rel="stylesheet" href="/css/form.css?v={{ asset_version }}">
-{% endif %}
+
 </head>
 
-<body{% if chapter_toc_html %} class="has-toc"{% endif %}>
+<body>
 
 <div class="container">
 
   <!-- MASTHEAD(ホーム › シリーズ目次) -->
   <header class="masthead">
-    <div class="masthead-left"><a href="/" class="masthead-home">デジタルドア</a><span class="masthead-sep">›</span><a href="{{ series_index_url }}">{{ series }}</a></div>
-    <div class="masthead-right">{{ masthead_right }}</div>
+    <div class="masthead-left"><a href="/" class="masthead-home">デジタルドア</a><span class="masthead-sep">›</span><a href="/guide/">解説</a></div>
+    <div class="masthead-right">No. 04 / 解説</div>
   </header>
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-meta">{{ hero_meta }}</div>
+    <div class="hero-meta">解説 № 04 · 2026</div>
 
-    <h1 class="hero-title">{% if title_html %}{{ title_html | safe }}{% else %}{{ title }}{% endif %}</h1>
+    <h1 class="hero-title">玄関まわりの技術を層に分けて見る</h1>
 
-    {% if subtitle %}<p class="hero-subtitle">{{ subtitle }}</p>{% endif %}
+    <p class="hero-subtitle">扉の製造から管理者まで、どの層が部品になり、どの層に責任が残るか</p>
 
     <div class="hero-byline">
-      <span>{{ date }}</span>
-      {% if other_lang_url %}<span><a href="{{ other_lang_url }}" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">🌐 {{ other_lang_label }}</a></span>{% endif %}
+      <span>2026.09.17</span>
+      
     </div>
   </section>
 
   <!-- SERIES TOC(全章一覧・現在の章をハイライト) -->
-  {{ chapter_toc_html | safe }}
+  
 
   <!-- ARTICLE BODY -->
   <article>
-    {{ content_html | safe }}
+    <p>玄関まわりの技術は、扉そのものから、それを管理する人まで、いくつもの層が重なってできています。Apple、Google、Amazonがドアホンや鍵の分野に参入した後の姿を前提に、各層で誰が残り、どのような経済になるかを整理します。並びは下から上へ、物から人への順です。</p>
+<h2>一覧表</h2>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>層</th>
+<th>残る事業者</th>
+<th>経済の形</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>扉の製造</td>
+</tr>
+<tr>
+<td>扉メーカー。電子錠を埋め込む開口部、扉内部の配線経路、その性能等級を持つ</td>
+</tr>
+<tr>
+<td>防火認定と等級が参入障壁。数量は新築着工数ではなく、既存の建物の戸数に比例する</td>
+</tr>
+<tr>
+<td>電子錠</td>
+</tr>
+<tr>
+<td>競争を経て少数の優良メーカーが残る。電動部は標準的な錠として購入する部品になる。認定や物理的な要件がある特殊な錠は残る</td>
+</tr>
+<tr>
+<td>汎用品は価格が下がり続ける。特殊品は認定によって少数が高い利幅で残る</td>
+</tr>
+<tr>
+<td>扉のコントローラ</td>
+</tr>
+<tr>
+<td>扉側の専用コントローラ。火災・停電・避難時の判断、監査記録、二人同時認証と強要検知、配線の自己診断、複数の入力の組み合わせを扉の中で処理する。インターネットに接続しなくても動作する。仕様は公開し、実装は各社が工夫する</td>
+</tr>
+<tr>
+<td>これまで設備工事会社(SIer)が独自の制御盤で担っていた部分。公開仕様に置き換わると、独自仕様による価格は消え、工夫の差が扉の中に残る</td>
+</tr>
+<tr>
+<td>ドアホン(リーダー)</td>
+</tr>
+<tr>
+<td>Apple、Google、Amazon。顔、NFC、UWB、音声を1台で読み取る。消防連動や過酷な環境が要件の特殊なリーダーは残る</td>
+</tr>
+<tr>
+<td>汎用品は本体を1回販売し、囲い込みは月額の映像サービスで行う。特殊品は認定と物理要件で残る</td>
+</tr>
+<tr>
+<td>スマートフォン</td>
+</tr>
+<tr>
+<td>Apple、Google。Walletの鍵と本人確認の手段</td>
+</tr>
+<tr>
+<td>鍵自体には課金しない。囲い込みは端末で行う</td>
+</tr>
+<tr>
+<td>周辺機器</td>
+</tr>
+<tr>
+<td>スピーカー、火災報知器、センサー、室内カメラ。各社</td>
+</tr>
+<tr>
+<td>購入する部品。足りない機能は1台追加する</td>
+</tr>
+<tr>
+<td>通信規格</td>
+</tr>
+<tr>
+<td>公開規格。Aliro、OSDP、ONVIF、そして扉のAPI(公開仕様)。Matterは周辺機器を接続する口の一つ</td>
+</tr>
+<tr>
+<td>無料。誰も所有しない</td>
+</tr>
+<tr>
+<td>鍵の発行</td>
+</tr>
+<tr>
+<td>発行者。誰に鍵を出し、いつ失効させ、本人であることを確認して記録する</td>
+</tr>
+<tr>
+<td><strong>収益が出る。</strong> 1戸あたり月額。限界費用はほぼゼロ</td>
+</tr>
+<tr>
+<td>業務システムとの連携</td>
+</tr>
+<tr>
+<td>機器で起きた出来事を、予約、名簿、鍵の台帳、スケジュールに結びつける</td>
+</tr>
+<tr>
+<td><strong>収益が出る。</strong> 事業者ごとに責任者と様式が異なるため、汎用のSaaSにはならない</td>
+</tr>
+<tr>
+<td>業務システム</td>
+</tr>
+<tr>
+<td>予約、名簿、会計、報告</td>
+</tr>
+<tr>
+<td>無料に向かう。作らずに既存の物を配る</td>
+</tr>
+<tr>
+<td>管理者とAI</td>
+</tr>
+<tr>
+<td>事業者本人。判定はAIが行い、判断に迷う件だけ本人が確認する</td>
+</tr>
+<tr>
+<td>外部の人員は原則ゼロ</td>
+</tr>
+</tbody>
+</table>
+<h2>表の読み方</h2>
+<p>扉の製造から周辺機器までは、購入する部品です。通信規格は無料の公開規格で、誰の所有物でもありません。収益が出るのは「鍵の発行」と「業務システムとの連携」の二つの層だけで、業務システムは無料で配布し、最上位に管理者が一人います。</p>
+<p>この二つの層は、機器と人の間に位置します。下は購入する部品、上は本人の責任です。その間で、機器の出来事を人の責任に翻訳する仕事だけが、汎用の商品になりません。安全に責任を持つ仕事だからです。</p>
+<h2>扉のコントローラの層</h2>
+<p>コントローラは、これまで表に現れなかった層です。設備工事会社(SIer)の独自の制御盤の中に隠れていたためです。入退室管理システム一式の仕様、価格、保守を握っていたのは、錠でも扉でもリーダーでもなく、制御盤でした。リーダー側はAliroが、機器側はMatterが、リーダーと制御盤の間はOSDPが公開規格にした後、火災・停電時の判断、監査記録、二人同時認証、建物設備との連動だけが独自仕様のまま残っています。これを扉側の専用コントローラとして公開仕様で実装するのが、扉メーカーの新しい役割です。</p>
+<p>この層はインターネットに接続しなくても完全に動作します。通信が切れても解錠・施錠・記録ができるため、物理鍵を廃止でき、電子錠は追加の機器ではなく標準の錠になります。外側のシリンダーが不要になり、開口部の規格が一つになります。</p>
+<p>この層は、カメラ、マイク、センサー、Aliroリーダーの情報を扉の中で統合します。配線が物理的に集まる場所が扉だからです。扉メーカーが利用者に提供できる機能は、たとえば次のようなものです。手ぶらで入れる、鍵を落としても他人は入れない、後ろから付いてきた人がいれば通知する、脅されて開けたときは通報する、重要な部屋は二人で開ける、配達員は音声で用件を伝えれば通す、家族や来客ごとに開け方を選べる。</p>
+<h2>三社が競争する領域</h2>
+<p>Apple、Google、Amazonが競争するのは、リーダー、スマートフォン、周辺機器です。これらは汎用品の領域であり、だからそれ以外の層は残ります。三社が参入しない特殊な錠とリーダーは、認定と物理要件によって汎用品の競争の外で残ります。競争の場所はリーダーの製造ではありません。リーダーとは来訪者を識別する機器であり、玄関でその役割を担うのはドアホンです。製造は台湾などの産業機器メーカーに移り、競争の成果は購入する側に還元されます。したがって、扉の側でリーダーを自社開発する必要はありません。</p>
+<h2>需要は減らない</h2>
+<p>全体として需要は減りません。減るのは1台あたりの価格と、中間に立っていた事業者です。</p>
+<p>汎用品の層は安くなりますが、安くなった分だけ数量が出ます。スマートフォンの鍵がWalletの標準機能になれば、リーダーは一部の高級仕様ではなく、全戸の要件になります。特殊品の側は認定と物理要件で残り、少数が高い利幅で残ります。鍵の発行と業務システムとの連携は新しく生まれた層で、以前は存在しなかった需要です。</p>
+<p>減ったように見えるのは、独自の錠と独自のアプリで囲い込んでいた会社の売上と、画面を受託開発していた会社の売上です。それは需要が消えたのではなく、囲い込みが外れて、需要が層ごとに配り直されたということです。</p>
+
   </article>
 
   <!-- CHAPTER NAV(前後の記事) -->
-  {% if nav_html %}{{ nav_html | safe }}{% endif %}
+  <nav class="chapter-nav">
+  <a href="/guide/what-a-smart-door-needs/" rel="prev">&larr; 前: スマートドアに求められる条件</a>
+  <a href="/guide/open-specification/" rel="next">次: 扉のコントローラの仕様と参照実装を公開する &rarr;</a>
+</nav>
 
   <!-- FOOTER(サイト内メニュー+奥付) -->
   <footer class="site-footer">
@@ -864,8 +990,8 @@ article img {
     </nav>
     <div class="colophon">
       <div class="colophon-mark">§</div>
-      {{ colophon_label }}<br>
-      Tokushima · {{ date }}<br>
+      解説 04<br>
+      Tokushima · 2026.09.17<br>
       <a href="/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">デジタルドア</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">CC BY 4.0</a>
     </div>
   </footer>
@@ -900,9 +1026,6 @@ article img {
   }
 </script>
 
-{% if has_form %}
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-<script src="/js/form-render.js?v={{ asset_version }}" defer></script>
-{% endif %}
+
 </body>
 </html>

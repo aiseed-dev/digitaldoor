@@ -29,3 +29,16 @@ include = ["digitalkey*"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
+
+# スマートフォンアプリ(digitalkey.mobile)を flet build で組むときの設定
+[tool.flet]
+org = "dev.aiseed"
+product = "digitaldoor"
+company = "aiseed"
+copyright = "2026 aiseed"
+
+[tool.flet.app]
+module = "digitalkey.mobile.main"
+
+[tool.flet.android]
+target_arch = ["arm64-v8a"]

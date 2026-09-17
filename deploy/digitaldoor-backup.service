@@ -1,0 +1,9 @@
+# 毎日の控え。台帳と監査記録を固めて暗号化し、事業者が決めた先へ置く
+[Unit]
+Description=digitaldoor backup
+
+[Service]
+Type=oneshot
+User=digitaldoor
+Environment=DIGITALKEY_VAULT=/var/lib/digitaldoor/vault
+ExecStart=/opt/digitaldoor/.venv/bin/digitalkey entrance backup /var/lib/digitaldoor/backup --passphrase-file /var/lib/digitaldoor/backup.pass

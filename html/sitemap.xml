@@ -11,6 +11,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://door.aiseed.dev/blog/apps-that-cannot-be-fixed/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://door.aiseed.dev/blog/start/</loc>
     <lastmod>2026-09-17</lastmod>
     <priority>0.7</priority>
@@ -32,6 +37,16 @@
   </url>
   <url>
     <loc>https://door.aiseed.dev/guide/what-a-smart-door-needs/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://door.aiseed.dev/guide/layers/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://door.aiseed.dev/guide/open-specification/</loc>
     <lastmod>2026-09-17</lastmod>
     <priority>0.6</priority>
   </url>

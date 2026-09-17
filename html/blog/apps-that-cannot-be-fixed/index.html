@@ -7,25 +7,25 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'">
 
 
-<title>{{ title }} — {{ series }} | デジタルドア</title>
-<meta name="description" content="{{ description }}">
-<link rel="canonical" href="{{ canonical_url }}">
-{% if hreflang_ja %}<link rel="alternate" hreflang="ja" href="{{ hreflang_ja }}">{% endif %}
-{% if hreflang_en %}<link rel="alternate" hreflang="en" href="{{ hreflang_en }}">{% endif %}
-<link rel="alternate" hreflang="x-default" href="{{ hreflang_ja or canonical_url }}">
+<title>大企業でもアプリを直せない構造がある — ブログ | デジタルドア</title>
+<meta name="description" content="Google Playに公開されているトヨタの「デジタルキー」アプリは、評価1.5(188件)です。利用者の声を整理すると、ローカルで動作しないため物理鍵を手放せないこと、認証が一社に集中していること、そして不具合が半年直らない構造が見えます。利用者、アプリ開発者、製品開発者の間の対話をAIで改善できるという考えを書きます。">
+<link rel="canonical" href="https://door.aiseed.dev/blog/apps-that-cannot-be-fixed/">
+<link rel="alternate" hreflang="ja" href="https://door.aiseed.dev/blog/apps-that-cannot-be-fixed/">
+
+<link rel="alternate" hreflang="x-default" href="https://door.aiseed.dev/blog/apps-that-cannot-be-fixed/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="デジタルドア">
 <meta property="og:locale" content="ja_JP">
-<meta property="og:title" content="{{ title }}">
-<meta property="og:description" content="{{ description }}">
-<meta property="og:url" content="{{ canonical_url }}">
-<meta property="og:image" content="{{ og_image }}">
-<meta property="article:section" content="{{ series }}">
-<meta property="article:published_time" content="{{ date }}">
+<meta property="og:title" content="大企業でもアプリを直せない構造がある">
+<meta property="og:description" content="Google Playに公開されているトヨタの「デジタルキー」アプリは、評価1.5(188件)です。利用者の声を整理すると、ローカルで動作しないため物理鍵を手放せないこと、認証が一社に集中していること、そして不具合が半年直らない構造が見えます。利用者、アプリ開発者、製品開発者の間の対話をAIで改善できるという考えを書きます。">
+<meta property="og:url" content="https://door.aiseed.dev/blog/apps-that-cannot-be-fixed/">
+<meta property="og:image" content="https://door.aiseed.dev/images/og-default.jpg">
+<meta property="article:section" content="ブログ">
+<meta property="article:published_time" content="2026.09.17">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{{ title }}">
-<meta name="twitter:description" content="{{ description }}">
-<meta name="twitter:image" content="{{ og_image }}">
+<meta name="twitter:title" content="大企業でもアプリを直せない構造がある">
+<meta name="twitter:description" content="Google Playに公開されているトヨタの「デジタルキー」アプリは、評価1.5(188件)です。利用者の声を整理すると、ローカルで動作しないため物理鍵を手放せないこと、認証が一社に集中していること、そして不具合が半年直らない構造が見えます。利用者、アプリ開発者、製品開発者の間の対話をAIで改善できるという考えを書きます。">
+<meta name="twitter:image" content="https://door.aiseed.dev/images/og-default.jpg">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="alternate" type="application/rss+xml" title="デジタルドア" href="/feed.xml">
 <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
@@ -797,45 +797,98 @@ article img {
   *, *::before, *::after { animation: none !important; transition: none !important; opacity: 1 !important; }
 }
 </style>
-{% if has_form %}
-<link rel="stylesheet" href="/css/form.css?v={{ asset_version }}">
-{% endif %}
+
 </head>
 
-<body{% if chapter_toc_html %} class="has-toc"{% endif %}>
+<body>
 
 <div class="container">
 
   <!-- MASTHEAD(ホーム › シリーズ目次) -->
   <header class="masthead">
-    <div class="masthead-left"><a href="/" class="masthead-home">デジタルドア</a><span class="masthead-sep">›</span><a href="{{ series_index_url }}">{{ series }}</a></div>
-    <div class="masthead-right">{{ masthead_right }}</div>
+    <div class="masthead-left"><a href="/" class="masthead-home">デジタルドア</a><span class="masthead-sep">›</span><a href="/blog/">ブログ</a></div>
+    <div class="masthead-right">№ 002 / ブログ</div>
   </header>
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-meta">{{ hero_meta }}</div>
+    <div class="hero-meta">ノート · 2026.09.17</div>
 
-    <h1 class="hero-title">{% if title_html %}{{ title_html | safe }}{% else %}{{ title }}{% endif %}</h1>
+    <h1 class="hero-title">大企業でもアプリを直せない構造がある</h1>
 
-    {% if subtitle %}<p class="hero-subtitle">{{ subtitle }}</p>{% endif %}
+    <p class="hero-subtitle">トヨタのデジタルキーアプリの評価から考える</p>
 
     <div class="hero-byline">
-      <span>{{ date }}</span>
-      {% if other_lang_url %}<span><a href="{{ other_lang_url }}" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">🌐 {{ other_lang_label }}</a></span>{% endif %}
+      <span>2026.09.17</span>
+      
     </div>
   </section>
 
   <!-- SERIES TOC(全章一覧・現在の章をハイライト) -->
-  {{ chapter_toc_html | safe }}
+  
 
   <!-- ARTICLE BODY -->
   <article>
-    {{ content_html | safe }}
+    <p>Google Playに公開されているトヨタ自動車の「デジタルキー」アプリのページを、2026年9月17日に保存しました(<a href="toyota-digikey.pdf">PDF</a>)。このページから読み取れることを整理します。</p>
+<h2>数字</h2>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>項目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>評価</td>
+<td>1.5(188件)</td>
+</tr>
+<tr>
+<td>ダウンロード数</td>
+<td>5万以上</td>
+</tr>
+<tr>
+<td>最終更新</td>
+<td>2026年6月25日。更新内容は「軽微な不具合を修正しました」</td>
+</tr>
+<tr>
+<td>同社の他のアプリの評価</td>
+<td>My TOYOTA+ 4.6、TOYOTA SHARE 4.5、トヨタレンタカー 4.4</td>
+</tr>
+</tbody>
+</table>
+<h2>利用者の声</h2>
+<p>日付順に要約します。個人名は書きません。</p>
+<ul>
+<li>2026年3月。バージョン2.1.4からドアノブでの施錠・解錠ができるようになった一方、車内でBluetoothの接続待ちになることが増えた。2年半使ってみて、スマートフォンだからという理由でセキュリティのロックをかけすぎている。使いやすさを優先してほしい。</li>
+<li>2026年4月。物理鍵がある自宅から100km離れた場所で突然接続できなくなった。サポートに相談したが、物理鍵がないとどうにもならなかった。自宅から鍵を持ってきて帰った。書かれている不具合は再現性が高い。</li>
+<li>2026年8月。ときどき車と接続できなくなり、解錠できなくなる。アプリのデータを削除して再起動し、鍵のデータをサーバーから再取得する再設定で使えるようになるが、数日するとまた接続できなくなる。「リモコンキーを持ち歩きましょう」。</li>
+</ul>
+<h2>読み取れること</h2>
+<p><strong>ローカルで動作しないと、物理鍵は手放せません。</strong> 利用者自身が「リモコンキーを持ち歩け」と書いています。鍵のデータをサーバーから再取得する再設定が復旧手順であることは、認証が手元で完結していないことを示しています。電子錠は追加の機器になり、鍵は二つに増えました。</p>
+<p><strong>認証が一社に集中しています。</strong> 接続が切れたときの相談先はサポートであり、サポートにできることはありませんでした。扉(この場合は車)が自ら判定する構造であれば、サーバーの状態に関わらず鍵は使えます。</p>
+<p><strong>不具合を直せない構造があります。</strong> 3月と4月に同じ不具合が報告され、6月の更新は「軽微な不具合を修正」で、8月に同じ不具合が再び報告されています。同じ会社の他のアプリは4.4から4.6の評価なので、開発力の問題ではありません。外から見える範囲で言えば、車両側、スマートフォンアプリ、サーバーが別々の組織にあり、修正のたびに三者の見積もり、検証、車両の認証を経る必要があります。使う人と直す人が分かれていて、不便が直す人に届きません。業務用アプリが高価で使いにくい理由と同じ構造が、日本最大の企業にもあります。</p>
+<h2>利用者、アプリ開発者、製品開発者の間の対話</h2>
+<p>利用者、アプリを作る人、製品を作る人の間には、対話があるべきです。現状では、その対話を少数の人が握っています。窓口の担当者、要件をまとめる人、見積もりを出す人が間に立ち、利用者の言葉は要約されてから届き、開発者の答えは翻訳されてから返ります。このアプリのページでは、利用者は3月から8月まで同じことを書き続け、開発側からは「軽微な不具合を修正しました」の一行が返りました。人が間に立つ構造では、これが普通です。</p>
+<p>AIの能力が上がった今、この部分は改善できます。利用者の言葉をそのまま読み、手元の記録と照合し、開発者に渡せる形に整え、修正結果を利用者の言葉で返す。これをAIが休みなく行えます。少数の人が握っていた席を、誰でも通れる道に変える。このサイトが公開仕様、読める実装、テストを置いているのは、その道を通れるようにするためでもあります。</p>
+<h2>AIで直せる仕組みの条件</h2>
+<ul>
+<li>仕様は「何を満たすか」だけを書く。直す人は仕様を読めば、何を壊してはいけないかが分かる。</li>
+<li>参照実装はPythonで、読める大きさにする。AIが読み、直し、説明できる。</li>
+<li>テストがある。修正後にテストが通れば直っている。AIが直した物を人が確認する基準がテストになる。</li>
+<li>記録は手元にある。不具合の原因を示す証拠が、サーバーの向こうではなく自分の手元にある。</li>
+<li>判定は扉が持つ。アプリもサーバーも止まっていてよい。</li>
+<li>直す人と使う人が同じ。事業者が自分の扉の不便を、その日に直せる。見積もりも稟議も三者間の調整も不要。</li>
+</ul>
+<p>さらに一つ。不具合の報告をAIが受け取る仕組みです。利用者が「接続が切れた」と言えば、AIが記録を読み、原因の候補と修正案を出し、テストを通してから管理者に提示する。このアプリのページで「サポートにできることがなかった」場面に、手元の記録と修正できるコードがあれば、できることがあります。</p>
+
   </article>
 
   <!-- CHAPTER NAV(前後の記事) -->
-  {% if nav_html %}{{ nav_html | safe }}{% endif %}
+  <nav class="chapter-nav">
+  <a href="/blog/start/" rel="prev">&larr; 前: 情報サイト「デジタルドア」を開設しました</a>
+  <a href="/blog/">Blog トップ &rarr;</a>
+</nav>
 
   <!-- FOOTER(サイト内メニュー+奥付) -->
   <footer class="site-footer">
@@ -864,8 +917,8 @@ article img {
     </nav>
     <div class="colophon">
       <div class="colophon-mark">§</div>
-      {{ colophon_label }}<br>
-      Tokushima · {{ date }}<br>
+      ブログ № 002<br>
+      Tokushima · 2026.09.17<br>
       <a href="/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">デジタルドア</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">CC BY 4.0</a>
     </div>
   </footer>
@@ -900,9 +953,6 @@ article img {
   }
 </script>
 
-{% if has_form %}
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-<script src="/js/form-render.js?v={{ asset_version }}" defer></script>
-{% endif %}
+
 </body>
 </html>

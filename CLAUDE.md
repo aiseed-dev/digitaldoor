@@ -2,8 +2,9 @@
 
 ## サイト
 
-- 手順は docs/ に書く(setup.md、writing.md、news.md)。README は概要と docs への案内だけにする
-- 解説は `articles/guide.adoc`(番号順)、ブログは `articles/blog.adoc`(日付順)。AsciiDoc、日本語で書く。ビルドは `.venv/bin/python tools/build_article.py --all`、続けて `tools/build_feed.py` と `tools/build_news.py`。確認は `tools/serve.py`
+- 手順は docs/使い方.md に書く。README は概要と docs への案内だけにする。考え方や背景は文書にせず、サイトの記事(articles/)にする
+- ユーザーマニュアルは `tools/build_manual.py` がコードから作る。説明はコードの docstring と --help に書く。機器(Sesame 等)の詳しい説明もコードの側に書く
+- 解説は `articles/guide.adoc`(番号順)、ブログは `articles/blog.adoc`(日付順)。AsciiDoc、日本語で書く。ビルドは `.venv/bin/python tools/build_article.py --all`、続けて `tools/build_feed.py`、`tools/build_news.py`、`tools/build_manual.py`。確認は `tools/serve.py`
 - 報道は、会社が正式に発表したことと、報道されただけのことを分けて書く。誰が、いつ、どこに書いたかを添える
 - 出典は記事の末尾に「== 出典」でまとめる。引用は短く、要約は自分の言葉で書く
 - 層の名前で書く(ドアホン、電子錠、扉のコントローラ、鍵の発行、業務システムとの連携)。題は読み手に通じる言葉にする
@@ -15,8 +16,8 @@
 
 ## ソフトウェア(digitalkey/)
 
-- テストは `.venv/bin/python -m pytest -q`(entrance・door・panel・sesame の全部)。commit は全テストが通ってから、別コマンドで行う
-- 設計判断は docs/SEKKEI.md(entrance)と docs/扉コントローラ仕様書.md(door)に書く。実装を変えるときは文書を先に直す
+- テストは `.venv/bin/python -m pytest -q`(entrance・door・panel・sesame・site・mobile の全部)。commit は全テストが通ってから、別コマンドで行う
+- 設計判断は docs/使い方.md の「設計方針」(entrance)と docs/扉コントローラ仕様書.md(door)に書く。実装を変えるときは文書を先に直す
 - 様式(digitalkey/entrance/forms_data/*.adoc)が正。コードに項目名を書くときは様式の名前をそのまま使う
 - 伝票と監査の記録は追記だけで扱う。訂正は新しい伝票・新しい記録として書く。テストもその前提で書く
 - 判断は door が持つ。panel(Matter のブリッジと画面)は翻訳と表示を担当する

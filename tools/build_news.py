@@ -68,7 +68,7 @@ def main() -> int:
 <body>
     <header class="site-header">
         <a href="/" class="brand">デジタルドア</a>
-        <nav><a href="/guide/">解説</a><a href="/blog/">ブログ</a><a href="/news/">ニュース</a><a href="/#about">このサイトについて</a></nav>
+        <nav><a href="/guide/">解説</a><a href="/blog/">ブログ</a><a href="/news/">ニュース</a><a href="/manual/">マニュアル</a><a href="/#about">このサイトについて</a></nav>
     </header>
     <main class="index">
         <h1>ニュース</h1>

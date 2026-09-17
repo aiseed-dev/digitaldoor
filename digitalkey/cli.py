@@ -10,6 +10,8 @@ USAGE = """使い方:
   digitalkey panel                 盤(Flet)。$DIGITALKEY_DOOR_URL の door に結び、$DIGITALKEY_PANEL_PORT(既定 8798)で開く
   digitalkey sesame <命令> ...     CANDY HOUSE Sesame を BLE で直接(scan | register | status | lock | unlock | toggle | version | keys)
   digitalkey sesame app [--web] [--fake]   その画面(Flet)。--fake は疑似の Sesame
+  digitalkey site init <dir> | serve --config site.toml   事業所サーバー(扉のコントローラ+鍵の台帳+HTTP API)
+  digitalkey mobile [--web]        管理者と利用者のスマートフォンアプリ(Flet)
 """
 
 
@@ -21,6 +23,12 @@ def main(argv: list[str] | None = None) -> int:
     if argv and argv[0] == "door":
         from .door.cli import main as m
         return m(argv[1:])
+    if argv and argv[0] == "site":
+        from .site.cli import main as m
+        return m(argv[1:])
+    if argv and argv[0] == "mobile":
+        from .mobile.main import run
+        return run(argv[1:])
     if argv and argv[0] == "sesame":
         if len(argv) > 1 and argv[1] == "app":
             from .sesame.app import run

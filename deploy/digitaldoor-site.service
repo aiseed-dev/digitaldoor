@@ -1,0 +1,15 @@
+# systemd のユニット。/etc/systemd/system/digitaldoor-site.service に置く
+[Unit]
+Description=digitaldoor site server (doors and keys)
+After=network.target
+
+[Service]
+User=digitaldoor
+WorkingDirectory=/var/lib/digitaldoor
+Environment=SESAME_KEYS=/var/lib/digitaldoor/sesame-keys.json
+ExecStart=/opt/digitaldoor/.venv/bin/digitalkey site serve --config /var/lib/digitaldoor/site.toml
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
