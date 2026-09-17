@@ -11,3 +11,4 @@
 - 計測(Google Analytics 等)は入れていない。入れるなら本人の判断で、プライバシーの頁と一緒に
 - commit は本人の合図で。push は勝手にしない
 - ニュースは広めに集めて、載せる物は人が選ぶ(`picked`)。AI の relevant は見立てで、絞りに使わない。`news/items.json` が正。手で直すなら title/summary/kind/category を直し、status は ai のまま。取り口を足すのは `news/sources.json`。AI の指示文は `tools/collect_news.py` の SYSTEM(事実と噂を分ける、原文に無いことを足さない、個人名を書かない)
+- **git push は Claude はしない。** 尼寺さんが内容を確認してから自分で push する。commit までは指示があればよい
