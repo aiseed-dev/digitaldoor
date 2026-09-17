@@ -17,3 +17,19 @@ digitalkey sesame app --web --fake                # 画面。--fake は実機な
 ```
 
 プロトコル(広告の解析、AES-CCM、AES-CMAC、ECDH、登録とログイン、施錠・解錠の命令)の説明は `digitalkey_sesame/protocol.py` と `device.py` の先頭にあります。Android/iOS で BLE を使う Flet 拡張は `flet_ble/` です。
+
+## スマートフォンアプリの配布
+
+登録用の画面は Android と iOS のアプリとして組めます。配布は Google Play と App Store で行います。APK ファイルをリポジトリに置いて配ることはしません。
+
+```bash
+cd drivers/digitalkey-sesame
+pip install flet-cli
+flet build apk    # 開発機で試す(Android、arm64)
+flet build aab    # Google Play に出す形式
+flet build ipa    # App Store に出す形式(macOS と Xcode が必要)
+```
+
+設定は pyproject.toml の `[tool.flet]` にあります。アプリ名、パッケージ名(dev.aiseed.digitalkey.sesame)、Bluetooth の権限、iOS の利用目的の文がここに書いてあります。バージョンを上げるときは `build_version` と `build_number` を書き換えます。
+
+ストアへの登録には開発者アカウントが必要です。Google Play は登録料 25 ドル(一回)、App Store は年 99 ドルです。署名鍵と証明書はリポジトリに入れず、それぞれの開発機で管理します。

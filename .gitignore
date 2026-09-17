@@ -11,3 +11,4 @@ vault/
 *.tar.gpg
 sesame-keys.json
 sesame-keys-fake.json
+build/

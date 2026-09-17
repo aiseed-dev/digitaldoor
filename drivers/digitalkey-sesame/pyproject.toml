@@ -30,3 +30,42 @@ include = ["digitalkey_sesame*"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
+
+# ---- スマートフォンアプリ(登録用の画面)を `flet build` で組む設定 ----
+# Google Play: flet build aab      App Store: flet build ipa(macOS と Xcode が必要)
+# 開発機で試す: flet build apk
+[tool.flet]
+org = "dev.aiseed"
+product = "Sesame 登録"
+company = "aiseed"
+copyright = "2026 aiseed"
+bundle_id = "dev.aiseed.digitalkey.sesame"
+build_version = "0.1.0"
+build_number = 1
+
+[tool.flet.app]
+module = "digitalkey_sesame.app"
+exclude = [".venv", "flet_ble", "tests", "build", ".pytest_cache", "__pycache__", "*.egg-info", "*.md"]
+
+# まだ PyPI に無いパッケージは手元の場所から入れる(PyPI に出したら消す)
+[tool.flet.dev_packages]
+flet-ble = "flet_ble"
+digitalkey = "../.."
+
+[tool.flet.android]
+target_arch = ["arm64-v8a"]
+
+[tool.flet.android.permission]
+"android.permission.BLUETOOTH" = true
+"android.permission.BLUETOOTH_ADMIN" = true
+"android.permission.BLUETOOTH_SCAN" = true
+"android.permission.BLUETOOTH_CONNECT" = true
+"android.permission.ACCESS_FINE_LOCATION" = true
+"android.permission.ACCESS_COARSE_LOCATION" = true
+
+[tool.flet.android.feature]
+"android.hardware.bluetooth_le" = true
+
+[tool.flet.ios.info]
+NSBluetoothAlwaysUsageDescription = "Sesame と Bluetooth で通信するために使います"
+NSBluetoothPeripheralUsageDescription = "Sesame と Bluetooth で通信するために使います"
