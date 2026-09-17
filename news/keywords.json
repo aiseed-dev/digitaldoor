@@ -1,0 +1,4 @@
+{
+  "note": "filter が true の口で、題か要約にこのどれかを含む物だけ拾う(大文字小文字は問わない)。",
+  "include": ["smart lock", "smartlock", "door lock", "deadbolt", "doorbell", "Home Key", "HomeKit lock", "Aliro", "Matter 1.", "Matter lock", "UWB", "NFC key", "digital key", "access control", "スマートロック", "電子錠", "ドアホン", "デジタルキー", "入退室", "玄関", "錠"]
+}

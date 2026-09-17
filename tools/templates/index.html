@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title or title or site_name }}</title>
+    <meta name="description" content="{{ description }}">
+    {% if canonical_url %}<link rel="canonical" href="{{ canonical_url }}">{% endif %}
+    {% if hreflang_ja %}<link rel="alternate" hreflang="ja" href="{{ hreflang_ja }}">{% endif %}
+    {% if hreflang_en %}<link rel="alternate" hreflang="en" href="{{ hreflang_en }}">{% endif %}
+    <link rel="stylesheet" href="{{ css_path }}{% if asset_version %}?v={{ asset_version }}{% endif %}">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="alternate" type="application/rss+xml" title="デジタルドア" href="/feed.xml">
+</head>
+<body>
+    <header class="site-header">
+        <a href="{{ home_link or '/' }}" class="brand">{{ site_name or 'Sample Site' }}</a>
+        <nav>
+            <a href="/guide/">解説</a>
+            <a href="{{ blog_base or '/blog' }}/">ブログ</a>
+            <a href="/news/">ニュース</a>
+            <a href="/#about">このサイトについて</a>
+        </nav>
+    </header>
+
+    <main class="index">
+        <h1>{{ page_title or title or 'Index' }}</h1>
+        {% if page_subtitle %}<p class="index-subtitle">{{ page_subtitle }}</p>{% endif %}
+
+        <section class="article-list">
+            {{ article_list_html }}
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>{{ copyright_text or site_name or 'Sample Site' }}</p>
+    </footer>
+</body>
+</html>

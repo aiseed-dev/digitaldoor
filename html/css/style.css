@@ -1,0 +1,139 @@
+/* デジタルドア — 一覧・トップ・固定頁の様式。記事(tools/templates/chapter.html)と同じ紙・墨・朱・罫の四色と同じ書体で組む。 */
+
+:root {
+  --ink: #1a1a1a;
+  --paper: #f4f1ea;
+  --paper-deep: #ebe6d8;
+  --accent: #c8442a;
+  --rule: #d4cdb8;
+  --whisper: #6b665a;
+  --max-w: 760px;
+  --font-body: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝",
+               "Hiragino Mincho ProN", "ヒラギノ明朝 ProN", "Yu Mincho", "游明朝", "YuMincho",
+               "Noto Serif CJK JP", "Noto Serif JP", serif;
+  --font-mono: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #e8e3d6;
+    --paper: #16140f;
+    --paper-deep: #211d16;
+    --accent: #e8765a;
+    --rule: #393428;
+    --whisper: #a39b88;
+  }
+}
+
+* { box-sizing: border-box; }
+html { font-size: 17px; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  line-height: 1.9;
+  letter-spacing: 0.02em;
+  font-feature-settings: "palt";
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 { font-family: var(--font-body); font-weight: 700; line-height: 1.35; color: var(--ink); letter-spacing: 0.01em; }
+h1 { font-size: 2.1rem; margin: 2.5rem 0 0.5rem; }
+h2 { font-size: 1.35rem; margin: 3rem 0 0.75rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--rule); }
+h3 { font-size: 1.1rem; margin: 1.5rem 0 0.4rem; }
+p { margin: 0.9rem 0; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; text-decoration-color: var(--rule); }
+ul { padding-left: 1.3rem; }
+li { margin: 0.35rem 0; }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2rem 0; }
+code { font-family: var(--font-mono); background: var(--paper-deep); padding: 0.1em 0.35em; border-radius: 3px; font-size: 0.9em; }
+pre { background: var(--paper-deep); padding: 1rem 1.2rem; border-radius: 4px; overflow-x: auto; font-size: 0.9rem; line-height: 1.6; font-family: var(--font-mono); }
+pre code { background: none; padding: 0; }
+
+/* 見出しの上の帯(記事の masthead と同じ二重罫と等幅の小さな字) */
+.site-header {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 24px 24px 16px;
+  border-bottom: 3px double var(--ink);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+.site-header .brand { font-weight: 700; color: var(--ink); font-size: 1rem; letter-spacing: 0.08em; white-space: nowrap; }
+.site-header .brand:hover { color: var(--accent); text-decoration: none; }
+.site-header nav { display: flex; gap: 1.2rem; flex-wrap: wrap; justify-content: flex-end; }
+.site-header nav a {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--whisper);
+  white-space: nowrap;
+}
+.site-header nav a:hover { color: var(--accent); text-decoration: none; }
+
+main { max-width: var(--max-w); margin: 0 auto; padding: 0 24px 3rem; }
+
+/* トップの見出し */
+.hero { padding: 3rem 0 1rem; }
+.hero .kicker { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.25em; color: var(--accent); margin: 0 0 1rem; }
+.hero .kicker::before { content: ""; display: inline-block; width: 48px; height: 2px; background: var(--accent); vertical-align: middle; margin-right: 14px; }
+.hero h1 { font-size: 2.4rem; margin: 0 0 0.6rem; }
+.hero p { font-size: 1.05rem; color: var(--whisper); margin: 0; }
+
+/* 一覧の題 */
+.index h1 { margin-bottom: 0.25rem; }
+.index-subtitle { color: var(--whisper); margin-top: 0; }
+
+/* 記事の一件 */
+.activity-item { padding: 1.2rem 0; border-bottom: 1px solid var(--rule); }
+.activity-item h3 { margin: 0.15rem 0 0.35rem; font-size: 1.15rem; }
+.activity-item p { margin: 0; color: var(--whisper); font-size: 0.95rem; line-height: 1.8; }
+.activity-number { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; color: var(--accent); }
+.item-sub { font-weight: 400; color: var(--whisper); }
+.article-link { display: block; color: inherit; }
+.article-link:hover { text-decoration: none; }
+.article-link:hover h3 { color: var(--accent); }
+a.activity-link { display: block; color: inherit; }
+a.activity-link:hover { text-decoration: none; }
+a.activity-link:hover h3 { color: var(--accent); }
+.article-list .activity-item:first-child { border-top: 1px solid var(--rule); }
+.more { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.15em; margin-top: 1rem; }
+
+/* ニュース */
+.news-item h3 a { color: var(--ink); }
+.news-item h3 a:hover { color: var(--accent); text-decoration: none; }
+.news-tag { display: inline-block; border: 1px solid var(--rule); border-radius: 2px; padding: 0 6px; margin-left: 6px; color: var(--whisper); letter-spacing: 0.1em; }
+
+/* 奥付 */
+.site-footer {
+  max-width: var(--max-w);
+  margin: 2rem auto 0;
+  padding: 1.5rem 24px 3rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--whisper);
+  text-align: center;
+}
+.site-footer a { color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule); }
+.site-footer a:hover { color: var(--accent); }
+
+/* 記事本文の部品(雛形の互換。使うときのため) */
+.article-body blockquote { margin: 1.5rem 0; padding: 0.5rem 1.2rem; border-left: 2px solid var(--accent); color: var(--whisper); }
+.article-body table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+.article-body th, .article-body td { border-bottom: 1px solid var(--rule); padding: 0.5rem 0.6rem; text-align: left; vertical-align: top; }
+.article-body th { font-weight: 700; color: var(--whisper); font-size: 0.85rem; }
+
+@media (max-width: 600px) {
+  html { font-size: 16px; }
+  .site-header { display: block; padding: 20px 20px 12px; }
+  .site-header nav { justify-content: flex-start; margin-top: 8px; gap: 1rem; }
+  main { padding: 0 20px 2.5rem; }
+  .hero { padding: 2rem 0 0.5rem; }
+  .hero h1 { font-size: 1.9rem; }
+  h1 { font-size: 1.7rem; }
+}

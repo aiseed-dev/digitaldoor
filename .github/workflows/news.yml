@@ -1,0 +1,35 @@
+# 毎朝、関連ニュースを集めて AI で整え、サイトを組み直して記録する。出すのは Cloudflare Pages の Git 連携(push で自動)。
+# 要る秘密: ANTHROPIC_API_KEY
+name: news
+on:
+  schedule:
+    - cron: "0 21 * * *"   # 06:00 JST
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  news:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: 集めて整える
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python3 tools/collect_news.py --max 40
+      - name: 組む
+        run: |
+          python3 tools/build_article.py --all
+          python3 tools/build_feed.py
+          python3 tools/build_news.py
+          rm -rf html/en
+      - name: 記録する(push で Cloudflare Pages が出す)
+        run: |
+          git config user.name "news-bot"
+          git config user.email "news-bot@users.noreply.github.com"
+          git add news/items.json html
+          git diff --cached --quiet || git commit -m "ニュース $(date -u +%Y-%m-%d)"
+          git push

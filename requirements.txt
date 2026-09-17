@@ -1,0 +1,10 @@
+# サイトのビルド(aiseed.dev のサイトと同じ)
+jinja2
+markdown-it-py
+mdit-py-cjk-friendly>=0.2
+pyasciidoc>=0.5
+pywashi>=0.10
+Pillow
+watchdog
+# ニュースの整理(tools/collect_news.py)
+anthropic>=1.0

@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /tools/
+Disallow: /articles/
+
+Sitemap: https://door.aiseed.dev/sitemap.xml

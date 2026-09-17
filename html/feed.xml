@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel>
+<title>デジタルドア</title>
+<link>https://door.aiseed.dev/</link>
+<description>扉と鍵の話を、層に分けて書く</description>
+<language>ja</language>
+<lastBuildDate>Thu, 17 Sep 2026 12:22:43 +0900</lastBuildDate>
+<item>
+<title>Matterとは何か。どこまで届いて、どこから届かないか</title>
+<link>https://door.aiseed.dev/guide/matter/</link>
+<guid>https://door.aiseed.dev/guide/matter/</guid>
+<category>解説</category>
+<pubDate>Thu, 17 Sep 2026 00:00:00 +0900</pubDate>
+<description>Matterは住宅の機器を同じ言葉で話させる規格。何ができて、錠には何があり、なぜ管理者の網と情報の置き場が業務用の扉に合わないかを、事実と評価に分けて書く。</description>
+</item>
+<item>
+<title>Aliroとは何か。スマートフォンが本人の証明になる仕組み</title>
+<link>https://door.aiseed.dev/guide/aliro/</link>
+<guid>https://door.aiseed.dev/guide/aliro/</guid>
+<category>解説</category>
+<pubDate>Thu, 17 Sep 2026 00:00:00 +0900</pubDate>
+<description>Aliroは、スマートフォンや時計を鍵として読取機に示す仕組みを決めたCSAの規格。2026年2月に1.0が出た。何を決め、何を決めていないか、なぜ扉の側で採るか、財布との契約という壁を書く。</description>
+</item>
+<item>
+<title>スマートドアに望まれるもの</title>
+<link>https://door.aiseed.dev/guide/what-a-smart-door-needs/</link>
+<guid>https://door.aiseed.dev/guide/what-a-smart-door-needs/</guid>
+<category>解説</category>
+<pubDate>Thu, 17 Sep 2026 00:00:00 +0900</pubDate>
+<description>スマートドアが満たすべきことを六つに分けて書く。ローカルだけで動く、錠を選べる、読取機は替えられる、記録は手元、認証は一社に集めない、経路は何本も。その上で、読取機の本命と見るAppleの顔認証ドアホンを、事実と噂に分けて読む。</description>
+</item>
+<item>
+<title>デジタルドアの情報サイトを始める</title>
+<link>https://door.aiseed.dev/blog/start/</link>
+<guid>https://door.aiseed.dev/blog/start/</guid>
+<category>ブログ</category>
+<pubDate>Thu, 17 Sep 2026 00:00:00 +0900</pubDate>
+<description>扉と鍵の話を、層に分けて書くサイトを始める。解説とブログの二本立て。報道は事実と噂を分け、規格は届く所と届かない所を書く。</description>
+</item>
+</channel></rss>

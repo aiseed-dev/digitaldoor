@@ -1,0 +1,108 @@
+{
+  "note": "ニュースの取り口。広めに取り、選ぶのは人(tools/pick_news.py)。kind は rss(RSS 2.0 か Atom)。filter が true の口は keywords.json の語を含む物だけ拾う(大きな一般の feed 用)。",
+  "sources": [
+    {
+      "name": "Google News(スマートロック)",
+      "url": "https://news.google.com/rss/search?q=%E3%82%B9%E3%83%9E%E3%83%BC%E3%83%88%E3%83%AD%E3%83%83%E3%82%AF&hl=ja&gl=JP&ceid=JP:ja",
+      "lang": "ja"
+    },
+    {
+      "name": "Google News(電子錠)",
+      "url": "https://news.google.com/rss/search?q=%E9%9B%BB%E5%AD%90%E9%8C%A0&hl=ja&gl=JP&ceid=JP:ja",
+      "lang": "ja"
+    },
+    {
+      "name": "Google News(デジタルキー)",
+      "url": "https://news.google.com/rss/search?q=%E3%83%87%E3%82%B8%E3%82%BF%E3%83%AB%E3%82%AD%E3%83%BC&hl=ja&gl=JP&ceid=JP:ja",
+      "lang": "ja"
+    },
+    {
+      "name": "Google News(入退室管理)",
+      "url": "https://news.google.com/rss/search?q=%E5%85%A5%E9%80%80%E5%AE%A4%E7%AE%A1%E7%90%86&hl=ja&gl=JP&ceid=JP:ja",
+      "lang": "ja"
+    },
+    {
+      "name": "Google News(Apple ドアホン)",
+      "url": "https://news.google.com/rss/search?q=Apple+%E3%83%89%E3%82%A2%E3%83%9B%E3%83%B3&hl=ja&gl=JP&ceid=JP:ja",
+      "lang": "ja"
+    },
+    {
+      "name": "Google News(Aliro)",
+      "url": "https://news.google.com/rss/search?q=Aliro+CSA+lock&hl=en-US&gl=US&ceid=US:en",
+      "lang": "en"
+    },
+    {
+      "name": "Google News(Matter smart lock)",
+      "url": "https://news.google.com/rss/search?q=Matter+%22smart+lock%22&hl=en-US&gl=US&ceid=US:en",
+      "lang": "en"
+    },
+    {
+      "name": "Google News(Apple doorbell)",
+      "url": "https://news.google.com/rss/search?q=Apple+doorbell+%22Face+ID%22&hl=en-US&gl=US&ceid=US:en",
+      "lang": "en"
+    },
+    {
+      "name": "Google News(Home Key UWB)",
+      "url": "https://news.google.com/rss/search?q=%22Home+Key%22+OR+%22HomeKit%22+lock&hl=en-US&gl=US&ceid=US:en",
+      "lang": "en"
+    },
+    {
+      "name": "Google News(スマートキー 玄関)",
+      "url": "https://news.google.com/rss/search?q=%E3%82%B9%E3%83%9E%E3%83%BC%E3%83%88%E3%82%AD%E3%83%BC+%E7%8E%84%E9%96%A2&hl=ja&gl=JP&ceid=JP:ja",
+      "lang": "ja"
+    },
+    {
+      "name": "Google News(オートロック マンション)",
+      "url": "https://news.google.com/rss/search?q=%E3%82%AA%E3%83%BC%E3%83%88%E3%83%AD%E3%83%83%E3%82%AF+%E3%83%9E%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%B3&hl=ja&gl=JP&ceid=JP:ja",
+      "lang": "ja"
+    },
+    {
+      "name": "Google News(顔認証 入退室)",
+      "url": "https://news.google.com/rss/search?q=%E9%A1%94%E8%AA%8D%E8%A8%BC+%E5%85%A5%E9%80%80%E5%AE%A4&hl=ja&gl=JP&ceid=JP:ja",
+      "lang": "ja"
+    },
+    {
+      "name": "Google News(ドアホン)",
+      "url": "https://news.google.com/rss/search?q=%E3%83%89%E3%82%A2%E3%83%9B%E3%83%B3&hl=ja&gl=JP&ceid=JP:ja",
+      "lang": "ja"
+    },
+    {
+      "name": "Google News(smart lock)",
+      "url": "https://news.google.com/rss/search?q=%22smart+lock%22&hl=en-US&gl=US&ceid=US:en",
+      "lang": "en"
+    },
+    {
+      "name": "Google News(video doorbell)",
+      "url": "https://news.google.com/rss/search?q=%22video+doorbell%22&hl=en-US&gl=US&ceid=US:en",
+      "lang": "en"
+    },
+    {
+      "name": "Google News(access control NFC)",
+      "url": "https://news.google.com/rss/search?q=%22access+control%22+NFC+OR+UWB&hl=en-US&gl=US&ceid=US:en",
+      "lang": "en"
+    },
+    {
+      "name": "Google News(digital key car)",
+      "url": "https://news.google.com/rss/search?q=%22digital+key%22&hl=en-US&gl=US&ceid=US:en",
+      "lang": "en"
+    },
+    {
+      "name": "CSA(Connectivity Standards Alliance)",
+      "url": "https://csa-iot.org/feed/",
+      "lang": "en",
+      "filter": true
+    },
+    {
+      "name": "9to5Mac",
+      "url": "https://9to5mac.com/feed/",
+      "lang": "en",
+      "filter": true
+    },
+    {
+      "name": "MacRumors",
+      "url": "https://feeds.macrumors.com/MacRumors-All",
+      "lang": "en",
+      "filter": true
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+/* ============================================================
+   form.css — FormRescue フォームの共通様式
+
+   サイトのルート共通CSSに、まとめて置く。
+     - /assets/common.css に統合、または
+     - /assets/form.css として別ファイルにし、フォームのあるページで読む
+
+   色・フォント・間隔は、サイト共通のトークン(CSS変数)を使う。
+   サイト側の common.css が :root で変数を定義していれば、それを継ぐ。
+   定義していなければ、各行の第2引数(フォールバック)が効く。
+   → サイトの見た目に、自動で揃う。フォーム固有の色を、持たない。
+   ============================================================ */
+
+.fr-root {
+  max-width: var(--fr-form-max, 640px);
+  margin: 0 auto;
+  font-family: var(--font-body, inherit);
+}
+
+.fr-screen[hidden] { display: none; }
+
+.fr-field { margin-bottom: var(--space-lg, 1.2em); }
+.fr-field > label { display: block; font-weight: 700; margin-bottom: .4em; }
+
+.fr-field input[type="text"],
+.fr-field input[type="email"],
+.fr-field input[type="tel"],
+.fr-field textarea,
+.fr-field select {
+  width: 100%;
+  padding: .5em;
+  box-sizing: border-box;
+  border: 1px solid var(--color-border, #ccc);
+  border-radius: var(--radius, 0);
+  font-family: inherit;
+  font-size: inherit;
+}
+.fr-field textarea { min-height: 8em; }
+
+.fr-req {
+  color: var(--color-danger, #c0392b);
+  font-size: .8em;
+  margin-left: .4em;
+}
+.fr-help {
+  margin: 0 0 .4em;
+  font-size: .85em;
+  color: var(--color-muted, #666);
+}
+.fr-choice { display: inline-block; margin-right: 1em; font-weight: 400; }
+
+.fr-error,
+.fr-status {
+  color: var(--color-danger, #c0392b);
+  min-height: 1.4em;
+}
+
+#fr-review { border-top: 1px solid var(--color-border, #ccc); }
+#fr-review dt { font-weight: 700; margin-top: .8em; }
+#fr-review dd {
+  margin: .2em 0 .8em;
+  padding-bottom: .8em;
+  border-bottom: 1px solid var(--color-border-light, #eee);
+  white-space: pre-wrap;
+}
+
+.fr-buttons { display: flex; gap: 1em; margin-top: 1.5em; }
+.fr-buttons button {
+  padding: .7em 1.6em;
+  cursor: pointer;
+  border: 1px solid var(--color-accent, #333);
+  border-radius: var(--radius, 0);
+  background: var(--color-accent, #333);
+  color: #fff;
+  font-family: inherit;
+  font-size: inherit;
+}
+.fr-buttons button#fr-back {
+  background: transparent;
+  color: var(--color-accent, #333);
+}
+.fr-buttons button:disabled { opacity: .5; cursor: default; }

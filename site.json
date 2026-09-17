@@ -1,0 +1,31 @@
+{
+  "site_url": "https://door.aiseed.dev",
+  "site_name": {
+    "ja": "デジタルドア",
+    "en": "Digital Door"
+  },
+  "copyright_text": {
+    "ja": "デジタルドア — aiseed",
+    "en": "Digital Door — aiseed"
+  },
+  "default_og_image": "https://door.aiseed.dev/images/og-default.jpg",
+  "builder": {
+    "preview_port": 8000,
+    "plugins": [],
+    "series": [
+      {
+        "file": "guide.adoc",
+        "label": "解説",
+        "url_base": "/guide",
+        "subtitle": "規格と機器を、届く所と届かない所に分けて読む",
+        "description": "Matter、Aliro、読取機、錠、扉のコントローラ、鍵の発行の解説。"
+      },
+      {
+        "file": "blog.adoc",
+        "label": "ブログ",
+        "url_base": "/blog"
+      }
+    ],
+    "cf_project": "door-aiseed-dev"
+  }
+}

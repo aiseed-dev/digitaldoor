@@ -1,0 +1,33 @@
+// blog — ブログ(時事のノート。このファイル1つで管理)。解説は guide.adoc
+// 記事の区切り: // ===== article: <記事ID> =====
+// フロントマター: 日英共通は裸キー、異なる値は key.ja / key.en
+// 本文: ifdef::lang-ja[] / ifdef::lang-en[] で言語別。日本語だけなら lang-ja だけでよい
+
+// ===== article: 001-start =====
+---
+slug: start
+date: 2026.09.17
+label: ブログ
+category.ja: このサイト
+category.en: This site
+title.ja: デジタルドアの情報サイトを始める
+title.en: Starting a site about smart doors
+subtitle.ja: 読者を広げるために。扉を開くという意味でも
+subtitle.en: To reach more readers, and to open the door
+description.ja: 扉と鍵の話を、層に分けて書くサイトを始める。解説とブログの二本立て。報道は事実と噂を分け、規格は届く所と届かない所を書く。
+description.en: A site that writes about doors and keys one layer at a time, with guides and a blog.
+---
+ifdef::lang-ja[]
+= デジタルドアの情報サイトを始める
+
+扉と鍵の話を、読取機、錠、扉のコントローラ、鍵の発行、機器と業務のつなぎの層に分けて書くサイトを始める。こうやって読者を広げないと、扉の話は扉の業界の中で閉じたままになる。デジタルドアという名は、扉を開くという意味でもちょうどいい。
+
+== 二本立て
+
+* 解説。規格と機器を、届く所と届かない所に分けて読む。最初の三本は、link:/guide/matter/[Matter]、link:/guide/aliro/[Aliro]、そしてlink:/guide/what-a-smart-door-needs/[スマートドアに望まれるもの]。
+* ブログ。時事のノート。報道は事実と噂を分け、誰がいつ何を書いたかを添える。
+
+== 書き方
+
+会社が発表したことと、報道されただけのことを混ぜない。出典は記事の末尾に並べる。層の名前で書き、番号や作った呼び名を題に置かない。
+endif::[]
