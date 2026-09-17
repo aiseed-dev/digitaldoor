@@ -7,8 +7,8 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'">
 
 
-<title>Aliroとは何か。スマートフォンが本人の証明になる仕組み — 解説 | デジタルドア</title>
-<meta name="description" content="Aliroは、スマートフォンや時計を鍵として読取機に示す仕組みを決めたCSAの規格。2026年2月に1.0が出た。何を決め、何を決めていないか、なぜ扉の側で採るか、財布との契約という壁を書く。">
+<title>Aliroとは何か — 解説 | デジタルドア</title>
+<meta name="description" content="Aliroは、スマートフォンやスマートウォッチを鍵として電子錠のリーダーに提示するための規格です。2026年2月に1.0が公開されました。規定している範囲と規定していない範囲、扉の側から見た利点、Walletとの契約という課題を解説します。">
 <link rel="canonical" href="https://door.aiseed.dev/guide/aliro/">
 <link rel="alternate" hreflang="ja" href="https://door.aiseed.dev/guide/aliro/">
 
@@ -16,15 +16,15 @@
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="デジタルドア">
 <meta property="og:locale" content="ja_JP">
-<meta property="og:title" content="Aliroとは何か。スマートフォンが本人の証明になる仕組み">
-<meta property="og:description" content="Aliroは、スマートフォンや時計を鍵として読取機に示す仕組みを決めたCSAの規格。2026年2月に1.0が出た。何を決め、何を決めていないか、なぜ扉の側で採るか、財布との契約という壁を書く。">
+<meta property="og:title" content="Aliroとは何か">
+<meta property="og:description" content="Aliroは、スマートフォンやスマートウォッチを鍵として電子錠のリーダーに提示するための規格です。2026年2月に1.0が公開されました。規定している範囲と規定していない範囲、扉の側から見た利点、Walletとの契約という課題を解説します。">
 <meta property="og:url" content="https://door.aiseed.dev/guide/aliro/">
 <meta property="og:image" content="https://door.aiseed.dev/images/og-default.jpg">
 <meta property="article:section" content="解説">
 <meta property="article:published_time" content="2026.09.17">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Aliroとは何か。スマートフォンが本人の証明になる仕組み">
-<meta name="twitter:description" content="Aliroは、スマートフォンや時計を鍵として読取機に示す仕組みを決めたCSAの規格。2026年2月に1.0が出た。何を決め、何を決めていないか、なぜ扉の側で採るか、財布との契約という壁を書く。">
+<meta name="twitter:title" content="Aliroとは何か">
+<meta name="twitter:description" content="Aliroは、スマートフォンやスマートウォッチを鍵として電子錠のリーダーに提示するための規格です。2026年2月に1.0が公開されました。規定している範囲と規定していない範囲、扉の側から見た利点、Walletとの契約という課題を解説します。">
 <meta name="twitter:image" content="https://door.aiseed.dev/images/og-default.jpg">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="alternate" type="application/rss+xml" title="デジタルドア" href="/feed.xml">
@@ -814,9 +814,9 @@ article img {
   <section class="hero">
     <div class="hero-meta">解説 № 02 · 2026</div>
 
-    <h1 class="hero-title">Aliroとは何か。スマートフォンが本人の証明になる仕組み</h1>
+    <h1 class="hero-title">Aliroとは何か</h1>
 
-    <p class="hero-subtitle">読取機の前までを決め、後ろを決めない規格。採る理由と、壁</p>
+    <p class="hero-subtitle">スマートフォンを鍵として使うための共通規格</p>
 
     <div class="hero-byline">
       <span>2026.09.17</span>
@@ -829,40 +829,40 @@ article img {
 
   <!-- ARTICLE BODY -->
   <article>
-    <p>Aliroは、スマートフォンや時計を鍵として、扉の読取機に本人であることを示す仕組みを決めた規格である。決めているのは読取機の手前までで、読取機から後ろは決めていない。この記事では、何を決めたか、何を決めていないか、そして扉の側から見た値打ちと壁を書く。</p>
-<h2>何であるか</h2>
-<p><a href="/guide/matter/">Matter</a>と同じConnectivity Standards Alliance(CSA)の規格で、1.0は2026年2月26日に公開された。Apple、Google、Samsungのスマートフォンの側と、ASSA ABLOY、Allegion、HIDのような錠と読取機の側が同じ席にいる。参加は220社を超える。</p>
-<p>それまで、スマートフォンを鍵にする仕組みは会社ごとに閉じていた。AppleのHome KeyはiOS 15(2021年)でNFCの鍵を財布に入れ、iOS 18(2024年)でUWBの近接解錠を足したが、Apple対応と名乗る錠にしか使えなかった。Aliroは、この部分を一つの言葉にする。</p>
-<h2>何を決めたか</h2>
+    <p>Aliro(アリロ)は、スマートフォンやスマートウォッチを鍵として使い、電子錠のリーダーに本人であることを提示するための規格です。規定しているのはリーダーとの通信までで、リーダーから先の制御は規定していません。この記事では、規定している範囲としていない範囲、扉の側から見た利点、そして導入時の課題を説明します。</p>
+<h2>概要</h2>
+<p>Aliroは、Matterと同じConnectivity Standards Alliance(CSA)が策定する規格で、バージョン1.0は2026年2月26日に公開されました。策定には、Apple、Google、Samsungといったスマートフォン側の企業と、ASSA ABLOY、Allegion、HIDといった錠・リーダー側の企業が参加しており、参加企業は220社を超えます。</p>
+<p>それまで、スマートフォンを鍵にする仕組みは企業ごとに分かれていました。たとえばAppleのHome Keyは、iOS 15(2021年)でNFCによる鍵をWalletに追加し、iOS 18(2024年)でUWBによる近接解錠に対応しましたが、Home Key対応の錠でしか使えませんでした。Aliroは、この部分を共通化する規格です。</p>
+<h2>規定している範囲</h2>
 <ul>
-<li>スマートフォンと読取機の間の相互認証。楕円曲線P-256の鍵、AES-256-GCMの暗号、圧縮したX.509の証明書。</li>
-<li>入館の資格を示す文書の形(mdoc)。</li>
-<li>経路は三つ。NFC、Bluetooth LE、UWB。かざす、近づく、手を触れずに通る、の三つの使い方に対応する。</li>
-<li>検証は読取機の中で終わる。網につながっていなくても、スマートフォンと読取機の二者で開く。</li>
-<li>網が無い状態での失効。</li>
+<li>スマートフォンとリーダーの間の相互認証。楕円曲線暗号P-256、AES-256-GCM、圧縮X.509証明書を使います。</li>
+<li>入館資格を示すデータの形式(mdoc)。</li>
+<li>通信方式は三つ。NFC(かざす)、Bluetooth LE(近づく)、UWB(手を触れずに通る)。</li>
+<li>認証はリーダーの中で完結します。インターネットに接続していなくても、スマートフォンとリーダーの二者だけで解錠できます。</li>
+<li>オフラインでの資格情報の失効。</li>
 </ul>
-<h2>何を決めていないか</h2>
-<p>Aliroは範囲を自分で狭く決めている。</p>
+<h2>規定していない範囲</h2>
+<p>Aliroは、規定する範囲を意図的に絞っています。</p>
 <ul>
-<li>読取機から後ろ。制御盤、業務のシステム、読取機と制御盤の間の言葉(OSDPなど)は問わない。</li>
-<li>パソコンへのログインのような、物理でない入場。</li>
-<li>鍵の共有と、監査の記録は、将来の版へ。</li>
+<li>リーダーから先。コントローラー、業務システム、リーダーとコントローラー間の通信規格(OSDPなど)は対象外です。</li>
+<li>パソコンへのログインなど、物理的な入場以外の認証。</li>
+<li>鍵の共有と監査記録。これらは将来のバージョンで扱う予定とされています。</li>
 </ul>
-<p>扉に何かを命じない規格である。誰が来たかを確かに示すだけで、その後をどう扱うかは扉と発行者(誰に鍵を出し、いつ失効させるかを決めて記録する側)に残す。だから扉の側は自由なままでいられる。</p>
-<h2>扉の側から見た値打ち</h2>
-<p>物理鍵を無くすには、代わりが一本では足りない。Aliroは、代わりを何本にも増やす道具になる。</p>
+<p>つまりAliroは、扉に対して何かを命令する規格ではありません。誰が来たかを確実に示すだけで、その後の処理は扉のコントローラーと鍵の発行者に委ねられます。このため、扉の側の設計の自由度が保たれます。ここでいう鍵の発行者とは、誰に鍵を発行し、いつ失効させるかを決めて記録する主体のことです。</p>
+<h2>扉の側から見た利点</h2>
+<p>物理的な鍵を完全に廃止するには、代わりとなる手段が一つでは不十分です。Aliroは、その手段を複数にするための基盤になります。</p>
 <ul>
-<li>経路が三つある。一つが不調でも別の経路で通る。</li>
-<li>端末が複数持てる。スマートフォンと時計に同じ鍵が入る。</li>
-<li>電池切れに耐える。iPhoneは電源が落ちた後も数時間、財布の鍵をNFCで使える。</li>
-<li>発行者が複数でも同じ読取機が受けられる。経営者の鍵、管理の鍵、点検の人の鍵を、別々の発行者が出せる。</li>
+<li>通信方式が三つあるため、一つが使えなくても別の方式で解錠できます。</li>
+<li>スマートフォンとスマートウォッチの両方に同じ鍵を入れられます。</li>
+<li>iPhoneは、バッテリー切れで電源が落ちた後も数時間はWalletの鍵をNFCで使えます。</li>
+<li>複数の発行者の鍵を、同じリーダーで受け付けられます。管理者の鍵、保守作業者の鍵、一時的な来客の鍵を、それぞれ別の発行者が出せます。</li>
 </ul>
-<p>どの経路も網に頼らない。網に頼る経路は何本足しても、サーバーが止まれば全部同時に止まるので、多重化にならない。Aliroが多重化に使えるのは、検証を読取機の中で終えると規格の側で決めているからである。</p>
-<h2>壁</h2>
-<p>財布に鍵を入れるには、AppleとGoogleの財布との契約が要る。読取機の側は自由でも、発行の側はそこを通る。これは鍵の発行者の層にある参入の壁で、Aliroの値打ちを減らすものではないが、知っておく必要がある。</p>
-<p>読取機を作る側には、参照設計がある。Espressif、Nordic、STMicroelectronicsが、Aliroの読取機の開発キットとソフトを出している。読取機は買う物になりつつあり、扉の側が作る物ではない。</p>
-<h2>どう扱うか</h2>
-<p>Aliroの読取機からの「認証が通った、誰である」という結果を、扉の側の口の入力の一つとして受ける。カメラの顔、マイクの声、扉の位置のセンサーも同じ形の入力にして、組み合わせの判断は扉の側が持つ。読取機はいつでも別の物に替わる、という作りにしておく。</p>
+<p>これらはいずれもインターネットに依存しません。クラウドに依存する認証手段は、何本用意してもサーバー障害で同時に止まるため、冗長化になりません。Aliroが冗長化に使えるのは、リーダー内で認証を完結させることを規格で定めているからです。</p>
+<h2>課題</h2>
+<p>スマートフォンのWalletに鍵を入れるには、AppleおよびGoogleとの契約が必要です。リーダー側の実装は自由でも、鍵を発行する側はこの契約を経由することになります。これは鍵の発行事業を始める際の参入障壁であり、Aliroそのものの価値を下げるものではありませんが、事前に把握しておく必要があります。</p>
+<p>リーダーを開発する側には参照設計があります。Espressif、Nordic Semiconductor、STMicroelectronicsが、Aliro対応リーダーの開発キットとソフトウェアを提供しています。リーダーは既製品として調達できるようになりつつあり、扉メーカーが自社開発する必要はありません。</p>
+<h2>まとめ</h2>
+<p>Aliroリーダーから得られる「認証成功、誰であるか」という結果を、扉のコントローラーの入力の一つとして扱います。カメラによる顔認証、マイクによる音声、ドアの開閉センサーも同じ形式の入力として扱い、それらを組み合わせた判断は扉の側で行います。リーダーはいつでも別の製品に交換できる設計にしておくことが重要です。</p>
 <h2>出典</h2>
 <ul>
 <li><a href="https://csa-iot.org/all-solutions/aliro/">Connectivity Standards Alliance: Aliro</a></li>
@@ -872,8 +872,8 @@ article img {
 
   <!-- CHAPTER NAV(前後の記事) -->
   <nav class="chapter-nav">
-  <a href="/guide/matter/" rel="prev">&larr; 前: Matterとは何か。どこまで届いて、どこから届かないか</a>
-  <a href="/guide/what-a-smart-door-needs/" rel="next">次: スマートドアに望まれるもの &rarr;</a>
+  <a href="/guide/matter/" rel="prev">&larr; 前: Matterとは何か</a>
+  <a href="/guide/what-a-smart-door-needs/" rel="next">次: スマートドアに求められる条件 &rarr;</a>
 </nav>
 
   <!-- FOOTER(サイト内メニュー+奥付) -->
@@ -884,7 +884,7 @@ article img {
         <ul>
           <li><a href="/guide/matter/">Matterとは何か</a></li>
           <li><a href="/guide/aliro/">Aliroとは何か</a></li>
-          <li><a href="/guide/what-a-smart-door-needs/">スマートドアに望まれるもの</a></li>
+          <li><a href="/guide/what-a-smart-door-needs/">スマートドアに求められる条件</a></li>
         </ul>
       </div>
       <div class="footer-col">

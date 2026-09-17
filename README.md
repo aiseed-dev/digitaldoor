@@ -10,7 +10,7 @@
 |---|---|
 | [docs/setup.md](docs/setup.md) | セットアップ、ビルド、開発サーバー、公開の手順、ディレクトリの構成 |
 | [docs/writing.md](docs/writing.md) | 記事の書き方 |
-| [docs/news.md](docs/news.md) | ニュースの仕組み。AI が集めて、人が選ぶ |
+| [docs/news.md](docs/news.md) | ニュースの収集と掲載の仕組み |
 
 ## ライセンス
 

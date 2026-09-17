@@ -58,7 +58,7 @@ def main() -> int:
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ニュース | デジタルドア</title>
-    <meta name="description" content="扉と鍵に関するニュース。AI が集めて一行に要約し、人が選んで掲載します。発表・報道・噂・解説の種別付き。">
+    <meta name="description" content="扉と鍵に関するニュース。AI が収集・要約し、編集者が選んだ記事を掲載しています。">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'">
     <link rel="canonical" href="{site_url}/news/">
     <link rel="icon" href="/favicon.ico" sizes="any">
@@ -72,7 +72,7 @@ def main() -> int:
     </header>
     <main class="index">
         <h1>ニュース</h1>
-        <p class="index-subtitle">扉と鍵に関するニュースです。AI が集めて一行に要約し、載せる記事は人が選んでいます。発表・報道・噂・解説の種別は目安です。詳しくは元の記事をお読みください。最終更新 {now}</p>
+        <p class="index-subtitle">扉と鍵に関するニュースです。AI が収集・要約し、編集者が選んだ記事を掲載しています。種別(発表・報道・噂・解説)は目安です。詳しくは元の記事をご覧ください。最終更新 {now}</p>
         <section class="article-list">{body}
         </section>
     </main>

@@ -17,8 +17,8 @@
         "file": "guide.adoc",
         "label": "解説",
         "url_base": "/guide",
-        "subtitle": "規格と機器について、何ができて何ができないかを分けて説明します",
-        "description": "Matter、Aliro、ドアホン、電子錠、扉のコントローラ、鍵の発行についての解説。"
+        "subtitle": "通信規格と機器の基礎知識",
+        "description": "Matter、Aliro、ドアホン、電子錠、扉のコントローラ、鍵の発行についての解説記事。"
       },
       {
         "file": "blog.adoc",

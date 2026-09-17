@@ -1,4 +1,4 @@
-// blog — ブログ(時事のノート。このファイル1つで管理)。解説は guide.adoc
+// blog — ブログ(このファイル1つで管理)。解説は guide.adoc
 // 記事の区切り: // ===== article: <記事ID> =====
 // フロントマター: 日英共通は裸キー、異なる値は key.ja / key.en
 // 本文: ifdef::lang-ja[] / ifdef::lang-en[] で言語別。日本語だけなら lang-ja だけでよい
@@ -8,26 +8,29 @@
 slug: start
 date: 2026.09.17
 label: ブログ
-category.ja: このサイト
-category.en: This site
-title.ja: デジタルドアの情報サイトを始める
-title.en: Starting a site about smart doors
-subtitle.ja: 読者を広げるために。扉を開くという意味でも
-subtitle.en: To reach more readers, and to open the door
-description.ja: 扉と鍵の話を、層に分けて書くサイトを始める。解説とブログの二本立て。報道は事実と噂を分け、規格は届く所と届かない所を書く。
-description.en: A site that writes about doors and keys one layer at a time, with guides and a blog.
+category.ja: お知らせ
+category.en: Announcements
+title.ja: 情報サイト「デジタルドア」を開設しました
+title.en: Launching "Digital Door"
+subtitle.ja: 扉と鍵の技術を、層に分けて解説していきます
+subtitle.en: Explaining door and key technology one layer at a time
+description.ja: 電子錠、ドアホン、扉のコントローラ、鍵の発行、通信規格(Aliro、Matter)など、扉と鍵に関する技術情報を解説するサイトを開設しました。解説記事、ブログ、AIが収集して編集者が選ぶニュースの三本立てです。
+description.en: A new site explaining door and key technology — electronic locks, doorbells, door controllers, key issuing, and the Aliro and Matter standards — with guides, a blog, and curated news.
 ---
 ifdef::lang-ja[]
-= デジタルドアの情報サイトを始める
+= 情報サイト「デジタルドア」を開設しました
 
-扉と鍵の話を、読取機、錠、扉のコントローラ、鍵の発行、機器と業務のつなぎの層に分けて書くサイトを始める。こうやって読者を広げないと、扉の話は扉の業界の中で閉じたままになる。デジタルドアという名は、扉を開くという意味でもちょうどいい。
+電子錠、ドアホン、扉のコントローラ、鍵の発行、通信規格(Aliro、Matter)など、扉と鍵に関する技術情報を解説するサイトを開設しました。
 
-== 二本立て
+扉に関する情報は、錠メーカー、ドアホンメーカー、規格団体がそれぞれの立場で発信しており、扉を使う側の視点で全体を見渡した解説はあまりありません。このサイトでは、玄関まわりの技術を、扉の製造、電子錠、コントローラ、ドアホン、スマートフォン、周辺機器、通信規格、鍵の発行、業務システムとの連携、という層に分けて整理し、各層の役割と責任の所在を解説していきます。
 
-* 解説。規格と機器を、届く所と届かない所に分けて読む。最初の三本は、link:/guide/matter/[Matter]、link:/guide/aliro/[Aliro]、そしてlink:/guide/what-a-smart-door-needs/[スマートドアに望まれるもの]。
-* ブログ。時事のノート。報道は事実と噂を分け、誰がいつ何を書いたかを添える。
+== コンテンツ
 
-== 書き方
+* 解説記事。通信規格と機器の基礎知識を扱います。最初の三本は、link:/guide/matter/[Matterとは何か]、link:/guide/aliro/[Aliroとは何か]、link:/guide/what-a-smart-door-needs/[スマートドアに求められる条件]です。
+* ブログ。お知らせと、時事的な話題に関するノートを掲載します。
+* ニュース。AIが関連ニュースを収集して一行に要約し、発表・報道・噂・解説の種別を付けます。掲載する記事は編集者が選びます。
 
-会社が発表したことと、報道されただけのことを混ぜない。出典は記事の末尾に並べる。層の名前で書き、番号や作った呼び名を題に置かない。
+== 編集方針
+
+企業が正式に発表したことと、報道されただけのことを区別して書きます。出典は記事の末尾にまとめ、誰がいつ書いた記事かを明示します。
 endif::[]
