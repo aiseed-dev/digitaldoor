@@ -1,0 +1,15 @@
+= 会議室・場所貸し
+:様式: 利用_会議室
+:持ち主: 経営者
+:書ける: 経営者, AI社員
+
+宿泊を伴わない時間貸し。宿泊料ではないので旅館業法と住宅宿泊事業法の外。
+
+利用者:: [varchar(100), not null]
+連絡先:: [varchar(100)]
+利用日:: [date, not null]
+開始時刻:: [time, not null]
+終了時刻:: [time, not null]
+用途:: [varchar(100)]
+人数:: [integer, check (人数 between 1 and 50)]
+料金:: [integer, check (料金 >= 0)] 場所の時間貸しの料金

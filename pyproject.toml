@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "digitalkey"
+version = "0.1.0"
+description = "扉の鍵 — 鍵の発行と本人確認と台帳(entrance)、扉側のコントローラ(door)、Matterの橋と盤(panel)、CANDY HOUSE Sesame の BLE 駆動(sesame)"
+readme = "README.md"
+requires-python = ">=3.12"
+license = {text = "AGPL-3.0-or-later"}
+dependencies = ["cryptography>=42"]
+
+[project.optional-dependencies]
+web = ["fastapi>=0.110", "uvicorn[standard]>=0.29", "pydantic>=2", "python-multipart>=0.0.9"]
+panel = ["flet>=1.0", "circuitmatter>=0.4", "qrcode[pil]>=8"]
+sesame = ["flet>=1.0", "pycryptodome>=3.20", "bleak>=3.0; sys_platform != 'android'"]
+dev = ["pytest", "pytest-asyncio", "httpx"]
+
+[project.scripts]
+digitalkey = "digitalkey.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["digitalkey*"]
+
+[tool.setuptools.package-data]
+"digitalkey.entrance" = ["forms_data/*.adoc", "static/*.html"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"

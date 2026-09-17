@@ -6,7 +6,14 @@ Python 3.12 以上が必要です。
 
 ```bash
 python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
+.venv/bin/pip install -r requirements.txt                       # サイトのビルドとニュース収集
+.venv/bin/pip install -e ".[web,panel,sesame,dev]" -e ./flet_ble   # ソフトウェア(digitalkey)を使う場合
+```
+
+ソフトウェアのテストは次のコマンドで実行します。
+
+```bash
+.venv/bin/python -m pytest -q
 ```
 
 ```bash

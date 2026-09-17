@@ -1,0 +1,19 @@
+name: flet_ble
+description: Flet BLE (flutter_blue_plus) service
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+  flutter: ">=3.7.0"
+
+dependencies:
+  flet: ^0.86.5
+  flutter:
+    sdk: flutter
+  flutter_blue_plus: ^2.3.12
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0

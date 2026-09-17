@@ -4,7 +4,7 @@
     python3 tools/pick_news.py           # 窓で開く
     python3 tools/pick_news.py --web     # ブラウザで開く(8552)
 
-Flet 1.0 以上が要る(サイトのビルド環境とは別に `pip install "flet>=1.0"` した環境で動かす)。
+Flet 1.0 以上が要る(`pip install -e ".[sesame]"` で入る)。
 選んだ物は news/items.json の picked に残る。保存したら tools/build_news.py で組む。
 """
 from __future__ import annotations

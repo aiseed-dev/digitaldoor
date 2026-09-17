@@ -1,0 +1,11 @@
+= 錠の操作
+:様式: 鍵_操作
+:持ち主: 経営者
+:書ける: 経営者, AI社員, 錠
+
+鍵番号:: [varchar(40)]
+錠:: [varchar(40), not null]
+操作:: [varchar(10), in ('解錠', '施錠'), not null]
+結果:: [varchar(10), in ('成功', '拒否', '失敗'), not null]
+理由:: [varchar(200)]
+主体:: [varchar(100)]

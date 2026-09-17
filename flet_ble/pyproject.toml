@@ -1,0 +1,17 @@
+[project]
+name = "flet-ble"
+version = "0.1.0"
+description = "Minimal Bluetooth Low Energy (central) service for Flet, backed by flutter_blue_plus"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["flet>=0.86.5"]
+
+[tool.setuptools.package-data]
+"flutter.flet_ble" = ["**/*"]
+
+[tool.setuptools]
+license-files = []
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

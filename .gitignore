@@ -4,3 +4,10 @@ __pycache__/
 .venv/
 .venv-pick/
 .claude/
+*.egg-info/
+.pytest_cache/
+vault/
+*.tar
+*.tar.gpg
+sesame-keys.json
+sesame-keys-fake.json

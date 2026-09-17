@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>チェックイン</title>
+<style>
+  body { font-family: sans-serif; margin: 1.2em; line-height: 1.6; }
+  label { display: block; margin-top: 1em; font-weight: bold; }
+  button { font-size: 1.1em; padding: .6em 1.2em; margin-top: 1.2em; }
+  #result { margin-top: 1.5em; white-space: pre-wrap; }
+  .note { color: #555; font-size: .9em; }
+</style>
+</head>
+<body>
+<h1>チェックイン</h1>
+<p class="note">玄関の前で、ドアホンのボタンを押してから、この画面で顔と身分証を撮ってください。
+位置情報の許可を求めます。画像はこの家の記録にだけ残ります。</p>
+<form id="f">
+  <label>顔(自撮り)</label>
+  <input type="file" name="selfie" accept="image/*" capture="user" required>
+  <label>身分証(旅券・免許証など)</label>
+  <input type="file" name="id_image" accept="image/*" capture="environment" required>
+  <input type="hidden" name="lat"><input type="hidden" name="lon">
+  <button type="submit">送る</button>
+</form>
+<div id="result"></div>
+<script>
+const f = document.getElementById('f'), r = document.getElementById('result');
+function pos() {
+  return new Promise(res => {
+    if (!navigator.geolocation) return res(null);
+    navigator.geolocation.getCurrentPosition(p => res(p.coords), () => res(null), {enableHighAccuracy: true, timeout: 10000});
+  });
+}
+f.addEventListener('submit', async ev => {
+  ev.preventDefault();
+  r.textContent = '位置を確かめています…';
+  const c = await pos();
+  const fd = new FormData(f);
+  if (c) { fd.set('lat', c.latitude); fd.set('lon', c.longitude); } else { fd.delete('lat'); fd.delete('lon'); }
+  r.textContent = '送っています…';
+  const resp = await fetch(location.pathname, {method: 'POST', body: fd});
+  const j = await resp.json();
+  if (j.判定 === '承認') r.textContent = '確認できました。鍵を開けます。';
+  else if (j.判定 === '保留') r.textContent = '確認を人に回しました。少しお待ちください。\n' + (j.理由 || '');
+  else r.textContent = '確認できませんでした。ドアホンでお呼びください。\n' + (j.理由 || '');
+});
+</script>
+</body>
+</html>

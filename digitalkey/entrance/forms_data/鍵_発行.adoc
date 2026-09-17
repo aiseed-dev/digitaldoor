@@ -1,0 +1,12 @@
+= 鍵の発行
+:様式: 鍵_発行
+:持ち主: 経営者
+:書ける: 経営者, AI社員
+
+主体:: [varchar(100), not null]
+錠:: [varchar(40), not null]
+経路:: [varchar(10), in ('遠隔解錠', '暗証番号', '財布', '機械鍵'), not null]
+開始:: [datetime, not null]
+終了:: [datetime, not null]
+予約番号:: [varchar(40)]
+根拠:: [varchar(200)] 本人確認伝票などの番号
