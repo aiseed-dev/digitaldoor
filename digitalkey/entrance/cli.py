@@ -12,7 +12,7 @@ from pathlib import Path
 from . import report, safe
 from . import forms as Y
 from .ledger import Ledger
-from .keyring import DummyLock, Keyring, SesameLock, SesameWebLock
+from .keyring import Keyring
 
 
 def _vault(args) -> Path:
@@ -76,33 +76,11 @@ def cmd_reserve(args):
 
 
 def _locks(specs: list[str]) -> dict:
-    out = {}
-    for s in specs or []:
-        lock_id, _, spec = s.partition("=")
-        if spec in ("", "dummy"):
-            out[lock_id] = DummyLock(lock_id)
-        elif spec.startswith("sesame:"):
-            out[lock_id] = SesameLock(lock_id, spec[len("sesame:"):])
-        elif spec.startswith("sesameweb:"):
-            uuid = spec[len("sesameweb:"):]
-            keys = _sesame_keys()
-            secret = keys.get(uuid) or os.environ.get("SESAME_SECRET_" + uuid.replace("-", "").upper(), "")
-            api_key = keys.get("api_key") or os.environ.get("SESAME_API_KEY", "")
-            if not (secret and api_key):
-                raise SystemExit(f"{lock_id}: SESAME_API_KEY と機器の secret key が要ります($SESAME_KEYS のJSONか環境変数)")
-            out[lock_id] = SesameWebLock(lock_id, uuid, api_key, secret)
-        else:
-            raise SystemExit(f"錠の指定が読めません: {s}")
-    return out
-
-
-def _sesame_keys() -> dict:
-    """$SESAME_KEYS が指す JSON: {"api_key": "...", "<uuid>": "<secret hex>", ...}。経営者の箱にだけ置く。"""
-    path = os.environ.get("SESAME_KEYS")
-    if not path or not Path(path).exists():
-        return {}
-    import json
-    return json.loads(Path(path).read_text(encoding="utf-8"))
+    from ..locks import parse_specs
+    try:
+        return parse_specs(specs)
+    except ValueError as e:
+        raise SystemExit(str(e))
 
 
 def cmd_key(args):
@@ -173,7 +151,7 @@ def main(argv: list[str] | None = None) -> int:
     p.set_defaults(fn=cmd_reserve)
 
     pk = sub.add_parser("key", help="鍵の発行・失効・一覧・解錠")
-    pk.add_argument("--lock-driver", action="append", help="錠ID=dummy | 錠ID=sesameweb:<uuid>(Hub 3経由、既定) | 錠ID=sesame:<uuid>(BLE直結)")
+    pk.add_argument("--lock-driver", action="append", help="錠ID=dummy | 錠ID=<種類>:<引数>(種類は入れたドライバ次第。digitalkey-sesame なら sesameweb:<uuid> と sesame:<uuid>)")
     ks = pk.add_subparsers(dest="key_cmd", required=True)
     p = ks.add_parser("issue"); p.add_argument("--subject", required=True); p.add_argument("--lock", required=True)
     p.add_argument("--start", required=True); p.add_argument("--end", required=True)

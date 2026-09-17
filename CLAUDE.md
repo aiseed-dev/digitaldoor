@@ -16,12 +16,12 @@
 
 ## ソフトウェア(digitalkey/)
 
-- テストは `.venv/bin/python -m pytest -q`(entrance・door・panel・sesame・site・mobile の全部)。commit は全テストが通ってから、別コマンドで行う
+- テストは `.venv/bin/python -m pytest -q`(entrance・door・panel・site・mobile)と `pytest -q drivers/digitalkey-sesame`(Sesame ドライバ)。commit は全テストが通ってから、別コマンドで行う
 - 設計判断は docs/使い方.md の「設計方針」(entrance)と docs/扉コントローラ仕様書.md(door)に書く。実装を変えるときは文書を先に直す
 - 様式(digitalkey/entrance/forms_data/*.adoc)が正。コードに項目名を書くときは様式の名前をそのまま使う
 - 伝票と監査の記録は追記だけで扱う。訂正は新しい伝票・新しい記録として書く。テストもその前提で書く
 - 判断は door が持つ。panel(Matter のブリッジと画面)は翻訳と表示を担当する
-- 錠の銘柄は接点の層(door)か駆動の差し替え口(entrance の LockDriver)の中に閉じる
+- 錠の銘柄は接点の層(door)か錠ドライバ(digitalkey.locks の登録簿。機器ごとのドライバは drivers/ の別パッケージで、entry point で登録する)の中に閉じる
 - 署名の口(Signer)は後で STSAFE に差し替える
 - 機器は買う。書くのは駆動の差し替え口まで
 - Matter の機器はプロセスに一つ(UDP 5541)。画面の接続をまたいで共有する

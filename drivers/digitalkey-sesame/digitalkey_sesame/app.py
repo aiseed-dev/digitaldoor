@@ -15,8 +15,8 @@ from typing import Optional
 
 import flet as ft
 
-from digitalkey.sesame import protocol as p
-from digitalkey.sesame.keystore import DeviceKey, KeyStore
+from digitalkey_sesame import protocol as p
+from digitalkey_sesame.keystore import DeviceKey, KeyStore
 
 FAKE_MODE = "--fake" in sys.argv
 MOBILE_PLATFORMS = {ft.PagePlatform.ANDROID, ft.PagePlatform.ANDROID_TV, ft.PagePlatform.IOS}
@@ -35,14 +35,14 @@ class Backend:
 
 def make_backend(page: ft.Page) -> Backend:
     if FAKE_MODE:
-        from digitalkey.sesame.fake import FakeConnection, FakeScanner, fake_adapter_available
+        from digitalkey_sesame.fake import FakeConnection, FakeScanner, fake_adapter_available
         return Backend("fake", FakeScanner, FakeConnection, fake_adapter_available)
     if page.platform in MOBILE_PLATFORMS:
-        from digitalkey.sesame.transport_fletble import FletBleHub
+        from digitalkey_sesame.transport_fletble import FletBleHub
         hub = FletBleHub(page)
         return Backend("flet-ble", hub.make_scanner, hub.make_connection, hub.adapter_available)
     try:
-        from digitalkey.sesame.transport_bleak import (BleakSesameConnection, SesameScanner,
+        from digitalkey_sesame.transport_bleak import (BleakSesameConnection, SesameScanner,
                                                 adapter_available)
     except Exception as e:  # no bleak backend on this platform
         async def unavailable():
@@ -265,7 +265,7 @@ class SesameApp:
         pf = self.page.platform
         desktop = pf in (ft.PagePlatform.LINUX, ft.PagePlatform.WINDOWS, ft.PagePlatform.MACOS) or self.page.web
         if FAKE_MODE:
-            from digitalkey.sesame.keystore import default_path
+            from digitalkey_sesame.keystore import default_path
             self.keystore = KeyStore(path=default_path().with_name("sesame-keys-fake.json"))
         elif desktop:
             self.keystore = KeyStore()  # JSON file shared with `digitalkey sesame`

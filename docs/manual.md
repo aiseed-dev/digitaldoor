@@ -36,7 +36,7 @@ vault = "/var/lib/digitaldoor/vault"            # 台帳・監査記録・鍵の
 host = "127.0.0.1"          # 構内だけに出す。外へ出すときは前段に TLS を置く
 port = 8800
 
-# 扉。lock は dummy(配線確認) | sesameweb:<機器UUID>(Hub 3 経由) | sesame:<機器UUID>(BLE 直結)
+# 扉。lock は dummy(配線確認)か、入れた錠ドライバの種類。digitalkey-sesame を入れると sesameweb:<機器UUID>(Hub 3 経由)と sesame:<機器UUID>(BLE 直結)
 [[door]]
 id = "正面玄関"
 lock = "dummy"
@@ -47,12 +47,12 @@ autolock = 5.0              # 解錠から自動施錠までの秒
 [[token]]
 name = "管理者"
 role = "管理者"
-token = "BkfO270H4SUvlVOhx-jIBJ9xpHjaeHIV"
+token = "FtlpmkwYMeiumm43LI8PKSlW3A4usccv"
 
 [[token]]
 name = "受付"
 role = "受付"
-token = "ky6fY32NbiP3oUTqf2Xm0JOVEQHms50V"
+token = "OPEejFeMM2bj0utsniJsp1UBBcnjpgoq"
 ```
 
 ### 役割
@@ -110,8 +110,7 @@ token = "ky6fY32NbiP3oUTqf2Xm0JOVEQHms50V"
 digitalkey entrance <命令> ...   様式・台帳・鍵・本人確認・報告・控え(--help で一覧)
   digitalkey door <命令> ...       扉のコントローラ(serve | verify)
   digitalkey panel                 盤(Flet)。$DIGITALKEY_DOOR_URL の door に結び、$DIGITALKEY_PANEL_PORT(既定 8798)で開く
-  digitalkey sesame <命令> ...     CANDY HOUSE Sesame を BLE で直接(scan | register | status | lock | unlock | toggle | version | keys)
-  digitalkey sesame app [--web] [--fake]   その画面(Flet)。--fake は疑似の Sesame
+  digitalkey <ドライバ名> ...       pip で入れた錠ドライバのコマンド(例: digitalkey-sesame を入れると `digitalkey sesame scan`)
   digitalkey site init <dir> | serve --config site.toml   事業所サーバー(扉のコントローラ+鍵の台帳+HTTP API)
   digitalkey mobile [--web]        管理者と利用者のスマートフォンアプリ(Flet)
 ```
@@ -377,11 +376,28 @@ options:
 | 対応者 | varchar(100), not null |
 | 結果 | text |
 
-## Sesame(CANDY HOUSE)の直接操作
+## 錠のドライバ
+
+site.toml の `lock` に書ける種類と提供元です。種類は pip で入れたドライバのパッケージで増えます。
+
+| 種類 | 提供元 |
+|---|---|
+| dummy | digitalkey |
+| sesame | digitalkey-sesame |
+| sesameweb | digitalkey-sesame |
+
+### digitalkey-sesame
 
 CANDY HOUSE Sesame OS3 (Sesame 5 / 6 / 6 Pro) BLE protocol in pure Python. 公式アプリとクラウドを使わず、BLE で直接 登録→ログイン→施錠/解錠。
 
 Reference: https://github.com/CANDY-HOUSE/SesameSDK_Android_with_DemoApp
            https://github.com/CANDY-HOUSE/API_document
 
-詳しい手順とプロトコルの要点は `digitalkey/sesame/` の各ファイルの先頭に書いてあります。
+```
+digitalkey の錠ドライバ(entry point `digitalkey.locks`)。
+
+  sesame:<機器UUID>      BLE 直結。事前に `digitalkey sesame register` で鍵を登録しておく
+  sesameweb:<機器UUID>   CANDY HOUSE の Web API(Hub 3 経由)。API key と機器の secret key は
+                         $SESAME_KEYS が指す JSON({"api_key": "...", "<uuid>": "<secret hex>"})か、
+                         環境変数 SESAME_API_KEY / SESAME_SECRET_<UUIDの16進を大文字で> で渡す
+```

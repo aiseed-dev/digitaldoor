@@ -12,7 +12,7 @@ ROLES = ("管理者", "受付", "利用者", "保守")
 @dataclass
 class DoorConfig:
     id: str
-    lock: str = "dummy"          # dummy | sesameweb:<uuid> | sesame:<uuid>
+    lock: str = "dummy"          # dummy | <種類>:<引数>(入れた錠ドライバによる。例 sesameweb:<uuid>)
     two_person: int = 1
     autolock_s: float = 5.0
     power_policy: str = "release"
@@ -70,7 +70,7 @@ vault = "{vault}"            # 台帳・監査記録・鍵の置き場(このサ
 host = "127.0.0.1"          # 構内だけに出す。外へ出すときは前段に TLS を置く
 port = 8800
 
-# 扉。lock は dummy(配線確認) | sesameweb:<機器UUID>(Hub 3 経由) | sesame:<機器UUID>(BLE 直結)
+# 扉。lock は dummy(配線確認)か、入れた錠ドライバの種類。digitalkey-sesame を入れると sesameweb:<機器UUID>(Hub 3 経由)と sesame:<機器UUID>(BLE 直結)
 [[door]]
 id = "正面玄関"
 lock = "dummy"

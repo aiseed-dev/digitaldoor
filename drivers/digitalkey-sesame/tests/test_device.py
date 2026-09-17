@@ -6,9 +6,9 @@ import time
 
 import pytest
 
-from digitalkey.sesame import protocol as p
-from digitalkey.sesame.device import SesameDevice, SesameError
-from digitalkey.sesame.fake import FakeSesame
+from digitalkey_sesame import protocol as p
+from digitalkey_sesame.device import SesameDevice, SesameError
+from digitalkey_sesame.fake import FakeSesame
 
 
 @pytest.mark.asyncio
@@ -75,7 +75,7 @@ async def test_no_token_timeout():
 
 @pytest.mark.asyncio
 async def test_keystore_roundtrip(tmp_path):
-    from digitalkey.sesame.keystore import KeyStore, DeviceKey
+    from digitalkey_sesame.keystore import KeyStore, DeviceKey
     ks = KeyStore(path=tmp_path / "k.json")
     await ks.put(DeviceKey(device_uuid="AABB", model_id="sesame_6_pro", secret_hex="00" * 16, name="door"))
     ks2 = KeyStore(path=tmp_path / "k.json")

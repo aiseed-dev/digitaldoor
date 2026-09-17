@@ -5,9 +5,9 @@ import types
 
 import pytest
 
-from digitalkey.sesame import protocol as p
-from digitalkey.sesame.fake import FakeSesame
-from digitalkey.sesame import transport_fletble as t
+from digitalkey_sesame import protocol as p
+from digitalkey_sesame.fake import FakeSesame
+from digitalkey_sesame import transport_fletble as t
 from flet_ble import BleNotifyEvent, BleScanResultEvent, BleConnectionStateEvent
 
 

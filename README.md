@@ -26,8 +26,8 @@
 | `digitalkey/panel/` | 扉を Matter の電子錠として見せるブリッジと、操作画面(Flet) |
 | `digitalkey/site/` | 事業所サーバー。設定ファイル、扉のコントローラと鍵の台帳、HTTP API、systemd 用のファイルは `deploy/` |
 | `digitalkey/mobile/` | 管理者と利用者のスマートフォンアプリ(Flet)。`flet build` で Android/iOS 向けに組めます |
-| `digitalkey/sesame/` | CANDY HOUSE 製 Sesame(SesameOS3)を公式アプリを使わずに BLE で直接操作するライブラリ、コマンドライン、画面。機器ごとの詳しい説明はコード内に書いています |
-| `flet_ble/` | Android/iOS で BLE を使うための Flet 拡張 |
+| `digitalkey/locks.py` | 錠ドライバの登録簿。`dummy` は組み込み、それ以外は pip で入れたドライバのパッケージが登録します |
+| `drivers/digitalkey-sesame/` | 錠ドライバの例。CANDY HOUSE 製 Sesame を BLE 直結または Web API で操作します。別パッケージとして PyPI に公開できます(機器ごとの詳しい説明はコード内) |
 | `tests/` | テスト |
 
 セットアップとテストの手順は [docs/setup.md](docs/setup.md) を見てください。

@@ -15,9 +15,9 @@ import logging
 import sys
 import time
 
-from digitalkey.sesame import protocol as p
-from digitalkey.sesame.keystore import DeviceKey, KeyStore
-from digitalkey.sesame.transport_bleak import BleakSesameConnection, SesameScanner, adapter_available
+from digitalkey_sesame import protocol as p
+from digitalkey_sesame.keystore import DeviceKey, KeyStore
+from digitalkey_sesame.transport_bleak import BleakSesameConnection, SesameScanner, adapter_available
 
 
 def fmt_adv(adv: p.Advertisement) -> str:
@@ -132,3 +132,11 @@ def main(argv=None) -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+
+
+def command(argv: list[str]) -> int:
+    """`digitalkey sesame ...` の入口(entry point digitalkey.commands)。`app` は画面、それ以外は命令行。"""
+    if argv and argv[0] == "app":
+        from .app import run
+        return run(argv[1:])
+    return main(argv)

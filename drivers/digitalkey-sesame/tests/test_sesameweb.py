@@ -4,7 +4,8 @@ import json
 from cryptography.hazmat.primitives import cmac
 from cryptography.hazmat.primitives.ciphers import algorithms
 
-from digitalkey.entrance.keyring import Keyring, SesameWebLock
+from digitalkey.entrance.keyring import Keyring
+from digitalkey_sesame.locks import SesameWebLock
 
 SECRET = "00112233445566778899aabbccddeeff"
 

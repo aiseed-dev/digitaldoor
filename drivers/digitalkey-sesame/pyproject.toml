@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "digitalkey-sesame"
+version = "0.1.0"
+description = "digitalkey の錠ドライバ: CANDY HOUSE Sesame(SesameOS3)を BLE 直結または Web API(Hub 3)で操作する"
+readme = "README.md"
+requires-python = ">=3.12"
+license = {text = "AGPL-3.0-or-later"}
+dependencies = ["digitalkey", "cryptography>=42", "pycryptodome>=3.20", "bleak>=3.0; sys_platform != 'android'"]
+
+[project.optional-dependencies]
+app = ["flet>=1.0"]
+dev = ["pytest", "pytest-asyncio"]
+
+# digitalkey の登録簿に入る。site.toml の lock = "sesame:<uuid>" / "sesameweb:<uuid>" がこれで解決される
+[project.entry-points."digitalkey.locks"]
+sesame = "digitalkey_sesame.locks:make_ble"
+sesameweb = "digitalkey_sesame.locks:make_web"
+
+# `digitalkey sesame ...` のコマンド
+[project.entry-points."digitalkey.commands"]
+sesame = "digitalkey_sesame.cli:command"
+
+[tool.setuptools.packages.find]
+include = ["digitalkey_sesame*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"

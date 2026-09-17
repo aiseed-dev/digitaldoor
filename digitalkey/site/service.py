@@ -11,7 +11,8 @@ from pathlib import Path
 from ..door.audit import Audit, HmacSigner
 from ..door.contacts import SimContacts
 from ..door.controller import Config as DoorCfg, Controller
-from ..entrance.keyring import DummyLock, Keyring, LockDriver, SesameLock, SesameWebLock
+from ..entrance.keyring import Keyring, LockDriver
+from ..locks import make_lock as make_lock_by_spec
 from ..entrance.ledger import Ledger, Slip
 from .config import DoorConfig, SiteConfig, TokenConfig
 
@@ -19,22 +20,8 @@ from .config import DoorConfig, SiteConfig, TokenConfig
 ROLE_WRITES = {"管理者": {"経営者", "AI社員", "錠"}, "受付": {"AI社員", "錠"}, "利用者": {"錠"}, "保守": {"錠"}}
 
 
-def make_lock(door: DoorConfig, keys: dict | None = None) -> LockDriver:
-    import os
-    spec = door.lock
-    if spec in ("", "dummy"):
-        return DummyLock(door.id)
-    if spec.startswith("sesame:"):
-        return SesameLock(door.id, spec[len("sesame:"):])
-    if spec.startswith("sesameweb:"):
-        uuid = spec[len("sesameweb:"):]
-        keys = keys or {}
-        secret = keys.get(uuid) or os.environ.get("SESAME_SECRET_" + uuid.replace("-", "").upper(), "")
-        api_key = keys.get("api_key") or os.environ.get("SESAME_API_KEY", "")
-        if not (secret and api_key):
-            raise ValueError(f"{door.id}: SESAME_API_KEY と機器の secret key が要ります")
-        return SesameWebLock(door.id, uuid, api_key, secret)
-    raise ValueError(f"{door.id}: 錠の指定が読めません: {spec}")
+def make_lock(door: DoorConfig) -> LockDriver:
+    return make_lock_by_spec(door.id, door.lock)
 
 
 def _signer(keyfile: Path) -> HmacSigner:
@@ -54,14 +41,14 @@ class Door:
 
 
 class Site:
-    def __init__(self, cfg: SiteConfig, *, locks: dict[str, LockDriver] | None = None, sesame_keys: dict | None = None) -> None:
+    def __init__(self, cfg: SiteConfig, *, locks: dict[str, LockDriver] | None = None) -> None:
         self.cfg = cfg
         cfg.vault.mkdir(parents=True, exist_ok=True)
         roles = {t.name: set(ROLE_WRITES[t.role]) for t in cfg.tokens}
         self.ledger = Ledger(cfg.vault, roles=roles)
         self.doors: dict[str, Door] = {}
         for d in cfg.doors:
-            drv = (locks or {}).get(d.id) or make_lock(d, sesame_keys)
+            drv = (locks or {}).get(d.id) or make_lock(d)
             audit = Audit(_signer(cfg.vault / "扉" / d.id / "audit.key"), cfg.vault / "扉" / d.id / "audit.jsonl")
             ctl = Controller(SimContacts(), audit, DoorCfg(two_person=d.two_person, autolock_s=d.autolock_s,
                                                           power_policy=d.power_policy))

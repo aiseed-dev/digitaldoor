@@ -3,7 +3,7 @@
 
     python3 tools/build_manual.py            # docs/manual.md と html/manual/index.html
 
-読む物: 各パッケージの docstring(digitalkey、site、mobile、door、sesame)、コマンドの --help、
+読む物: 各パッケージの docstring(digitalkey、site、mobile、door、入れた錠ドライバ)、コマンドの --help、
 設定ファイルの雛形(site.config.sample)、API の一覧(FastAPI のルート)、様式(forms_data/*.adoc)。
 コードを直せばマニュアルも変わる。手で書き足す文はこのスクリプトの TEXT にだけ置く。
 """
@@ -51,11 +51,14 @@ def section_cli() -> str:
     from digitalkey import cli as top
     from digitalkey.door import cli as door
     from digitalkey.entrance import cli as entrance
-    from digitalkey.sesame import cli as sesame
     from digitalkey.site import cli as site
+    from importlib.metadata import entry_points
     out = ["## コマンド一覧", "", "サーバーやパソコンで使うコマンドです。`digitalkey` の後に対象を付けます。", ""]
     out += ["```", top.USAGE.replace("使い方:\n", "").strip(), "```", ""]
-    for name, main in (("site", site.main), ("entrance", entrance.main), ("door", door.main), ("sesame", sesame.main)):
+    mains = [("site", site.main), ("entrance", entrance.main), ("door", door.main)]
+    for ep in entry_points(group="digitalkey.commands"):
+        mains.append((ep.name, ep.load()))
+    for name, main in mains:
         out += [f"### digitalkey {name}", "", "```", help_of(main), "```", ""]
     return "\n".join(out)
 
@@ -119,9 +122,18 @@ def section_forms() -> str:
     return "\n".join(out)
 
 
-def section_sesame() -> str:
-    from digitalkey import sesame
-    return "\n".join(["## Sesame(CANDY HOUSE)の直接操作", "", doc(sesame), "", "詳しい手順とプロトコルの要点は `digitalkey/sesame/` の各ファイルの先頭に書いてあります。", ""])
+def section_drivers() -> str:
+    from digitalkey.locks import available
+    out = ["## 錠のドライバ", "", "site.toml の `lock` に書ける種類と提供元です。種類は pip で入れたドライバのパッケージで増えます。", "", "| 種類 | 提供元 |", "|---|---|"]
+    out += [f"| {k} | {v} |" for k, v in available().items()]
+    out.append("")
+    try:
+        import digitalkey_sesame
+        from digitalkey_sesame import locks as L
+        out += ["### digitalkey-sesame", "", doc(digitalkey_sesame), "", "```", doc(L), "```", ""]
+    except ImportError:
+        out += ["digitalkey-sesame は入っていません。CANDY HOUSE Sesame を使うときは `pip install digitalkey-sesame`。", ""]
+    return "\n".join(out)
 
 
 def md_to_html(md: str) -> str:
@@ -131,7 +143,7 @@ def md_to_html(md: str) -> str:
 
 def main() -> int:
     parts = [f"# {TEXT['title']}", "", TEXT["intro"], "", f"生成日: {datetime.now().strftime('%Y-%m-%d')}", "",
-             section_site(), section_mobile(), section_cli(), section_door(), section_forms(), section_sesame()]
+             section_site(), section_mobile(), section_cli(), section_door(), section_forms(), section_drivers()]
     md = "\n".join(parts)
     (SITE / "docs" / "manual.md").write_text(md, encoding="utf-8")
     css_v = re.search(r'style\.css\?v=([0-9a-f]+)', (SITE / "html/index.html").read_text(encoding="utf-8"))

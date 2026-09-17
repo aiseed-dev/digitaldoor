@@ -40,7 +40,7 @@ vault = &quot;/var/lib/digitaldoor/vault&quot;            # 台帳・監査記�
 host = &quot;127.0.0.1&quot;          # 構内だけに出す。外へ出すときは前段に TLS を置く
 port = 8800
 
-# 扉。lock は dummy(配線確認) | sesameweb:&lt;機器UUID&gt;(Hub 3 経由) | sesame:&lt;機器UUID&gt;(BLE 直結)
+# 扉。lock は dummy(配線確認)か、入れた錠ドライバの種類。digitalkey-sesame を入れると sesameweb:&lt;機器UUID&gt;(Hub 3 経由)と sesame:&lt;機器UUID&gt;(BLE 直結)
 [[door]]
 id = &quot;正面玄関&quot;
 lock = &quot;dummy&quot;
@@ -51,12 +51,12 @@ autolock = 5.0              # 解錠から自動施錠までの秒
 [[token]]
 name = &quot;管理者&quot;
 role = &quot;管理者&quot;
-token = &quot;BkfO270H4SUvlVOhx-jIBJ9xpHjaeHIV&quot;
+token = &quot;FtlpmkwYMeiumm43LI8PKSlW3A4usccv&quot;
 
 [[token]]
 name = &quot;受付&quot;
 role = &quot;受付&quot;
-token = &quot;ky6fY32NbiP3oUTqf2Xm0JOVEQHms50V&quot;
+token = &quot;OPEejFeMM2bj0utsniJsp1UBBcnjpgoq&quot;
 </code></pre>
 <h3>役割</h3>
 <table>
@@ -172,8 +172,7 @@ token = &quot;ky6fY32NbiP3oUTqf2Xm0JOVEQHms50V&quot;
 <pre><code>digitalkey entrance &lt;命令&gt; ...   様式・台帳・鍵・本人確認・報告・控え(--help で一覧)
   digitalkey door &lt;命令&gt; ...       扉のコントローラ(serve | verify)
   digitalkey panel                 盤(Flet)。$DIGITALKEY_DOOR_URL の door に結び、$DIGITALKEY_PANEL_PORT(既定 8798)で開く
-  digitalkey sesame &lt;命令&gt; ...     CANDY HOUSE Sesame を BLE で直接(scan | register | status | lock | unlock | toggle | version | keys)
-  digitalkey sesame app [--web] [--fake]   その画面(Flet)。--fake は疑似の Sesame
+  digitalkey &lt;ドライバ名&gt; ...       pip で入れた錠ドライバのコマンド(例: digitalkey-sesame を入れると `digitalkey sesame scan`)
   digitalkey site init &lt;dir&gt; | serve --config site.toml   事業所サーバー(扉のコントローラ+鍵の台帳+HTTP API)
   digitalkey mobile [--web]        管理者と利用者のスマートフォンアプリ(Flet)
 </code></pre>
@@ -707,11 +706,41 @@ options:
 </tr>
 </tbody>
 </table>
-<h2>Sesame(CANDY HOUSE)の直接操作</h2>
+<h2>錠のドライバ</h2>
+<p>site.toml の <code>lock</code> に書ける種類と提供元です。種類は pip で入れたドライバのパッケージで増えます。</p>
+<table>
+<thead>
+<tr>
+<th>種類</th>
+<th>提供元</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dummy</td>
+<td>digitalkey</td>
+</tr>
+<tr>
+<td>sesame</td>
+<td>digitalkey-sesame</td>
+</tr>
+<tr>
+<td>sesameweb</td>
+<td>digitalkey-sesame</td>
+</tr>
+</tbody>
+</table>
+<h3>digitalkey-sesame</h3>
 <p>CANDY HOUSE Sesame OS3 (Sesame 5 / 6 / 6 Pro) BLE protocol in pure Python. 公式アプリとクラウドを使わず、BLE で直接 登録→ログイン→施錠/解錠。</p>
 <p>Reference: https://github.com/CANDY-HOUSE/SesameSDK_Android_with_DemoApp
 https://github.com/CANDY-HOUSE/API_document</p>
-<p>詳しい手順とプロトコルの要点は <code>digitalkey/sesame/</code> の各ファイルの先頭に書いてあります。</p>
+<pre><code>digitalkey の錠ドライバ(entry point `digitalkey.locks`)。
+
+  sesame:&lt;機器UUID&gt;      BLE 直結。事前に `digitalkey sesame register` で鍵を登録しておく
+  sesameweb:&lt;機器UUID&gt;   CANDY HOUSE の Web API(Hub 3 経由)。API key と機器の secret key は
+                         $SESAME_KEYS が指す JSON({&quot;api_key&quot;: &quot;...&quot;, &quot;&lt;uuid&gt;&quot;: &quot;&lt;secret hex&gt;&quot;})か、
+                         環境変数 SESAME_API_KEY / SESAME_SECRET_&lt;UUIDの16進を大文字で&gt; で渡す
+</code></pre>
 
     </main>
     <footer class="site-footer"><p>デジタルドア — aiseed · <a href="/license/">ライセンス</a> · <a href="/feed.xml">RSS</a></p></footer>

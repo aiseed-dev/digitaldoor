@@ -36,7 +36,7 @@ class AsyncKV(Protocol):
     async def set(self, key: str, value) -> bool: ...
 
 
-DEFAULT_KEY = "digitalkey.sesame.devices"
+DEFAULT_KEY = "digitalkey_sesame.devices"
 
 
 class KeyStore:

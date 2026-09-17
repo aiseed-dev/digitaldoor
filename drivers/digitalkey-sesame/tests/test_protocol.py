@@ -3,7 +3,7 @@ import uuid
 
 import pytest
 
-from digitalkey.sesame import protocol as p
+from digitalkey_sesame import protocol as p
 
 
 def test_cmac_rfc4493_vectors():
