@@ -50,7 +50,7 @@ def main() -> int:
     site_url = cfg["site_url"].rstrip("/")
     css_v = re.search(r'style\.css\?v=([0-9a-f]+)', (SITE / "html/index.html").read_text(encoding="utf-8"))
     css = "/css/style.css" + (f"?v={css_v.group(1)}" if css_v else "")
-    body = "".join(entry(i) for i in items) or "<p>まだありません。</p>"
+    body = "".join(entry(i) for i in items) or "<p>まだ記事がありません。</p>"
     now = datetime.now(JST).strftime("%Y.%m.%d %H:%M")
     page = f'''<!DOCTYPE html>
 <html lang="ja">
@@ -58,7 +58,7 @@ def main() -> int:
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ニュース | デジタルドア</title>
-    <meta name="description" content="扉と鍵の関連ニュース。AIが広く集めて一行に整え、人が選ぶ。発表と報道と噂を分けて印を付ける。">
+    <meta name="description" content="扉と鍵に関するニュース。AI が集めて一行に要約し、人が選んで掲載します。発表・報道・噂・解説の種別付き。">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'">
     <link rel="canonical" href="{site_url}/news/">
     <link rel="icon" href="/favicon.ico" sizes="any">
@@ -72,7 +72,7 @@ def main() -> int:
     </header>
     <main class="index">
         <h1>ニュース</h1>
-        <p class="index-subtitle">扉と鍵の関連ニュース。AIが広く集めて一行に整え、載せる物は人が選ぶ。発表・報道・噂・解説の印は目安で、判断は元の記事で。最終更新 {now}</p>
+        <p class="index-subtitle">扉と鍵に関するニュースです。AI が集めて一行に要約し、載せる記事は人が選んでいます。発表・報道・噂・解説の種別は目安です。詳しくは元の記事をお読みください。最終更新 {now}</p>
         <section class="article-list">{body}
         </section>
     </main>
@@ -87,7 +87,7 @@ def main() -> int:
     home = SITE / "html/index.html"
     s = home.read_text(encoding="utf-8")
     if START in s and END in s:
-        latest = "".join(entry(i) for i in items[:5]) or "<p>まだありません。</p>"
+        latest = "".join(entry(i) for i in items[:5]) or "<p>まだ記事がありません。</p>"
         s = s[: s.index(START) + len(START)] + latest + "\n            " + s[s.index(END):]
         home.write_text(s, encoding="utf-8")
     print(f"Built news: {out} ({len(items)} picked)")

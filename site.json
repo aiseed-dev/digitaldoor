@@ -17,8 +17,8 @@
         "file": "guide.adoc",
         "label": "解説",
         "url_base": "/guide",
-        "subtitle": "規格と機器を、届く所と届かない所に分けて読む",
-        "description": "Matter、Aliro、読取機、錠、扉のコントローラ、鍵の発行の解説。"
+        "subtitle": "規格と機器について、何ができて何ができないかを分けて説明します",
+        "description": "Matter、Aliro、ドアホン、電子錠、扉のコントローラ、鍵の発行についての解説。"
       },
       {
         "file": "blog.adoc",
