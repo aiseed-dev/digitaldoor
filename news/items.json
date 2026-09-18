@@ -1,5 +1,57 @@
 [
  {
+  "id": "5464e645ee259423",
+  "link": "https://9to5mac.com/2026/09/18/homeys-new-device-updates-feature-shows-what-matter-was-supposed-to-be-all-along/",
+  "source": "9to5Mac",
+  "publisher": "",
+  "lang": "en",
+  "published": "2026-09-18T18:33:00Z",
+  "title_raw": "HomeKit Weekly: Homey’s new Device Updates feature shows what Matter was supposed to be all along",
+  "summary_raw": "Firmware updates have been the weakest link for a decade with smart homes. Every sensor, light bulb, and smart lock in your house runs software that should be updated regularly . This is on top of even if they have software updates. Homey just announced a fix for a big piece of that, and the way it handles Matter devices is the part that Apple Home users should take note of. more…",
+  "collected": "2026-09-18T22:57:56Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "a3dff7ecd93bdabc",
+  "link": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxOaHp1V1I1X2dFYXFMTUVoWTFTcmZ2YWkxX295MlFHXzJnTXg2WGFqV25tQU1mQlFmb1ZQUGZzaWczRF83eEU4ZlVlaE9HTXVMa1lYUHR0Qy0zY09fbmI4bFVXdkpYdmpKZjBPM25QU0xhc29yN0dNRjc0TzBGQ2FVU1gxMXdHUU42bUdUQjNHMU1nbmpNUG9tcDVPeHprTnFUSE1DQXNGVElMOTEtenhheUVBSk1Gc0dxS0hVbmpBVS0?oc=5",
+  "source": "Google News(smart lock)",
+  "publisher": "TechBullion",
+  "lang": "en",
+  "published": "2026-09-18T11:03:57Z",
+  "title_raw": "Walk Up and Unlock: GHome Smart's Hands-Free 3D Face Recognition Smart Lock Goes Live on Kickstarter - TechBullion",
+  "summary_raw": "Walk Up and Unlock: GHome Smart's Hands-Free 3D Face Recognition Smart Lock Goes Live on Kickstarter TechBullion",
+  "collected": "2026-09-18T22:57:54Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "f6f52b73ccdba255",
+  "link": "https://news.google.com/rss/articles/CBMiigFBVV95cUxNSkw2LWprZDJ3aDh1LVBSd3NSM0Y3QzZPUGlhSnU3dUoydzN3UldRb1NsREVteDdrS3lkcXNGcE9Mc2ZIMzNSazRyZFBHOXdQU2tndVNZeGg4Qlk1dHE1eHF6R1hRZUFwN2tEVmVweVdORVFzal9PTHJRZzB4SlR1M1Rqd2kyaHRuQmfSAYgBQVVfeXFMTmhQSkItclIta3VMVTc4TlBfa19oS1oyZ2VwbXhLb1ctSGo3VEtRU3RGV1NuUHJYd2tPbnhhSVRTY3lSOFNZa0JtQm9LbXhnWUN3dHI3bUJGN0NENXF0OFBJNE8xU3RncTM2c1BKRnk1T0VTRTdmSGc3cFBCS2ZRTFdHSmVGWGMzZA?oc=5",
+  "source": "Google News(video doorbell)",
+  "publisher": "gearbrain.com",
+  "lang": "en",
+  "published": "2026-09-18T01:46:11Z",
+  "title_raw": "TP-Link Tapo Doorbell Pro D260: What to Know About Tapo’s New 4K Video Doorbell - gearbrain.com",
+  "summary_raw": "TP-Link Tapo Doorbell Pro D260: What to Know About Tapo’s New 4K Video Doorbell gearbrain.com",
+  "collected": "2026-09-18T22:57:55Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "2ff71f381b5e511e",
+  "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTFBLaXpvQmpUZFVZM1FzcWxqb0oxaFpGNU9vbDJkM0JpVVAwMjQ4VnJkalotV0h4V1NOZ3oyVDFPV3JmWUlmQk8yMmY0MVdWRUN2Wno4SjdxYzBRbjVoMTFiSkQ5N1Rub2VycldhcTZtRmxwX192WFo5bGlSRlF0RHM?oc=5",
+  "source": "Google News(video doorbell)",
+  "publisher": "The New York Times",
+  "lang": "en",
+  "published": "2026-09-17T19:12:04Z",
+  "title_raw": "I’m a Security Camera Expert, and I’m Cheap. These Are the Cameras I Would Buy. - The New York Times",
+  "summary_raw": "I’m a Security Camera Expert, and I’m Cheap. These Are the Cameras I Would Buy. The New York Times",
+  "collected": "2026-09-18T22:57:55Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "09b645679d6e5d19",
   "link": "https://news.google.com/rss/articles/CBMi6AFBVV95cUxNQVlwNklvcU1ZOERUWlRPQUVvcHJBbUdEM2V1aWFIQUdJMjA1OXRHV0EyNlR4bEkyQWdvTkJadFZJY3hZd3B4TnExNU9xckNJTlJDTTYwcHpMZGluVnF3T1N0X2V5dmJMRUczN25qVVpWT1lKOFRsYjBuVUpuVDhkSERidXJDSjZ1cUUzaU5Xd05lb2MwTkU0clBRMHlRTWs0cFU1SDNnQ2czM1I5TlRLX1M4ZlZTdEdpbzJnWmtZS2dmQk9wTlA1OVliMEdaVWFWamd2czREWllsZjA3dVBVOGRqQW8zbmpP0gHsAUFVX3lxTE9vYVlXbEJsWERYeHU5a1c2bHVEUGpOaEhMcGNMZmw3M0s0MGFtMk9PbmljZllZMFJMYjJ0UHl6bTV3dHkyVVNyZDdwbFhfTDdyOXZEcFdZeXFJUnlLT2lyQ0tOU0J5d0h5Q1U2M3lRTzltYmczcUdHSHlXaEZlRjFXb0xHVXpGQnJsY0pYZHJEbFZKbUxLUWxFczhzNHJHMDdQalZrVnF2eW9odzR1TjRJX0tab0ZPQ3BqU05aWnAxZFlrX1MxWHUyMDRKa1h6REVGVE56ZW5xYkdZXzE1Tkx1MEFhMmtCWVJSYjFO?oc=5",
   "source": "Google News(smart lock)",
@@ -598,6 +650,19 @@
   "picked": false
  },
  {
+  "id": "3b4ef947a55c972a",
+  "link": "https://news.google.com/rss/articles/CBMiR0FVX3lxTFBGTVlUQXVseDlieEVMZXdvVVRGS1I4YWFJWDRIdFBJek9RN3NxNF9yZ2FQZTIyTERtN2NtaGx1eWtiU3dtNlVR?oc=5",
+  "source": "Google News(ドアホン)",
+  "publisher": "VAGUE(ヴァーグ)",
+  "lang": "ja",
+  "published": "2026-09-14T17:04:20Z",
+  "title_raw": "AIは勝手に賢くならない――人の顔や姿を15万枚撮り、雨粒一滴と戦ったパナソニック「ドアホン開発」の裏側 - VAGUE(ヴァーグ)",
+  "summary_raw": "AIは勝手に賢くならない――人の顔や姿を15万枚撮り、雨粒一滴と戦ったパナソニック「ドアホン開発」の裏側 VAGUE(ヴァーグ)",
+  "collected": "2026-09-18T22:57:54Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "40582ff86393f42f",
   "link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxNVXBobFJSdjUxVnd4c2JXVVhsTkVucmEtRldpalBhZ2NqT09IUmdYZW9ZZzE2Z0JDUHpwRC15bllwc1AxSVlDRER3bEVsRmtvSmhlckRsdUZIUkdPV2pBbWJ2WUJiZEQ1YmJsRXVyajFhRkEteGRhVG9acEhZc3B0TUc0LWt5c0syVTNSV0Q1REs?oc=5",
   "source": "Google News(video doorbell)",
@@ -698,6 +763,19 @@
   "title_raw": "AIは勝手に賢くならない――人の顔や姿を15万枚撮り、雨粒一滴と戦ったパナソニック「ドアホン開発」の裏側 - ｄメニューニュース",
   "summary_raw": "AIは勝手に賢くならない――人の顔や姿を15万枚撮り、雨粒一滴と戦ったパナソニック「ドアホン開発」の裏側 ｄメニューニュース",
   "collected": "2026-09-17T01:57:30Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "4ca6930987cda79a",
+  "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE5sakZweXNQNThzWU14UE9oMG5CTEVUWFZyb2FvZ2xzck95QkgwUHM2WlpPX1pfS0J3SzlGWFROOElWel8zaWhPclh0OUI5VUkteHpIeGhWRDBEWE11T21Qc2ZEb292RmdNZmcwSnE3cHVYaTRlWVRyamRLb9IBd0FVX3lxTFAyeUVWRlBhOHFJWUM0c3FGYjNGeEhpV3Zrb0RfRHZGOWJaVVA2WkZlS19YOHB0bGZsd0R0SHk2NzdnT3NtRENwQ0Y4UncxVFpiLTVrc0lGOTRBbGlYODBCS0V5ZjBHUkppbl9ncWE0YzhlX0I2NVE0?oc=5",
+  "source": "Google News(ドアホン)",
+  "publisher": "ｄメニューニュース",
+  "lang": "ja",
+  "published": "2026-09-14T10:10:00Z",
+  "title_raw": "AIは勝手に賢くならない――人の顔や姿を15万枚撮り、雨粒一滴と戦ったパナソニック「ドアホン開発」の裏側 - ｄメニューニュース",
+  "summary_raw": "AIは勝手に賢くならない――人の顔や姿を15万枚撮り、雨粒一滴と戦ったパナソニック「ドアホン開発」の裏側 ｄメニューニュース",
+  "collected": "2026-09-18T22:57:54Z",
   "status": "raw",
   "picked": false
  },
@@ -910,6 +988,19 @@
   "picked": false
  },
  {
+  "id": "0a347e090524bd22",
+  "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE52Y3ZtbjZyYVU2RFVWZnhxTkk5elNFTm10OGtIb3NQVTQyWHhXeDN2TFpEb0wtcFpBeTdQRlkyclN2bDJuOVVfeDhFWjEzRDg1dzktR1dCdWFuMWtPOXc?oc=5",
+  "source": "Google News(電子錠)",
+  "publisher": "佐賀新聞",
+  "lang": "ja",
+  "published": "2026-09-11T15:56:15Z",
+  "title_raw": "【写真・画像】電子錠誤作動で車盗んだ疑い 男２人逮捕、フラフープ悪用か | | 全国のニュース - 佐賀新聞",
+  "summary_raw": "【写真・画像】電子錠誤作動で車盗んだ疑い 男２人逮捕、フラフープ悪用か | | 全国のニュース 佐賀新聞",
+  "collected": "2026-09-18T22:57:48Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "5a0785e174028cbb",
   "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE1xQVl2ZEFWSTJNYVZFYmhTcE56emR2OGJGMi1Zd0hlemVZRWYzcGFjUDk4MVBXVi12QUpnNWZ2bVpoSk1WQ2RwUEVmSTRUbDg1eDF1OQ?oc=5",
   "source": "Google News(デジタルキー)",
@@ -975,6 +1066,19 @@
   "picked": false
  },
  {
+  "id": "0320facf712eedc1",
+  "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFB0aFhwTnNLcTRxbTFMcG5TQWFTZmMxa3Y4ek1iZWhPREtudG1jRGxBVl9MMnlWcllGTmdFdGJyWnpaRFoyMzdabjNBR1dYMDdkLS03ZURWcUkzX0hFcDBv?oc=5",
+  "source": "Google News(ドアホン)",
+  "publisher": "千葉テレビ放送株式会社",
+  "lang": "ja",
+  "published": "2026-09-10T17:40:30Z",
+  "title_raw": "「スマートにつながる、次世代のビデオドアホン」EZVIZ、7インチ大画面とスマホ遠隔操作に対応した「HP5」日本向けカスタムモデルを発売 3MP高画質とAI人物検知、ホームセキュリティ連携で、玄関をもっとスマートに - 千葉テレビ放送株式会社",
+  "summary_raw": "「スマートにつながる、次世代のビデオドアホン」EZVIZ、7インチ大画面とスマホ遠隔操作に対応した「HP5」日本向けカスタムモデルを発売 3MP高画質とAI人物検知、ホームセキュリティ連携で、玄関をもっとスマートに 千葉テレビ放送株式会社",
+  "collected": "2026-09-18T22:57:54Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "7a746ded177fd181",
   "link": "https://news.google.com/rss/articles/CBMixgFBVV95cUxOa1U0S0hBMTdqX2h0QzYzQlNfS05TZU85REs4YndLTjhHU2JHWFRqTHpJNHlZRVN2YUlNT3BqZVhLOWU5dXJtbFIwYWNOZ3V5bW9pTGYtZzBCZENqYV9HdXdvclFMUlZ0dnpiWHZLNGlHYVFodVV6SGM0YWtrTFkyRG1EMXlVNjNOekpUS1Y4dkpOSlZkdi1RdE1HaDcyRzVqVk9pakZRN2RUTE10RXZ2d1MyVW5wTnJiVHlNT1BCTHJnLXRXZXc?oc=5",
   "source": "Google News(smart lock)",
@@ -1036,6 +1140,19 @@
   "title_raw": "Hikvision、最先端dToFセンサー＆顔認証対応の新型小型スイングゲート「DS-K6BC402(T)Xシリーズ」を新発売 - tv-tokyo.co.jp",
   "summary_raw": "Hikvision、最先端dToFセンサー＆顔認証対応の新型小型スイングゲート「DS-K6BC402(T)Xシリーズ」を新発売 tv-tokyo.co.jp",
   "collected": "2026-09-17T23:19:51Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "09d13b364cc7814c",
+  "link": "https://news.google.com/rss/articles/CBMieEFVX3lxTFBBUkYzcnFrMko5RDFYQ09hc3RldHR6elR1c2JaN1ZrdjlPVzNGb1J1RDc3cG5zaUVadXRJb2FmZ0s3bE9WamNjQ1dqa3ZGaU92aU1ZMjVsTXpOVlZCYUZrRUdpV2U4bWhtWFJBSXZwalFwV2hkWTJrVw?oc=5",
+  "source": "Google News(電子錠)",
+  "publisher": "au Webポータル",
+  "lang": "ja",
+  "published": "2026-09-10T07:00:00Z",
+  "title_raw": "まさか…フラフープで車窃盗か スマートキーの微弱電波を増幅、電子錠を誤作動させる手口 男2人を再逮捕、住所不定、無職の26歳と28歳 別の車2台盗んだ容疑で逮捕済み 埼玉・千葉・茨城で数十件の余罪の疑い - au Webポータル",
+  "summary_raw": "まさか…フラフープで車窃盗か スマートキーの微弱電波を増幅、電子錠を誤作動させる手口 男2人を再逮捕、住所不定、無職の26歳と28歳 別の車2台盗んだ容疑で逮捕済み 埼玉・千葉・茨城で数十件の余罪の疑い au Webポータル",
+  "collected": "2026-09-18T22:57:48Z",
   "status": "raw",
   "picked": false
  },
@@ -1157,6 +1274,19 @@
   "picked": false
  },
  {
+  "id": "157c9e3a493bcdeb",
+  "link": "https://news.google.com/rss/articles/CBMickFVX3lxTE12TFZyOXhVdzRHa2lqYXZMWFhPaUx5LWR1akhwY1lPSkRPWU1ZdkpyaGRIbzhiUkhQSm5sNTFRZkNUUXpZa1piRHVqVHRIRDFGbzRUQ2NNYUxGVXhuWjF3NkdsNi16UVgybi1zZER5d1l6Zw?oc=5",
+  "source": "Google News(ドアホン)",
+  "publisher": "woman.excite.co.jp",
+  "lang": "ja",
+  "published": "2026-09-10T01:00:00Z",
+  "title_raw": "「スマートにつながる、次世代のビデオドアホン」EZVIZ、7インチ大画面とスマホ遠隔操作に対応した「HP5」日本向けカスタムモデルを発売 - woman.excite.co.jp",
+  "summary_raw": "「スマートにつながる、次世代のビデオドアホン」EZVIZ、7インチ大画面とスマホ遠隔操作に対応した「HP5」日本向けカスタムモデルを発売 woman.excite.co.jp",
+  "collected": "2026-09-18T22:57:54Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "eb24286c2e01bf97",
   "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5RTkNCZzVtVklFcWl3TFNncERTZVM4Q2NFdF8tSUxPQy13Wnk0LTVYNWFPTHh4TXZEUnZGeWtyNHJxclUtMFROX0F5azY1RG8?oc=5",
   "source": "Google News(電子錠)",
@@ -1270,6 +1400,19 @@
   "title_raw": "スマート南京錠を東京の実店舗で販売｜指紋認証・スマホ遠隔解錠に対応、倉庫・門扉の鍵管理をもっと簡単に - ニコニコニュース",
   "summary_raw": "スマート南京錠を東京の実店舗で販売｜指紋認証・スマホ遠隔解錠に対応、倉庫・門扉の鍵管理をもっと簡単に ニコニコニュース",
   "collected": "2026-09-17T01:55:25Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "aed6a252bbfd38bc",
+  "link": "https://news.google.com/rss/articles/CBMifEFVX3lxTFBBUElkeUU2Y3c1Wm5WRzRZdUlSZG8tbkZEbVlwSm11Sk1BTXpXa3ljTUkzQ0k3clhYRHkwc01CMC0tai0zd3NqZmdORjIyTVRRTWtVbHZld2J3WEtsMnhrWVloZmRidFA1WDM4NTZiWU1wb1A1S3VONzA2R1rSAXxBVV95cUxQQVBJZHlFNmN3NVpuVkc0WXVJUmRvLW5GRG1ZcEptdUpNQU16V2t5Y01JM0NJN3JYWER5MHNNQjAtLWotM3dzamZnTkYyMk1UUU1rVWx2ZXdid1hLbDJ4a1lZaGZkYnRQNVgzODU2YllNcG9QNUt1TjcwNkda?oc=5",
+  "source": "Google News(電子錠)",
+  "publisher": "四国新聞",
+  "lang": "ja",
+  "published": "2026-09-09T14:46:47Z",
+  "title_raw": "電子錠誤作動で車窃盗疑い｜四国新聞WEB朝刊 - 四国新聞",
+  "summary_raw": "電子錠誤作動で車窃盗疑い｜四国新聞WEB朝刊 四国新聞",
+  "collected": "2026-09-18T22:57:48Z",
   "status": "raw",
   "picked": false
  },
@@ -1391,6 +1534,19 @@
   "picked": false
  },
  {
+  "id": "5a1eda66fba15b65",
+  "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFBrTzRBN0pkWDMtU3l5a1ZFTHdRbUxuaUdqYjJmWFgxSHkzX2xnWjlLV1lrTUVpQ3ZaY0o3T2dDZ2M4RHE0MGlQaG03c2l1STh5OVZjMw?oc=5",
+  "source": "Google News(スマートロック)",
+  "publisher": "ASCII.jp",
+  "lang": "ja",
+  "published": "2026-09-09T07:00:00Z",
+  "title_raw": "スマート南京錠を東京の実店舗で販売｜指紋認証・スマホ遠隔解錠に対応、倉庫・門扉の鍵管理をもっと簡単に - ASCII.jp",
+  "summary_raw": "スマート南京錠を東京の実店舗で販売｜指紋認証・スマホ遠隔解錠に対応、倉庫・門扉の鍵管理をもっと簡単に ASCII.jp",
+  "collected": "2026-09-18T22:57:48Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "fab83f3d17dd647d",
   "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5JeHd6X2lmSnhIT0FOOTNpa0FyYlBGNjFVcWMwRzY1WXJqRDg3c1RZaVl0X0hqLTU5YlFQN0V5R1FDZnlBYnh5R213cXBxOTBtcjVFNldCUmtpT3JGWFEw?oc=5",
   "source": "Google News(電子錠)",
@@ -1400,6 +1556,19 @@
   "title_raw": "電子錠誤作動で車盗んだ疑い 男2人逮捕、フラフープ悪用か - 千葉テレビ放送株式会社",
   "summary_raw": "電子錠誤作動で車盗んだ疑い 男2人逮捕、フラフープ悪用か 千葉テレビ放送株式会社",
   "collected": "2026-09-17T23:19:48Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "846d1266177e7bd9",
+  "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBjWTNsR1VUUmx1YW1wc0trLVhaeWxZcGdtQmMyd3JCUEw2MVl1QVdtMDNEN2lLZEFaNlFTUlg5X3ZTVGJNc2kxZHNKRmp4WUZiVVJNM1pFckk5QQ?oc=5",
+  "source": "Google News(電子錠)",
+  "publisher": "北海道新聞デジタル",
+  "lang": "ja",
+  "published": "2026-09-09T06:48:34Z",
+  "title_raw": "電子錠誤作動で車盗んだ疑い 男2人逮捕、フラフープ悪用か - 北海道新聞デジタル",
+  "summary_raw": "電子錠誤作動で車盗んだ疑い 男2人逮捕、フラフープ悪用か 北海道新聞デジタル",
+  "collected": "2026-09-18T22:57:48Z",
   "status": "raw",
   "picked": false
  },
@@ -1521,6 +1690,19 @@
   "picked": false
  },
  {
+  "id": "9864dda0d6648a36",
+  "link": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9CRUk2bkJkdUxiOXZ5aHg4TDhJdVo5VzdwUGRfQTlJRVFoNjU0NWhBTEhrVUpoWHZpMmlFMGxxRklmaU9KSXZTMkpuZDRTa3ZGbVJpQmpWa2s?oc=5",
+  "source": "Google News(電子錠)",
+  "publisher": "東奥日報社",
+  "lang": "ja",
+  "published": "2026-09-09T06:37:04Z",
+  "title_raw": "電子錠誤作動で車盗んだ疑い 男２人逮捕、フラフープ悪用か｜全国のニュース｜Web東奥 - 東奥日報社",
+  "summary_raw": "電子錠誤作動で車盗んだ疑い 男２人逮捕、フラフープ悪用か｜全国のニュース｜Web東奥 東奥日報社",
+  "collected": "2026-09-18T22:57:48Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "8011295ea9bbc3bb",
   "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxNUHVwQW9xTDM1M2JvRVl2ckZzN1dzSlJGbmxkU29TQnd4OXhONHNyaUxCYWlaOVV1aVFMcmZSZzZOdGN1OVhla210ZHpJblZjaUNrZDRLendyVUxCU05vZ0hNejROS092dHZyQ0t0djIxOFRzcVItU0JMRjhTa3dHWkZHenI0YmJBTUZnamRB?oc=5",
   "source": "Google News(電子錠)",
@@ -1556,6 +1738,19 @@
   "title_raw": "電子錠誤作動で車盗んだ疑い 男２人逮捕、フラフープ悪用か - 秋田魁新報電子版",
   "summary_raw": "電子錠誤作動で車盗んだ疑い 男２人逮捕、フラフープ悪用か 秋田魁新報電子版",
   "collected": "2026-09-17T01:55:25Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "14ec2a24ed2dc494",
+  "link": "https://news.google.com/rss/articles/CBMifkFVX3lxTE5mNUhobjFmRzNZY0Z2SjdPYmpVTThKWUxVa21NYmdrREhhTDZFZ1BhMEE4M1dXeDZmRFFSZjZZd2VRcDhyR29xMUN1TlQ2LWQ4NlBia1V6Q202NWFhajVueTM5LXppZHpMS29ZLWREVm83OUxITHBTTlZ5ZnJSZw?oc=5",
+  "source": "Google News(電子錠)",
+  "publisher": "河北新報オンライン",
+  "lang": "ja",
+  "published": "2026-09-09T06:36:58Z",
+  "title_raw": "電子錠誤作動で車盗んだ疑い 男２人逮捕、フラフープ悪用か - 河北新報オンライン",
+  "summary_raw": "電子錠誤作動で車盗んだ疑い 男２人逮捕、フラフープ悪用か 河北新報オンライン",
+  "collected": "2026-09-18T22:57:48Z",
   "status": "raw",
   "picked": false
  },
@@ -1621,6 +1816,19 @@
   "title_raw": "電子錠誤作動で車盗んだ疑い 男２人逮捕、フラフープ悪用か - kochinews.co.jp",
   "summary_raw": "電子錠誤作動で車盗んだ疑い 男２人逮捕、フラフープ悪用か kochinews.co.jp",
   "collected": "2026-09-17T23:19:48Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "2b41b7e799cd36e4",
+  "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE44SHRLWnFiQTJfYjdsZnVaSDlKVC1lSll2amRQUEZPak14c05JZVNkcWtNYWxkSHJZZ1lGVHNGdlpxbjJFTGFNX3ZqdXN4UkVIUFBMeDRB?oc=5",
+  "source": "Google News(電子錠)",
+  "publisher": "佐賀新聞",
+  "lang": "ja",
+  "published": "2026-09-09T06:36:00Z",
+  "title_raw": "電子錠誤作動で車盗んだ疑い 男２人逮捕、フラフープ悪用か | | 全国のニュース - 佐賀新聞",
+  "summary_raw": "電子錠誤作動で車盗んだ疑い 男２人逮捕、フラフープ悪用か | | 全国のニュース 佐賀新聞",
+  "collected": "2026-09-18T22:57:48Z",
   "status": "raw",
   "picked": false
  },
@@ -1764,6 +1972,19 @@
   "title_raw": "LIXIL、電気部品の交換のみでスマートロックシステムへアップグレードできる「とりかえFamiLock」を発売 - 日本経済新聞",
   "summary_raw": "LIXIL、電気部品の交換のみでスマートロックシステムへアップグレードできる「とりかえFamiLock」を発売 日本経済新聞",
   "collected": "2026-09-17T01:55:24Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "f8fd833d53c107c0",
+  "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5UV085dTVHckFiQ1ViQVJwbE9fNVBQeVNVQW1MRmVNQjI3N0ZHMGdLQm1COXhTNkZMM0h5ZmdTcGhHRlJtYmJMME1XS3hOSDFGVVRnQ0xYWl94UGIwMDQtbERZVERTREVldklN?oc=5",
+  "source": "Google News(スマートロック)",
+  "publisher": "時事ドットコム",
+  "lang": "ja",
+  "published": "2026-09-09T00:16:00Z",
+  "title_raw": "ChatLock、スマートロックと連携するVDPを展開。ペットシッター利用時の「確認してから開ける」玄関アクセスを提案 - 時事ドットコム",
+  "summary_raw": "ChatLock、スマートロックと連携するVDPを展開。ペットシッター利用時の「確認してから開ける」玄関アクセスを提案 時事ドットコム",
+  "collected": "2026-09-18T22:57:48Z",
   "status": "raw",
   "picked": false
  },
@@ -1976,6 +2197,19 @@
   "picked": false
  },
  {
+  "id": "1f220abd4abd4b94",
+  "link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1OdnRIMjgxV1FyaG41V25jazZ0d0xYU2puZUhkVUxnNXBnUzFCdC1XTl9XcjFabTRDb1JWbHYyUldwMTQzVEM3N3RGcmsyeDlJcmRn?oc=5",
+  "source": "Google News(顔認証 入退室)",
+  "publisher": "ZDNET Japan",
+  "lang": "ja",
+  "published": "2026-09-07T08:52:00Z",
+  "title_raw": "顔認証・入退室管理リーダーFE-800シリーズに新モデルが登場！FE-500同等の価格帯で画面大型化・高輝度LEDによる圧倒的な認証精度を実現した「FE-800SE」を発売開始 - ZDNET Japan",
+  "summary_raw": "顔認証・入退室管理リーダーFE-800シリーズに新モデルが登場！FE-500同等の価格帯で画面大型化・高輝度LEDによる圧倒的な認証精度を実現した「FE-800SE」を発売開始 ZDNET Japan",
+  "collected": "2026-09-18T22:57:53Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "6ed92f2ddc781db1",
   "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE8ybjB2ZFFpSG1HdHJKYWZFejJYMFdKaFpUcjNGeXhEaFgxdnVrcVhybE05R0p6YXppc3RuTVFOQzN4QU50NDYzYldlLUdDM1EyTzAwcjU5OXhKVmNrNmswMThvU3BuYjlYTGg0eHdR?oc=5",
   "source": "Google News(デジタルキー)",
@@ -2076,6 +2310,32 @@
   "title_raw": "Hotel Smart Lock System vs Traditional Key Cards: Cost and Security Compared - The National Law Review",
   "summary_raw": "Hotel Smart Lock System vs Traditional Key Cards: Cost and Security Compared The National Law Review",
   "collected": "2026-09-17T01:57:31Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "41a6a8a95b242178",
+  "link": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTE1FNFhJclhtMFpQaklrRUJjVDFMb3I3NnlWZ0hNaGx6eDczZnlmY2xZZ0RfblhCRTJsSGdSNjJyOFQ1S1E?oc=5",
+  "source": "Google News(スマートロック)",
+  "publisher": "ゴリミー",
+  "lang": "ja",
+  "published": "2026-09-06T07:00:00Z",
+  "title_raw": "スリム化「SESAME 6 Pro mini」新登場、ドア枠ギリギリでも取り付け可能。引き戸対応モデルも - ゴリミー",
+  "summary_raw": "スリム化「SESAME 6 Pro mini」新登場、ドア枠ギリギリでも取り付け可能。引き戸対応モデルも ゴリミー",
+  "collected": "2026-09-18T22:57:48Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "51d47b9337e4f174",
+  "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQd1VBRkhiU2hOa1pNMTRhYl8teEFvVEFUMi01aFRQVE9Hbk1kajgtWFJ6R3JCbXNJN0JoU1psQUkxZHhXYUxCSnFhRGdpdTMxMWRrcnJsUmxSYnJpTThIMHpmU0U3YmtrdWwzRjJWRkx1M0NSTGg4ajZsdnF1RV9OdHlxU1VtQ2hFRlFQZER0VXJJOWFvTHRjd3NGUm5sbmdUbFA0aW1lckV4QnpVSm0tbHNuVQ?oc=5",
+  "source": "Google News(smart lock)",
+  "publisher": "The National Law Review",
+  "lang": "en",
+  "published": "2026-09-06T07:00:00Z",
+  "title_raw": "FEICON BATIMAT 2026 Recap: Top-Rated Smart Lock Solutions Showcased by YOUNUO IET - The National Law Review",
+  "summary_raw": "FEICON BATIMAT 2026 Recap: Top-Rated Smart Lock Solutions Showcased by YOUNUO IET The National Law Review",
+  "collected": "2026-09-18T22:57:54Z",
   "status": "raw",
   "picked": false
  },
@@ -2197,6 +2457,19 @@
   "picked": false
  },
  {
+  "id": "53b12c0070b0facc",
+  "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1jNFlHd3pIN3p5MEF0b2IzdGxQTzBwRG1HamxZM2J0aFpSWE00U3QyblpDcWV2c1hBV2NZRi1SU3NHVlRRc2RuRWxURVgya1VkT1hVc1hWODVhOTUycmNZRkxNOFZVN002VW4xQ25CZlpwclZR?oc=5",
+  "source": "Google News(電子錠)",
+  "publisher": "Excite エキサイト",
+  "lang": "ja",
+  "published": "2026-09-04T00:45:00Z",
+  "title_raw": "スマートロック・電子錠「ChatLock T10」、Appの解錠履歴機能をアップデート｜共働き家庭の子どもの帰宅確認をサポート - Excite エキサイト",
+  "summary_raw": "スマートロック・電子錠「ChatLock T10」、Appの解錠履歴機能をアップデート｜共働き家庭の子どもの帰宅確認をサポート Excite エキサイト",
+  "collected": "2026-09-18T22:57:48Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "86d91e1949e6955e",
   "link": "https://news.google.com/rss/articles/CBMifEFVX3lxTE1qX01CZHBlUy1kaTI4NEEySndGNW9ZU2VTd2hrZ1d2Mjg4cENEcnZjN0h0bWxPNmdPNkRTRjYzSFlYb1BueUdlUjZTOXBqREp3c0o2M25qd1hyNWJ5RXRFX2VWdjNEeGFYRlJtYXhPdkt1QmpmRkJNN24yd2Q?oc=5",
   "source": "Google News(ドアホン)",
@@ -2206,6 +2479,19 @@
   "title_raw": "【【セール情報】本日のPICK UP】外出の多い方へ！ スマホでも見える配線工事不要のテレビドアホンがAmazonでセール中 - Car Watch",
   "summary_raw": "【【セール情報】本日のPICK UP】外出の多い方へ！ スマホでも見える配線工事不要のテレビドアホンがAmazonでセール中 Car Watch",
   "collected": "2026-09-17T01:57:30Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "faacfd3885ec8b7f",
+  "link": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxOeHk5Y1NWUWxsd3NtS1VrdF9GQVdvUzU4STEtcGpnSUFlZUhQdHJrdGFrM3V3VGdjeF96MlkwYnBJa3Z4NVRsWDZwLVVtVmp3dVNDanZaV2QzaF9NWGZWTGgwNzhGV25QOTlSbTZseWdxR3c2LXJjTnMxZmVKTmlHR0dQU1h0VWlqUmozQ0JCN0ZiQ19zNkZCUktPYUloenVOeEh0UkxEOWRqQWhrUC1Oa3dSaFhyaUpVWHcyVG5PMXI5Sjg?oc=5",
+  "source": "Google News(顔認証 入退室)",
+  "publisher": "日経クロステック",
+  "lang": "ja",
+  "published": "2026-09-03T18:13:43Z",
+  "title_raw": "顔認証で攻め守り - 日経クロステック",
+  "summary_raw": "顔認証で攻め守り 日経クロステック",
+  "collected": "2026-09-18T22:57:53Z",
   "status": "raw",
   "picked": false
  },
@@ -2431,6 +2717,32 @@
   "picked": false
  },
  {
+  "id": "a10999a6a3d5a229",
+  "link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxOY0VuaWdXNWRnWTlHMWFSRXA5Yk1FX1ZuV0VSMmQ3eDVlbElPTENqanpraE1mbzFtQ21Wb184ZVRvTk10UjhUbW1mQ1VsSVBRaXZQdURPYlE2OHFRakJZWFdsUTRXM21JOE5FZlRFMlplSElBVENkZHR1RDFfRTBwNmpCYmNBNkZGVGVZOEhUM08?oc=5",
+  "source": "Google News(smart lock)",
+  "publisher": "Yahoo Tech",
+  "lang": "en",
+  "published": "2026-09-03T07:00:00Z",
+  "title_raw": "SwitchBot’s new smart lock has just convinced me to upgrade my front door - Yahoo Tech",
+  "summary_raw": "SwitchBot’s new smart lock has just convinced me to upgrade my front door Yahoo Tech",
+  "collected": "2026-09-18T22:57:54Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "49e90abc32d85d27",
+  "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOaEt2R1BIa2ZkaGxhMlpXZ3lYLXU3ZlU3OVBfamN1MTQtV20tNzhELWRKUjhaVG9sYVdsbGU4SE90a21FbU41Rm4yTWVUQ3RvdTFKSGY5RUI2MVB0d1M4Uklxa1RTNWFuN0JjYzY5b1ZaMnlTbmdJWTVBa2pZYWxwSQ?oc=5",
+  "source": "Google News(access control NFC)",
+  "publisher": "NeoTeo",
+  "lang": "en",
+  "published": "2026-09-03T07:00:00Z",
+  "title_raw": "ADATA Urban Tapsafe review: clever NFC access, serious limits - NeoTeo",
+  "summary_raw": "ADATA Urban Tapsafe review: clever NFC access, serious limits NeoTeo",
+  "collected": "2026-09-18T22:57:55Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "d67648ad2c1579f6",
   "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTFB3V1BIemRRcy1xMllkTmFOV2JGcEoxY01NanNBOVhsZWJ1anJNYVp5eHJ1aU9NaF93ZzVUaHJob2c5YUR4Z0ZPc2UxQnJKQjEzSDU1R1NnbVF6TG5Ya2UtWWJlMXNYRVBzeHc?oc=5",
   "source": "Google News(電子錠)",
@@ -2453,6 +2765,19 @@
   "title_raw": "スマートロック・電子錠は自宅の玄関ドアに取り付けできる？ChatLockが写真で確認する無料ドア適合診断サービスを開始 - Infoseek",
   "summary_raw": "スマートロック・電子錠は自宅の玄関ドアに取り付けできる？ChatLockが写真で確認する無料ドア適合診断サービスを開始 Infoseek",
   "collected": "2026-09-17T01:55:24Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "8413a95be1d0f7b6",
+  "link": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOcnpyTnVYSTlkbEFQLVN5NlNaTDcyWHZTU2pIUi1raVFMd3paSUlZcG96TklmSkFoVHdLWmR4NTdVcVVjTFI4UGxkdmZXVTB1TVR2dkVkZHR1anN1bm9sbXkzT0pGcFk5OS1sc1p5ZVhsaUltRUZtWWxMOFpJVGVEeA?oc=5",
+  "source": "Google News(電子錠)",
+  "publisher": "Excite エキサイト",
+  "lang": "ja",
+  "published": "2026-09-03T00:15:00Z",
+  "title_raw": "スマートロック・電子錠は自宅の玄関ドアに取り付けできる？ChatLockが写真で確認する無料ドア適合診断サービスを開始 - Excite エキサイト",
+  "summary_raw": "スマートロック・電子錠は自宅の玄関ドアに取り付けできる？ChatLockが写真で確認する無料ドア適合診断サービスを開始 Excite エキサイト",
+  "collected": "2026-09-18T22:57:48Z",
   "status": "raw",
   "picked": false
  },
@@ -2596,6 +2921,19 @@
   "title_raw": "顔認証やスマホ遠隔解錠に対応！次世代AI顔認証IPインターホン「LAXAS S414」の販売を開始 - PR TIMES",
   "summary_raw": "顔認証やスマホ遠隔解錠に対応！次世代AI顔認証IPインターホン「LAXAS S414」の販売を開始 PR TIMES",
   "collected": "2026-09-17T23:19:51Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "1436d651e054a32a",
+  "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE9pQks2OVdycnhNZDdFMEN4WFNtRTZBOVZNV3hyTUtfVHJPUnpYQWV2X0hRc1BCOW5xUW90ZjJLVmFCcEVMV0JDMUUyY1Fwak1ySmJQWg?oc=5",
+  "source": "Google News(Apple ドアホン)",
+  "publisher": "ASCII.jp",
+  "lang": "ja",
+  "published": "2026-09-02T07:00:00Z",
+  "title_raw": "【Amazonスマイルセール攻略法】9月3日まで！ オトクになる方法やセール対象商品まとめ【随時更新】 - ASCII.jp",
+  "summary_raw": "【Amazonスマイルセール攻略法】9月3日まで！ オトクになる方法やセール対象商品まとめ【随時更新】 ASCII.jp",
+  "collected": "2026-09-18T22:57:50Z",
   "status": "raw",
   "picked": false
  },
@@ -2782,6 +3120,45 @@
   "picked": false
  },
  {
+  "id": "7587132b2d3b81a3",
+  "link": "https://news.google.com/rss/articles/CBMidkFVX3lxTE05SGIxdW5nSk44QUtjTEZMeExmYjdETGw1SlkxQlJxU2F0TFVnUTlZMDd5ejQtYi1yRHl5NFlqNW1zM01MWE56LS1LQ0REX3VPNUlaRGdNZmFNaktTckFGT3ZFa283QU5RUktqeVUtUWJ2Z3hBbUE?oc=5",
+  "source": "Google News(電子錠)",
+  "publisher": "STRAIGHT PRESS",
+  "lang": "ja",
+  "published": "2026-09-01T07:00:00Z",
+  "title_raw": "オフィス向けスマートロック・電子錠「ChatLock S70」をAmazonで販売開始｜ガラスドアの鍵管理・入退室管理をよりシンプルに - STRAIGHT PRESS",
+  "summary_raw": "オフィス向けスマートロック・電子錠「ChatLock S70」をAmazonで販売開始｜ガラスドアの鍵管理・入退室管理をよりシンプルに STRAIGHT PRESS",
+  "collected": "2026-09-18T22:57:48Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "11e86325515e6b67",
+  "link": "https://news.google.com/rss/articles/CBMieEFVX3lxTE9rbXhUOVNEeGsyMnFnNE9rRVRmU0xNZ1JrWmRsREcwREtKN1gwR29jN3VnMjI1SElKX3JXZTJ2QUEwN2g0MFlINkl5WWRydjlnb3FmYVBrcjkxQnU4OXowRk5LZVlnRjBsZDVESXc5RzVnMG9DX0ZfWg?oc=5",
+  "source": "Google News(入退室管理)",
+  "publisher": "RBB TODAY",
+  "lang": "ja",
+  "published": "2026-09-01T07:00:00Z",
+  "title_raw": "オフィス向けスマートロック・電子錠「ChatLock S70」をAmazonで販売開始｜ガラスドアの鍵管理・入退室管理をよりシンプルに - RBB TODAY",
+  "summary_raw": "オフィス向けスマートロック・電子錠「ChatLock S70」をAmazonで販売開始｜ガラスドアの鍵管理・入退室管理をよりシンプルに RBB TODAY",
+  "collected": "2026-09-18T22:57:49Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "8a67919bbae8d6ce",
+  "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE1IZ0FNZUtESjNoczFZbVB1R0xtN256Sk4ySGQ1aWxkcTFDRU5nbkpEem1CMXAtMUpjRzJFZjhRN2RRR1hROHpKVEpOMjJRVFVMbXV0aQ?oc=5",
+  "source": "Google News(顔認証 入退室)",
+  "publisher": "ニコニコニュース",
+  "lang": "ja",
+  "published": "2026-09-01T07:00:00Z",
+  "title_raw": "六本木エリアの全住戸オール顔認証マンション(R) - ニコニコニュース",
+  "summary_raw": "六本木エリアの全住戸オール顔認証マンション(R) ニコニコニュース",
+  "collected": "2026-09-18T22:57:53Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "89dea18c468bca8d",
   "link": "https://news.google.com/rss/articles/CBMickFVX3lxTE1vQ3RhU1FIbEZQR2h3c0l1WUVVZExmcjJibTlZbk5oRUU2S1pPdk1fR2dpZ01BTVpBMXBpR1NqNWFQSkhwSWJXMTFXcG4tX1M5MWFSX2ZqTDZXZDlWU24xdmZNVnpfMHAxaGRIUG0ySE5VQQ?oc=5",
   "source": "Google News(スマートロック)",
@@ -2908,6 +3285,19 @@
   "title_raw": "グローバルTier-1のYFORE、米国で製造した初のデジタルキーをラインオフ - 47NEWS",
   "summary_raw": "グローバルTier-1のYFORE、米国で製造した初のデジタルキーをラインオフ 47NEWS",
   "collected": "2026-09-17T23:19:48Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "d8c63a20db421e38",
+  "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE9SWWh6YTliRVE2dFFQX0VUeU9pU1ZCa1lLT2EyTVpJVThlUGs5VXFsdERVcU5wTWQ2LWRDZjVWdVBxb0dTZjBzdVpSWDhYOHh1NVZMUW8xdUE0YTNuRVhteFI5S25sMlpWeFdBczF3?oc=5",
+  "source": "Google News(デジタルキー)",
+  "publisher": "tv-tokyo.co.jp",
+  "lang": "ja",
+  "published": "2026-08-31T07:00:00Z",
+  "title_raw": "グローバルTier-1のYFORE、米国で製造した初のデジタルキーをラインオフ - tv-tokyo.co.jp",
+  "summary_raw": "グローバルTier-1のYFORE、米国で製造した初のデジタルキーをラインオフ tv-tokyo.co.jp",
+  "collected": "2026-09-18T22:57:49Z",
   "status": "raw",
   "picked": false
  },
@@ -3237,6 +3627,19 @@
   "picked": false
  },
  {
+  "id": "2f4ad0e8b3e6d568",
+  "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE5UUkhLeXMyLWx4eEFBaWtiV3hIY3otOVBobVpsTHNadHE4RklnMGtrR3k5ZnNITVdlWlVCUmJIalhCOGFzUDB4eElHcDRWUWFpUHVTbA?oc=5",
+  "source": "Google News(電子錠)",
+  "publisher": "ニコニコニュース",
+  "lang": "ja",
+  "published": "2026-08-27T07:00:00Z",
+  "title_raw": "Chatlock、台湾の鍵専門パートナーとスマートロック・電子錠の技術交流を実施｜日本本社で施工・運用ノウハウを共有 - ニコニコニュース",
+  "summary_raw": "Chatlock、台湾の鍵専門パートナーとスマートロック・電子錠の技術交流を実施｜日本本社で施工・運用ノウハウを共有 ニコニコニュース",
+  "collected": "2026-09-18T22:57:48Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "6a1f87ec1fd0a33a",
   "link": "https://news.google.com/rss/articles/CBMidkFVX3lxTE81N3dhd0pGejl1d0tDdUUzeE5wR3cwRDN3MGc1X1VYV0liUDBGRWlIZF9BVlFBNWc4dTRNS0tIYkZDbDFfVHJqMDB1aFM3Tm5sUU5sMWo3X2FtZmNZMHBLSzdGS2YteG1ULWdEeUZIVTZxRDc3VUE?oc=5",
   "source": "Google News(入退室管理)",
@@ -3259,6 +3662,19 @@
   "title_raw": "Ring introduces TAKE, setting a new industry standard for default encryption and control - About Amazon",
   "summary_raw": "Ring introduces TAKE, setting a new industry standard for default encryption and control About Amazon",
   "collected": "2026-09-17T01:57:31Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "f9a6dd893d30d34d",
+  "link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBWWkVub0IwREpUQmszSFVyNXdVZHFGSWhLSFNCSFJxSlVHdmNjQks2ckNkNkRVTnMtTDRTbjdhZTRTbDY3MXBOY3lXNnlfZW5XVGxV?oc=5",
+  "source": "Google News(スマートロック)",
+  "publisher": "気になる、記になる…",
+  "lang": "ja",
+  "published": "2026-08-26T07:00:00Z",
+  "title_raw": "SwitchBot、｢IFAベルリン 2026｣で新型スマートロックの発表を予告 - 気になる、記になる…",
+  "summary_raw": "SwitchBot、｢IFAベルリン 2026｣で新型スマートロックの発表を予告 気になる、記になる…",
+  "collected": "2026-09-18T22:57:48Z",
   "status": "raw",
   "picked": false
  },
@@ -3393,6 +3809,19 @@
   "picked": false
  },
  {
+  "id": "f0351ee9a7fd83e4",
+  "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxQRHg5OUJteFhJTEFOZzdyaDF4MTZaaFdpZTJGbVBpNVVDRGkwVXdnUW9LOHV3d1VlU2pMaEZpUTFXTDY0ZmVKdG1pa0tqdjU1N2xDOFh6WmhTY0JkNkw2dklOT1pqdWNXWTI1ZnRzbEo0Tmltazc3LVl5MF83eml4cGF5ZFhRN2REcmJJZlVuTDgyNy1FNDlYMl9OdGtsdEh1ZWc?oc=5",
+  "source": "Google News(digital key car)",
+  "publisher": "MarketsandMarkets",
+  "lang": "en",
+  "published": "2026-08-24T07:42:53Z",
+  "title_raw": "Rest-Of-Europe Digital Key Cabinet Market Size, Share,Trends, Growth Analysis Report, 2029 - MarketsandMarkets",
+  "summary_raw": "Rest-Of-Europe Digital Key Cabinet Market Size, Share,Trends, Growth Analysis Report, 2029 MarketsandMarkets",
+  "collected": "2026-09-18T22:57:56Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "14227daf91d03be6",
   "link": "https://news.google.com/rss/articles/CBMirgJBVV95cUxQQ2lydlJCQlg1VEltZWhrRi1QWS1na1RSSS1fUzlyaWthT0FHN2pYVnRneHZBbU1aUjV3bnRFeWlCM2t0U29tZ2wwcVZXY19XSVlyaEFWTWNtUTl6QWdzcXg0cTBmMExLaE4tRDl0NXNERG9PTi1xWktBdldlR0dhX2tyOWk1WmlrUS1fWk00RDRoS2F5WnRBMEoxUkpSenA0SDRpZEprZ01mbXd3UUhIeGlOT3NqcXFsTkJpV18xTkh3Rm9fdUZuSnpEMUhud3FuNEJQeXA2UE1LamxHcUJQMnE5UEpNMzNWMDFfd1oybnVSYWpDdWxUWXRZRDRWUU9kX2xBVUp6YXlic0VETU1BOFBjRUxybDNDRl9NeFRIeHNpb1dqUlhQVXpjVlNsZw?oc=5",
   "source": "Google News(電子錠)",
@@ -3493,6 +3922,19 @@
   "title_raw": "Amazon、「Ring 防犯ドアホン プロ」を日本限定発売 - classy-online.jp",
   "summary_raw": "Amazon、「Ring 防犯ドアホン プロ」を日本限定発売 classy-online.jp",
   "collected": "2026-09-17T01:57:30Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "d1db8b3a63e7009a",
+  "link": "https://news.google.com/rss/articles/CBMiggFBVV95cUxQbFN3dEFMTWtJZU1DOEhmazFmanA5ZTNQY1pvVmliR1BjMXQzNjZlOFgwak52OVlvME93N2hhZFlFRmVVTWZ1blE4OE5FMFhrbVl5eWlFTm1OYkpEWjE3STlTMUpKMUduWGpaeWNmdHczelFEVGhjSTVNQVM0RExIbXd3?oc=5",
+  "source": "Google News(オートロック マンション)",
+  "publisher": "時事ドットコム",
+  "lang": "ja",
+  "published": "2026-08-22T22:04:00Z",
+  "title_raw": "建物「共連れ」、防ぐには 「オートロック過信は危険」―専門家訴え・神戸女性刺殺１年 - 時事ドットコム",
+  "summary_raw": "建物「共連れ」、防ぐには 「オートロック過信は危険」―専門家訴え・神戸女性刺殺１年 時事ドットコム",
+  "collected": "2026-09-18T22:57:52Z",
   "status": "raw",
   "picked": false
  },
