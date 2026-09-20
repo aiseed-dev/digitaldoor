@@ -1,5 +1,31 @@
 [
  {
+  "id": "b51163e7fcdc1d6b",
+  "link": "https://news.google.com/rss/articles/CBMifkFVX3lxTFBsME5Xby16U0s1MUswaEFYNng3Tzk3VUZnVUFoQzZ2ZUN5SDJWUU1hWTdjRjRFdmpvQnBoUzJRdHNkblE3ejNCWElNSjZ5VHdYenhxaktsOXhyZUdKMEt6bE5hSUdZS2laaVRYMHpqX2owX1VNZHpqVEJ4b2Zpdw?oc=5",
+  "source": "Google News(smart lock)",
+  "publisher": "bgr.com",
+  "lang": "en",
+  "published": "2026-09-20T16:47:00Z",
+  "title_raw": "5 Future-Proof Smart Home Devices Worth Buying - bgr.com",
+  "summary_raw": "5 Future-Proof Smart Home Devices Worth Buying bgr.com",
+  "collected": "2026-09-20T22:54:11Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "a6c7d861c367adb0",
+  "link": "https://news.google.com/rss/articles/CBMic0FVX3lxTE5qdEdOTm82NEIweTZULTNEOEgyZHNkSlh1UTJiUEVGbXF5YXdoaWRlY25RckpYWUZ4Wnk0RnpQYTVPLWlFejRtVVJ1Q2ctdm85anFIa2RGOE9NcEFVV3FTVmpsUHZpV1V2UEg5ZWFjVWR5VFU?oc=5",
+  "source": "Google News(video doorbell)",
+  "publisher": "How-To Geek",
+  "lang": "en",
+  "published": "2026-09-20T13:30:14Z",
+  "title_raw": "Doorbell-over-Ethernet: Avoiding Wi-Fi for Your smart doorbell - How-To Geek",
+  "summary_raw": "Doorbell-over-Ethernet: Avoiding Wi-Fi for Your smart doorbell How-To Geek",
+  "collected": "2026-09-20T22:54:12Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "5c148acaa276e451",
   "link": "https://news.google.com/rss/articles/CBMickFVX3lxTE91WjJCeHZCaE56R1pkZWVyd2ZQeElmSlFjU2xwdjRmOTJ2MWlUUmJaSW45bkdpZ0J1WUpKVFFEejYwNjZQY2pLTjBDOUZidW9lQTJmN0hvVEo2bU9BV3hjcTJRRGhNLXBPLXFwbXFVMHlpdw?oc=5",
   "source": "Google News(スマートロック)",
@@ -230,6 +256,19 @@
   "title_raw": "【部活動地域展開・学校開放事業】NTTSportict「マチスポ」施設管理DXが京都市の学校施設スマート化実証事業に採択・本格始動！｜Infoseekニュース - Infoseek",
   "summary_raw": "【部活動地域展開・学校開放事業】NTTSportict「マチスポ」施設管理DXが京都市の学校施設スマート化実証事業に採択・本格始動！｜Infoseekニュース Infoseek",
   "collected": "2026-09-17T23:19:47Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "e5e31d5ebe601c5a",
+  "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTFB5bjl6VXI0YXVyN3JuYnhqQTFTVmZCUUJiT3dwa1BhYW9vUElxVDQtTHZ1VUJQQTNxa2lTMEpJamtqNktNc1dVaFE3WnpCcTl2c1dsZG1HNHV0MEpBbXJCQXFrRG5qZjg?oc=5",
+  "source": "Google News(デジタルキー)",
+  "publisher": "Motor Fan",
+  "lang": "ja",
+  "published": "2026-09-17T00:27:13Z",
+  "title_raw": "「日本で１番売れてるクルマ知ってます？」ライバルを凌ぐオールマイティカー！【ホンダ・N-BOX】【写真・24枚目】 - Motor Fan",
+  "summary_raw": "「日本で１番売れてるクルマ知ってます？」ライバルを凌ぐオールマイティカー！【ホンダ・N-BOX】【写真・24枚目】 Motor Fan",
+  "collected": "2026-09-20T22:54:06Z",
   "status": "raw",
   "picked": false
  },
@@ -1326,6 +1365,19 @@
   "picked": false
  },
  {
+  "id": "7b9d7c3849581cc8",
+  "link": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE5IdkR1UVNDRFBsaUliY25SWnNuV0dsS3dYREdyTXpqMHhtTkc1bUphN2RJTzJTaTNOdkFlMVExNncwTXdHRVhJUDNkZmwxSDlDSi1aNkN5WFQwZHdOaWc?oc=5",
+  "source": "Google News(Apple ドアホン)",
+  "publisher": "weekly.ascii.jp",
+  "lang": "ja",
+  "published": "2026-09-10T07:00:00Z",
+  "title_raw": "アップルが新型Apple Watchを発表！「Apple Watch Series 12」と「Apple Watch Ultra 4」の特徴まとめ - weekly.ascii.jp",
+  "summary_raw": "アップルが新型Apple Watchを発表！「Apple Watch Series 12」と「Apple Watch Ultra 4」の特徴まとめ weekly.ascii.jp",
+  "collected": "2026-09-20T22:54:07Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "b1f8946a6427cd17",
   "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE5USGx1TEFFSTlIUTRnN0M2LUIwU3dLczhzdmQzeVA3TVVYeW8wRWUwZnE0Rlo5Q0FPbFdfeEZadHF0N2xjTVhsSmZxaHZYVWdLU3Q2bw?oc=5",
   "source": "Google News(顔認証 入退室)",
@@ -1768,6 +1820,32 @@
   "picked": false
  },
  {
+  "id": "efa2c544b04bac5b",
+  "link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFBaVHM2ZGlyN0phVkdCYU1iT0VpcDRuT0ZVYmFpT180OTJxS1hkUVlmUGRFc1h0MmlsWHE3U0FIdmVDUVdLMVRMUm81V3VfbVlNUVpXWWtn?oc=5",
+  "source": "Google News(電子錠)",
+  "publisher": "西日本新聞me",
+  "lang": "ja",
+  "published": "2026-09-09T07:00:00Z",
+  "title_raw": "電子錠誤作動で車盗んだ疑い 男2人逮捕、フラフープ悪用か - 西日本新聞me",
+  "summary_raw": "電子錠誤作動で車盗んだ疑い 男2人逮捕、フラフープ悪用か 西日本新聞me",
+  "collected": "2026-09-20T22:54:05Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "35b96d7819e10a67",
+  "link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE05YWFVLWlzbGF1QmVhR0h1OWRrNGVnOEttVFRDandtbDNEcUd5UTM1RXJ3SDhORkxDSHNySktEaTBsbEtxbXpsSGt6dmp6VDhITnM3d1JON2lPSkt3aXIweTJMM3o5S1U?oc=5",
+  "source": "Google News(電子錠)",
+  "publisher": "南日本新聞",
+  "lang": "ja",
+  "published": "2026-09-09T07:00:00Z",
+  "title_raw": "【写真】電子錠誤作動で車盗んだ疑い 男２人逮捕、フラフープ悪用か - 南日本新聞",
+  "summary_raw": "【写真】電子錠誤作動で車盗んだ疑い 男２人逮捕、フラフープ悪用か 南日本新聞",
+  "collected": "2026-09-20T22:54:05Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "fab83f3d17dd647d",
   "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5JeHd6X2lmSnhIT0FOOTNpa0FyYlBGNjFVcWMwRzY1WXJqRDg3c1RZaVl0X0hqLTU5YlFQN0V5R1FDZnlBYnh5R213cXBxOTBtcjVFNldCUmtpT3JGWFEw?oc=5",
   "source": "Google News(電子錠)",
@@ -2184,6 +2262,19 @@
   "picked": false
  },
  {
+  "id": "1c7b1e177497e0d8",
+  "link": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxNU0hpdnVxMTE4WEN5RlkzendQeTJPZTA0VWhUSzZMNkdZSDhkeERna1IwZFctQjNUbWZpLTFYa0lHWllkcTZydDZsMUI2S2phNkRsSDZPV3lpd3BudU5ocTJJUUtOSXcxSXktWWtTblZHQjBrZmRsbGV4R0J5NF9xbkZrb1hadUxNZWJERkY5RlBrdUwtWDNWNEJacktwb0F6Tk5mUDBYbkJJLTk5dEJJZU1fdnIzRW5r?oc=5",
+  "source": "Google News(smart lock)",
+  "publisher": "EIN News",
+  "lang": "en",
+  "published": "2026-09-09T05:21:00Z",
+  "title_raw": "Hotel Smart Lock System vs Traditional Key Cards: Cost and Security Compared - EIN News",
+  "summary_raw": "Hotel Smart Lock System vs Traditional Key Cards: Cost and Security Compared EIN News",
+  "collected": "2026-09-20T22:54:11Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "516338019aca4b1c",
   "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPRE9XYldYcktORlEzVno3VHdBY05ZTFhtbTRfWmJDXzUzZnk4QWVMZnBxRHM4UV94dmhnYUJfQ1M3Z25OLV9QQ2pBbGVIU0pvR2ZtY0J0OVB6OFczbUQ1WG0xMGkwQ2M1bFpsRW1DSEl4ejJlVWtYWTg0ZGF0YzQ2ZzJ5YklWTkd2?oc=5",
   "source": "Google News(スマートロック)",
@@ -2440,6 +2531,19 @@
   "title_raw": "ChatLock、法人向けスマートロック・電子錠の導入相談窓口を新設｜オフィス・ホテル・民泊・各種施設の導入を支援 - ニコニコニュース",
   "summary_raw": "ChatLock、法人向けスマートロック・電子錠の導入相談窓口を新設｜オフィス・ホテル・民泊・各種施設の導入を支援 ニコニコニュース",
   "collected": "2026-09-17T01:55:24Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "1d2a68b3da263470",
+  "link": "https://news.google.com/rss/articles/CBMickFVX3lxTE1iSjNqQU9xQ2h0SS1GS1pqbFRSYzhROXdNUnU2SFloRTJuWnNvLWJDQnRwMnZTU3NlenlDSjB2Ynhka2xjdk8xWTNWamxOeVNQUnhhTGF1b0NhTl83Z2p6TTJ6ZjJfMmtqSVR4THRtTVRtUQ?oc=5",
+  "source": "Google News(顔認証 入退室)",
+  "publisher": "Infoseek",
+  "lang": "ja",
+  "published": "2026-09-07T09:15:47Z",
+  "title_raw": "顔認証・入退室管理リーダーFE-800シリーズに新モデルが登場！FE-500同等の価格帯で画面大型化・高輝度LEDによる圧倒的な認証精度を実現した「FE-800SE」を発売開始 - Infoseek",
+  "summary_raw": "顔認証・入退室管理リーダーFE-800シリーズに新モデルが登場！FE-500同等の価格帯で画面大型化・高輝度LEDによる圧倒的な認証精度を実現した「FE-800SE」を発売開始 Infoseek",
+  "collected": "2026-09-20T22:54:10Z",
   "status": "raw",
   "picked": false
  },
@@ -2726,6 +2830,19 @@
   "title_raw": "ホテル向けスマートロック・電子錠で鍵管理を効率化｜ChatLock、フロント業務の省人化を支えるアクセス管理提案を開始 - 時事ドットコム",
   "summary_raw": "ホテル向けスマートロック・電子錠で鍵管理を効率化｜ChatLock、フロント業務の省人化を支えるアクセス管理提案を開始 時事ドットコム",
   "collected": "2026-09-19T22:37:11Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "74f4de14320665a3",
+  "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9wSkpoZnlxdTdlTVFfeGlGTy0yLVB3SzJuaHl6bzNYMHV3RXpaQmt0TnlNa1RNLU1pM1RSci0zekxQcHRYdl9oNmVycEhScDdlT3hLdldmSm40WWQwSEVYalNwZFNrd0oxLWh3?oc=5",
+  "source": "Google News(スマートロック)",
+  "publisher": "時事ドットコム",
+  "lang": "ja",
+  "published": "2026-09-04T07:00:00Z",
+  "title_raw": "スマートロック・電子錠「ChatLock T10」、Appの解錠履歴機能をアップデート｜共働き家庭の子どもの帰宅確認をサポート - 時事ドットコム",
+  "summary_raw": "スマートロック・電子錠「ChatLock T10」、Appの解錠履歴機能をアップデート｜共働き家庭の子どもの帰宅確認をサポート 時事ドットコム",
+  "collected": "2026-09-20T22:54:05Z",
   "status": "raw",
   "picked": false
  },
@@ -3025,6 +3142,19 @@
   "title_raw": "ADATA Urban Tapsafe review: clever NFC access, serious limits - NeoTeo",
   "summary_raw": "ADATA Urban Tapsafe review: clever NFC access, serious limits NeoTeo",
   "collected": "2026-09-18T22:57:55Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "fb89134a1a450b8f",
+  "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE1aSG0yQzladzJuOHV0amdGU2hHTlF5MUtmTjY4VTV4OWdmb3pUN0x0bDRDR1ZLZHEtRy1NUjlhWm94ZlBUUVk1TjRYd2JmdV9jUGpiOA?oc=5",
+  "source": "Google News(電子錠)",
+  "publisher": "ニコニコニュース",
+  "lang": "ja",
+  "published": "2026-09-03T07:00:00Z",
+  "title_raw": "スマートロック・電子錠「ChatLock T10」、Appの解錠履歴機能をアップデート｜共働き家庭の子どもの帰宅確認をサポート - ニコニコニュース",
+  "summary_raw": "スマートロック・電子錠「ChatLock T10」、Appの解錠履歴機能をアップデート｜共働き家庭の子どもの帰宅確認をサポート ニコニコニュース",
+  "collected": "2026-09-20T22:54:05Z",
   "status": "raw",
   "picked": false
  },
@@ -3601,6 +3731,19 @@
   "picked": false
  },
  {
+  "id": "02039399eaef638b",
+  "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9JN3YtZk5RTlExeEp3MFd2RFB6aHFLbER1RkxBOGhxdTR2X28taUxPN2k2eVRla0lTRVF0QmMwdnM1MHh2dDNzeU9Yc1NXQ0I4WFRZSHJ5SjBPYjJzT1M0?oc=5",
+  "source": "Google News(デジタルキー)",
+  "publisher": "千葉テレビ放送",
+  "lang": "ja",
+  "published": "2026-08-31T07:00:00Z",
+  "title_raw": "グローバルTier-1のYFORE、米国で製造した初のデジタルキーをラインオフ - 千葉テレビ放送",
+  "summary_raw": "グローバルTier-1のYFORE、米国で製造した初のデジタルキーをラインオフ 千葉テレビ放送",
+  "collected": "2026-09-20T22:54:06Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "ba9af7abe2e285f4",
   "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5FM0FUaWhnOXFuanU2UGZuWGVwN0FDX3JhSC1aQmpPa0hsWVVoQ1FSZFhOZFFkMUN1Mmh5UUZ2U2NKdzhIMk9kbkhnWWEwelF3NjB5VldzN1RrUGluVEJHem1QYjJla21iY2Zr?oc=5",
   "source": "Google News(スマートロック)",
@@ -3974,6 +4117,19 @@
   "title_raw": "Chatlock、台湾の鍵専門パートナーとスマートロック・電子錠の技術交流を実施｜日本本社で施工・運用ノウハウを共有 - ニコニコニュース",
   "summary_raw": "Chatlock、台湾の鍵専門パートナーとスマートロック・電子錠の技術交流を実施｜日本本社で施工・運用ノウハウを共有 ニコニコニュース",
   "collected": "2026-09-18T22:57:48Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "37b3472386e1b6d2",
+  "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFAyUXNLbTdBUWpxNTkzQ3BzeURieHBRdTNJaDNYWWo4am0tWnUzTFpHRmJpU2FzTVRIWkMxbUEteWVEQ3FEaEFBTmdjMFVVWVRTY2hQVQ?oc=5",
+  "source": "Google News(入退室管理)",
+  "publisher": "ASCII.jp",
+  "lang": "ja",
+  "published": "2026-08-27T07:00:00Z",
+  "title_raw": "セーフィー、顔認証入退室管理「Safie Entrance」に共連れ検知機能の提供を開始 - ASCII.jp",
+  "summary_raw": "セーフィー、顔認証入退室管理「Safie Entrance」に共連れ検知機能の提供を開始 ASCII.jp",
+  "collected": "2026-09-20T22:54:06Z",
   "status": "raw",
   "picked": false
  },
