@@ -1,5 +1,31 @@
 [
  {
+  "id": "3f0bcdb63a4304dc",
+  "link": "https://news.google.com/rss/articles/CBMiggFBVV95cUxOdFNNaHFtOE9ERGthQjRaRmRTcmRQNlpxV1h6dm5STDRTeFRKeGE0TTZybUh0c2VXOHFaakUzb0RvTVdZSDdRSUt2THVfZUx5ZTZZaGRqclhvVnZUWjRCTERrMWFsUXY3bl80NFlzdjRVbjc2YkdlcnZJZGdIR0dab2p3?oc=5",
+  "source": "Google News(video doorbell)",
+  "publisher": "The Gadgeteer",
+  "lang": "en",
+  "published": "2026-09-21T15:30:14Z",
+  "title_raw": "SimpliSafe’s New Wired Doorbell Makes You Check Your Setup Before Your Wallet - The Gadgeteer",
+  "summary_raw": "SimpliSafe’s New Wired Doorbell Makes You Check Your Setup Before Your Wallet The Gadgeteer",
+  "collected": "2026-09-21T23:46:52Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "f1be46655283a349",
+  "link": "https://news.google.com/rss/articles/CBMixwFBVV95cUxPajhNZXotbmEtdU9nMkpGVU1iS3BQdGx2MkdrcVRJZXFYNjREMFhta3ZxekdpYThMSGZYRDZiNWpWRXRGampnRnJRVkhxSk1xS3dSSmVpTWJ5Ymc0a080TTA3UEQ1NG5Qdm5nT1lnS25wcmJqT2ZuQkNtekI0RWFKU05PV3cxS0ptQ1JfeV93NXZzMWVfNHZ6c1JBaVpwRkR0UDNZV28xWnYzNHdBN0stRkdFWFJBY1JXb3NSbVVIbHRPbXYyTjlB?oc=5",
+  "source": "Google News(video doorbell)",
+  "publisher": "t3.com",
+  "lang": "en",
+  "published": "2026-09-21T11:00:00Z",
+  "title_raw": "Tapo’s teeny tiny video doorbell might have convinced me to switch to a hardwired model - t3.com",
+  "summary_raw": "Tapo’s teeny tiny video doorbell might have convinced me to switch to a hardwired model t3.com",
+  "collected": "2026-09-21T23:46:52Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "b51163e7fcdc1d6b",
   "link": "https://news.google.com/rss/articles/CBMifkFVX3lxTFBsME5Xby16U0s1MUswaEFYNng3Tzk3VUZnVUFoQzZ2ZUN5SDJWUU1hWTdjRjRFdmpvQnBoUzJRdHNkblE3ejNCWElNSjZ5VHdYenhxaktsOXhyZUdKMEt6bE5hSUdZS2laaVRYMHpqX2owX1VNZHpqVEJ4b2Zpdw?oc=5",
   "source": "Google News(smart lock)",
@@ -61,6 +87,19 @@
   "title_raw": "What Is a Smart Lock? Why I Recommend This Security Upgrade for Everyone - CNET",
   "summary_raw": "What Is a Smart Lock? Why I Recommend This Security Upgrade for Everyone CNET",
   "collected": "2026-09-19T22:37:17Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "f3a1caac152bd7dc",
+  "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxPYS1ycHlwVkV6QXQyUER2RG4zZ0s1alFMNlJsTzJXZ1VOZXZzaWVEWjVEaG1waUpmRkktMTlFbzJ5VVl0RERSZE1NN3JldHNaMFZfalZfMkp1UW9qXzVWby1tZVhLajVPbUtjLVQzdVc2RHJRMmhhaEFWWG8tbzFUUnUtRmdfQU10dnFTZjB3?oc=5",
+  "source": "Google News(smart lock)",
+  "publisher": "Yahoo Tech",
+  "lang": "en",
+  "published": "2026-09-19T11:00:00Z",
+  "title_raw": "What Is a Smart Lock? Why I Recommend This Security Upgrade for Everyone - Yahoo Tech",
+  "summary_raw": "What Is a Smart Lock? Why I Recommend This Security Upgrade for Everyone Yahoo Tech",
+  "collected": "2026-09-21T23:46:51Z",
   "status": "raw",
   "picked": false
  },
@@ -520,6 +559,19 @@
   "picked": false
  },
  {
+  "id": "6ad8a6b5b1ebbf3c",
+  "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxQaDlJWnRWcjlPNW14cW5OQUdYZ1o4TXhEajk4OEU4VTRWeFpMUWRGaEppYUZCVk1wbE1wd2pIWVRqaExkX21oTHdBRUJVRUZQbmdHYzBlNnAtV1hmWGVDbkRuSXk0bUxHZXNIMllKd25VazVHOVo1Q0I3aHJEWXBZaXFJYXVQLTdrNlQ1bmYtUldXbG5wTGZNVTN4NHNXRlhkX1E?oc=5",
+  "source": "Google News(電子錠)",
+  "publisher": "産経ニュース",
+  "lang": "ja",
+  "published": "2026-09-15T23:30:00Z",
+  "title_raw": "車を盗むため、アンテナコードを取り付けたとみられるフラフープ（左上）＝埼玉県警提供 - 産経ニュース",
+  "summary_raw": "車を盗むため、アンテナコードを取り付けたとみられるフラフープ（左上）＝埼玉県警提供 産経ニュース",
+  "collected": "2026-09-21T23:46:46Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "5f71c6b8599153f0",
   "link": "https://news.google.com/rss/articles/CBMivgFBVV95cUxPRVkxTi1nNVhteEZiY1AtYm9Ha2VUWExhMFh6QTlsbmVOQk5FMTBWTi1SZERoUWRnVXRIZ3VlcnBUWDFRRVhiU0EyN1hTTG9WWHVvcl9OaHQwRU43VFgtekhxUm5lQU1wdXpuNi16ei1zbmFaYUFHa3BfckNweWQyTWtuQVNKZkNaRndubkpQLW9hX0F0OEx4QTV0UTRUUmlwNGVwQ1Fwb0tzX3B0M2MxWDJ2dVFqeUZDSWtzTVhn?oc=5",
   "source": "Google News(smart lock)",
@@ -767,6 +819,19 @@
   "picked": false
  },
  {
+  "id": "738a6caffddb3832",
+  "link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBkQzhBZHJfbWE3WWp6d2Y5X2RwbEtHbm00dDExMjN6ZE1kelJFR1JZdVBGMmhBR3lGdGczRUN1VmhCWDRfbE9VY1FpTHVxUWJhSlYzbExyQ3poNjQ?oc=5",
+  "source": "Google News(入退室管理)",
+  "publisher": "朝日新聞",
+  "lang": "ja",
+  "published": "2026-09-15T01:00:00Z",
+  "title_raw": "株式会社アートが「危機管理産業展2026（RISCON TOKYO）」に出展！最新セキュリティを実機で体感 ＆LINE登録特典も - 朝日新聞",
+  "summary_raw": "株式会社アートが「危機管理産業展2026（RISCON TOKYO）」に出展！最新セキュリティを実機で体感 ＆LINE登録特典も 朝日新聞",
+  "collected": "2026-09-21T23:46:47Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "947c891826d2dc95",
   "link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFA0alNWZTlIUFNablFwUW40S0t1QkJXYjQzWTJ5OVoxZU0wLTdNWWdzanVmMUdPU3U1VlBZNkNqM3NUUFd3WGY4WkJwQUVlUEt0TlBz?oc=5",
   "source": "Google News(入退室管理)",
@@ -971,6 +1036,19 @@
   "title_raw": "AIは勝手に賢くならない――人の顔や姿を15万枚撮り、雨粒一滴と戦ったパナソニック「ドアホン開発」の裏側 (VAGUE) - Yahoo!ニュース",
   "summary_raw": "AIは勝手に賢くならない――人の顔や姿を15万枚撮り、雨粒一滴と戦ったパナソニック「ドアホン開発」の裏側 (VAGUE) Yahoo!ニュース",
   "collected": "2026-09-19T22:37:17Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "7538954c0afffce3",
+  "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxQQVp2eGRnc2hocmx1aWhqUzl5QnVEbENCQVQ4OTV1Q1RnZnJCSG1hS0FXbUpXaElhLTVyMUpLaVd6TlRpcjRlQWNyTWlrRTJISHJqNXpKVVFmQjlVbmhnVVpMRHl3cEFXOUpMeHgtX2U0XzNLOVpaVW9yN1pqUkZIazhUU2JlME0wTmFsZXhB?oc=5",
+  "source": "Google News(ドアホン)",
+  "publisher": "Yahoo!ニュース",
+  "lang": "ja",
+  "published": "2026-09-14T10:10:00Z",
+  "title_raw": "AIは勝手に賢くならない――人の顔や姿を15万枚撮り、雨粒一滴と戦ったパナソニック「ドアホン開発」の裏側 (VAGUE) - Yahoo!ニュース",
+  "summary_raw": "AIは勝手に賢くならない――人の顔や姿を15万枚撮り、雨粒一滴と戦ったパナソニック「ドアホン開発」の裏側 (VAGUE) Yahoo!ニュース",
+  "collected": "2026-09-21T23:46:51Z",
   "status": "raw",
   "picked": false
  },
@@ -1248,6 +1326,32 @@
   "picked": false
  },
  {
+  "id": "446a8c715f71b18c",
+  "link": "https://csa-iot.org/wp-content/uploads/2026/09/Aliro_UWB-Position-Paper_for-Publication-CN.pdf",
+  "source": "CSA(Connectivity Standards Alliance)",
+  "publisher": "",
+  "lang": "en",
+  "published": "2026-09-10T21:36:45Z",
+  "title_raw": "The Importance of Ultra-Wideband (UWB) and Channel 9 at a Glance (Mandarin)",
+  "summary_raw": "",
+  "collected": "2026-09-21T23:46:52Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "599075e3c5b20f51",
+  "link": "https://csa-iot.org/wp-content/uploads/2026/09/Aliro_UWB-Position-Paper_for-Publication.pdf",
+  "source": "CSA(Connectivity Standards Alliance)",
+  "publisher": "",
+  "lang": "en",
+  "published": "2026-09-10T21:36:19Z",
+  "title_raw": "The Importance of Ultra-Wideband (UWB) and Channel 9 at a Glance",
+  "summary_raw": "",
+  "collected": "2026-09-21T23:46:52Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "75e12c49a43e7c0a",
   "link": "https://news.google.com/rss/articles/CBMihAFBVV95cUxQMVZTQkVia3pQQzB1VGpmaXpiYXRGMmV4ZENoX3FLdk1mbldLM2ZvMUZrNTBsbHQ5Zkl5Q251T2FNWkZjRjVoSXVlVnpmZXNWaC1mNTJBX0ZyT3pKRzF0LXM5WHRZWFk0ZFdyeUhpejByLVJjMEducXFaOEJfcnlFRzVBM0E?oc=5",
   "source": "Google News(ドアホン)",
@@ -1374,6 +1478,19 @@
   "title_raw": "アップルが新型Apple Watchを発表！「Apple Watch Series 12」と「Apple Watch Ultra 4」の特徴まとめ - weekly.ascii.jp",
   "summary_raw": "アップルが新型Apple Watchを発表！「Apple Watch Series 12」と「Apple Watch Ultra 4」の特徴まとめ weekly.ascii.jp",
   "collected": "2026-09-20T22:54:07Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "947ce3e67b156d33",
+  "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE41NXpzYmZOVlhMcEFZQTFDV000alJOYmhBSS1MeDMyLUlWbXJjZDI1aEhOQXhENFNFUFU0Yjl4MWhKdXhxR0FsRXNfcU1xdmJQSVVBSTU5TlZZcGZ0RVh3?oc=5",
+  "source": "Google News(電子錠)",
+  "publisher": "千葉テレビ放送",
+  "lang": "ja",
+  "published": "2026-09-10T07:00:00Z",
+  "title_raw": "まさか…フラフープで車窃盗か スマートキーの微弱電波を増幅、電子錠を誤作動させる手口 男2人を再逮捕、住所不定、無職の26歳と28歳 別の車2台盗んだ容疑で逮捕済み 埼玉・千葉・茨城で数十件の余罪の疑い - 千葉テレビ放送",
+  "summary_raw": "まさか…フラフープで車窃盗か スマートキーの微弱電波を増幅、電子錠を誤作動させる手口 男2人を再逮捕、住所不定、無職の26歳と28歳 別の車2台盗んだ容疑で逮捕済み 埼玉・千葉・茨城で数十件の余罪の疑い 千葉テレビ放送",
+  "collected": "2026-09-21T23:46:46Z",
   "status": "raw",
   "picked": false
  },
@@ -1842,6 +1959,32 @@
   "title_raw": "【写真】電子錠誤作動で車盗んだ疑い 男２人逮捕、フラフープ悪用か - 南日本新聞",
   "summary_raw": "【写真】電子錠誤作動で車盗んだ疑い 男２人逮捕、フラフープ悪用か 南日本新聞",
   "collected": "2026-09-20T22:54:05Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "1d5a66505764f5c0",
+  "link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE8xSW1fZGZBQXE1YUxxcm51RXpiQWI5VFNUc0ZnODZhSGVMbjZydF9VcEpDdkpaN3ZwZFhxTWFDeThka2xDeHhyY3RaRQ?oc=5",
+  "source": "Google News(電子錠)",
+  "publisher": "47NEWS",
+  "lang": "ja",
+  "published": "2026-09-09T07:00:00Z",
+  "title_raw": "【速報】「フラフープ」で電子錠誤作動、車窃盗疑い - 47NEWS",
+  "summary_raw": "【速報】「フラフープ」で電子錠誤作動、車窃盗疑い 47NEWS",
+  "collected": "2026-09-21T23:46:46Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "8fccf301b2478a2e",
+  "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE55VXk4c0FBV25objgwa2kzSVlXUVhkR3NoMmlBUDZjS2xGS1hsVlhra0JMakpGNzJmZWp0OVgtSFhiTmtOU29nTmtXU0c1WWM0?oc=5",
+  "source": "Google News(電子錠)",
+  "publisher": "nnn.co.jp",
+  "lang": "ja",
+  "published": "2026-09-09T07:00:00Z",
+  "title_raw": "電子錠誤作動で車盗んだ疑い 男２人逮捕、フラフープ悪用か - nnn.co.jp",
+  "summary_raw": "電子錠誤作動で車盗んだ疑い 男２人逮捕、フラフープ悪用か nnn.co.jp",
+  "collected": "2026-09-21T23:46:46Z",
   "status": "raw",
   "picked": false
  },
@@ -2847,6 +2990,32 @@
   "picked": false
  },
  {
+  "id": "b767f4a4052ed5ad",
+  "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxNWEV1NWdhanh5VDJkNEEyNjVQdEFwUEwyLUNzRUZWZTR3YTN3aDd3R1pwS0RiZTRyamdvZEllWDhxa3lrcW00T0lqV3d2aHEza1k1eEJfMVF0Nzg4cnV5UzJ3cHNhc2hHRzJWVWNSNm5wbWlJaVQyV1lKRHIyMm0wcjNxY2g3M0dpeld1WC1lbHNhdVJGWnc?oc=5",
+  "source": "Google News(オートロック マンション)",
+  "publisher": "kentaku.co.jp",
+  "lang": "ja",
+  "published": "2026-09-04T07:00:00Z",
+  "title_raw": "オートロック付き新築賃貸マンションの共用エントランスに「顔認証システム」を導入 | 2026年度 | ニュースリリース | ニュース - kentaku.co.jp",
+  "summary_raw": "オートロック付き新築賃貸マンションの共用エントランスに「顔認証システム」を導入 | 2026年度 | ニュースリリース | ニュース kentaku.co.jp",
+  "collected": "2026-09-21T23:46:49Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "83ba61255c6e79bf",
+  "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTFBSUUpvb2xhaHAzUktac0tJNk1WVWFQZ2lDRmtlSjdrYXViTUdFX1F1ZmhpR21qVHpxQm1mQ2VpMHV4aTVMVXdJVGIxaUNTUWg0OUhSdmJCSjRGNEp4TWpvcTNCUmhCMHFIVEE?oc=5",
+  "source": "Google News(オートロック マンション)",
+  "publisher": "PR TIMES",
+  "lang": "ja",
+  "published": "2026-09-04T07:00:00Z",
+  "title_raw": "大東建託のオートロック付き新築賃貸マンションにライナフの顔認証エントランスが採用 - PR TIMES",
+  "summary_raw": "大東建託のオートロック付き新築賃貸マンションにライナフの顔認証エントランスが採用 PR TIMES",
+  "collected": "2026-09-21T23:46:49Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "cd7ae60d528f1330",
   "link": "https://news.google.com/rss/articles/CBMickFVX3lxTFBJeVFIQ3h2RHYtLUV6bGpyOGtTeUxfVGNKZHQyODF6M3VxUWJDUVNTSUc1TFVqWDhuc1BTZHlQbEp1WlhQMi10dmFEenZZd29mcEJOV3pFZTQxSFEtR1BQYnhYWko4blhrZHludGk5dko2QQ?oc=5",
   "source": "Google News(オートロック マンション)",
@@ -3740,6 +3909,19 @@
   "title_raw": "グローバルTier-1のYFORE、米国で製造した初のデジタルキーをラインオフ - 千葉テレビ放送",
   "summary_raw": "グローバルTier-1のYFORE、米国で製造した初のデジタルキーをラインオフ 千葉テレビ放送",
   "collected": "2026-09-20T22:54:06Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "b151ffb252601932",
+  "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxPdU1Tc2E2OGJ6UFhvcHBvRUVvUHctMkN6aW5aS19Oc0h5a0RkS2VIWTVDV0t6OEJ0VlBkR1BCR1hKb0dCeVViYkFaREF6clJIY1UxbWo5M3dOZ3dBODI1LWR0aUNPdlVnSUxYbzgxQ2lsOWp4c1d6Ukt3R0dIZ1lHNzlUS2hKLWc2aWpLZk1qSm1SOVNLVHNRWXYwZXI3Zw?oc=5",
+  "source": "Google News(digital key car)",
+  "publisher": "MarketsandMarkets",
+  "lang": "en",
+  "published": "2026-08-30T15:01:43Z",
+  "title_raw": "South-Korea Digital Key Cabinet Market Size, Share,Trends, Growth Analysis Report, 2029 - MarketsandMarkets",
+  "summary_raw": "South-Korea Digital Key Cabinet Market Size, Share,Trends, Growth Analysis Report, 2029 MarketsandMarkets",
+  "collected": "2026-09-21T23:46:52Z",
   "status": "raw",
   "picked": false
  },
