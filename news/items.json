@@ -1,5 +1,57 @@
 [
  {
+  "id": "7ff4bdf66491c0fb",
+  "link": "https://news.google.com/rss/articles/CBMihgFBVV95cUxQd2dOT2h4REdZX1ZIQUdNcEhfc0tDM1Z0UURZNEZIaGR2MHkyVXowdjBuVTRkaDRpMUtjRmZtMDRydTR6NUcxMWVQTUpyLUxHY0wwc2l1SUxBb0dXenB5YWdPVmtUcGx5QWdYRW5oVzZJY3VLRmVQZFJKVTY2RkhnaGtOcUxsUQ?oc=5",
+  "source": "Google News(digital key car)",
+  "publisher": "Autoblog",
+  "lang": "en",
+  "published": "2026-09-26T14:15:00Z",
+  "title_raw": "Your Phone Is Your New Key Fob on These GM Models - Autoblog",
+  "summary_raw": "Your Phone Is Your New Key Fob on These GM Models Autoblog",
+  "collected": "2026-09-26T23:20:52Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "4f3dab6edbc2c7c8",
+  "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1mYnEtM1kzVTVQX0ZaeU9CUFo3b0YzSVdfa0NGWXA3TGh5dlIxdzB3OUpjSVJncGE3bTlNWDRPcnNRZHMyMThxM0hPbEtZSEpXbmFKbGZLT0Y3QWdWbzVjaS0xNkltb29zRXFoN0VR?oc=5",
+  "source": "Google News(smart lock)",
+  "publisher": "Trend Hunter",
+  "lang": "en",
+  "published": "2026-09-26T09:38:17Z",
+  "title_raw": "Approach-Aware Smart Locks: ULTRALOQ Expands Its Lineup with Bolt Mission - Trend Hunter",
+  "summary_raw": "Approach-Aware Smart Locks: ULTRALOQ Expands Its Lineup with Bolt Mission Trend Hunter",
+  "collected": "2026-09-26T23:20:49Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "887d272e174c5751",
+  "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxORWN3ZF9iN3Z4Mld3aVBEVUdmUmVGY1c4WnJJUFhodGt5SGY0Q1VHdktXU05Cc0VmVU5FS2xFbUtHcThONGJUMjA0MFZqbG5nZUowVFZhRUswTTVacWFFYWxGODNZbkNTUGNxLXJSZGduZjlWUzF5cmhjRHo3MGhDUlZsbzRYV3c?oc=5",
+  "source": "Google News(video doorbell)",
+  "publisher": "TechRadar",
+  "lang": "en",
+  "published": "2026-09-26T07:00:00Z",
+  "title_raw": "Aosu R1 Ultra Video Doorbell review: Free local video storage makes this a smart budget buy, provided you look past the slightly inflated spec sheet - TechRadar",
+  "summary_raw": "Aosu R1 Ultra Video Doorbell review: Free local video storage makes this a smart budget buy, provided you look past the slightly inflated spec sheet TechRadar",
+  "collected": "2026-09-26T23:20:50Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "da36a5c3ef6c09b3",
+  "link": "https://news.google.com/rss/articles/CBMifEFVX3lxTFBMUVVVYmx3Zi0yVWhxNFlod1hoQkhCcGdCUndkdDVYb3pYZVBfRnh4T2puU3hsb2hidWFnUW1QQXhnc2dGSXRJeFNzb0piWVR0TnVrdE9DZHFQam1ucDFWNVRJQk9wVnh6dlZLc2Z4VWowRUMwYW4zY3lZeWbSAXtBVV95cUxOaGxzNFJRdzlUOVkxdWhQamt0dWNpMkVXa2hDaGhoaXpLVFdFa013X2FHbWt2ZWRqMi11M1JTRnl3dFVONkJ1dkhzM0pBNmtXQl9rTjFIRWQyek1sd3d1aFZzTnF1OEhrdnExTG45eFJIQmpYbEpaSHJMVnc?oc=5",
+  "source": "Google News(Matter smart lock)",
+  "publisher": "Gearbrain",
+  "lang": "en",
+  "published": "2026-09-25T23:48:55Z",
+  "title_raw": "ULTRALOQ launches three next-generation smart locks with UWB, Aliro and Matter - Gearbrain",
+  "summary_raw": "ULTRALOQ launches three next-generation smart locks with UWB, Aliro and Matter Gearbrain",
+  "collected": "2026-09-26T23:20:43Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "f73b5904e1797ad4",
   "link": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxPR0tnellFUDFsUm9yTVNIM1otZEQ0UUFuSDBRLXZEUXJLMXNXaDhwb3k4OXJ5eVFQWHE0RFhPOUNEVkJrVWVvRmRkSnZJbkxhNXlDU3lXUDZTQ1daaklmUWJ1VUxvZlZQd1BlMUVLNHNwN05RbjZBaWNIU2x6LUhfYWF2WXZlM05yd2pB?oc=5",
   "source": "Google News(smart lock)",
@@ -100,6 +152,19 @@
   "title_raw": "スマートロックに締め出され、東京で朝までスマホも財布もなしでサバイバルした話 - ギズモード",
   "summary_raw": "スマートロックに締め出され、東京で朝までスマホも財布もなしでサバイバルした話 ギズモード",
   "collected": "2026-09-25T23:45:35Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "5c3b8dca82f4675d",
+  "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxPT1BRal9pR1NJWElLTXpEREVyMW9GRkpwNzNyNkMxOElxT1NMZTlxSnRPMmxCSDVBcWp2eWc0dzFWVWhZOW5JR1p0M0R1aTd2SlV0c28zTTF4Nlh1RHM1ZFFabTN6MWRSeTBUVW4yQklhRnh2T0k4U0hlSEI3YjNJUXp1VU8tc2NCZEM0MkdyS3dNekhOYWZxb3JmX0xoYVhtd3cxWDIxd2JaRVg0djFQeGc5dmpYYVhWMGdRQ2F3c0dVa3Y4?oc=5",
+  "source": "Google News(video doorbell)",
+  "publisher": "The Verge",
+  "lang": "en",
+  "published": "2026-09-25T13:00:00Z",
+  "title_raw": "Apple is making your security camera smarter. What comes next is more interesting. - The Verge",
+  "summary_raw": "Apple is making your security camera smarter. What comes next is more interesting. The Verge",
+  "collected": "2026-09-26T23:20:50Z",
   "status": "raw",
   "picked": false
  },
@@ -312,6 +377,19 @@
   "picked": false
  },
  {
+  "id": "e1e77ddfd8be43d8",
+  "link": "https://news.google.com/rss/articles/CBMifkFVX3lxTE04S21SN0xJS25IVFowQURBdFlUSmp6emM0MF9ScDJrT3BqbU5qMFhvSEFWb3NHX19nRU4ySXItRjExdWVXbWQ1djJiaU5QTWY0LTlyeU11Y0JWZmRWaUxueVNPeUVYMEpLemh5eFhkQ2d3V3otcXVTa256R245QQ?oc=5",
+  "source": "Google News(入退室管理)",
+  "publisher": "city.higashihiroshima.lg.jp",
+  "lang": "ja",
+  "published": "2026-09-24T07:42:55Z",
+  "title_raw": "東広島市入退室管理システム等構築業務に係る公募型プロポーザルの実施について|東広島市ホームページ - city.higashihiroshima.lg.jp",
+  "summary_raw": "東広島市入退室管理システム等構築業務に係る公募型プロポーザルの実施について|東広島市ホームページ city.higashihiroshima.lg.jp",
+  "collected": "2026-09-26T23:20:40Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "83753c9d982e5a78",
   "link": "https://news.google.com/rss/articles/CBMijwFBVV95cUxQNFRNbnFzb25hc0hFY0loaDgzVGpNY3J3dXV5UnRUN1FjWjk1b2xrVDdsU0pwRWtKUno1ZFBBNzZTeG5GZ1pUZTVPb3VJQ0VsSTRXUFBtSTdKQmMzTlNwd0JHT1MycmF5b2lsQW5uaUx3TDZmWjVTX3N4c2RRMEl1Y3FOWnhzNWdyaTB3aGxrYw?oc=5",
   "source": "Google News(スマートロック)",
@@ -347,6 +425,19 @@
   "title_raw": "東広島市入退室管理システム等構築業務に係る公募型プロポーザルの実施について|東広島市ホームページ - city.higashihiroshima.lg.jp",
   "summary_raw": "東広島市入退室管理システム等構築業務に係る公募型プロポーザルの実施について|東広島市ホームページ city.higashihiroshima.lg.jp",
   "collected": "2026-09-24T23:43:21Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "7b6331bd027b44fc",
+  "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTE5XMnVOamZDNU1NTzJKOGpRRWVTU1pCYk0zTkdjby1MamRaZXhrSUVoVmlzczZYc01oZURSTjVkUnJCR0VrdDZQMmF0R3VBVmgtZTFzcFUtX0Q3aHQtOVhuRURXU2d1TzVERDQ5NENQSQ?oc=5",
+  "source": "Google News(スマートロック)",
+  "publisher": "jetstream.blog",
+  "lang": "ja",
+  "published": "2026-09-24T07:08:25Z",
+  "title_raw": "第4世代！「SwitchBot ハブ4」登場へ【アプリ解析】 - jetstream.blog",
+  "summary_raw": "第4世代！「SwitchBot ハブ4」登場へ【アプリ解析】 jetstream.blog",
+  "collected": "2026-09-26T23:20:37Z",
   "status": "raw",
   "picked": false
  },
@@ -828,6 +919,19 @@
   "title_raw": "Walk Up and Unlock: GHome Smart's Hands-Free 3D Face Recognition Smart Lock Goes Live on Kickstarter - TechBullion",
   "summary_raw": "Walk Up and Unlock: GHome Smart's Hands-Free 3D Face Recognition Smart Lock Goes Live on Kickstarter TechBullion",
   "collected": "2026-09-18T22:57:54Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "7764acff68f025d7",
+  "link": "https://news.google.com/rss/articles/CBMipAFBVV95cUxOV1g5cWloTk9tRzVhaXBHdDhQbEUxVDQxQm9CS2lQbzlyOG96Q1FLazdJbUh4ZW1vUDZCTU8zalVJVU5VaW80Y3VjSFVlbUZfd2xncTVVelhrdjdGeERUeHllTjA2SlIxS1ZLZGw0Rm1yQUdVaTlwbVpzUG1id0lzYU5QQUVQOEZZdTI1SmktM2E5R1RobE5nMjQ0Z1UxRE9kTVY1dw?oc=5",
+  "source": "Google News(video doorbell)",
+  "publisher": "CNET",
+  "lang": "en",
+  "published": "2026-09-18T07:00:00Z",
+  "title_raw": "The Magic of AI Greetings and Auto-Messages on Our Video Doorbells - CNET",
+  "summary_raw": "The Magic of AI Greetings and Auto-Messages on Our Video Doorbells CNET",
+  "collected": "2026-09-26T23:20:50Z",
   "status": "raw",
   "picked": false
  },
@@ -1426,6 +1530,19 @@
   "title_raw": "TP-Link Announces Tapo Doorbell Pro D260, 4K Video Doorbell for Superior Entryway Security - Business Wire",
   "summary_raw": "TP-Link Announces Tapo Doorbell Pro D260, 4K Video Doorbell for Superior Entryway Security Business Wire",
   "collected": "2026-09-25T23:45:40Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "825d09766f029d4c",
+  "link": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNOUZNTTZkek8wREVXaU9VNjlnbXQ0SDR6WWFNcndqTk1aQ09vblluMld0LUZ0RG9JWklBOVBIZ1ZNWUhFVWNaSGRTQU8zY01tSzlhck1XMDIzSklHR01acTBzUkp0VE5ieU5QNXVXYTluZjFlbDdiM2x1VWxNLUJwVlduWTVseG9tTjBqOHBnUGptdjZ4bDlQZXBaN0g?oc=5",
+  "source": "Google News(digital key car)",
+  "publisher": "Lab Manager",
+  "lang": "en",
+  "published": "2026-09-15T07:00:00Z",
+  "title_raw": "NIST Issues Final Guidance for Protecting Digital Access Tokens - Lab Manager",
+  "summary_raw": "NIST Issues Final Guidance for Protecting Digital Access Tokens Lab Manager",
+  "collected": "2026-09-26T23:20:52Z",
   "status": "raw",
   "picked": false
  },
@@ -2050,6 +2167,19 @@
   "title_raw": "ChatLock、法人向けスマートロック・電子錠の導入相談窓口を新設｜オフィス・ホテル・民泊・各種施設の導入を支援 - excite.co.jp",
   "summary_raw": "ChatLock、法人向けスマートロック・電子錠の導入相談窓口を新設｜オフィス・ホテル・民泊・各種施設の導入を支援 excite.co.jp",
   "collected": "2026-09-17T01:55:26Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "e71770f847aa4069",
+  "link": "https://news.google.com/rss/articles/CBMifEFVX3lxTE5NbUZDZDRaZldYMHFoN1I0QnNnS0FBelJBS3htNURLdHVTR3dUcVMyMkpncTVCZlBrTVlwLWU3bnBmLXNDWnpjSWo1TWswS2I5aVpMZllKUGYtYWR2VXdNZUU3Qm9tVFRNdEpkZ2pXaEU5cUtvbFVjdjRjUy3SAYIBQVVfeXFMTUtnN2xhcWNYMEVZZXBUYnRneGJKaHU2am81eW1WeXVIX1MzOU4zWFM3YkZmY1RkcE1vWHVlc0o5Q21YaV9vanNVakdCX0IzVFhtOXJPc0wxMGYzZ3ItR0pUaFNrVmRFLTJqUTVzZ0w1dTdZYXN1UFBJSzdfcmVORFJ1UQ?oc=5",
+  "source": "Google News(ドアホン)",
+  "publisher": "ｄメニューニュース",
+  "lang": "ja",
+  "published": "2026-09-11T07:00:00Z",
+  "title_raw": "次世代ビデオドアホン「HP5」、日本向けカスタムモデル発売 - ｄメニューニュース",
+  "summary_raw": "次世代ビデオドアホン「HP5」、日本向けカスタムモデル発売 ｄメニューニュース",
+  "collected": "2026-09-26T23:20:48Z",
   "status": "raw",
   "picked": false
  },
@@ -2804,6 +2934,32 @@
   "title_raw": "電子錠誤作動で車盗んだ疑い - daily.co.jp",
   "summary_raw": "電子錠誤作動で車盗んだ疑い daily.co.jp",
   "collected": "2026-09-25T23:45:35Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "7b08a0f3045ba4f3",
+  "link": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE94TDBlTElWLS1FMEJaN05vcmJDT3pwSWJ1SzJQWXF5am80T29JbjR6ci15SEczczh3UzFZbURLcFFHamIzT1JscEE2MjJ2cENvMHdfbXRvM2RUTTJRUnEzWlktZy1tUQ?oc=5",
+  "source": "Google News(電子錠)",
+  "publisher": "愛媛新聞",
+  "lang": "ja",
+  "published": "2026-09-09T07:00:00Z",
+  "title_raw": "電子錠誤作動で車盗んだ疑い - 愛媛新聞",
+  "summary_raw": "電子錠誤作動で車盗んだ疑い 愛媛新聞",
+  "collected": "2026-09-26T23:20:38Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "a936244dd2a4c2e6",
+  "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9yYThMQWxJdTEtcWNBYTJMalJBUnlYWlRwbnVibkpkNmxGUlgzRFRIN01KbnRiRE9UV0RVZmIwby1oWWJLdkJuZ2tEeFp5V2EzTVFwUlNPaldYX1FPcFc5cUV4SXQtQVZUdkE?oc=5",
+  "source": "Google News(顔認証 入退室)",
+  "publisher": "PR TIMES",
+  "lang": "ja",
+  "published": "2026-09-09T07:00:00Z",
+  "title_raw": "AI顔認証IPインターホン「LAXAS S414」「LAXAS S617」の専用スマホアプリが大幅アップデート！外出先からの遠隔解錠・来客対応機能をさらに拡充し、次世代の利便性とセキュリティを提供 - PR TIMES",
+  "summary_raw": "AI顔認証IPインターホン「LAXAS S414」「LAXAS S617」の専用スマホアプリが大幅アップデート！外出先からの遠隔解錠・来客対応機能をさらに拡充し、次世代の利便性とセキュリティを提供 PR TIMES",
+  "collected": "2026-09-26T23:20:47Z",
   "status": "raw",
   "picked": false
  },
