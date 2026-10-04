@@ -1,5 +1,44 @@
 [
  {
+  "id": "7d8df44ad8aeb78b",
+  "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxOVzV3SmR4V3owdUt5TXllcG5YQ1pPVDdGLXpTVk5qZ0U0aE1NOExHX0tQNFdmTjE3WS10ZzY0aFdrem1NR3dUdHBrSmUyMFplMXFPU2tVM3lBX0ppeWxJNU9FSmlWallpTzlXR1NHQ0Z0ZDB2T2dhb2NhRUc5bXNHVHhwNGY5bVVlblh3dWpwT0YyOU5kZVFOSjJCekIycDVia0QwcG9ubC04djl3OWIzT0hHdmhSVDRuWVIzNGpNcw?oc=5",
+  "source": "Google News(video doorbell)",
+  "publisher": "Gizmodo",
+  "lang": "en",
+  "published": "2026-10-04T18:48:18Z",
+  "title_raw": "Ring's 2K Battery Doorbell Is 60% Off, Amazon Isn't Waiting for Prime Day to Cut Its Own Brands - Gizmodo",
+  "summary_raw": "Ring's 2K Battery Doorbell Is 60% Off, Amazon Isn't Waiting for Prime Day to Cut Its Own Brands Gizmodo",
+  "collected": "2026-10-04T23:46:38Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "101ab26088b3c6c0",
+  "link": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBaNjdWQnprYk1WVm40NU5FZFVCcmhyZlJhMi1yUFRfM21IMDNIMjJueHUxLVhlNkdHdDZqdEduYlI3Zi05MWwxS3hoWXRNdEVhMUk4VDBkNTBQOENwUWRkODJNdEZZcktIWTJPOW55azVudVh3QUR3?oc=5",
+  "source": "Google News(video doorbell)",
+  "publisher": "Gizmodo",
+  "lang": "en",
+  "published": "2026-10-04T12:30:21Z",
+  "title_raw": "TP-Link Tapo Doorbell Pro D260 Review: Everything You Need at No Extra Cost - Gizmodo",
+  "summary_raw": "TP-Link Tapo Doorbell Pro D260 Review: Everything You Need at No Extra Cost Gizmodo",
+  "collected": "2026-10-04T23:46:38Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "eeb81aaa8f325096",
+  "link": "https://news.google.com/rss/articles/CBMiSkFVX3lxTFBrUG1KWFVxWHE4cnVzRWZJelVsN1Nudl8wZDZGV0V5MjNVSFhHTzI0ZGxXTjF0X2xtSWxLRlpaNmxrYUpHOEJ4TFBn?oc=5",
+  "source": "Google News(スマートロック)",
+  "publisher": "pando.life",
+  "lang": "ja",
+  "published": "2026-10-04T09:42:20Z",
+  "title_raw": "スマートロック市場動向レポート：規模、シェア、競争環境を含む産業分析、2026年から20 - pando.life",
+  "summary_raw": "スマートロック市場動向レポート：規模、シェア、競争環境を含む産業分析、2026年から20 pando.life",
+  "collected": "2026-10-04T23:46:32Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "6cdd7db6f7b8c1fe",
   "link": "https://news.google.com/rss/articles/CBMinAFBVV95cUxQVTBDNzFadjhlb0NObU00ZHNkQWZKYzlMckRvZElPWVk2aG1FZ2RRa1Zfb3ByZGl4VTFBS3hhMVlzemlhYUxLQ05LQ05lVGp1c0xWR1VFeFNOSXFWREEza1NBSzlEeGd3WFZfc0ZMd3hGQWc3elVhQ2ZYSGd4Y1JpRHlIaUJsOG0yTWhObnpjXzJkMnZYWTE5RmxaQkw?oc=5",
   "source": "Google News(video doorbell)",
@@ -832,6 +871,19 @@
   "picked": false
  },
  {
+  "id": "fb4113743df9529c",
+  "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE9PR0laTE9JN2FjQjFyZlpQSEtnNDRaeTlQaU13RmJSX3pSUTI4dDJILWNtclhmemdtaEQzeGtrbU9QWVhLT2pldGVDRHN0NUZCRUllcThmY2NVTnFQaWtBU01RNzJORUxwN3c?oc=5",
+  "source": "Google News(顔認証 入退室)",
+  "publisher": "日本経済新聞",
+  "lang": "ja",
+  "published": "2026-09-29T02:30:00Z",
+  "title_raw": "ミガロＨＤ - 日本経済新聞",
+  "summary_raw": "ミガロＨＤ 日本経済新聞",
+  "collected": "2026-10-04T23:46:37Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "0362ae971a6fedcd",
   "link": "https://news.google.com/rss/articles/CBMiowFBVV95cUxOT3FKVUJhNVVpZWVfVXMxTks3ZEoxdnZxTGhweFdhTDdpdkpha09PNzIyTzR1Rk5EWG05enY5UG02QWtBR2dQZGQ3dzVtS1BqMjN2M3czRnNLZmtPY05UN2cta0o2dEVzbkZjVnhIcktmMGV2MV9Fb0dGZTItYlZkVVV3SzlTeHp1ek9WNGxxakY5Z3h1QXlGZ0V5MThYb20wSnJZ?oc=5",
   "source": "Google News(video doorbell)",
@@ -854,6 +906,32 @@
   "title_raw": "薬品庫の後付け電気錠と鍵の貸し出し管理を展示 - PR TIMES",
   "summary_raw": "薬品庫の後付け電気錠と鍵の貸し出し管理を展示 PR TIMES",
   "collected": "2026-10-03T00:06:11Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "8123633b57af2477",
+  "link": "https://news.google.com/rss/articles/CBMiekFVX3lxTE5xTWROWWJ4bkxsSTktcnNBOTliVTFtSkJjN3d3LVlXWEladGR2NmpBbjVQdTBfb1EwczVOZC0tOG15SzJEWTJ4dFIyV3M5MjJHRDBxeTlFWFgyU05zRXZZN1AwVGQtQWhWcVFJZ1F2UTNUUG1yTjE3VlhR?oc=5",
+  "source": "Google News(顔認証 入退室)",
+  "publisher": "イザ！",
+  "lang": "ja",
+  "published": "2026-09-29T02:00:00Z",
+  "title_raw": "マツダ、東京本社にビットキーの「workhub」を導入 - イザ！",
+  "summary_raw": "マツダ、東京本社にビットキーの「workhub」を導入 イザ！",
+  "collected": "2026-10-04T23:46:37Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "987fa984f05f4c55",
+  "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE9XZnMzdWxqSy16V0NrSXlsNW9VcWZ4XzJ5VTNXRzBLWGo3REFXS04yZnQtb2U2SFdpNjc0U0c4ZUFLVHF6eVBzM1BxLXBPMkluVmJVdA?oc=5",
+  "source": "Google News(スマートロック)",
+  "publisher": "ニコニコニュース",
+  "lang": "ja",
+  "published": "2026-09-29T01:21:17Z",
+  "title_raw": "愛知県蒲郡市、LINEで公共施設の予約から入室、利用報告、決済まで完結。スマートロック連携による施設予約を開始予約情報 - ニコニコニュース",
+  "summary_raw": "愛知県蒲郡市、LINEで公共施設の予約から入室、利用報告、決済まで完結。スマートロック連携による施設予約を開始予約情報 ニコニコニュース",
+  "collected": "2026-10-04T23:46:32Z",
   "status": "raw",
   "picked": false
  },
@@ -1586,6 +1664,19 @@
   "picked": false
  },
  {
+  "id": "06fba0dd0607084c",
+  "link": "https://news.google.com/rss/articles/CBMiwgJBVV95cUxQcXZXR0hWZm15TUdXSUU3QzhhUlFER0ZiNFVIYUE2b3JKY2VTbXFkRzhTdXJjVjFKb1Mwc05OQmJaQ1VUYldNMTU2Y1J4ZjQ5aDZ0TkkzODdVcGRNLVIyUEhSS19TLUlYS3NhbjUzMkozekpyNDQ2SC1teV80aFNXeklVVmdzWWZ6bTZlMC1kQTQwQ3oxT2RGcGJraVgydklMUEFkOW9FVGJNWEwzakdpZ3hyMkp3N0NrcDV4d09qOU9zUTBCT3hEWFZpWWRxRTU0NkRtQ2xWT1JjLWVGeWQ2SXBKRGhfdkVSTHFQbUQ0akVxWXZmd3ZrcmQxc0h3VVRZZEYyZ3JEX3NTbGxuLU43Sy0tVEVUOWxPTHFRenFqeVhpanFzSTRkcm9wN19vQkhWdnBJSlU2ajVRSDZYZGQ2ZnVR?oc=5",
+  "source": "Google News(smart lock)",
+  "publisher": "ttownmedia.com",
+  "lang": "en",
+  "published": "2026-09-25T18:46:00Z",
+  "title_raw": "ULTRALOQ Launches Next-Generation Smart Lock Collection: Refining Home Entry with Natural, Intelligent and Trusted Access Solutions - ttownmedia.com",
+  "summary_raw": "ULTRALOQ Launches Next-Generation Smart Lock Collection: Refining Home Entry with Natural, Intelligent and Trusted Access Solutions ttownmedia.com",
+  "collected": "2026-10-04T23:46:37Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "8a124c4c283d5c1c",
   "link": "https://9to5mac.com/2026/09/25/deals-mac-studio-airpods-pro-3-powerbeats/",
   "source": "9to5Mac",
@@ -1712,6 +1803,19 @@
   "title_raw": "統合ビルセキュリティーシステム「MELSAFETY-R(メルセーフティー アール)」発売 - ニコニコニュース",
   "summary_raw": "統合ビルセキュリティーシステム「MELSAFETY-R(メルセーフティー アール)」発売 ニコニコニュース",
   "collected": "2026-09-27T23:32:47Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "7862d2150fd4e29c",
+  "link": "https://news.google.com/rss/articles/CBMiTEFVX3lxTFBfOU54Y2JBWXoyUlh1WlVWZGhidERkS3hXSlpBbzVPMkhoQ25Rb19yZlR0WnBibTA5aFRsOWlDWlI3T1NsMHRNZ255cjY?oc=5",
+  "source": "Google News(スマートロック)",
+  "publisher": "newspicks.com",
+  "lang": "ja",
+  "published": "2026-09-25T07:00:00Z",
+  "title_raw": "スマートロックに締め出され、東京で朝までスマホも財布もなしでサバイバルした話 (ギズモード・ジャパン) - newspicks.com",
+  "summary_raw": "スマートロックに締め出され、東京で朝までスマホも財布もなしでサバイバルした話 (ギズモード・ジャパン) newspicks.com",
+  "collected": "2026-10-04T23:46:32Z",
   "status": "raw",
   "picked": false
  },
@@ -3536,6 +3640,19 @@
   "picked": false
  },
  {
+  "id": "b8cd3bbc75016886",
+  "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE9hdGt0SnB4cW1aSFgwX1pPd09rdDQtemVqNjhDcXZsczNNaEtySk9OSkVET3pHUHFjLWVveFNOcUdSd2xHSWNUcFowZEI4LTBYYTZWVkgtUWZ3NlJ6dDFWYnAtSE90ZFpBc0ptQVpwb0hnYWhYTkdJWlpKMNIBd0FVX3lxTFAyeUVWRlBhOHFJWUM0c3FGYjNGeEhpV3Zrb0RfRHZGOWJaVVA2WkZlS19YOHB0bGZsd0R0SHk2NzdnT3NtRENwQ0Y4UncxVFpiLTVrc0lGOTRBbGlYODBCS0V5ZjBHUkppbl9ncWE0YzhlX0I2NVE0?oc=5",
+  "source": "Google News(ドアホン)",
+  "publisher": "ｄメニューニュース",
+  "lang": "ja",
+  "published": "2026-09-14T07:00:00Z",
+  "title_raw": "AIは勝手に賢くならない――人の顔や姿を15万枚撮り、雨粒一滴と戦ったパナソニック「ドアホン開発」の裏側 - ｄメニューニュース",
+  "summary_raw": "AIは勝手に賢くならない――人の顔や姿を15万枚撮り、雨粒一滴と戦ったパナソニック「ドアホン開発」の裏側 ｄメニューニュース",
+  "collected": "2026-10-04T23:46:37Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "735a06a21db762ec",
   "link": "https://news.google.com/rss/articles/CBMidkFVX3lxTE1PMloyTkloVTNQaThybnZYeWVTNnk5bkoxUURfQXlfR1RrYVRqOHRpMHh4bGFFbUZKeHU5WnYzMDZ5eVl3d3NKcFo2NTIwR1pRNTR2eHFLaElUa3NYWkZ4anpWcDNJWFZlZC1CTEthbDFFWTZWR2c?oc=5",
   "source": "Google News(デジタルキー)",
@@ -3835,6 +3952,19 @@
   "picked": false
  },
  {
+  "id": "d3af473478c56e01",
+  "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE1jZjVfc2lDZUNhSmFUcko5SFdhaDg3N3VnOEwtLWdTOUJjbFduZkVveURzMGtIU1dzXzllb3JKeUExMjlvTFZzUzR6YXVhOXdlc2hRRk5ScFBLYWdxbzNUVHI0OHAzS2NVMkpKYmJsY0hpaURzTWlvX2hrMGEydVU?oc=5",
+  "source": "Google News(ドアホン)",
+  "publisher": "Yahoo!ニュース",
+  "lang": "ja",
+  "published": "2026-09-11T07:00:00Z",
+  "title_raw": "次世代ビデオドアホン「HP5」、日本向けカスタムモデル発売（BCN） - Yahoo!ニュース",
+  "summary_raw": "次世代ビデオドアホン「HP5」、日本向けカスタムモデル発売（BCN） Yahoo!ニュース",
+  "collected": "2026-10-04T23:46:37Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "436a8a601ab01b2d",
   "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFBNekZTRUt5QXhWc0FMLUtGOHhfMkxXOUdraWlITFdETUtHcnNNX1NFV2dFVUFNbEZib3hiN2dMbFBpblNiNlRnaktwR3czaUEybjV5dQ?oc=5",
   "source": "Google News(ドアホン)",
@@ -3896,6 +4026,19 @@
   "title_raw": "The Importance of Ultra-Wideband (UWB) and Channel 9 at a Glance",
   "summary_raw": "",
   "collected": "2026-09-21T23:46:52Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "bb7fc797dbd4365f",
+  "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxPOVhFNWp6MUhBTTJ2M2NILXg2eVdNTFpjdGREVkNKYnVxVDhlNHZUaklwaldTMDZ5MF9CNXZKRl9zOERQVWFqb1MwUWZpeXN4WHBzWjVSem9paEVLdEJjMGx2MzhpdFhpRzM4ZmxFdktyRU11WUJXMVFxWUNPN2N2cDhiaERtNU5ySkxzRmpVcExGZTVoVzhFLWlNZnhueGRZNW1faUI4eVJkQQ?oc=5",
+  "source": "Google News(digital key car)",
+  "publisher": "MarketsandMarkets",
+  "lang": "en",
+  "published": "2026-09-10T20:44:11Z",
+  "title_raw": "Rest-Of-Asia-Pacific Digital Key Cabinet Market Size, Share,Trends, Growth Analysis Report, 2029 - MarketsandMarkets",
+  "summary_raw": "Rest-Of-Asia-Pacific Digital Key Cabinet Market Size, Share,Trends, Growth Analysis Report, 2029 MarketsandMarkets",
+  "collected": "2026-10-04T23:46:39Z",
   "status": "raw",
   "picked": false
  },
