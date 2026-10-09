@@ -30,7 +30,7 @@
 | `drivers/digitalkey-sesame/` | 錠ドライバの例。CANDY HOUSE 製 Sesame を BLE 直結または Web API で操作します。別パッケージとして PyPI に公開できます(機器ごとの詳しい説明はコード内) |
 | `tests/` | テスト |
 
-セットアップとテストの手順は [docs/setup.md](docs/setup.md) を見てください。
+セットアップとテストの手順は [docs/使い方.md](docs/使い方.md) を見てください。
 
 ## ライセンス
 
