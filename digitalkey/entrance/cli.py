@@ -6,7 +6,7 @@ import asyncio
 import os
 import secrets
 import sys
-from datetime import date, datetime
+from datetime import date
 from pathlib import Path
 
 from . import report, safe

@@ -9,7 +9,7 @@ from __future__ import annotations
 import re
 import unicodedata
 from dataclasses import dataclass, field
-from datetime import date, datetime, time
+from datetime import date
 from importlib import resources
 from pathlib import Path
 
