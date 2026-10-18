@@ -49,7 +49,7 @@ def doc(obj) -> str:
 
 def section_cli() -> str:
     from digitalkey import cli as top
-    from digitalkey.door import cli as door
+    from digitaldoor_controller import cli as door
     from digitalkey.entrance import cli as entrance
     from digitalkey.site import cli as site
     from importlib.metadata import entry_points
@@ -105,7 +105,7 @@ def section_mobile() -> str:
 
 
 def section_door() -> str:
-    from digitalkey.door import controller
+    from digitaldoor_controller import controller
     return "\n".join(["## 扉のコントローラの動作", "", doc(controller).replace("判断 — ", ""), ""])
 
 

@@ -354,22 +354,22 @@ date: 2026.09.17
 label: 解説 05
 category.ja: 扉
 category.en: Doors
-title.ja: 扉のコントローラの仕様と参照実装を公開する
-title.en: Publishing the door controller specification and reference implementation
+title.ja: 扉のコントローラの仕様と試験の道具を公開する
+title.en: Publishing the door controller specification and test tools
 subtitle.ja: 認証制度ではなく実用の仕様として。Matterが届かない業務用の扉のために
 subtitle.en: A practical specification rather than a certification scheme, for the commercial doors Matter does not reach
-description.ja: 扉側コントローラの仕様と、Pythonによる参照実装を公開します。仕様は「何を満たすか」だけを番号付きで書き、認証制度や会費は設けません。ローカルで動作すること、認証と監査を含むAPI、認証を一社に集中させないことを中核に据えます。扉メーカーからは料金を取らず、鍵の発行と業務システムとの連携で事業を成り立たせます。
+description.ja: 扉側コントローラの仕様と、仕様を確かめるための疑似の扉(Python、Apache-2.0)を公開します。仕様は「何を満たすか」だけを番号付きで書き、認証制度や会費は設けません。ローカルで動作すること、認証と監査を含むAPI、認証を一社に集中させないことを中核に据えます。扉メーカーからは料金を取らず、鍵の発行と業務システムとの連携で事業を成り立たせます。
 description.en: Publishing the door-side controller specification and a Python reference implementation: requirements only, no certification scheme, local operation and an API with authentication and audit at its core.
 ---
 ifdef::lang-ja[]
-= 扉のコントローラの仕様と参照実装を公開する
+= 扉のコントローラの仕様と試験の道具を公開する
 
-このサイトを運営するaiseedは、扉側のコントローラの仕様と参照実装を公開しています。この記事では、何を公開するか、どのような性格の物か、仕様の中核に何を置くかを説明します。
+このサイトを運営するaiseedは、扉側のコントローラの仕様と、それを確かめるための試験の道具を公開しています。この記事では、何を公開するか、どのような性格の物か、仕様の中核に何を置くかを説明します。
 
 == 公開する物
 
 * 仕様。何を満たすかだけを、番号を付けて書いた文書です。本文は https://github.com/aiseed-dev/digitaldoor/blob/main/docs/扉コントローラ仕様書.md[扉コントローラ仕様書]にあります。
-* 参照実装。Pythonで動作するコードです。扉の判断、監査記録、HTTP APIを含みます。同じリポジトリの `digitalkey/door/` にあります。
+* 疑似の扉と試験の道具。Pythonで動作するコードです。扉の判断、監査記録、HTTP APIを含みます。別のリポジトリ https://github.com/aiseed-dev/digitaldoor-controller[digitaldoor-controller] に、Apache-2.0 で公開しています。製品に組み込んで、閉じたまま配ることもできます。認定を受けた製品ではなく、仕様を確かめ、読取機や管理ソフトを作る人が実機なしで相手にするための物です(2026年10月18日に、仕様のリポジトリから分けました)。
 * テスト。「この入力に対してこの出力」という形式で書かれています。テストが通れば、仕様を満たしていると言えます。
 
 日本語を優先し、英語版は後から用意します。日本の扉メーカー、錠メーカー、電気工事の技術者、学生が、同じ言葉で開発できるようにするためです。

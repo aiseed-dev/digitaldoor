@@ -4,7 +4,7 @@
 <link>https://door.aiseed.dev/</link>
 <description>扉と鍵の話を、層に分けて書く</description>
 <language>ja</language>
-<lastBuildDate>Sun, 18 Oct 2026 04:48:13 +0900</lastBuildDate>
+<lastBuildDate>Sun, 18 Oct 2026 10:49:39 +0900</lastBuildDate>
 <item>
 <title>スマートドアとスマートロックを作る人が集まる場所</title>
 <link>https://door.aiseed.dev/guide/where-developers-meet/</link>
@@ -62,12 +62,12 @@
 <description>玄関まわりの技術を、扉の製造、電子錠、扉のコントローラ、ドアホン、スマートフォン、周辺機器、通信規格、鍵の発行、業務システムとの連携、業務システム、管理者の11層に分けて整理します。Apple、Google、Amazonの参入後に、どの層が買えばすむ部品になり、どの層に人の責任と収益が残るかを説明します。</description>
 </item>
 <item>
-<title>扉のコントローラの仕様と参照実装を公開する</title>
+<title>扉のコントローラの仕様と試験の道具を公開する</title>
 <link>https://door.aiseed.dev/guide/open-specification/</link>
 <guid>https://door.aiseed.dev/guide/open-specification/</guid>
 <category>解説</category>
 <pubDate>Thu, 17 Sep 2026 00:00:00 +0900</pubDate>
-<description>扉側コントローラの仕様と、Pythonによる参照実装を公開します。仕様は「何を満たすか」だけを番号付きで書き、認証制度や会費は設けません。ローカルで動作すること、認証と監査を含むAPI、認証を一社に集中させないことを中核に据えます。扉メーカーからは料金を取らず、鍵の発行と業務システムとの連携で事業を成り立たせます。</description>
+<description>扉側コントローラの仕様と、仕様を確かめるための疑似の扉(Python、Apache-2.0)を公開します。仕様は「何を満たすか」だけを番号付きで書き、認証制度や会費は設けません。ローカルで動作すること、認証と監査を含むAPI、認証を一社に集中させないことを中核に据えます。扉メーカーからは料金を取らず、鍵の発行と業務システムとの連携で事業を成り立たせます。</description>
 </item>
 <item>
 <title>情報サイト「デジタルドア」を開設しました</title>

@@ -5,20 +5,22 @@ description: スマートドア、スマートロック、電気錠、扉のコ�
 
 # スマートドアとスマートロックを、公開の仕様に沿って作る
 
-扉の錠は、間違えると人が閉じ込められるか、他人が入れる機器です。そして一度付けると何十年も使われます。だからこのスキルは、速く書くことより、**何を満たすかを先に決め、確かめられる形で作る**ことを優先します。土台は digitaldoor の公開の要求仕様と、扉のコントローラの参照実装とテストです。文章は CC BY 4.0、コードは AGPL-3.0-or-later です。
+扉の錠は、間違えると人が閉じ込められるか、他人が入れる機器です。そして一度付けると何十年も使われます。だからこのスキルは、速く書くことより、**何を満たすかを先に決め、確かめられる形で作る**ことを優先します。土台は digitaldoor の公開の要求仕様(CC BY 4.0)と、仕様を確かめるための疑似の扉と試験の道具 digitaldoor-controller(Apache-2.0。製品に組み込んで閉じたまま配ることもできる)です。
 
 ## まず手元に置く物
 
 ```bash
-git clone https://github.com/aiseed-dev/digitaldoor
-cd digitaldoor
+git clone https://github.com/aiseed-dev/digitaldoor                # 仕様
+git clone https://github.com/aiseed-dev/digitaldoor-controller     # 疑似の扉と試験の道具
+cd digitaldoor-controller
 python3 -m venv .venv
-.venv/bin/pip install -e ".[web,panel,mobile,dev]"
-.venv/bin/python -m pytest -q          # 参照実装のテストが通ることを先に見る
-python3 tools/taiou.py --check         # 要求とテストの対応(docs/適合の現在.md)
+.venv/bin/pip install -e ".[dev]"
+.venv/bin/python -m pytest -q          # 疑似の扉のテストが通ることを先に見る
+cd ../digitaldoor
+python3 tools/taiou.py --check         # 要求とテストの対応(docs/適合の現在.md)。隣の digitaldoor-controller のテストも数える
 ```
 
-リポジトリが取れない環境では、文書を GitHub で読み、参照実装は写さずに、要求の番号と試験の対だけを使って自分の言語で作ります。
+リポジトリが取れない環境では、文書を GitHub で読み、要求の番号と試験の対だけを使って自分の言語で作ります。
 
 主な文書:
 
@@ -74,5 +76,5 @@ python3 tools/taiou.py --check         # 要求とテストの対応(docs/適合
 
 - `references/roles.md` — 立場ごとに、作る物、読む文書、最初に選ぶとよい要求
 - `references/testing.md` — 試験の対からテストを書く、番号の付け方、わざと壊す手順、`taiou.py`
-- `references/interfaces.md` — 参照実装の口(接点、コントローラ、HTTP、監査記録、伝票、錠のドライバ、Matter の錠)と疑似の機器
+- `references/interfaces.md` — 疑似の扉の口(接点、コントローラ、HTTP、監査記録、伝票、錠のドライバ、Matter の錠)と疑似の機器
 - `references/landscape.md` — 規格団体と制度の地図(Matter、Aliro、OSDP、ECHONET Lite、JEM-A、JC-STAR、EU の RED と CRA、英国の PSTI)。日付があるので、使う前に新しさを確かめる

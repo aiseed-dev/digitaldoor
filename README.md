@@ -14,12 +14,12 @@
 
 ## 扉の製造者向け
 
-扉の製造者に「何を満たすか」を伝える要求仕様と、扉側のコントローラの仕様、その参照実装とテストです。認証制度ではなく実用の仕様で、料金と会費はありません。満たしているかどうかは、公開されたテストを自分で実行すれば分かります。
+扉の製造者に「何を満たすか」を伝える要求仕様と、扉側のコントローラの仕様です。仕様を確かめる疑似の扉と試験の道具は、別リポジトリ [digitaldoor-controller](https://github.com/aiseed-dev/digitaldoor-controller)(Apache-2.0)にあります。認証制度ではなく実用の仕様で、料金と会費はありません。満たしているかどうかは、公開されたテストを自分で実行すれば分かります。
 
 | 文書 | 内容 |
 |---|---|
 | [docs/要求仕様/README.md](docs/要求仕様/README.md) | 要求仕様の文書群。共通コア、電動ラッチ、認定の境界と標準インターフェース、読取機（ドアホンと顔認識）、用途別のプロファイル（個別住宅、集合住宅、事業所、室内、防火区画）、開発用ミニサーバー |
-| [docs/扉コントローラ仕様書.md](docs/扉コントローラ仕様書.md) | 扉側コントローラの仕様（要求 R-CT-01〜25）。参照実装は `digitalkey/door/` と `digitalkey/panel/` |
+| [docs/扉コントローラ仕様書.md](docs/扉コントローラ仕様書.md) | 扉側コントローラの仕様（要求 R-CT-01〜25）。疑似の扉と試験の道具は別リポジトリ digitaldoor-controller、Matter の橋は `digitalkey/panel/` |
 | [docs/適合の現在.md](docs/適合の現在.md) | 要求の番号とテストの対応。`python tools/taiou.py` が作ります。番号の無い要求は未検証です |
 
 ## 受け入れをする人向け
@@ -38,7 +38,7 @@
 | ディレクトリ | 内容 |
 |---|---|
 | `digitalkey/entrance/` | 鍵の発行と失効、本人確認、台帳、報告、バックアップ。民泊・貸家・WWOOF の受け入れ向け |
-| `digitalkey/door/` | 扉側のコントローラ。火災・停電・避難時の判断、監査ログ、接点の抽象化、HTTP API。インターネットに接続しなくても動作します |
+| (別リポジトリ)[digitaldoor-controller](https://github.com/aiseed-dev/digitaldoor-controller) | 扉側のコントローラ。仕様を確かめる疑似の扉と試験の道具(Apache-2.0)。火災・停電・避難時の判断、監査ログ、接点の抽象化、HTTP API。`digitalkey/site` はこれを pip で入れて使います |
 | `digitalkey/panel/` | 扉を Matter の電子錠として見せるブリッジと、操作画面(Flet) |
 | `digitalkey/site/` | 事業所サーバー。設定ファイル、扉のコントローラと鍵の台帳、HTTP API、systemd 用のファイルは `deploy/` |
 | `digitalkey/mobile/` | 管理者と利用者のスマートフォンアプリ(Flet)。`flet build` で Android/iOS 向けに組めます |
@@ -50,4 +50,4 @@
 
 ## ライセンス
 
-文章は CC BY 4.0、コードは AGPL-3.0-or-later です。詳しくは [LICENSE](LICENSE) を見てください。
+文章は CC BY 4.0、このリポジトリのコードは AGPL-3.0-or-later です。詳しくは [LICENSE](LICENSE) を見てください。扉のコントローラ(digitaldoor-controller)は Apache-2.0 です。

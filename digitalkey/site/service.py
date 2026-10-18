@@ -6,9 +6,9 @@ import time
 from dataclasses import asdict, dataclass
 from datetime import datetime
 
-from ..door.audit import Audit, load_signer
-from ..door.contacts import SimContacts
-from ..door.controller import Config as DoorCfg, Controller
+from digitaldoor_controller.audit import Audit, load_signer
+from digitaldoor_controller.contacts import SimContacts
+from digitaldoor_controller.controller import Config as DoorCfg, Controller
 from ..entrance.keyring import Keyring, LockDriver
 from ..locks import make_lock as make_lock_by_spec
 from ..entrance.ledger import Ledger, Slip

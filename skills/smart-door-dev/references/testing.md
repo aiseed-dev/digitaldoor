@@ -27,12 +27,12 @@ def test_fire_refuses_lock_whatever_power_policy():
 
 ## 3. テストの形
 
-参照実装のテストは pytest で、接点を模擬(`SimContacts`)に替えて回ります。
+疑似の扉(digitaldoor-controller)のテストは pytest で、接点を模擬(`SimContacts`)に替えて回ります。
 
 ```python
-from digitalkey.door.audit import Audit, HmacSigner
-from digitalkey.door.contacts import SimContacts
-from digitalkey.door.controller import Config, Controller
+from digitaldoor_controller.audit import Audit, HmacSigner
+from digitaldoor_controller.contacts import SimContacts
+from digitaldoor_controller.controller import Config, Controller
 
 def test_autolock_waits_while_door_open():
     """R-CT-09: 扉が開いている間は自動施錠せず、閉じた後に施錠する。"""

@@ -7,9 +7,14 @@ docstrings or comments. This script lists, per document, which requirements
 have at least one test and which are still unverified, and writes the result
 to docs/適合の現在.md. Standard library only.
 
+Tests of implementations kept in other repositories are counted too: the
+sibling checkout ../digitaldoor-controller is picked up when present, and
+--tests adds any other test directory.
+
 Usage:
     python tools/taiou.py            # write docs/適合の現在.md and print a summary
     python tools/taiou.py --check    # also fail if a test names an ID no document defines
+    python tools/taiou.py --tests ../other-impl/tests
 """
 
 from __future__ import annotations
@@ -24,6 +29,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SPEC_FILES = sorted(ROOT.glob("docs/要求仕様/*.md")) + [ROOT / "docs/扉コントローラ仕様書.md"]
 TEST_DIRS = [ROOT / "tests", *ROOT.glob("drivers/*/tests")]
+SIBLINGS = [ROOT.parent / "digitaldoor-controller" / "tests"]
 OUT = ROOT / "docs/適合の現在.md"
 
 ID_RE = re.compile(r"\bR-[A-Z]{2}-\d{2}\b")
@@ -48,10 +54,19 @@ def requirements() -> dict[str, list[str]]:
     return found
 
 
-def coverage() -> dict[str, list[str]]:
-    """Return {ID: ["tests/door/test_controller.py::test_fire", ...]}."""
+def _shown(path: Path) -> str:
+    """Path as shown in the table: relative to this repository, or prefixed with the other repository's name."""
+    try:
+        return str(path.relative_to(ROOT))
+    except ValueError:
+        return str(path.relative_to(ROOT.parent))
+
+
+def coverage(extra: list[Path] | None = None) -> dict[str, list[str]]:
+    """Return {ID: ["digitaldoor-controller/tests/test_controller.py::test_fire", ...]}."""
     cov: defaultdict[str, list[str]] = defaultdict(list)
-    for d in TEST_DIRS:
+    dirs = TEST_DIRS + [d for d in SIBLINGS if d.is_dir()] + [d.resolve() for d in (extra or [])]
+    for d in dirs:
         for path in sorted(d.rglob("test_*.py")):
             func = None
             for line in path.read_text(encoding="utf-8").splitlines():
@@ -59,7 +74,7 @@ def coverage() -> dict[str, list[str]]:
                 if m:
                     func = m.group(1)
                 for rid in ID_RE.findall(line):
-                    where = f"{path.relative_to(ROOT)}::{func}" if func else str(path.relative_to(ROOT))
+                    where = f"{_shown(path)}::{func}" if func else _shown(path)
                     if where not in cov[rid]:
                         cov[rid].append(where)
     return dict(cov)
@@ -70,7 +85,8 @@ def render(reqs: dict[str, list[str]], cov: dict[str, list[str]], today: str) ->
         "# 適合の現在 — 要求とテストの対応",
         "",
         f"`tools/taiou.py` が {today} に作った。要求仕様の ID(R-XX-nn)ごとに、"
-        "その ID を名指しするテストを並べる。テストの無い要求は「未検証」で、"
+        "その ID を名指しするテストを並べる。扉のコントローラのテストは別のリポジトリ"
+        "(digitaldoor-controller)にあり、名前の先頭にその名を付ける。テストの無い要求は「未検証」で、"
         "実機の受入れ試験で確かめる物と、まだ書いていない物の両方が入る。"
         "テストが通ることは、ここに並ぶ要求を満たすことの確かめであって、"
         "並んでいない要求については何も言わない。",
@@ -100,10 +116,12 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--check", action="store_true", help="fail when a test names an undefined ID")
     ap.add_argument("--out", type=Path, default=OUT, help="output file (default docs/適合の現在.md)")
+    ap.add_argument("--tests", type=Path, action="append", default=[],
+                    help="another test directory to count (repeatable)")
     args = ap.parse_args()
 
     reqs = requirements()
-    cov = coverage()
+    cov = coverage(args.tests)
     defined = {i for ids in reqs.values() for i in ids}
     unknown = sorted(i for i in cov if i not in defined)
 

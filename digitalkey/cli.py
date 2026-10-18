@@ -6,7 +6,7 @@ import sys
 
 USAGE = """使い方:
   digitalkey entrance <命令> ...   様式・台帳・鍵・本人確認・報告・控え(--help で一覧)
-  digitalkey door <命令> ...       扉のコントローラ(serve | verify)
+  digitalkey door <命令> ...       扉のコントローラ(別パッケージ digitaldoor-controller。serve | verify | pubkey | export | check-box)
   digitalkey panel                 盤(Flet)。$DIGITALKEY_DOOR_URL の door に結び、$DIGITALKEY_PANEL_PORT(既定 8798)で開く
   digitalkey <ドライバ名> ...       pip で入れた錠ドライバのコマンド(例: digitalkey-sesame を入れると `digitalkey sesame scan`)
   digitalkey site init <dir> | serve --config site.toml   事業所サーバー(扉のコントローラ+鍵の台帳+HTTP API)
@@ -20,7 +20,7 @@ def main(argv: list[str] | None = None) -> int:
         from .entrance.cli import main as m
         return m(argv[1:])
     if argv and argv[0] == "door":
-        from .door.cli import main as m
+        from digitaldoor_controller.cli import main as m
         return m(argv[1:])
     if argv and argv[0] == "site":
         from .site.cli import main as m

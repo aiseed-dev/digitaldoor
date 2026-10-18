@@ -1,6 +1,6 @@
-# 参照実装の口と疑似の機器
+# 疑似の扉の口と疑似の機器
 
-参照実装(`digitalkey/`)は Python で、読める大きさにしてあります。写して使う場合は AGPL-3.0-or-later がかかります。読んで自分で書き直した物には及びません。ここでは、自社の実装が合わせるべき口の形をまとめます。正は仕様書で、ここは要約です。
+扉のコントローラの疑似の扉と試験の道具は、別のリポジトリ digitaldoor-controller(パッケージ `digitaldoor_controller`)にあり、Python で読める大きさにしてあります。Apache-2.0 なので、写して製品に使うこともできます。錠のドライバの登録簿、Matter の橋、事業所サーバーは digitaldoor のリポジトリの `digitalkey/` にあり、こちらは AGPL-3.0-or-later です。ここでは、自社の実装が合わせるべき口の形をまとめます。正は仕様書で、ここは要約です。
 
 ## 目次
 1. 接点(錠と扉と建物)
@@ -13,7 +13,7 @@
 8. 読取機からの判定結果
 9. 疑似の機器の一覧
 
-## 1. 接点 — `digitalkey/door/contacts.py`
+## 1. 接点 — `digitaldoor_controller/contacts.py`
 
 コントローラから見える錠と扉と建物は、この入出力の束だけです。錠の銘柄はこの下に隠れます(R-CT-03、04)。
 
@@ -27,7 +27,7 @@
 
 開発中は `SimContacts`、基板では GPIO やリレーの実装に差し替えます。手動リリースと改ざん検知は、事象としてコントローラに渡します。
 
-## 2. コントローラ — `digitalkey/door/controller.py`
+## 2. コントローラ — `digitaldoor_controller/controller.py`
 
 | 呼び出し | 役 |
 |---|---|
@@ -42,7 +42,7 @@
 
 設定(`Config`)の項目: `two_person`、`two_person_window_s`、`autolock_s`(0 で自動施錠しない)、`power_policy`(release / hold)、`fire_policy`、`time_jump_s`。
 
-## 3. HTTP の口 — `digitalkey/door/server.py`
+## 3. HTTP の口 — `digitaldoor_controller/server.py`
 
 標準ライブラリだけの小さな口です。向きは三つに分かれます(出す、受ける、引かれる)。
 
@@ -58,7 +58,7 @@
 
 記録を消す口はありません(R-CT-14)。時計と記録の書き出しは、別々のスレッドで回し、書き出しは判断の排他を持ちません(`start_workers`)。
 
-## 4. 監査記録 — `digitalkey/door/audit.py`
+## 4. 監査記録 — `digitaldoor_controller/audit.py`
 
 一件の欄: `seq`(連番)、`at`(錠の時刻)、`synced`(同期の印)、`kind`(操作/物理/認証/資格情報/設定/非常/異常/時刻)、`event`、`result`、`subject`(仮名化した識別子)、`route`(経路)、`detail`、`prev_hash`、`hash`、`signature`。
 
@@ -66,7 +66,7 @@
 - `signature` は `hash` の 16 進の文字列への署名です。署名の口(`Signer`)は差し替えられ、今はソフトの Ed25519(秘密鍵は置き場のファイル `audit.ed25519`)、後でセキュアエレメントに替えます。試験では HMAC も使います。
 - `verify_chain` が、欠番、連鎖、内容、署名を順に検べます。
 
-## 5. 伝票 — `digitalkey/door/slips.py`
+## 5. 伝票 — `digitaldoor_controller/slips.py`
 
 記録を、受け手が公開鍵だけで検べられる伝票として、箱(フォルダ)へ出します(R-CT-17)。
 
@@ -77,7 +77,7 @@
 | 続きから | どこまで出したかは装置側の `export.cursor`。箱が無い間は進めない |
 | 受け手 | 据付のときに台帳へ写した公開鍵で検べる(`check_box`)。伝票の中の鍵の識別は照合にだけ使う |
 
-命令行: `digitalkey door pubkey`、`digitalkey door export --box DIR`、`digitalkey door serve --box DIR`、`digitalkey door check-box --box DIR --door NAME --pubkey HEX`。
+命令行: `digitaldoor-controller pubkey`、`digitaldoor-controller export --box DIR`、`digitaldoor-controller serve --box DIR`、`digitaldoor-controller check-box --box DIR --door NAME --pubkey HEX`。
 
 ## 6. 錠のドライバ — `digitalkey/locks.py`
 
@@ -118,7 +118,7 @@ def make(lock_id: str, arg: str) -> MyLock:
 
 | 疑似 | 置き場 | 使い道 |
 |---|---|---|
-| `SimContacts` | `digitalkey/door/contacts.py` | 錠と扉と建物の接点。火災、停電、開閉を属性で切り替える |
+| `SimContacts` | `digitaldoor_controller/contacts.py` | 錠と扉と建物の接点。火災、停電、開閉を属性で切り替える |
 | `DummyLock` | `digitalkey/entrance/keyring.py` | 配線確認と試験用の錠。動作を記録するだけ |
 | `FakeSesame` | `drivers/digitalkey-sesame/digitalkey_sesame/fake.py` | Sesame の機器側の手順。`--fake` で画面も実機なしで動く |
 | 時計 | `Controller.set_time`、`tick` | 実時間を待たずに、自動施錠や時刻のずれを試す |

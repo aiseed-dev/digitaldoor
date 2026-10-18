@@ -9,7 +9,7 @@ description = "扉の鍵 — 鍵の発行と本人確認と台帳(entrance)、�
 readme = "README.md"
 requires-python = ">=3.12"
 license = {text = "AGPL-3.0-or-later"}
-dependencies = ["cryptography>=42"]
+dependencies = ["cryptography>=42", "digitaldoor-controller>=0.1"]
 
 [project.optional-dependencies]
 web = ["fastapi>=0.110", "uvicorn[standard]>=0.29", "pydantic>=2", "python-multipart>=0.0.9"]

@@ -51,12 +51,12 @@ autolock = 5.0              # 解錠から自動施錠までの秒
 [[token]]
 name = &quot;管理者&quot;
 role = &quot;管理者&quot;
-token = &quot;qnjkxNNxtsITPTrPANnS43dT3Pc06U9d&quot;
+token = &quot;1HxkQem3HFF4f1iqxJJKRYQVcqLWbRUI&quot;
 
 [[token]]
 name = &quot;受付&quot;
 role = &quot;受付&quot;
-token = &quot;GfoyIf186uKZSf7axfSm0ThNtsGDkXbt&quot;
+token = &quot;oNRCkdEZGHkIPZqHbHKcxnHHo-zVYRzo&quot;
 </code></pre>
 <h3>役割</h3>
 <table>
@@ -170,7 +170,7 @@ token = &quot;GfoyIf186uKZSf7axfSm0ThNtsGDkXbt&quot;
 <h2>コマンド一覧</h2>
 <p>サーバーやパソコンで使うコマンドです。<code>digitalkey</code> の後に対象を付けます。</p>
 <pre><code>digitalkey entrance &lt;命令&gt; ...   様式・台帳・鍵・本人確認・報告・控え(--help で一覧)
-  digitalkey door &lt;命令&gt; ...       扉のコントローラ(serve | verify)
+  digitalkey door &lt;命令&gt; ...       扉のコントローラ(別パッケージ digitaldoor-controller。serve | verify | pubkey | export | check-box)
   digitalkey panel                 盤(Flet)。$DIGITALKEY_DOOR_URL の door に結び、$DIGITALKEY_PANEL_PORT(既定 8798)で開く
   digitalkey &lt;ドライバ名&gt; ...       pip で入れた錠ドライバのコマンド(例: digitalkey-sesame を入れると `digitalkey sesame scan`)
   digitalkey site init &lt;dir&gt; | serve --config site.toml   事業所サーバー(扉のコントローラ+鍵の台帳+HTTP API)
@@ -217,10 +217,11 @@ options:
   --issuer ISSUER       伝票の発行者
 </code></pre>
 <h3>digitalkey door</h3>
-<pre><code>usage: digitalkey door [-h] [--dir DIR] [--name NAME] [--host HOST]
-                       [--port PORT] [--two-person TWO_PERSON]
-                       [--autolock AUTOLOCK] [--power-policy {release,hold}]
-                       {serve,verify,pubkey,export,check-box} ...
+<pre><code>usage: digitaldoor-controller [-h] [--dir DIR] [--name NAME] [--host HOST]
+                              [--port PORT] [--two-person TWO_PERSON]
+                              [--autolock AUTOLOCK]
+                              [--power-policy {release,hold}]
+                              {serve,verify,pubkey,export,check-box} ...
 
 扉側のコントローラ(中核)
 
