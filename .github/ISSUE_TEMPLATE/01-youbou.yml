@@ -1,0 +1,51 @@
+name: 使う人の困りごと・要望
+description: 扉や鍵で困っていること、こうなってほしいこと。要求仕様の番号に落とし、製造者に伝えます
+title: "[要望] "
+labels: ["要望"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ここに書いたことは公開されます。識別情報(氏名、住所、電話番号、建物の名前、部屋の番号、メールアドレス)は書かないでください。
+        会社や製品の名前は、公開されている物だけにしてください。
+        あなたの言葉のままで書いてください。要約や専門の言葉に直す必要はありません。この先は AI と運営が読み、要求の番号に整えて、製造者に渡せる形にします。
+  - type: dropdown
+    id: basho
+    attributes:
+      label: どの扉のことか
+      options:
+        - 個別住宅の玄関
+        - 集合住宅の玄関(住戸の玄関、集合玄関、共用部)
+        - 事業所の玄関
+        - 室内の扉(業務用)
+        - 室内の扉(家庭用)
+        - 防火区画の扉
+        - 民泊、貸家、会議室の受け入れ
+        - その他、分からない
+    validations:
+      required: true
+  - type: textarea
+    id: bamen
+    attributes:
+      label: どの場面で、何が困るか
+      description: いつ、誰が、何をしようとして、何が起きるか
+      placeholder: 例 夜に帰ってスマートフォンの電池が切れていると、家に入れない。鍵は持ち歩いていない
+    validations:
+      required: true
+  - type: textarea
+    id: ima
+    attributes:
+      label: いまはどうしているか
+      placeholder: 例 物理の鍵を玄関の近くに隠している
+  - type: textarea
+    id: nozomi
+    attributes:
+      label: こうなってほしい
+      placeholder: 例 電池が切れていても、本人なら入れる手段がほしい。ただし他人が入れないこと
+    validations:
+      required: true
+  - type: input
+    id: kiki
+    attributes:
+      label: 使っている機器(分かれば)
+      placeholder: 例 後付けの電子錠、ドアホンの製品名。公開されている名前だけ

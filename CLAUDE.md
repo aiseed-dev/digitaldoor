@@ -14,6 +14,9 @@
 - アクセス計測を入れるときは本人が決め、プライバシーポリシーの頁と一緒に入れる
 - ニュースは広めに集め、載せる物は人が選ぶ(`picked`)。AI の relevant は参考の見立てとして扱う。`news/items.json` が正で、手で直すときは title/summary/kind/category を直し、status は ai のままにする。収集元を足すときは `news/sources.json`。AI への指示文は `tools/collect_news.py` の SYSTEM(原文にあることだけ書く、発表と報道を分ける、製品名と会社名は原文のまま)
 
+- 要求を足すときは、理由に出どころ(Issue の番号か、使う人の困りごとの文)を書く。番号は変えない。製造者の制約と代わりの案は、同じ番号の下に残す(docs/つなぐ.md)
+- SKILL.md は、各社の AI に読ませる入口。文書やコードの置き場や進め方を変えたら SKILL.md も直す
+
 ## ソフトウェア(digitalkey/)
 
 - テストは `.venv/bin/python -m pytest -q`(entrance・door・panel・site・mobile)と `pytest -q drivers/digitalkey-sesame`(Sesame ドライバ)。commit は全テストが通ってから、別コマンドで行う
@@ -28,7 +31,8 @@
 - 起動確認の後は avahi-publish-service の子プロセスと UDP 5541 / TCP 8797 / 8798 を `fuser -k` で空ける
 - テストの個人情報(画像・名簿)は、バイト列や架空の名前で代用する
 - Sesame の鍵(sesame-keys.json)は手元だけに置く(.gitignore 済み)。テストと画面の確認は疑似の Sesame(fake.py、`--fake`)で行う。実機は BLE アダプタを挿してから
-- 公開する物なので、文書に書く固有名は製品名と会社名(CANDY HOUSE の Sesame 等)にとどめる
+- 公開する物なので、文書に書く固有名は製品名と会社名(CANDY HOUSE の Sesame 等)にとどめる。提案先の会社の名前は、文書にも記事にもコミットメッセージにも書かない(2026-10-17)
+- テストは、確かめる要求の番号(R-XX-nn)を docstring の先頭の行に書く。`python3 tools/taiou.py --check` で docs/適合の現在.md を作り直し、番号の無い要求は未検証として残す。要求仕様を直したらこれも作り直す
 - 細部は作るときに選ぶ。設計書には作った物と選んでいる物を書く。肯定形で書く
 
 ## git

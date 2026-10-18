@@ -9,6 +9,7 @@ class Path:
 
 
 def test_device_and_cluster_shape():
+    """R-CT-18: Matter の Door Lock 機器として見える(機器種別 0x000A、クラスタ 0x0101)。"""
     calls = []
     d = DoorLockDevice("玄関", lambda: calls.append("lock") or True, lambda: calls.append("unlock") or True)
     assert d.descriptor.DeviceTypeList[0].DeviceType == 0x000A
@@ -21,6 +22,7 @@ def test_device_and_cluster_shape():
 
 
 def test_commands_go_to_core_and_mirror():
+    """R-CT-18: Matter の施錠・解錠の命令が判断側へ渡り、状態が鏡写しになる。"""
     calls = []
     d = DoorLockDevice("玄関", lambda: calls.append("lock") or True, lambda: calls.append("unlock") or True)
     r = d.lock.invoke(None, Path(0x01), {})  # 復号済みの引数(暗証番号なし)
@@ -33,6 +35,7 @@ def test_commands_go_to_core_and_mirror():
 
 
 def test_refused_command_keeps_state():
+    """R-CT-18: 判断側が拒んだ命令では状態が変わらない。"""
     d = DoorLockDevice("玄関", lambda: False, lambda: False)
     d.lock.invoke(None, Path(0x01), {})
     assert d.lock.LockState == LockState.LOCKED

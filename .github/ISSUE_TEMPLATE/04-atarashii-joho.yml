@@ -1,0 +1,35 @@
+name: 新しい情報
+description: 規格の版、制度、製品、研究が変わった。書いてあることと今が違う
+title: "[新しい情報] "
+labels: ["新しい情報"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ここに書いたことは公開されます。公開されている資料だけを出典にしてください。
+  - type: input
+    id: basho
+    attributes:
+      label: どこに書いてあることか(ファイルの名前、要求の番号、記事の題)
+      placeholder: 例 docs/要求仕様/00_core.md 5.3 の Matter の版
+    validations:
+      required: true
+  - type: textarea
+    id: kawatta
+    attributes:
+      label: 何が変わったか(いまの書き方と、新しい情報)
+    validations:
+      required: true
+  - type: textarea
+    id: shutten
+    attributes:
+      label: 出典(資料の名前と URL)
+    validations:
+      required: true
+  - type: input
+    id: hi
+    attributes:
+      label: 確かめた日
+      placeholder: 2026-10-17
+    validations:
+      required: true

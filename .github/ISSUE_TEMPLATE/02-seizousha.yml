@@ -1,0 +1,46 @@
+name: 製造者からの質問・制約・代わりの案
+description: 要求の番号について、満たせない、意味が分からない、別の方法がある、試験の結果が出た
+title: "[製造者] R-XX-nn "
+labels: ["製造者"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ここに書いたことは公開されます。公開できない技術の情報や契約の内容は書かないでください。
+        要求の番号(R-XX-nn)は変えません。制約と代わりの案は、同じ番号の下に残り、次の版の理由になります。
+  - type: input
+    id: id
+    attributes:
+      label: 要求の番号
+      placeholder: 例 R-WR-02
+    validations:
+      required: true
+  - type: dropdown
+    id: shurui
+    attributes:
+      label: 種類
+      options:
+        - 満たせない(理由を書く)
+        - 意味が分からない、二つに読める
+        - 別の方法で同じ目的を満たせる
+        - 試験の結果(満たした、満たさなかった)
+        - 費用、納期、認定への影響
+    validations:
+      required: true
+  - type: textarea
+    id: naiyou
+    attributes:
+      label: 内容
+      description: 何が、なぜ。代わりの案があれば、何が変わり、何が変わらないか
+    validations:
+      required: true
+  - type: textarea
+    id: shiken
+    attributes:
+      label: 試験の結果(あれば)
+      description: 入力、期待した出力、実際の出力、条件(温度、回数、照明など)
+  - type: input
+    id: hi
+    attributes:
+      label: 確かめた日
+      placeholder: 2026-10-17

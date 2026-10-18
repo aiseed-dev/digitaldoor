@@ -199,7 +199,7 @@ R-EL-19 の原則を機器種別ごとに具体化する。「必須」を満た
 | --- | --- | --- | --- |
 | 錠（扉側、壁側コントローラとも） | Matter Door Lock（Thread） | Aliro 対応（Matter の Aliro 鍵登録）。玄関・住戸玄関・集合玄関は必須 | 玄関の系統 1 だけは自前 BLE（別添 A）を追加で要求 |
 | 扉・窓の開閉センサー | Matter Contact Sensor | | 錠に内蔵されない場合 |
-| カメラ（玄関、共用部） | ONVIF Profile S / T + RTSP（H.264 / H.265）、PoE 給電 | Matter 1.5 Camera デバイスタイプ | ONVIF / RTSP は Linux ゲートウェイでの録画・動体検知が枯れている。Matter 1.5（2025-11 制定、1.5.1 が 2026-03）のカメラは認証品が 2026 年に出始めた段階なので、当面は両対応品を選ぶ |
+| カメラ（玄関、共用部） | ONVIF Profile S / T + RTSP（H.264 / H.265）、PoE 給電 | Matter 1.5 Camera デバイスタイプ | ONVIF / RTSP は Linux ゲートウェイでの録画・動体検知が枯れている。Matter 1.5（2025-11-20 公開、1.5.1 が 2026-03、1.6 が 2026-06。CSA の発表と開発者向けの版の一覧で 2026-10-17 に確かめた）のカメラは認証品が出始めた段階なので、当面は両対応品を選ぶ |
 | ドアホン・インターホン | Matter 1.5 Video Doorbell / Intercom、または SIP | | |
 | 照明・電源（威嚇用ライト、スマートプラグ） | Matter On/Off Light / Plug | | 空き家の動物対策で使用 |
 | 人感・在室 | Matter Occupancy Sensing | ミリ波式 | |

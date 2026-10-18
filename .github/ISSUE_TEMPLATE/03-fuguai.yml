@@ -1,0 +1,25 @@
+name: 不具合
+description: 参照実装、テスト、サイト、文書の間違い
+title: "[不具合] "
+labels: ["不具合"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ここに書いたことは公開されます。識別情報と、公開できない記録は書かないでください。監査の記録を貼るときは、主体の識別子を消してください。
+  - type: input
+    id: basho
+    attributes:
+      label: どこか(ファイルの名前、ページの URL、要求の番号)
+    validations:
+      required: true
+  - type: textarea
+    id: saigen
+    attributes:
+      label: 何をしたら、何が起きたか。期待していたこと
+    validations:
+      required: true
+  - type: textarea
+    id: kiroku
+    attributes:
+      label: 記録、エラーの文、環境(OS、Python の版、機器)
