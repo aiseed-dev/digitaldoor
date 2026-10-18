@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'">
+
+
+<title>日本のスマートドアとスマートロックの現状 — 解説 | デジタルドア</title>
+<meta name="description" content="日本でスマートドアとスマートロックを作る人が、どこで仕様と制度に触れ、どこで話しているかを整理します。錠と扉の業界団体と防犯性能の高い建物部品、ECHONET Lite と JEM-A、JC-STAR、置き配の解錠、火災と避難の決まり、各社の開発者向けの窓口、催しを並べ、層ごとに空いている所を示します。">
+<link rel="canonical" href="https://door.aiseed.dev/guide/japan-today/">
+<link rel="alternate" hreflang="ja" href="https://door.aiseed.dev/guide/japan-today/">
+
+<link rel="alternate" hreflang="x-default" href="https://door.aiseed.dev/guide/japan-today/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="デジタルドア">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="日本のスマートドアとスマートロックの現状">
+<meta property="og:description" content="日本でスマートドアとスマートロックを作る人が、どこで仕様と制度に触れ、どこで話しているかを整理します。錠と扉の業界団体と防犯性能の高い建物部品、ECHONET Lite と JEM-A、JC-STAR、置き配の解錠、火災と避難の決まり、各社の開発者向けの窓口、催しを並べ、層ごとに空いている所を示します。">
+<meta property="og:url" content="https://door.aiseed.dev/guide/japan-today/">
+<meta property="og:image" content="https://door.aiseed.dev/images/og-default.jpg">
+<meta property="article:section" content="解説">
+<meta property="article:published_time" content="2026.10.18">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="日本のスマートドアとスマートロックの現状">
+<meta name="twitter:description" content="日本でスマートドアとスマートロックを作る人が、どこで仕様と制度に触れ、どこで話しているかを整理します。錠と扉の業界団体と防犯性能の高い建物部品、ECHONET Lite と JEM-A、JC-STAR、置き配の解錠、火災と避難の決まり、各社の開発者向けの窓口、催しを並べ、層ごとに空いている所を示します。">
+<meta name="twitter:image" content="https://door.aiseed.dev/images/og-default.jpg">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="alternate" type="application/rss+xml" title="デジタルドア" href="/feed.xml">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+
+<!-- フォントは Web 配信せず、すべて端末のローカルフォントで賄う。
+     和文: UDデジタル教科書体 → BIZ UDP明朝(いずれも Windows 標準搭載の
+     モリサワ UD 書体) → ヒラギノ明朝・游明朝などのシステム明朝。
+     等幅: 端末のシステム等幅フォント。 -->
+
+<style>
+/* ============================================================
+   LOCAL FONT: UDデジタル教科書体(モリサワ)
+   Windows・教育向け端末に無償搭載。端末にあれば local() で拾い、
+   なければ BIZ UDP明朝(同じく Windows 標準搭載)→ システム明朝へ
+   フォールバックする。R と B は別ファミリー名なので、太字(700)を
+   B 書体に明示的にマッピングして疑似ボールドを避ける。
+   ============================================================ */
+@font-face {
+  font-family: "UD Digital Kyokasho";
+  font-weight: 400;
+  src: local("UD デジタル 教科書体 NK-R"), local("UD Digital Kyokasho NK-R"),
+       local("UD デジタル 教科書体 NP-R"), local("UD Digital Kyokasho NP-R"),
+       local("UD デジタル 教科書体 N-R"), local("UD Digital Kyokasho N-R");
+}
+@font-face {
+  font-family: "UD Digital Kyokasho";
+  font-weight: 700;
+  src: local("UD デジタル 教科書体 NK-B"), local("UD Digital Kyokasho NK-B"),
+       local("UD デジタル 教科書体 NP-B"), local("UD Digital Kyokasho NP-B"),
+       local("UD デジタル 教科書体 N-B"), local("UD Digital Kyokasho N-B");
+}
+
+/* ============================================================
+   COLOR & DESIGN TOKENS
+   aiseed.dev 全体のスタイルに合わせる場合は、ここの変数を
+   既存サイトのCSS変数に差し替える。
+   ============================================================ */
+:root {
+  --ink: #1a1a1a;
+  --paper: #f4f1ea;
+  --paper-deep: #ebe6d8;
+  --accent: #c8442a;
+  --rule: #d4cdb8;
+  --whisper: #6b665a;
+  --highlight: #f7e9c8;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+/* 本文: 端末にあれば UDデジタル教科書体を最優先、次に BIZ UDP明朝
+   (Windows 標準搭載)、どちらもなければヒラギノ明朝等のシステム明朝 */
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "UD Digital Kyokasho",
+               "BIZ UDPMincho", "BIZ UDP明朝",
+               "Hiragino Mincho ProN", "ヒラギノ明朝 ProN",
+               "Yu Mincho", "游明朝", "YuMincho",
+               "Noto Serif CJK JP", "Noto Serif JP", serif;
+  font-size: 17px;
+  line-height: 1.9;
+  letter-spacing: 0.02em;
+  font-feature-settings: "palt";
+  overflow-x: hidden;
+}
+
+/* グレインテクスチャ(紙の質感) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image: radial-gradient(rgba(0,0,0,0.04) 1px, transparent 1px);
+  background-size: 3px 3px;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+}
+
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 32px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ============================================================
+   MASTHEAD(シリーズ名・章番号)
+   ============================================================ */
+.masthead {
+  border-bottom: 3px double var(--ink);
+  padding: 24px 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--whisper);
+}
+.masthead-left  { font-weight: 700; color: var(--ink); }
+.masthead-left a { color: inherit; text-decoration: none; }
+.masthead-left a:hover { color: var(--accent); }
+.masthead-home { color: var(--whisper); }
+.masthead-sep { margin: 0 10px; color: var(--whisper); font-weight: 400; }
+.masthead-right { font-style: italic; }
+
+/* ============================================================
+   HERO(タイトル領域)
+   ============================================================ */
+.hero {
+  padding: 80px 0 60px;
+}
+.hero-meta {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  color: var(--accent);
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.hero-meta::before {
+  content: "";
+  width: 40px;
+  height: 1px;
+  background: var(--accent);
+}
+.hero-title {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 800;
+  font-size: clamp(32px, 5.5vw, 56px);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin-bottom: 24px;
+}
+.hero-title .accent {
+  color: var(--accent);
+}
+.hero-subtitle {
+  font-size: 18px;
+  line-height: 1.85;
+  color: var(--whisper);
+  max-width: 580px;
+  border-left: 2px solid var(--accent);
+  padding-left: 20px;
+  margin-top: 32px;
+}
+.hero-byline {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--whisper);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ============================================================
+   ARTICLE BODY
+   ============================================================ */
+article p {
+  margin-bottom: 24px;
+}
+
+article h2 {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1.4;
+  margin: 72px 0 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--ink);
+  position: relative;
+}
+article h2::before {
+  content: "§";
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  color: var(--accent);
+  margin-right: 16px;
+  font-size: 22px;
+}
+
+article h3 {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 600;
+  font-size: 19px;
+  margin: 40px 0 16px;
+  color: var(--ink);
+}
+article h3::before {
+  content: "—";
+  color: var(--accent);
+  margin-right: 12px;
+  font-weight: 400;
+}
+
+article strong {
+  font-weight: 700;
+  background: linear-gradient(to top, var(--highlight) 35%, transparent 35%);
+  padding: 0 2px;
+}
+
+article em {
+  font-style: normal;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+article a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: color 0.2s;
+}
+article a:hover {
+  color: var(--accent);
+}
+
+/* ============================================================
+   BLOCKQUOTE
+   ============================================================ */
+blockquote {
+  margin: 40px 0;
+  padding: 32px 40px;
+  background: var(--paper-deep);
+  border-left: 4px solid var(--accent);
+  position: relative;
+  font-size: 18px;
+  line-height: 1.85;
+  font-style: normal;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "「";
+  position: absolute;
+  top: 4px;
+  left: 8px;
+  font-size: 48px;
+  color: var(--accent);
+  opacity: 0.3;
+  font-family: "Hiragino Mincho ProN", serif;
+}
+blockquote p {
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 32px 0;
+  font-size: 15px;
+  line-height: 1.7;
+}
+article thead th {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 700;
+  text-align: left;
+  padding: 14px 16px;
+  border-bottom: 2px solid var(--ink);
+  color: var(--ink);
+}
+article tbody td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+article tbody tr:last-child td {
+  border-bottom: none;
+}
+@media (max-width: 720px) {
+  article table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ============================================================
+   ORDERED LIST(番号付きリスト)
+   ============================================================ */
+article ol {
+  margin: 32px 0;
+  counter-reset: item;
+  padding: 0;
+}
+article ol li {
+  list-style: none;
+  position: relative;
+  padding: 16px 0 16px 56px;
+  border-bottom: 1px dashed var(--rule);
+  counter-increment: item;
+}
+article ol li::before {
+  content: counter(item, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 16px;
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 14px;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+/* 通常のul(章末の関連リンクなど) */
+article ul {
+  margin: 24px 0;
+  padding-left: 1.5em;
+}
+article ul li {
+  margin-bottom: 8px;
+}
+
+/* ============================================================
+   CODE BLOCK(疑似ターミナル風)
+   ============================================================ */
+article pre {
+  margin: 40px 0;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 24px 28px;
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 13px;
+  line-height: 1.8;
+  position: relative;
+  overflow-x: auto;
+}
+article pre::before {
+  content: "● ● ●";
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  font-size: 8px;
+  color: var(--whisper);
+  letter-spacing: 4px;
+}
+article pre code {
+  display: block;
+  padding-top: 16px;
+  white-space: pre;
+}
+
+/* インラインコード */
+article code {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 0.9em;
+  background: var(--paper-deep);
+  padding: 2px 6px;
+  border-radius: 2px;
+  color: var(--ink);
+}
+article pre code {
+  background: transparent;
+  padding: 16px 0 0 0;
+  color: var(--paper);
+}
+
+/* ============================================================
+   HORIZONTAL RULE(本文中の区切り)
+   ============================================================ */
+article hr {
+  border: none;
+  text-align: center;
+  margin: 64px 0;
+  height: 1em;
+}
+article hr::before {
+  content: "◆ ◆ ◆";
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 14px;
+  color: var(--accent);
+  letter-spacing: 0.5em;
+}
+
+/* ============================================================
+   RELATED LINKS(章末の関連記事)
+   ============================================================ */
+.related-links {
+  margin-top: 64px;
+  padding: 32px 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.related-links h3 {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  color: var(--whisper);
+  margin: 0 0 20px;
+  font-weight: 600;
+}
+.related-links h3::before {
+  content: none;
+}
+.related-links ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.related-links li {
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--rule);
+  margin-bottom: 0;
+}
+.related-links li:last-child {
+  border-bottom: none;
+}
+.related-links a {
+  text-decoration: none;
+  color: var(--ink);
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+}
+.related-links .related-tag {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.related-links a:hover .related-title {
+  color: var(--accent);
+}
+
+/* ============================================================
+   FOOTER(サイト内メニュー+奥付)
+   ============================================================ */
+.site-footer {
+  margin-top: 96px;
+  border-top: 3px double var(--ink);
+  padding-top: 48px;
+}
+.footer-nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 32px 48px;
+}
+.footer-col h4 {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--whisper);
+  font-weight: 700;
+  margin: 0 0 14px;
+}
+.footer-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.footer-col li {
+  padding: 6px 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.footer-col a {
+  color: var(--ink);
+  text-decoration: none;
+}
+.footer-col a:hover { color: var(--accent); }
+
+.colophon {
+  margin-top: 48px;
+  padding: 32px 0 40px;
+  border-top: 1px solid var(--rule);
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--whisper);
+  text-align: center;
+  line-height: 2;
+}
+.colophon-mark {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "Hiragino Mincho ProN", serif;
+  font-size: 32px;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+/* ============================================================
+   SERIES TOC(全章一覧・折りたたみ式)
+   ============================================================ */
+.series-toc {
+  margin: 24px 0 40px;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 8px 0;
+}
+.series-toc details {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+}
+.series-toc summary {
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--whisper);
+  font-weight: 700;
+  padding: 8px 0;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.series-toc summary::-webkit-details-marker { display: none; }
+.series-toc summary::before {
+  content: "▸";
+  color: var(--accent);
+  font-size: 10px;
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+.series-toc details[open] summary::before { transform: rotate(90deg); }
+.series-toc ol {
+  list-style: none;
+  margin: 12px 0 8px;
+  padding: 0;
+  counter-reset: none;
+}
+.series-toc li {
+  list-style: none;
+  padding: 9px 0;
+  border-bottom: 1px dashed var(--rule);
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: 14px;
+  line-height: 1.55;
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+}
+.series-toc li::before { content: none; }
+.series-toc li:last-child { border-bottom: none; }
+.series-toc li a {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+  text-decoration: none;
+  color: var(--ink);
+  flex: 1;
+}
+.series-toc li a:hover .toc-title { color: var(--accent); }
+.series-toc .toc-num {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 5em;
+}
+.series-toc li.current {
+  background: var(--paper-deep);
+  margin: 0 -12px;
+  padding: 9px 12px;
+}
+.series-toc li.current .toc-title {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ============================================================
+   IMAGES
+   ============================================================ */
+article img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 32px auto;
+}
+
+/* ============================================================
+   CUSTOM BLOCKS(:::chain / :::highlight / :::quote / :::compare)
+   ============================================================ */
+.chain-diagram {
+  background: var(--paper-deep);
+  border-left: 4px solid var(--accent);
+  padding: 24px 28px;
+  margin: 32px 0;
+  font-size: 15px;
+  line-height: 2.2;
+}
+.chain-diagram .arrow {
+  color: var(--accent);
+  font-weight: 700;
+  margin: 0 0.3em;
+}
+.highlight-box {
+  background: var(--paper-deep);
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--accent);
+  padding: 24px 28px;
+  margin: 32px 0;
+}
+.highlight-box p { margin-bottom: 12px; }
+.highlight-box p:last-child { margin-bottom: 0; }
+.quote-block {
+  margin: 40px 0;
+  padding: 32px 40px;
+  background: var(--paper-deep);
+  border-left: 4px solid var(--accent);
+}
+.quote-block .quote-text {
+  font-size: 18px;
+  line-height: 1.85;
+  margin: 0;
+}
+
+/* ============================================================
+   CHAPTER NAV(前後の記事へのリンク)
+   ============================================================ */
+.chapter-nav {
+  margin-top: 64px;
+  padding: 24px 0;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  font-size: 14px;
+}
+.chapter-nav a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+  text-underline-offset: 4px;
+}
+.chapter-nav a:hover { color: var(--accent); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 640px) {
+  .container { padding: 0 20px; }
+  .hero { padding: 48px 0 40px; }
+  blockquote { padding: 24px 20px 24px 28px; }
+  article pre { padding: 20px 16px; font-size: 12px; }
+  article ol li { padding-left: 48px; }
+  .series-toc .toc-num { min-width: 4em; font-size: 10px; }
+  .series-toc li { font-size: 13px; gap: 12px; }
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-meta, .hero-title, .hero-subtitle, .hero-byline {
+  animation: rise 0.8s ease-out backwards;
+}
+.hero-meta     { animation-delay: 0.1s; }
+.hero-title    { animation-delay: 0.25s; }
+.hero-subtitle { animation-delay: 0.45s; }
+.hero-byline   { animation-delay: 0.65s; }
+.mermaid {
+  text-align: center;
+  margin: 2.5rem 0;
+  background: var(--paper-warm, #f5f1ea);
+  padding: 1.5rem 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+.mermaid svg { max-width: 100%; height: auto; }
+
+/* ============================================================
+   WIDE LAYOUT(広い画面では目次を左サイドバーに常時展開)
+   ============================================================ */
+@media (min-width: 1200px) {
+  body.has-toc .container {
+    max-width: 1320px;
+    display: grid;
+    grid-template-columns: 280px minmax(0, 880px);
+    column-gap: 64px;
+    justify-content: center;
+  }
+  body.has-toc .masthead,
+  body.has-toc .hero {
+    grid-column: 1 / -1;
+  }
+  /* グリッドアイテム自体は行いっぱいに伸ばし、内側の details を sticky に
+     する(sticky なグリッドアイテムはグリッドエリアではなくコンテナ全体で
+     制約されるブラウザ挙動があり、フッターに重なってしまうため)。 */
+  body.has-toc .series-toc {
+    grid-column: 1;
+    grid-row: 3 / span 2;
+    margin: 0;
+    padding: 0;
+    border-top: none;
+    border-bottom: none;
+  }
+  body.has-toc .series-toc details {
+    position: sticky;
+    top: 32px;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+    padding: 0 12px 12px 0;
+  }
+  /* サイドバーでは折りたたみを無効化し、見出しとして表示 */
+  body.has-toc .series-toc summary {
+    pointer-events: none;
+    cursor: default;
+  }
+  body.has-toc .series-toc summary::before { content: none; }
+  body.has-toc .series-toc li { font-size: 13.5px; }
+  body.has-toc article    { grid-column: 2; grid-row: 3; }
+  body.has-toc .chapter-nav { grid-column: 2; grid-row: 4; }
+  body.has-toc .site-footer { grid-column: 1 / -1; grid-row: 5; }
+}
+
+/* ============================================================
+   DARK MODE(OS の配色設定に追従して自動で暗色に切り替え)
+   ============================================================ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --ink: #e8e3d6;
+    --paper: #16140f;
+    --paper-deep: #211d16;
+    --accent: #e8765a;
+    --rule: #393428;
+    --whisper: #a39b88;
+    --highlight: rgba(220, 168, 78, 0.30);
+  }
+  /* 紙の質感(グレイン)を暗色背景向けに反転 */
+  body::before {
+    background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+    mix-blend-mode: screen;
+    opacity: 0.4;
+  }
+  /* コードブロックは両モードとも暗いターミナル調を維持 */
+  article pre {
+    background: #0d0c0a;
+    color: #e8e3d6;
+  }
+  article pre code {
+    color: #e8e3d6;
+  }
+  /* Mermaid 図の枠を暗色に */
+  .mermaid {
+    background: #211d16;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; opacity: 1 !important; }
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- MASTHEAD(ホーム › シリーズ目次) -->
+  <header class="masthead">
+    <div class="masthead-left"><a href="/" class="masthead-home">デジタルドア</a><span class="masthead-sep">›</span><a href="/guide/">解説</a></div>
+    <div class="masthead-right">No. 07 / 解説</div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-meta">解説 № 07 · 2026</div>
+
+    <h1 class="hero-title">日本のスマートドアとスマートロックの現状</h1>
+
+    <p class="hero-subtitle">業界団体、通信の規格、制度、各社の窓口、催しを、同じ見方で並べる</p>
+
+    <div class="hero-byline">
+      <span>2026.10.18</span>
+      
+    </div>
+  </section>
+
+  <!-- SERIES TOC(全章一覧・現在の章をハイライト) -->
+  
+
+  <!-- ARTICLE BODY -->
+  <article>
+    <p><a href="/guide/where-developers-meet/">スマートドアとスマートロックを作る人が集まる場所</a> と同じ見方で、日本の状況を整理します。調べたのは2026年10月17日です。出典は、各団体、官庁、各社の公式の頁と発表を主にし、報道だけで確かめた事柄はそのように書きます。</p>
+<h2>業界団体</h2>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>団体</th>
+<th>していること</th>
+<th>スマートロックと公開の仕様</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>日本ロック工業会</td>
+<td>錠メーカーの団体。防犯性能の高い建物部品の官民合同会議の構成団体で、錠、シリンダー、サムターンの試験の窓口</td>
+<td>取り組みは見つからない。公式の頁と会員の名簿を見つけられなかった</td>
+</tr>
+<tr>
+<td>日本サッシ協会</td>
+<td>窓と扉の団体。防犯の委員会を持ち、防犯性能の高い建物部品の扉の区分を扱う。2025年5月に防犯設計のハンドブックを発行</td>
+<td>取り組みは見つからない</td>
+</tr>
+<tr>
+<td>日本シヤッター・ドア協会</td>
+<td>防火シャッターと防火戸の点検の資格者の認定</td>
+<td>取り組みは見つからない</td>
+</tr>
+<tr>
+<td>日本防犯設備協会</td>
+<td>一般向けの「出入口のセキュリティガイド」(2022年)で、電気錠、電気ストライク、スマートフォンによる認証、火災の信号による解錠を解説</td>
+<td>ガイドで解説。技術基準に入退室管理や錠の通信の基準は見つからない</td>
+</tr>
+<tr>
+<td>エコーネットコンソーシアム</td>
+<td>家庭の機器の通信規格 ECHONET Lite</td>
+<td>電気錠の機器の種類を定め、仕様を公開</td>
+</tr>
+<tr>
+<td>CSA 日本支部</td>
+<td>Matter と Aliro。2024年5月に38社で発足、2026年9月の時点で約80社</td>
+<td>中心の話題。会員向け(Adopter 以上)</td>
+</tr>
+</tbody>
+</table>
+<p>スマートロックを専門に扱う業界団体や協議会は、見つかりませんでした。近い物として、不動産テック協会の不動産オープンID推進部会の資料に、鍵の依頼に触れる記述があります。</p>
+<h3>防犯性能の高い建物部品(CP部品)</h3>
+<p>警察庁、国土交通省、経済産業省と民間の16団体が、2002年11月25日に官民合同会議を設けました。侵入までに5分以上かかる建物部品を試験で確かめて目録に載せ、CP マークを付けます。2026年3月末の時点で、17種類、3,545品目です。電気錠も錠の区分に入っています(日本サッシ協会の目録)。</p>
+<p>試験は、物理的な攻撃に対する強さを見ます。通信の安全を扱う規定は見つけられませんでした。</p>
+<h2>通信の規格</h2>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>規格(決める所)</th>
+<th>公開</th>
+<th>錠に関わる所</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ECHONET Lite(エコーネットコンソーシアム)</td>
+<td>仕様は誰でも閲覧できる</td>
+<td>電気錠の機器の種類(クラスコード 0x026F)を、Web API の機器仕様(v1.3.0、2021年6月25日)で定めている</td>
+</tr>
+<tr>
+<td>JEM-A、JEM1427(日本電機工業会)</td>
+<td>公開の本文を見つけられなかった</td>
+<td>インターホンと電気錠の連動の接点。各社の取扱説明書に、極性、アダプター、配線の長さの制限が書かれている</td>
+</tr>
+<tr>
+<td>Matter、Aliro(CSA)</td>
+<td>確定した仕様は無料</td>
+<td>日本支部が日本語で活動している</td>
+</tr>
+</tbody>
+</table>
+<p>ECHONET Lite の電気錠の種類は、日本で公開されている通信の規格のうち、錠を扱う唯一の物でした。JEM-A は建物の現場で広く使われていますが、本文は公開されていません。</p>
+<h2>制度</h2>
+<h3>JC-STAR</h3>
+<p>JC-STAR は、IoT 製品のセキュリティの適合ラベルの制度です。経済産業省の監督のもとで IPA が運営し、2025年3月に★1の申請の受付が始まりました。★1は、IoT 製品に共通する最低限の脅威への備えです。</p>
+<p>美和ロックは2025年10月7日に、住宅の玄関扉用の電気錠「iEL Zero smart シリーズ」で★1を取得し、錠メーカーとして初めてだと発表しました。IPA の一覧では、ラベルの付与は2025年9月11日、期限は2027年9月10日です。扉の周りでは、パナソニックのドアホン「外でもドアホン」(2026年2月6日)や、Axis の入退室管理とインターホンを含む製品(2025年5月12日)もラベルを受けています。後付けのスマートロックは、確かめた範囲の一覧には見当たりませんでした。</p>
+<h3>置き配とオートロック</h3>
+<p>国土交通大臣は2025年9月16日の会見で、宅配の業者がオートロックを自由に開けられる仕組みを国が作るという話は事実ではないと述べました。あわせて、民間の各社が開発した解錠の仕組みが、既に2万棟を超えるマンションに入っていること、配達員の本人確認と解錠の記録、事前に登録した荷物だけの一時的な解錠、管理組合の合意という条件で使われていることを説明しました。令和8年度の予算要求には、配送会社をまたいだ伝票番号と配送データの標準化を支える事業が入っています。</p>
+<p>事業者の例として、美和ロックと PacPort は2026年1月13日に、ヤマト運輸の「EAZY」の配達でオートロックを解錠する仕組みを2026年春から始めると発表しました。</p>
+<h3>火災と避難</h3>
+<p>建築基準法施行令第125条の2は、屋外への出口などの施錠装置を、屋内から鍵を使わずに開けられる構造にすることを定めています。火災の信号による解錠、非常時の解錠、予備の電源の扱いは、各地の火災予防条例と消防の基準で決まります。例えば名古屋市の「電気錠の指導基準」は、電気錠を通電時に施錠する型など四つの型に分け、避難に要る出入口では、防災センター等からの遠隔の解錠と、自動火災報知設備に連動した解錠を、型に応じて求めています。国としてまとめた電気錠の通知は見つけられませんでした。</p>
+<p>経済産業省の「スマートホームの安心・安全に向けたサイバー・フィジカル・セキュリティ対策ガイドライン」(2021年4月)は、スマートホーム全体を扱い、錠に絞った章はありません。</p>
+<h2>各社の開発者向けの窓口</h2>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>会社と製品</th>
+<th>窓口</th>
+<th>条件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CANDY HOUSE の SESAME</td>
+<td>SesameSDK(iOS、Android、ESP32 向け。MIT ライセンス)と Web API</td>
+<td>公開。SDK は「永続的に無料」と書かれている</td>
+</tr>
+<tr>
+<td>SwitchBot</td>
+<td>Open API v1.1</td>
+<td>アプリの開発者向けの設定でトークンを発行。1日1万回まで。個人利用で、商用は問い合わせ</td>
+</tr>
+<tr>
+<td>フォトシンスの Akerun</td>
+<td>Akerun API v3(OAuth2 で認可)。遠隔の施錠と解錠、鍵、履歴、利用者、IC カード</td>
+<td>営業の担当者に問い合わせ</td>
+</tr>
+<tr>
+<td>ビットキー</td>
+<td>他社のサービスとの連携が報じられている</td>
+<td>公開の開発者向けの頁は見つからない</td>
+</tr>
+<tr>
+<td>構造計画研究所の RemoteLOCK</td>
+<td>予約システム等との連携</td>
+<td>公開の文書は見つからない</td>
+</tr>
+<tr>
+<td>美和ロック、ゴール、Qrio</td>
+<td>―</td>
+<td>公開の API と SDK は見つからない</td>
+</tr>
+</tbody>
+</table>
+<p>開発者の窓口は、個人でも使える公開の物(SESAME、SwitchBot)と、営業を通す物(Akerun 等)に分かれています。</p>
+<h2>開発者の集まり</h2>
+<p>Qiita と Zenn には、SESAME や SwitchBot の API で錠を動かす記事が多くあります。例は、SESAME3 を Web API で動かす記事(2021年8月)や、SwitchBot の API v1.1 で錠を遠隔操作する記事(2022年9月)です。フォトシンスは2017年に Akerun の Advent Calendar を開きました。こうした記事の多くは2019年から2023年のものです。</p>
+<p>connpass では、Matter の勉強会が数件(2023年7月、2024年5月)見つかりました。スマートロックや Aliro の集まりは見つかりませんでした。</p>
+<h2>催し</h2>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>催し</th>
+<th>時期と場所</th>
+<th>錠と扉に関わる所</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SECURITY SHOW 2026(日本経済新聞社)</td>
+<td>2026年3月3日〜6日、東京ビッグサイト</td>
+<td>入退室管理が主題の一つ。次回は2027年3月2日〜5日</td>
+</tr>
+<tr>
+<td>CEATEC 2026</td>
+<td>2026年10月13日〜16日、幕張メッセ</td>
+<td>CSA 日本支部が23社(前年は19社)で出展し、Aliro を国内で初めて一般に展示した(ポケットや鞄に電話を入れたまま近づくと開く)。出展には美和ロック、YKK AP、パナソニック、SwitchBot、半導体の各社が入っている</td>
+</tr>
+<tr>
+<td>Japan Home &amp; Building Show 2026</td>
+<td>2026年11月18日〜20日、東京ビッグサイト</td>
+<td>住宅と建物の設備</td>
+</tr>
+<tr>
+<td>JAPAN BUILD TOKYO</td>
+<td>2026年12月2日〜4日、東京ビッグサイト</td>
+<td>建築と建材</td>
+</tr>
+</tbody>
+</table>
+<p>業界の側と開発者の側が同じ場にいるのは、確かめた範囲では CSA 日本支部だけでした。</p>
+<h2>層ごとに見る</h2>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>層</th>
+<th>仕様と制度の場</th>
+<th>開発者の場</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>扉の製造</td>
+<td>防犯性能の高い建物部品(物理的な強さ)、業界団体、建築基準法と各地の消防の基準</td>
+<td>見つからない</td>
+</tr>
+<tr>
+<td>電子錠</td>
+<td>CSA 日本支部(Matter、Aliro)、ECHONET Lite、JC-STAR</td>
+<td>各社の SDK と API、Qiita と Zenn の記事</td>
+</tr>
+<tr>
+<td>扉のコントローラ</td>
+<td>火災の信号による解錠は各地の基準。公開の仕様は見つからない</td>
+<td>見つからない</td>
+</tr>
+<tr>
+<td>ドアホン(読取機)</td>
+<td>JEM-A(本文は非公開)、JC-STAR</td>
+<td>見つからない</td>
+</tr>
+<tr>
+<td>鍵の発行</td>
+<td>置き配の解錠は各社の仕組み。不動産オープンID の検討</td>
+<td>見つからない</td>
+</tr>
+<tr>
+<td>業務システムとの連携</td>
+<td>見つからない</td>
+<td>営業を通す各社の API</td>
+</tr>
+</tbody>
+</table>
+<h2>足りない物</h2>
+<ol>
+<li><strong>スマートロックを扱う業界団体。</strong> 錠の業界団体は物理の防犯の試験の窓口で、公開の仕様は見当たりません。</li>
+<li><strong>扉、錠、業務システムの間の公開の接続仕様。</strong> ECHONET Lite の電気錠の種類と、始まったばかりの Matter と Aliro だけです。建物の現場で使われる JEM-A は本文が公開されていません。</li>
+<li><strong>火災と避難のときの電気錠の挙動の、全国で同じ前提。</strong> 決まりは各地の基準にあり、国としてまとめた公開の文書は見つかりません。扉のコントローラを作る人が、全国で同じ前提を持てません。</li>
+<li><strong>事業者が公開の条件で使える開発者の窓口。</strong> 個人向けと営業経由に分かれています。</li>
+<li><strong>業界と開発者が会員制でなく会う場。</strong> 両者が同じ場にいるのは CSA 日本支部で、Adopter(年7,500ドル)以上の会員制です。</li>
+<li><strong>置き配の解錠の条件を確かめる公開の試験。</strong> 2万棟を超える建物で動いていますが、本人確認、解錠の記録、管理組合の合意という条件を確かめる公開の仕様と試験は見つけられませんでした。</li>
+</ol>
+<p>このサイトの <a href="/guide/open-specification/">扉のコントローラの仕様</a> は、3 と 6 にある火災と停電のときの挙動と、改ざんの分かる解錠の記録を、番号の付いた要求と公開のテストで扱っています。</p>
+<h2>出典</h2>
+<ul>
+<li><a href="https://www.npa.go.jp/safetylife/seianki26/theme_b/b_c_1_main.html">警察庁: 住まいる防犯110番 防犯性能の高い建物部品(2026年10月17日に閲覧)</a></li>
+<li><a href="https://www.jsma.or.jp/Portals/0/images/bohan/cp_products202304.pdf">日本サッシ協会: 防犯性能の高い建物部品の目録</a></li>
+<li><a href="https://www.jsma.or.jp/Portals/0/images/bohan/handbook_pressrelease202506.pdf">日本サッシ協会: 防犯設計ハンドブックの発行</a></li>
+<li><a href="https://www.ssaj.or.jp/pubdoc/pdf/guidebook/458.pdf">日本防犯設備協会: 出入口のセキュリティガイド(2022年)</a></li>
+<li><a href="https://echonet.jp/spec_g/">エコーネットコンソーシアム: 規格書</a></li>
+<li><a href="https://echonet.jp/wp/wp-content/uploads/pdf/General/Standard/web_api/ECHONET_Lite_Web_API_Dev_Specs_v1.3.0.pdf">エコーネットコンソーシアム: ECHONET Lite Web API ガイドライン 機器仕様 v1.3.0(2021年6月25日)</a></li>
+<li><a href="https://csa-iot.org/ja/newsroom/the-connectivity-standards-alliance-establishes-new-japan-interest-group/">Connectivity Standards Alliance: 日本支部の設立(2024年5月)</a></li>
+<li><a href="https://csa-iot.org/newsroom/connectivity-standards-alliance-ceatec-2026-jp/">Connectivity Standards Alliance: 日本支部、CEATEC 2026 への出展を発表(2026年9月1日)</a></li>
+<li><a href="https://www.ipa.go.jp/security/jc-star/list/jc-star-product-list/index.html">IPA: JC-STAR 適合ラベル取得製品の一覧(2026年10月17日に閲覧)</a></li>
+<li><a href="https://www.miwa-lock.co.jp/news/pdf/release_JC-STAR_20251007.pdf">美和ロック: ロックメーカー初 JC-STAR の★1 適合ラベルを取得(2025年10月7日)</a></li>
+<li><a href="https://www.mlit.go.jp/report/interview/daijin250916.html">国土交通省: 大臣会見(2025年9月16日)</a></li>
+<li><a href="https://www.mlit.go.jp/common/001335954.pdf">国土交通省、経済産業省: 置き配の現状と実施に向けたポイント(2020年3月)</a></li>
+<li><a href="https://miwa-lock.co.jp/news/pdf/release_Delivery_20260113.pdf">美和ロック: 置き配の解錠に関する発表(2026年1月13日)</a></li>
+<li><a href="https://elaws.e-gov.go.jp/document?lawid=325CO0000000338">e-Gov 法令検索: 建築基準法施行令</a></li>
+<li><a href="https://www.city.nagoya.jp/_res/projects/default_project/_page_/001/013/185/1-10.pdf">名古屋市: 消防用設備等技術基準(通則・運用・特例基準編)1-10 電気錠の指導基準について</a></li>
+<li><a href="https://github.com/CANDY-HOUSE/API_document">GitHub: CANDY-HOUSE/API_document</a></li>
+<li><a href="https://github.com/OpenWonderLabs/SwitchBotAPI">GitHub: OpenWonderLabs/SwitchBotAPI</a></li>
+<li><a href="https://developers.akerun.com/">フォトシンス: Akerun Developers</a></li>
+<li><a href="https://messe.nikkei.co.jp/en/ss">日本経済新聞社: SECURITY SHOW</a></li>
+<li><a href="https://qiita.com/soapshoprock/items/036462d1edb97c1872c8">Qiita: SESAME3をWEB API経由で操作する(2021年8月)</a></li>
+<li><a href="https://qiita.com/masaki12-s/items/0295a96fd5a70442f7d5">Qiita: APIでSwitchBotロックを遠隔操作する(2022年9月)</a></li>
+</ul>
+
+  </article>
+
+  <!-- CHAPTER NAV(前後の記事) -->
+  <nav class="chapter-nav">
+  <a href="/guide/where-developers-meet/" rel="prev">&larr; 前: スマートドアとスマートロックを作る人が集まる場所</a>
+  <a href="/guide/japanese-smart-lock-apps/" rel="next">次: 日本のスマートロックのアプリの現状と課題 &rarr;</a>
+</nav>
+
+  <!-- FOOTER(サイト内メニュー+奥付) -->
+  <footer class="site-footer">
+    <nav class="footer-nav" aria-label="サイト内リンク">
+      <div class="footer-col">
+        <h4>解説</h4>
+        <ul>
+          <li><a href="/guide/matter/">Matterとは何か</a></li>
+          <li><a href="/guide/aliro/">Aliroとは何か</a></li>
+          <li><a href="/guide/what-a-smart-door-needs/">スマートドアに求められる条件</a></li>
+          <li><a href="/guide/layers/">玄関まわりの技術の層</a></li>
+          <li><a href="/guide/open-specification/">仕様と参照実装の公開</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>サイト</h4>
+        <ul>
+          <li><a href="/">ホーム</a></li>
+          <li><a href="/guide/">解説の一覧</a></li>
+          <li><a href="/blog/">ブログ</a></li>
+          <li><a href="/#about">このサイトについて</a></li>
+          <li><a href="/license/">ライセンス</a></li>
+          <li><a href="/feed.xml">RSS</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="colophon">
+      <div class="colophon-mark">§</div>
+      解説 07<br>
+      Tokushima · 2026.10.18<br>
+      <a href="/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">デジタルドア</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">CC BY 4.0</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // 広い画面ではサイドバー目次を常時展開する(狭い画面では折りたたみに戻す)
+  (function () {
+    var toc = document.querySelector(".series-toc details");
+    if (!toc) return;
+    var mq = window.matchMedia("(min-width: 1200px)");
+    function sync() { toc.open = mq.matches; }
+    sync();
+    if (mq.addEventListener) mq.addEventListener("change", sync);
+    else mq.addListener(sync);
+  })();
+
+  // Mermaid loads only on pages that contain a .mermaid block.
+  // Self-hosted (no third-party CDN dependency); SRI verified.
+  if (document.querySelector(".mermaid")) {
+    const s = document.createElement("script");
+    s.src = "/js/vendor/mermaid-11.14.0.min.js";
+    s.integrity = "sha384-1CMXl090wj8Dd6YfnzSQUOgWbE6suWCaenYG7pox5AX7apTpY3PmJMeS2oPql4Gk";
+    s.crossOrigin = "anonymous";
+    s.onload = () => {
+      const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      mermaid.initialize({ startOnLoad: false, theme: prefersDark ? "dark" : "default" });
+      mermaid.run();
+    };
+    document.head.appendChild(s);
+  }
+</script>
+
+
+</body>
+</html>

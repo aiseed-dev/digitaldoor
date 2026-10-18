@@ -4,7 +4,31 @@
 <link>https://door.aiseed.dev/</link>
 <description>扉と鍵の話を、層に分けて書く</description>
 <language>ja</language>
-<lastBuildDate>Sat, 10 Oct 2026 06:08:55 +0900</lastBuildDate>
+<lastBuildDate>Sun, 18 Oct 2026 04:48:13 +0900</lastBuildDate>
+<item>
+<title>スマートドアとスマートロックを作る人が集まる場所</title>
+<link>https://door.aiseed.dev/guide/where-developers-meet/</link>
+<guid>https://door.aiseed.dev/guide/where-developers-meet/</guid>
+<category>解説</category>
+<pubDate>Sun, 18 Oct 2026 00:00:00 +0900</pubDate>
+<description>スマートドアとスマートロックの開発に関わる人が、どこで仕様を決め、どこで実装を共有し、どこで話しているかを、規格団体、制度、各社の開発者向けの窓口、オープンソース、研究者の五つの場に分けて整理します。どの場も同じ項目で並べ、層ごとの表で空いている所を示します。</description>
+</item>
+<item>
+<title>日本のスマートドアとスマートロックの現状</title>
+<link>https://door.aiseed.dev/guide/japan-today/</link>
+<guid>https://door.aiseed.dev/guide/japan-today/</guid>
+<category>解説</category>
+<pubDate>Sun, 18 Oct 2026 00:00:00 +0900</pubDate>
+<description>日本でスマートドアとスマートロックを作る人が、どこで仕様と制度に触れ、どこで話しているかを整理します。錠と扉の業界団体と防犯性能の高い建物部品、ECHONET Lite と JEM-A、JC-STAR、置き配の解錠、火災と避難の決まり、各社の開発者向けの窓口、催しを並べ、層ごとに空いている所を示します。</description>
+</item>
+<item>
+<title>日本のスマートロックのアプリの現状と課題</title>
+<link>https://door.aiseed.dev/guide/japanese-smart-lock-apps/</link>
+<guid>https://door.aiseed.dev/guide/japanese-smart-lock-apps/</guid>
+<category>解説</category>
+<pubDate>Sun, 18 Oct 2026 00:00:00 +0900</pubDate>
+<description>日本で使われている六社のスマートロックのアプリを、ストアの数字、利用者の多い不満、会社の答え方、障害と終了の発表、網やクラウドが止まったときの動きで並べます。共通する課題は、近くで開ける無線の不安定さ、クラウドとアカウントへの依存、錠より短いアプリの寿命、選べない利用者、直したことの伝わらなさです。</description>
+</item>
 <item>
 <title>Matterとは何か</title>
 <link>https://door.aiseed.dev/guide/matter/</link>

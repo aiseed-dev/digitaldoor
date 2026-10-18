@@ -2515,8 +2515,13 @@ def copy_form_assets():
         src = assets / name
         if src.is_file():
             dest = config.SITE_ROOT / "html" / sub / name
+            data = src.read_bytes()
+            # 中身が同じなら書かない。書くと開発サーバー(tools/serve.py)が
+            # html/css と html/js の変更と見て、ビルドとリロードを繰り返す
+            if dest.is_file() and dest.read_bytes() == data:
+                continue
             dest.parent.mkdir(parents=True, exist_ok=True)
-            dest.write_bytes(src.read_bytes())
+            dest.write_bytes(data)
 
 
 # ---------------------------------------------------------------------------

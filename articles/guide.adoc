@@ -404,3 +404,514 @@ Matterと同じ位置づけで、Matterが対象としていない業務用の�
 
 この仕様があれば、三つの相手と共通の言葉で話せます。事業者(民泊の経営者、管理組合、企業)には「要望をこう整理した」と。設備工事会社には「独自仕様の制御盤の価格は、公開仕様に置き換われば消える。残るのは据付と建物全体の統合であり、それは正当な仕事である」と。AppleとGoogleには「家庭用はあなたたちの規格で開いた。業務用の扉には、あなたたちのアプリの外から呼べる、認証と監査を含むAPIが必要だ。仕様と動作する実装はここにある」と。
 endif::[]
+
+// ===== article: 06-where-developers-meet =====
+---
+slug: where-developers-meet
+number: 06
+date: 2026.10.18
+label: 解説 06
+category.ja: 業界
+category.en: Industry
+title.ja: スマートドアとスマートロックを作る人が集まる場所
+title.en: Where the people who build smart doors and smart locks meet
+subtitle.ja: 2026年10月の現状を、場の種類と層で整理する
+subtitle.en: The state of things in October 2026, by kind of venue and by layer
+description.ja: スマートドアとスマートロックの開発に関わる人が、どこで仕様を決め、どこで実装を共有し、どこで話しているかを、規格団体、制度、各社の開発者向けの窓口、オープンソース、研究者の五つの場に分けて整理します。どの場も同じ項目で並べ、層ごとの表で空いている所を示します。
+description.en: Where the people who build smart doors and smart locks set specifications, share implementations and talk, organized into standards bodies, regulation, vendor developer programs, open source and security research, with a table of the gaps by layer.
+---
+ifdef::lang-ja[]
+= スマートドアとスマートロックを作る人が集まる場所
+
+スマートドアとスマートロックの開発には、扉メーカー、錠メーカー、ドアホンや読取機のメーカー、半導体メーカー、設備工事会社、建物の運営者、ソフトウェアの開発者が関わります。この人たちが、今どこで仕様を決め、どこで実装を共有し、どこで話しているかを、2026年10月17日に調べて整理しました。
+
+出典は、各団体と各社の公式の頁と発表を主にしています。報道だけで確かめた事柄は、そのように書きます。日本の業界団体、制度、各社の窓口は、同じ見方で link:/guide/japan-today/[日本のスマートドアとスマートロックの現状] にまとめています。
+
+== 見方
+
+場を五つの種類に分けます。規格団体、制度、各社の開発者向けの窓口、オープンソース、研究者です。それぞれについて、誰が入れるか、何が公開されているか、費用、どの層を扱うかを見ます。
+
+層は link:/guide/layers/[玄関まわりの技術を層に分けて見る] と同じく、扉の製造、電子錠、扉のコントローラ、ドアホン(読取機)、通信規格、鍵の発行、業務システムとの連携を使います。最後に、層ごとの表で、場が無い所を示します。
+
+== 規格団体
+
+|===
+| 団体と規格 | 誰が入れるか、何が公開か | 扱う層
+
+| Connectivity Standards Alliance(CSA)。Matter、Aliro | 会員制。会費は下の表。確定した仕様の PDF、Matter の SDK、Aliro の試験の道具は公開 | 電子錠、ドアホン、通信規格
+| FiRa Consortium。UWB | 会員制。年5,000〜80,000ドル。会員向けが中心 | 通信規格
+| NFC Forum。NFC | 会員制。投票権の無い無料の区分がある。仕様は会員以外も入手できると同会は説明している | 通信規格
+| Security Industry Association(SIA)。OSDP(読取機と制御盤の間) | 会員制。規格は IEC 60839-11-5 として国際規格になっている | ドアホン、扉のコントローラ
+| ONVIF。Profile C(扉の監視と制御)、Profile A(資格情報と規則) | 会員制。規格の概要は公開 | 扉のコントローラ
+| Car Connectivity Consortium(CCC)。車のデジタルキー | 会員制。仕様は閲覧と教育の目的に限って無料 | 比較のため。車の鍵
+|===
+
+=== CSA の Matter と Aliro
+
+電子錠とスマートフォンの鍵の規格は、CSA に集まっています。会員の区分と年会費は、CSA の頁で次のとおりです。
+
+|===
+| 区分 | 年会費 | できること
+
+| Promoter | 112,500ドル(別に入会金) | 理事会の席、作業部会での投票と議長
+| Participant | 21,500ドル | 作業部会での投票と議長、仕様の草案と試験資料の先行入手
+| Adopter | 7,500ドル | 会員の会合、確定した仕様
+| Associate | 無料 | 他の会員が認証した製品を自社の名前で売ることだけ
+|===
+
+確定した仕様は、会員でなくても CSA の頁から無料でダウンロードできます。2026年10月の時点で、Matter 1.4〜1.6.1、Aliro 1.0、製品のセキュリティの仕様が並んでいます。一方、仕様を決める作業部会に加わり、草案を読むには、Participant 以上の会員になる必要があります。仕様が決まる過程は、外からは見えません。
+
+Matter は、2025年11月の1.5でカメラと開閉機器(シャッター、門、ガレージの扉)を加え、2026年6月17日の1.6でNFCによる設定と、複数のエコシステムによる一台の共同管理を加えました。錠(Door Lock)は1.0から機器の種類として定まっています。
+
+Aliro 1.0 は2026年2月26日に公開されました。NFC、Bluetooth LE、Bluetooth LE と UWB の組み合わせで、スマートフォンやウォッチを鍵にする規格です。CSA の発表では、Apple、Google、Samsung がウォレットでの対応を表明し、220社を超える会員が開発に関わりました。認証は、CSA が認めた試験所で行います。CSA の認証製品の一覧には、2026年3月27日付けで Aliro 1.0 の錠が載っています(ULTRALOQ)。同社は2026年9月に、Aliro の認証を受けた錠を三機種まとめて発表しました。どれが最初かは、同社の発表の言い方であって、CSA は述べていません。
+
+開かれている所もあります。Matter の SDK(connectedhomeip)は Apache-2.0 で GitHub にあり、誰でも CLA に署名すれば修正を送れます。ただし GitHub の Discussions は使っておらず、話し合いは Issue で行います。仕様そのものを変えるには、作業部会への参加が要ります。Aliro には、CSA の公開の置き場(aliro-access-control)があり、認証の試験の道具と、読取機と利用者の端末を模擬する道具が Apache-2.0 で公開されています。開発者の会合は、2026年8月27日に深圳で Matter Developer Conference が開かれ、Aliro と入退室管理も議題でした。
+
+=== 読取機と制御盤の間
+
+業務用の入退室管理では、読取機と制御盤の間に OSDP が使われます。SIA の規格で、2020年に IEC 60839-11-5 として国際規格になったと報じられています(Security Sales)。SIA の適合確認(OSDP Verified)を受けた機種は、2026年7月に32社の222機種になったと報じられています(SecurityInfoWatch、2026年7月28日、SIA の発表に基づく)。適合確認には SIA の会員であることが要ります。オープンソースの実装として libosdp(Apache-2.0)があります。
+
+ONVIF には、扉の監視と制御の Profile C(2014年)と、資格情報と規則の Profile A があります。
+
+== 制度
+
+製品の安全を求める制度は、作る人が必ず通る場です。錠に関わるものを並べます。
+
+|===
+| 制度 | 時期 | 錠に関わる所
+
+| JC-STAR(日本) | 2025年3月に申請の受付開始 | IoT 製品のセキュリティの適合ラベル。詳しくは日本の記事
+| 無線機器指令の委任規則(2022/30)と EN 18031(EU) | 2025年8月1日から義務 | 無線でつながる機器に、パスワード、更新、データ保護の要件
+| サイバーレジリエンス法、CRA(EU) | 報告の義務は2026年9月11日から、全面の適用は2027年12月11日 | スマートドアロックは、セキュリティ機能を持つスマートホーム製品として、重要な製品の区分に入る(法律事務所等の解説による)
+| PSTI 法(英国) | 2024年4月29日 | 共通の初期パスワードの禁止、脆弱性の連絡先と更新期間の公開
+| Cyber Trust Mark(米国) | 2025年に中断。FCC は2026年4月13日に新しい運営者を選んだ | 再開の状況は確かめられなかった
+|===
+
+どの制度も、脆弱性の連絡先と更新の期間を公開することを求める方向です。製造者と研究者をつなぐ窓口が、制度として要るようになりました。
+
+== 各社の開発者向けの窓口
+
+|===
+| 会社と製品 | 窓口 | 条件
+
+| Nuki | Bluetooth、ブリッジ、Web、MQTT の各 API、Matter。公開の開発者フォーラム | 公開
+| SwitchBot | Open API v1.1(GitHub で文書を公開) | アプリでトークンを発行。個人利用で、商用は問い合わせ
+| CANDY HOUSE の SESAME | SesameSDK(iOS、Android、ESP32 向け。MIT ライセンス)と Web API | 公開
+| Allegion の Schlage | 開発者ポータル | 事業者だけ。審査の後に鍵を発行。趣味の開発は対象外と明記
+| U-tec の ULTRALOQ | U Home OpenAPI | 登録の条件は確かめられなかった
+| Brivo | 入退室管理の API | アプリを登録し、本番の鍵を申請
+| Avigilon Alta | 入退室管理の REST API、技術提携の制度 | 提携
+| Seam | 錠、入退室管理、インターホン等を一つの API にまとめる | 商用のサービス。SDK は公開
+|===
+
+錠の会社(Nuki から U-tec まで)は電子錠の層を、Brivo と Avigilon Alta は扉のコントローラと鍵の発行の層を、Seam は鍵の発行と業務システムとの連携の層を扱います。窓口の形と条件は会社ごとに違います。複数の会社の錠を一つの口で扱いたい事業者には、Seam のような商用のサービスがまとめ役を担っています。Seam は、民泊、ホテル、集合住宅、ジム、コワーキング、トランクルームを用途に挙げています。
+
+== オープンソース
+
+* Matter の SDK(project-chip/connectedhomeip)。Apache-2.0。2026年10月17日の時点で、星は約8,970、貢献者は約779。最新は v1.6.1.0(2026年9月25日)。錠の例(examples/lock-app)が、ESP32、Linux、Nordic、Silicon Labs、NXP 等の向けにあります。
+* Home Assistant。錠を扱う連携は53あります(2026年10月17日、開発版)。2026年4月の版で、Matter の錠の利用者と暗証番号を管理する画面が加わりました。SESAME の連携は古いクラウドの方式のままで、保守する人がいません。
+* openHAB、ESPHome、Zigbee2MQTT も錠を扱います。Zigbee2MQTT と openHAB は GitHub の Discussions で話しています。
+* 有志のファームウェア。Nuki の錠を家のネットワークにつなぐ ESP32 の中継器(nuki_hub)、RFID と Wiegand の入退室管理(esp-rfid、2017年から)、Apple のホームキーを ESP32 で読む実装(HomeKey-ESP32)。
+* Aliro。Espressif が2026年6月に、ESP32 向けの Aliro の SDK(esp-aliro、Apache-2.0)を公開しました。有志による研究用の実装もあります。
+
+広く使われている、開かれた扉のコントローラのハードウェアは見つかりませんでした。近い物は、ESP32 を使う有志のファームウェアです。
+
+== 研究者
+
+錠の脆弱性を調べる研究者も、一つの集まりです。会議と脆弱性の公開の場で集まり、製造者とは事案ごとにつながります。
+
+* 2024年3月。ホテルの RFID 錠(dormakaba の Saflok)で、偽の親鍵のカードで扉が開く問題が公開されました。報道では、131か国のホテルと集合住宅の13,000を超える施設で、300万を超える錠が対象とされています(SecurityWeek、2024年3月22日)。製造者への連絡は2022年で、公開まで1年半ほどかかりました。
+* 2024年3月7日。CERT/CC が、Sciener のファームウェアを使う錠と TTLock のアプリ等の問題を公開しました(VU#949046)。CERT/CC は、ソフトウェアによる修正の手段は無いとしています。
+* 2026年10月9日。SwitchBot の Lock の系列の Bluetooth で暗号の使い方の誤りが、CVE-2026-8374 として公開されました(CVSS v4 で8.5)。
+
+== 層ごとに見る
+
+場ごとに見た物を、層ごとに並べ直します。
+
+|===
+| 層 | 仕様を決める場 | 実装と話し合いの場
+
+| 扉の製造 | 国ごとの防犯と防火の制度、業界団体 | 見つからない
+| 電子錠 | CSA(Matter の Door Lock、Aliro) | connectedhomeip の錠の例、Home Assistant、各社の SDK。各社と Home Assistant のフォーラム
+| 扉のコントローラ | SIA(OSDP)と ONVIF。ただし読取機との間の通信だけ | libosdp。話し合いの場は見つからない
+| ドアホン(読取機) | CSA(Aliro、Matter 1.5 のカメラ)、ONVIF | esp-aliro、有志の実装。話し合いの場は見つからない
+| 通信規格 | CSA、FiRa、NFC Forum | 各規格の SDK。connectedhomeip の Issue
+| 鍵の発行 | Aliro(資格情報の形) | 商用のまとめ役。開かれた場は見つからない
+| 業務システムとの連携 | 見つからない | 各社の API と商用のまとめ役。開かれた場は見つからない
+|===
+
+== 足りない物
+
+調べた範囲で、次の物が見つかりませんでした。
+
+. *層をまたいで話す開かれた場。* 扉メーカー、錠メーカー、読取機のメーカー、設備工事会社、建物の運営者が一緒に話す公開の場はありません。近い物は、会員制の団体と展示会です。
+. *仕様を決める過程の公開。* 確定した仕様は無料で読めますが、決める席は会員制で、草案に触れるには年21,500ドル以上(CSA)が要ります。
+. *扉のコントローラの層の仕様と試験。* 火災、停電、避難のときの挙動と、改ざんの分かる監査記録を扱う公開の仕様と試験はありません。Matter と Aliro は錠と読取機まで、OSDP は読取機と制御盤の間までです。
+. *事業者が使える共通の口。* 各社の API は形も条件も違い、まとめる役は商用のサービスが担っています。業務システムとの連携の層に、公開の仕様はありません。
+. *使う人の声が仕様に届く道。* 建物の運営者や住む人の困りごとは、各社のサポートと利用者のフォーラムに散っていて、要求として仕様の席に届く公開の道は見つかりませんでした。
+
+このサイトは、扉のコントローラの link:/guide/open-specification/[仕様と参照実装] と、使う人の困りごとを要求の番号に結ぶ道を、誰でも読める形で置いています。上の空いた所を、開かれた場で埋めるためです。
+
+== 出典
+
+* https://csa-iot.org/become-member/[Connectivity Standards Alliance: Become a Member(2026年10月17日に閲覧)]
+* https://csa-iot.org/developer-resource/specifications-download-request/[Connectivity Standards Alliance: Alliance Specification Downloads(2026年10月17日に閲覧)]
+* https://csa-iot.org/newsroom/matter-1-5-introduces-cameras-closures-and-enhanced-energy-management-capabilities/[Connectivity Standards Alliance: Matter 1.5 Introduces Cameras, Closures, and Enhanced Energy Management Capabilities(2025年11月)]
+* https://csa-iot.org/newsroom/matter-1-6-enables-more-intuitive-setup-multi-ecosystem-experiences-and-context-driven-control/[Connectivity Standards Alliance: Matter 1.6 Enables More Intuitive Setup, Multi-Ecosystem Experiences, and Context-Driven Control(2026年6月17日)]
+* https://csa-iot.org/newsroom/introducing-aliro-1-0-a-unified-standard-to-transform-the-access-control-ecosystem/[Connectivity Standards Alliance: Introducing Aliro 1.0(2026年2月26日)]
+* https://csa-iot.org/csa_product/ultraloq-smart-door-lock-3/[Connectivity Standards Alliance: 認証製品 ULTRALOQ Smart Door Lock(Aliro 1.0、2026年3月27日認証)]
+* https://csa-iot.org/event/2026-matter-developer-conference/[Connectivity Standards Alliance: 2026 Matter Developer Conference(2026年8月27日)]
+* https://github.com/project-chip/connectedhomeip[GitHub: project-chip/connectedhomeip(2026年10月17日に閲覧)]
+* https://github.com/aliro-access-control[GitHub: aliro-access-control(2026年10月17日に閲覧)]
+* https://github.com/espressif/esp-aliro[GitHub: espressif/esp-aliro]
+* https://firaconsortium.org/membership/information[FiRa Consortium: Membership Information]
+* https://carconnectivity.org/digital-key/[Car Connectivity Consortium: Digital Key]
+* https://github.com/osdp-dev/libosdp[GitHub: osdp-dev/libosdp]
+* https://www.onvif.org/profiles/profile-c/[ONVIF: Profile C]
+* https://www.gov.uk/government/publications/the-uk-product-security-and-telecommunications-infrastructure-product-security-regime[GOV.UK: The UK Product Security and Telecommunications Infrastructure (PSTI) product security regime]
+* https://developer.nuki.io/[Nuki Developer]
+* https://github.com/OpenWonderLabs/SwitchBotAPI[GitHub: OpenWonderLabs/SwitchBotAPI]
+* https://github.com/CANDY-HOUSE[GitHub: CANDY-HOUSE]
+* https://developer.allegion.com/[Allegion Developer Portal]
+* https://www.seam.co/[Seam]
+* https://www.home-assistant.io/blog/2026/04/01/release-20264/[Home Assistant: 2026.4 のリリース]
+* https://github.com/home-assistant/core[GitHub: home-assistant/core(2026年10月17日に閲覧)]
+* https://kb.cert.org/vuls/id/949046[CERT/CC: VU#949046(2024年3月7日)]
+* https://www.securityweek.com/saflok-lock-vulnerability-can-be-exploited-to-open-millions-of-doors/[SecurityWeek: Saflok Lock Vulnerability Can Be Exploited to Open Millions of Doors(2024年3月)]
+* https://www.cve.org/CVERecord?id=CVE-2026-8374[CVE: CVE-2026-8374(2026年10月9日)]
+endif::[]
+
+// ===== article: 07-japan-today =====
+---
+slug: japan-today
+number: 07
+date: 2026.10.18
+label: 解説 07
+category.ja: 業界
+category.en: Industry
+title.ja: 日本のスマートドアとスマートロックの現状
+title.en: Smart doors and smart locks in Japan today
+subtitle.ja: 業界団体、通信の規格、制度、各社の窓口、催しを、同じ見方で並べる
+subtitle.en: Associations, communication standards, regulation, vendor programs and events, side by side
+description.ja: 日本でスマートドアとスマートロックを作る人が、どこで仕様と制度に触れ、どこで話しているかを整理します。錠と扉の業界団体と防犯性能の高い建物部品、ECHONET Lite と JEM-A、JC-STAR、置き配の解錠、火災と避難の決まり、各社の開発者向けの窓口、催しを並べ、層ごとに空いている所を示します。
+description.en: Where people building smart doors and smart locks in Japan meet specifications, regulation and each other: industry associations and the CP scheme, ECHONET Lite and JEM-A, JC-STAR, delivery unlocking, fire and evacuation rules, vendor developer programs and events, with the gaps by layer.
+---
+ifdef::lang-ja[]
+= 日本のスマートドアとスマートロックの現状
+
+link:/guide/where-developers-meet/[スマートドアとスマートロックを作る人が集まる場所] と同じ見方で、日本の状況を整理します。調べたのは2026年10月17日です。出典は、各団体、官庁、各社の公式の頁と発表を主にし、報道だけで確かめた事柄はそのように書きます。
+
+== 業界団体
+
+|===
+| 団体 | していること | スマートロックと公開の仕様
+
+| 日本ロック工業会 | 錠メーカーの団体。防犯性能の高い建物部品の官民合同会議の構成団体で、錠、シリンダー、サムターンの試験の窓口 | 取り組みは見つからない。公式の頁と会員の名簿を見つけられなかった
+| 日本サッシ協会 | 窓と扉の団体。防犯の委員会を持ち、防犯性能の高い建物部品の扉の区分を扱う。2025年5月に防犯設計のハンドブックを発行 | 取り組みは見つからない
+| 日本シヤッター・ドア協会 | 防火シャッターと防火戸の点検の資格者の認定 | 取り組みは見つからない
+| 日本防犯設備協会 | 一般向けの「出入口のセキュリティガイド」(2022年)で、電気錠、電気ストライク、スマートフォンによる認証、火災の信号による解錠を解説 | ガイドで解説。技術基準に入退室管理や錠の通信の基準は見つからない
+| エコーネットコンソーシアム | 家庭の機器の通信規格 ECHONET Lite | 電気錠の機器の種類を定め、仕様を公開
+| CSA 日本支部 | Matter と Aliro。2024年5月に38社で発足、2026年9月の時点で約80社 | 中心の話題。会員向け(Adopter 以上)
+|===
+
+スマートロックを専門に扱う業界団体や協議会は、見つかりませんでした。近い物として、不動産テック協会の不動産オープンID推進部会の資料に、鍵の依頼に触れる記述があります。
+
+=== 防犯性能の高い建物部品(CP部品)
+
+警察庁、国土交通省、経済産業省と民間の16団体が、2002年11月25日に官民合同会議を設けました。侵入までに5分以上かかる建物部品を試験で確かめて目録に載せ、CP マークを付けます。2026年3月末の時点で、17種類、3,545品目です。電気錠も錠の区分に入っています(日本サッシ協会の目録)。
+
+試験は、物理的な攻撃に対する強さを見ます。通信の安全を扱う規定は見つけられませんでした。
+
+== 通信の規格
+
+|===
+| 規格(決める所) | 公開 | 錠に関わる所
+
+| ECHONET Lite(エコーネットコンソーシアム) | 仕様は誰でも閲覧できる | 電気錠の機器の種類(クラスコード 0x026F)を、Web API の機器仕様(v1.3.0、2021年6月25日)で定めている
+| JEM-A、JEM1427(日本電機工業会) | 公開の本文を見つけられなかった | インターホンと電気錠の連動の接点。各社の取扱説明書に、極性、アダプター、配線の長さの制限が書かれている
+| Matter、Aliro(CSA) | 確定した仕様は無料 | 日本支部が日本語で活動している
+|===
+
+ECHONET Lite の電気錠の種類は、日本で公開されている通信の規格のうち、錠を扱う唯一の物でした。JEM-A は建物の現場で広く使われていますが、本文は公開されていません。
+
+== 制度
+
+=== JC-STAR
+
+JC-STAR は、IoT 製品のセキュリティの適合ラベルの制度です。経済産業省の監督のもとで IPA が運営し、2025年3月に★1の申請の受付が始まりました。★1は、IoT 製品に共通する最低限の脅威への備えです。
+
+美和ロックは2025年10月7日に、住宅の玄関扉用の電気錠「iEL Zero smart シリーズ」で★1を取得し、錠メーカーとして初めてだと発表しました。IPA の一覧では、ラベルの付与は2025年9月11日、期限は2027年9月10日です。扉の周りでは、パナソニックのドアホン「外でもドアホン」(2026年2月6日)や、Axis の入退室管理とインターホンを含む製品(2025年5月12日)もラベルを受けています。後付けのスマートロックは、確かめた範囲の一覧には見当たりませんでした。
+
+=== 置き配とオートロック
+
+国土交通大臣は2025年9月16日の会見で、宅配の業者がオートロックを自由に開けられる仕組みを国が作るという話は事実ではないと述べました。あわせて、民間の各社が開発した解錠の仕組みが、既に2万棟を超えるマンションに入っていること、配達員の本人確認と解錠の記録、事前に登録した荷物だけの一時的な解錠、管理組合の合意という条件で使われていることを説明しました。令和8年度の予算要求には、配送会社をまたいだ伝票番号と配送データの標準化を支える事業が入っています。
+
+事業者の例として、美和ロックと PacPort は2026年1月13日に、ヤマト運輸の「EAZY」の配達でオートロックを解錠する仕組みを2026年春から始めると発表しました。
+
+=== 火災と避難
+
+建築基準法施行令第125条の2は、屋外への出口などの施錠装置を、屋内から鍵を使わずに開けられる構造にすることを定めています。火災の信号による解錠、非常時の解錠、予備の電源の扱いは、各地の火災予防条例と消防の基準で決まります。例えば名古屋市の「電気錠の指導基準」は、電気錠を通電時に施錠する型など四つの型に分け、避難に要る出入口では、防災センター等からの遠隔の解錠と、自動火災報知設備に連動した解錠を、型に応じて求めています。国としてまとめた電気錠の通知は見つけられませんでした。
+
+経済産業省の「スマートホームの安心・安全に向けたサイバー・フィジカル・セキュリティ対策ガイドライン」(2021年4月)は、スマートホーム全体を扱い、錠に絞った章はありません。
+
+== 各社の開発者向けの窓口
+
+|===
+| 会社と製品 | 窓口 | 条件
+
+| CANDY HOUSE の SESAME | SesameSDK(iOS、Android、ESP32 向け。MIT ライセンス)と Web API | 公開。SDK は「永続的に無料」と書かれている
+| SwitchBot | Open API v1.1 | アプリの開発者向けの設定でトークンを発行。1日1万回まで。個人利用で、商用は問い合わせ
+| フォトシンスの Akerun | Akerun API v3(OAuth2 で認可)。遠隔の施錠と解錠、鍵、履歴、利用者、IC カード | 営業の担当者に問い合わせ
+| ビットキー | 他社のサービスとの連携が報じられている | 公開の開発者向けの頁は見つからない
+| 構造計画研究所の RemoteLOCK | 予約システム等との連携 | 公開の文書は見つからない
+| 美和ロック、ゴール、Qrio | ― | 公開の API と SDK は見つからない
+|===
+
+開発者の窓口は、個人でも使える公開の物(SESAME、SwitchBot)と、営業を通す物(Akerun 等)に分かれています。
+
+== 開発者の集まり
+
+Qiita と Zenn には、SESAME や SwitchBot の API で錠を動かす記事が多くあります。例は、SESAME3 を Web API で動かす記事(2021年8月)や、SwitchBot の API v1.1 で錠を遠隔操作する記事(2022年9月)です。フォトシンスは2017年に Akerun の Advent Calendar を開きました。こうした記事の多くは2019年から2023年のものです。
+
+connpass では、Matter の勉強会が数件(2023年7月、2024年5月)見つかりました。スマートロックや Aliro の集まりは見つかりませんでした。
+
+== 催し
+
+|===
+| 催し | 時期と場所 | 錠と扉に関わる所
+
+| SECURITY SHOW 2026(日本経済新聞社) | 2026年3月3日〜6日、東京ビッグサイト | 入退室管理が主題の一つ。次回は2027年3月2日〜5日
+| CEATEC 2026 | 2026年10月13日〜16日、幕張メッセ | CSA 日本支部が23社(前年は19社)で出展し、Aliro を国内で初めて一般に展示した(ポケットや鞄に電話を入れたまま近づくと開く)。出展には美和ロック、YKK AP、パナソニック、SwitchBot、半導体の各社が入っている
+| Japan Home & Building Show 2026 | 2026年11月18日〜20日、東京ビッグサイト | 住宅と建物の設備
+| JAPAN BUILD TOKYO | 2026年12月2日〜4日、東京ビッグサイト | 建築と建材
+|===
+
+業界の側と開発者の側が同じ場にいるのは、確かめた範囲では CSA 日本支部だけでした。
+
+== 層ごとに見る
+
+|===
+| 層 | 仕様と制度の場 | 開発者の場
+
+| 扉の製造 | 防犯性能の高い建物部品(物理的な強さ)、業界団体、建築基準法と各地の消防の基準 | 見つからない
+| 電子錠 | CSA 日本支部(Matter、Aliro)、ECHONET Lite、JC-STAR | 各社の SDK と API、Qiita と Zenn の記事
+| 扉のコントローラ | 火災の信号による解錠は各地の基準。公開の仕様は見つからない | 見つからない
+| ドアホン(読取機) | JEM-A(本文は非公開)、JC-STAR | 見つからない
+| 鍵の発行 | 置き配の解錠は各社の仕組み。不動産オープンID の検討 | 見つからない
+| 業務システムとの連携 | 見つからない | 営業を通す各社の API
+|===
+
+== 足りない物
+
+. *スマートロックを扱う業界団体。* 錠の業界団体は物理の防犯の試験の窓口で、公開の仕様は見当たりません。
+. *扉、錠、業務システムの間の公開の接続仕様。* ECHONET Lite の電気錠の種類と、始まったばかりの Matter と Aliro だけです。建物の現場で使われる JEM-A は本文が公開されていません。
+. *火災と避難のときの電気錠の挙動の、全国で同じ前提。* 決まりは各地の基準にあり、国としてまとめた公開の文書は見つかりません。扉のコントローラを作る人が、全国で同じ前提を持てません。
+. *事業者が公開の条件で使える開発者の窓口。* 個人向けと営業経由に分かれています。
+. *業界と開発者が会員制でなく会う場。* 両者が同じ場にいるのは CSA 日本支部で、Adopter(年7,500ドル)以上の会員制です。
+. *置き配の解錠の条件を確かめる公開の試験。* 2万棟を超える建物で動いていますが、本人確認、解錠の記録、管理組合の合意という条件を確かめる公開の仕様と試験は見つけられませんでした。
+
+このサイトの link:/guide/open-specification/[扉のコントローラの仕様] は、3 と 6 にある火災と停電のときの挙動と、改ざんの分かる解錠の記録を、番号の付いた要求と公開のテストで扱っています。
+
+== 出典
+
+* https://www.npa.go.jp/safetylife/seianki26/theme_b/b_c_1_main.html[警察庁: 住まいる防犯110番 防犯性能の高い建物部品(2026年10月17日に閲覧)]
+* https://www.jsma.or.jp/Portals/0/images/bohan/cp_products202304.pdf[日本サッシ協会: 防犯性能の高い建物部品の目録]
+* https://www.jsma.or.jp/Portals/0/images/bohan/handbook_pressrelease202506.pdf[日本サッシ協会: 防犯設計ハンドブックの発行]
+* https://www.ssaj.or.jp/pubdoc/pdf/guidebook/458.pdf[日本防犯設備協会: 出入口のセキュリティガイド(2022年)]
+* https://echonet.jp/spec_g/[エコーネットコンソーシアム: 規格書]
+* https://echonet.jp/wp/wp-content/uploads/pdf/General/Standard/web_api/ECHONET_Lite_Web_API_Dev_Specs_v1.3.0.pdf[エコーネットコンソーシアム: ECHONET Lite Web API ガイドライン 機器仕様 v1.3.0(2021年6月25日)]
+* https://csa-iot.org/ja/newsroom/the-connectivity-standards-alliance-establishes-new-japan-interest-group/[Connectivity Standards Alliance: 日本支部の設立(2024年5月)]
+* https://csa-iot.org/newsroom/connectivity-standards-alliance-ceatec-2026-jp/[Connectivity Standards Alliance: 日本支部、CEATEC 2026 への出展を発表(2026年9月1日)]
+* https://www.ipa.go.jp/security/jc-star/list/jc-star-product-list/index.html[IPA: JC-STAR 適合ラベル取得製品の一覧(2026年10月17日に閲覧)]
+* https://www.miwa-lock.co.jp/news/pdf/release_JC-STAR_20251007.pdf[美和ロック: ロックメーカー初 JC-STAR の★1 適合ラベルを取得(2025年10月7日)]
+* https://www.mlit.go.jp/report/interview/daijin250916.html[国土交通省: 大臣会見(2025年9月16日)]
+* https://www.mlit.go.jp/common/001335954.pdf[国土交通省、経済産業省: 置き配の現状と実施に向けたポイント(2020年3月)]
+* https://miwa-lock.co.jp/news/pdf/release_Delivery_20260113.pdf[美和ロック: 置き配の解錠に関する発表(2026年1月13日)]
+* https://elaws.e-gov.go.jp/document?lawid=325CO0000000338[e-Gov 法令検索: 建築基準法施行令]
+* https://www.city.nagoya.jp/_res/projects/default_project/_page_/001/013/185/1-10.pdf[名古屋市: 消防用設備等技術基準(通則・運用・特例基準編)1-10 電気錠の指導基準について]
+* https://github.com/CANDY-HOUSE/API_document[GitHub: CANDY-HOUSE/API_document]
+* https://github.com/OpenWonderLabs/SwitchBotAPI[GitHub: OpenWonderLabs/SwitchBotAPI]
+* https://developers.akerun.com/[フォトシンス: Akerun Developers]
+* https://messe.nikkei.co.jp/en/ss[日本経済新聞社: SECURITY SHOW]
+* https://qiita.com/soapshoprock/items/036462d1edb97c1872c8[Qiita: SESAME3をWEB API経由で操作する(2021年8月)]
+* https://qiita.com/masaki12-s/items/0295a96fd5a70442f7d5[Qiita: APIでSwitchBotロックを遠隔操作する(2022年9月)]
+endif::[]
+
+// ===== article: 08-japanese-smart-lock-apps =====
+---
+slug: japanese-smart-lock-apps
+number: 08
+date: 2026.10.18
+label: 解説 08
+category.ja: 業界
+category.en: Industry
+title.ja: 日本のスマートロックのアプリの現状と課題
+title.en: Japanese smart lock apps: where they stand and what goes wrong
+subtitle.ja: Akerun、ビットキー、RemoteLOCK、美和ロック、ゴール、Qrio のアプリを同じ項目で並べる
+subtitle.en: Akerun, Bitkey, RemoteLOCK, MIWA, GOAL and Qrio, compared on the same points
+description.ja: 日本で使われている六社のスマートロックのアプリを、ストアの数字、利用者の多い不満、会社の答え方、障害と終了の発表、網やクラウドが止まったときの動きで並べます。共通する課題は、近くで開ける無線の不安定さ、クラウドとアカウントへの依存、錠より短いアプリの寿命、選べない利用者、直したことの伝わらなさです。
+description.en: Six Japanese smart lock apps compared on store figures, common complaints, how the makers respond, announced outages and end-of-support, and behavior when the network or cloud is down.
+---
+ifdef::lang-ja[]
+= 日本のスマートロックのアプリの現状と課題
+
+日本で使われているスマートロックのうち、Akerun(フォトシンス)、ビットキー、RemoteLOCK、美和ロック、ゴール、Qrio の六社のアプリを、2026年10月18日に調べました。錠そのものではなく、利用者が毎日触るアプリの側を見ます。
+
+数字は Google Play と App Store の日本の頁から取りました。利用者の声は、ストアのレビューを読んで自分の言葉で要約し、個人は特定しません。会社が発表したことと、報道されたことと、利用者が書いたことは、分けて書きます。レビューは、困った人ほど書くものです。評価の低さは不満の多さを示しますが、使っている人全体の満足度とは違います。
+
+== 見方
+
+アプリごとに、次の六つを見ます。
+
+* アプリの役割(住む人、働く人、管理する人、施工する人)
+* ストアの数字(評価、件数、ダウンロード数、最終更新日)
+* 利用者の多い不満
+* 会社の答え方(レビューへの返信、更新の説明)
+* 会社の発表と報道(障害、提供の終了)
+* 網やクラウドが止まったときの動き
+
+== 一覧
+
+評価は、Google Play / App Store の順です。件数が少ないと Google Play は評価を表示しません。
+
+|===
+| アプリ(会社) | 評価(件数) | 最終更新
+
+| Akerun App(フォトシンス) | 2.4(58) / 2.39(93) | 2026年7月
+| homehub(ビットキー) | 2.3(312) / 2.1(350) | 2026年10月
+| workhub(ビットキー) | 3.9(47) / 3.47(121) | 2026年10月
+| RemoteLock(米国の RemoteLock 社。日本は構造計画研究所) | 日本の頁に表示なし / 2.0(8) | 2026年10月
+| MIWA Support(美和ロック) | 表示なし / 3.4(15) | 2026年5月
+| KEYMO NEO(美和ロック) | 1.3(7) / 1.39(36) | 2024年10月
+| LaresIA ON(ゴール) | 表示なし / 2.43(7) | iOS は2021年5月、Android は2025年10月
+| Qrio Lock(ソニーネットワークコミュニケーションズ) | 2.2(1,130) / 2.19(1,109) | 2026年9月
+|===
+
+利用者の多いアプリ(10万ダウンロード以上)は、Akerun App、homehub、Qrio Lock の三つで、評価はどれも2点台です。
+
+== 会社ごとに見る
+
+=== Akerun(フォトシンス)
+
+Akerun App は、会社、ジム、スタジオ、賃貸住宅で、利用者が錠を開けるアプリです。Google Play で10万ダウンロードを超えています。
+
+*利用者の多い不満。* 一番多いのは、Bluetooth でつながらず、何度押しても開かないという声です。2025年から2026年にかけて、十回以上押した、家に入るのに十分以上かかった、同じ扉で IC カードはすぐ開くのにアプリでは開かない、という声が続いています。ジムやスタジオの会員が、入れなかったと書く例が目立ちます。ほかに、招待した鍵が届かない、機種を替えたらつながらない、ログインで締め出される、という声があります。
+
+*会社の答え方。* Google Play の文章つきのレビュー(2022年〜2026年の24件)に、会社の返信はありませんでした。更新の説明は「不具合を修正しました」が中心です。
+
+*会社の発表と報道。* 日経クロステックは2025年6月10日に、5月27日の午前から Akerun のアプリで解錠できないなどの障害が起き、約半日後に完全に復旧したと報じました。会社の告知は、サポートの頁が自動の取得を断るため確かめられませんでした。
+
+*止まったとき。* 会社の説明は見つかりませんでした。利用者の声では、アプリで開かないときも IC カードでは開いています。
+
+=== ビットキー(homehub、workhub)
+
+homehub は住む人のアプリで、賃貸住宅の管理会社が錠と一緒に入れる形が中心です。同社の発表では、レオパレス21 の物件で2024年4月末までに25万戸に設置しました。workhub は会社で働く人と管理者のアプリです。
+
+*利用者の多い不満(homehub)。*
+
+* 2026年8月19日の版(3.34.0)で、開閉のボタンが「再読み込み」のまま進まず、Bluetooth はつながっているのに開け閉めできないという声が集中しました。二日後の版で直りましたが、その説明は「軽微な不具合を修正しました」でした。
+* 建物の入口で「未接続」になる、遅いという声が、2024年から2026年まで続いています。
+* 錠の状態や履歴がアプリと合わない、夜中に自動で解錠された、電池を替えても残量の警告が消えない、急にログアウトされた、古い機種が使えなくなった、という声があります。
+* 管理会社が入れたので選べなかった、という声が多くあります。
+
+*会社の答え方。* homehub の Google Play のレビューには、ほぼすべてに1〜3日で返信しています(2025年以降の文章つき58件中57件)。返信は、お詫びと問い合わせ窓口への案内の定型が中心です。workhub の Google Play のレビューには返信がありません。workhub の iOS の更新の説明は、何を直したかが具体的です。
+
+*会社の発表。* 2026年3月1日に iOS 15 以前と Android 10 以前の対応を終え、次の終了(iOS 16 以前、Android 12 以前)は2026年10月31日に延ばしています。旧アプリ bitlock の提供は2026年5月30日で終わり、homehub への移行を求めました。2026年8月の不具合の告知は、ニュースの頁には見当たりませんでした。
+
+*止まったとき。* アプリがクラウドが止まっても開けるかの説明は見つかりませんでした。遠隔の操作と状態の確認は、網の中継器を通ると説明しています。
+
+=== RemoteLOCK(構造計画研究所)
+
+RemoteLOCK は米国の RemoteLock 社の製品で、日本では構造計画研究所が提供しています。管理はおもにウェブの画面で行い、アプリは管理者向けと、機種ごとの設定用に分かれています。
+
+*利用者の多い不満。* 管理者向けのアプリが開かない、すぐ落ちる、という声が2024年から2025年に続き、ウェブ版を使っているという声があります。
+
+*会社の答え方。* ストアのレビューへの返信は見当たりませんでした。一方で、構造計画研究所はサポートの頁に「障害情報」をまとめ、2024年1月から2026年9月までの障害を、起きた時刻、影響、対応とともに載せています。例えば2025年1月7日の障害では、新しい利用者と来訪者が解錠できず、登録済みの暗証番号か物理鍵を使うよう案内しました。2026年9月1日から2日の障害では、障害の間に受けた発行の要求を後で送り直したと書いています。
+
+*止まったとき。* 停電と通信の障害のときの動きを、機種の電源の取り方ごとに表で説明しています。本体に登録済みの暗証番号は網が切れても使え、クラウドで作った番号は次に網につながったときに本体に届き、遠隔の解錠は網が無いと使えません。
+
+=== 美和ロック
+
+美和ロックは、電気錠と住宅の玄関の錠の大手です。アプリは用途ごとに分かれています。MIWA Support は住む人と施工の人の設定用で、スマートフォンを鍵にする機能は有料のサービスです。KEYMO NEO は、集合住宅の錠をスマートフォンで開けるアプリです。
+
+*利用者の多い不満。*
+
+* MIWA Support では、Android で利用規約の同意の欄に印が付けられず登録できないという声(2025年4月、8月)があります。
+* KEYMO NEO は評価が1点台で、最後の更新は2024年10月です。2026年9月17日と10月15日の二件のレビューは、iOS の更新の後に使えなくなったと書いています。一件は、物理鍵をたまたま持っていたので入れたと書いています。ほかに、ペアリングに時間がかかる、解錠のたびに操作が多い、鍵を家族のスマートフォンに渡せない、という声があります。
+* FeliCa の鍵をスマートフォンに移すアプリ(KEYMO)では、料金を払った後で、管理会社が持つカードでの登録も要ると分かった、という声があります。
+
+*会社の答え方。* ストアのレビューへの返信は見当たりませんでした。KEYMO NEO の紹介の頁に、iOS の更新についての告知は見当たりませんでした(2026年10月18日)。
+
+*会社の発表。* ニュースの頁に、アプリの障害や提供の終了の告知は見当たりませんでした。2025年10月7日に、住宅用の電気錠で JC-STAR の★1を取得したと発表しています。
+
+*止まったとき。* 明確な説明は見つかりませんでした。錠に登録した ID キーやカードを併せて使う前提の作りです。
+
+=== ゴール
+
+ゴールは錠のメーカーで、スマートフォンで開けるための自社のアプリを持っていません。電池式の電気錠 LaresIA の設定アプリ(LaresIA ON)は、ストアの説明で「本アプリで施解錠操作はできません」としています。iOS 版の最後の更新は2021年5月です。
+
+賃貸住宅向けの LaresIA+ は、2023年2月27日の同社の発表で、住む人は Qrio の「Qrio Lock」アプリで開け閉めし、管理は Qrio の管理システムで行うとしています。つまり、この製品のスマートフォンの使い心地は、Qrio Lock のアプリに左右されます。
+
+2025年11月に発表したホテルと民泊向けの Arc LINK Room は、本体で照合する設定なら、網が切れても登録済みの鍵が使えると説明しています。ストアの頁とニュースの頁に、アプリの障害や終了の告知は見当たりませんでした。
+
+=== Qrio
+
+Qrio Lock は、後付けのスマートロックの代表的な製品の一つです。ストアの提供元はソニーネットワークコミュニケーションズです。
+
+*製品の今。* 同社のサポートの頁は2026年3月23日に、Qrio Lock(Q-SL2)の販売を終えたこと、サービスとサポートを終える予定は無いことを告知しました。2026年4月21日には、Nature 社が Qrio Lock の設計と技術を使った Nature Lock を発表しましたが、Qrio Lock のアプリとは使えません。前の機種の Qrio Smart Lock(Q-SL1)は、2026年7月15日にアプリでの解錠ができなくなり、物理鍵に切り替えるよう案内されました。
+
+*利用者の多い不満。*
+
+* 近づくと開くハンズフリー解錠が働かない、遅い、という声が一番多くあります。
+* 反対に、家にいるのに解錠された、寝ている間に開いた、という声があります。
+* 2026年1月の更新の後に Apple Watch のアプリが落ちる、強制のログアウトの後に再ログインできず締め出された、合鍵の受け取りの案内がループする、消せない広告が出る、という声があります。
+* 販売の終了の後、先行きを心配する声と、他社の製品に移るという声が増えています。
+
+*会社の答え方。* Google Play のレビューへの返信は、ここ三年は見当たりませんでした。更新の説明は「安定性を向上しました」が中心です。一方、サポートの頁では、障害、提供の終了、必要な版を告知しています。2025年6月10日17時から翌朝7時30分ごろまでの障害では、遠隔の操作、ログイン、履歴、合鍵の発行が使えず、原因はクラウドの基盤の電力の障害としました。2026年2月の告知は、アプリには定期的な再ログインが要ること、古い版では錠と通信できず開けられなくなるおそれがあることを書き、物理鍵を持つよう勧めています。
+
+*止まったとき。* サーバーの保守の告知で、手元にある鍵での Bluetooth の解錠は使えると説明しています。止まるのは、ログイン、遠隔の操作、履歴、鍵の発行です。
+
+== 共通する課題
+
+. *近くで開ける無線が不安定。* 六社のうち、利用者の多いアプリの不満の一番は、どれも Bluetooth でつながらない、遅い、勝手に開く、です。スマートフォンの機種や OS の更新で動きが変わり、KEYMO NEO のように OS の更新の後に開かなくなったという声も出ています。
+. *クラウドとアカウントに頼る所が大きい。* ログインが切れる、再ログインを求められる、クラウドが止まると新しい鍵が届かない、という場面で締め出しが起きています。錠の本体に登録した暗証番号、カード、手元に持っている鍵は、止まっても使えると説明している会社(RemoteLOCK、Qrio)があります。説明の無い会社もあります。
+. *アプリの寿命が錠より短い。* 錠は十年単位で扉に付いていますが、アプリは毎年の OS の更新に追われます。Qrio の前の機種はアプリでの解錠が終わって物理鍵に戻り、ビットキーは旧アプリの提供を終え、古い機種のスマートフォンの対応を順に切っています。美和ロックの KEYMO NEO は二年、ゴールの設定アプリの iOS 版は五年、更新がありません。
+. *使う人がアプリを選べない。* 賃貸住宅の住む人、ジムの会員、会社で働く人は、管理する側が選んだアプリを使います。低い評価の多くはこの人たちのものです。合わないと思っても、他のアプリに替えられません。
+. *直したことが伝わらない。* 開け閉めができなくなった不具合を直した版の説明が「軽微な不具合を修正しました」だった例があります。ストアのレビューに返信しない会社が多く、返信しても定型です。
+. *止まったときの説明に差がある。* 障害の記録と、停電と通信の障害のときの動きを具体的に公開しているのは RemoteLOCK(構造計画研究所)で、Qrio もサポートの頁で障害と必要な版を告知しています。他の会社は、確かめた範囲では、止まったときに何が使えるかを書いていません。
+
+== 層で見る
+
+不満の多くは、錠そのものではなく、アプリとクラウドの層で起きています。錠の本体が持つ暗証番号やカードは、アプリやクラウドが止まっても使えています。スマートフォンを鍵にするなら、判定は錠の側が持ち、アプリやクラウドが止まっても、OS が変わっても、手元の鍵で開けられる作りが要ります。link:/guide/what-a-smart-door-needs/[スマートドアに求められる条件] の「ローカルで動作すること」と「認証手段を複数持つこと」は、この課題への答えです。スマートフォンの鍵を各社のアプリではなく端末のウォレットに置く link:/guide/aliro/[Aliro] は、アプリの寿命の課題を軽くする道の一つです。
+
+== 出典
+
+* https://play.google.com/store/apps/details?id=jp.co.photosynth.akerun&hl=ja[Google Play: Akerun App(2026年10月18日に閲覧)]
+* https://apps.apple.com/jp/app/id1542946007[App Store: Akerun App]
+* https://xtech.nikkei.com/atcl/nxt/column/18/00598/041800318/[日経クロステック: スマートロックの「Akerun」、解錠できないなどの障害 約半日後に完全復旧(2025年6月10日)]
+* https://play.google.com/store/apps/details?id=app.jp.co.bitkey.homehub&hl=ja[Google Play: homehub(2026年10月18日に閲覧)]
+* https://apps.apple.com/jp/app/homehub/id1545859399[App Store: homehub]
+* https://apps.apple.com/jp/app/id1537057387[App Store: workhub]
+* https://www.homehub.site/news-posts/20251221[homehub: 「homehubアプリ」の対応OSの変更について]
+* https://www.homehub.site/news-posts/20260325[homehub: 「bitlockアプリ」サポート終了と「homehubアプリ」移行のお願い(2026年3月)]
+* https://zaikei.co.jp/releases/2461225/[ビットキー: レオパレス21、スマートロックの導入で繁忙期3ヶ月の鍵受け渡し5万件超を削減(財経新聞のリリース掲載、2024年)]
+* https://apps.apple.com/jp/app/id1249400469[App Store: RemoteLock]
+* https://remotelocksupport.kke.co.jp/hc/ja/articles/38615538555801[構造計画研究所: 障害情報 システム・サービスの障害と復旧のお知らせ(2026年9月24日更新)]
+* https://remotelocksupport.kke.co.jp/hc/ja/articles/62290405162393[構造計画研究所: スマートロックの停電・通信障害のときの動き(2026年10月10日更新)]
+* https://apps.apple.com/jp/app/id1551284986[App Store: MIWA Support]
+* https://apps.apple.com/jp/app/id1496716705[App Store: KEYMO NEO]
+* https://play.google.com/store/apps/details?id=jp.co.miwa_lock.keymoneo&hl=ja[Google Play: KEYMO NEO]
+* https://www.miwa-lock.co.jp/miwa_smartphone/appdl_1.html[美和ロック: KEYMO NEO(2026年10月18日に閲覧)]
+* https://www.miwa-lock.co.jp/news/pdf/release_JC-STAR_20251007.pdf[美和ロック: JC-STAR の★1 適合ラベルを取得(2025年10月7日)]
+* https://apps.apple.com/jp/app/id1479403026[App Store: LaresIA ON]
+* https://www.goal-lock.com/wp/wp-content/uploads/2023/02/pressrelease_230227.pdf[ゴール: LaresIA+ の発表(2023年2月27日)]
+* https://www.goal-lock.com/wp/news/20251107/[ゴール: Arc LINK Room の発表(2025年11月7日)]
+* https://play.google.com/store/apps/details?id=me.qrio.smartlock2&hl=ja[Google Play: Qrio Lock(2026年10月18日に閲覧)]
+* https://apps.apple.com/jp/app/id1392268920[App Store: Qrio Lock]
+* https://support.qrio.me/hc/ja/articles/56262248544665[Qrio: 製品販売終了について(2026年3月23日)]
+* https://support.qrio.me/hc/ja/articles/56042174266905[Qrio: Qrio Smart Lock(Q-SL1)アプリでのカギ解施錠を終了しました(2026年7月15日追記)]
+* https://support.qrio.me/hc/ja/articles/53466049592729[Qrio: Qrio Lock サーバー不具合のお知らせ(2025年6月10日)]
+* https://support.qrio.me/hc/ja/articles/54678072935065[Qrio: Qrio Lock アプリおよび本体ソフトウェアは最新版をご利用ください(2026年2月26日)]
+* https://support.qrio.me/hc/ja/articles/57174317222425[Qrio: Nature のスマートロック「Nature Lock」のご紹介(2026年4月21日)]
+* https://www.watch.impress.co.jp/docs/news/2103328.html[Impress Watch: Nature Lock の報道(2026年4月21日)]
+endif::[]
