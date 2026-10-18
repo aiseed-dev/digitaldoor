@@ -4,7 +4,7 @@
 <link>https://door.aiseed.dev/</link>
 <description>扉と鍵の話を、層に分けて書く</description>
 <language>ja</language>
-<lastBuildDate>Sun, 18 Oct 2026 12:54:22 +0900</lastBuildDate>
+<lastBuildDate>Sun, 18 Oct 2026 13:04:29 +0900</lastBuildDate>
 <item>
 <title>スマートドアとスマートロックを作る人が集まる場所</title>
 <link>https://door.aiseed.dev/guide/where-developers-meet/</link>
@@ -52,6 +52,14 @@
 <category>解説</category>
 <pubDate>Sun, 18 Oct 2026 00:00:00 +0900</pubDate>
 <description>AI は攻撃の手間を減らし、狙われるのは多くの顧客の鍵を預かる委託先になります。預けた側は防げず、まとめて守るという委託の前提が崩れます。一方で AI は守る側の手間も減らすので、一般の会社でも、鍵と判断を自社で持てるようになりました。AI に任せ切らずに確かめる人を育て、自社で持つ範囲と任せてよい範囲を分ける、という結論を順に説明します。</description>
+</item>
+<item>
+<title>植物の守り方に学ぶ</title>
+<link>https://door.aiseed.dev/guide/plant-defense/</link>
+<guid>https://door.aiseed.dev/guide/plant-defense/</guid>
+<category>解説</category>
+<pubDate>Sun, 18 Oct 2026 00:00:00 +0900</pubDate>
+<description>植物は、動きまわる免疫の細胞も獲得免疫も持たず、一つひとつの細胞が自分で守ります。感染した所の細胞は自ら死んで病原体を閉じ込め、攻撃の知らせは信号として全身と隣の植物に伝わります。一方、同じ株ばかりを植えた畑は、一つの病気で全滅します。植物の守り方を、扉と情報システムの守り方に当てはめ、似ている所と似ていない所を整理します。</description>
 </item>
 <item>
 <title>Matterとは何か</title>
