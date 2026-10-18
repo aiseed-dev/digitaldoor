@@ -33,7 +33,7 @@ AI のスキルとして入れて使う場合は、`skills/smart-door-dev/` を�
 
 ## いま、何があるか
 
-- 要求仕様 10 の文書、要求 ID 299(2026-10-18)。テストに結び付いているのは 24 で(扉のコントローラーのテストは digitaldoor-controller にあります)、残りは未検証です(`docs/適合の現在.md`)
+- 要求仕様 10 の文書、要求 ID 309(2026-10-18)。テストに結び付いているのは 24 で(扉のコントローラーのテストは digitaldoor-controller にあります)、残りは未検証です(`docs/適合の現在.md`)
 - 扉のコントローラーの疑似の扉と試験の道具(別リポジトリ digitaldoor-controller、Apache-2.0。判断、監査の記録、HTTP の口)と、Matter の錠として見せるブリッジ(`digitalkey/panel/`、CircuitMatter)。テストは接点を模擬にして回ります
 - 受け入れの参照実装(`digitalkey/entrance/`。様式は adoc、伝票は追記だけ、前ハッシュで連鎖)、事業所サーバー(`digitalkey/site/`)、スマートフォンのアプリ(`digitalkey/mobile/`、Flet)
 - 後付け錠のドライバーの例(`drivers/digitalkey-sesame/`。BLE 直結と Web API、疑似の機器つき)

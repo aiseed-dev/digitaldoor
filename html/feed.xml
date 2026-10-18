@@ -4,7 +4,7 @@
 <link>https://door.aiseed.dev/</link>
 <description>扉と鍵の話を、層に分けて書く</description>
 <language>ja</language>
-<lastBuildDate>Sun, 18 Oct 2026 13:04:29 +0900</lastBuildDate>
+<lastBuildDate>Sun, 18 Oct 2026 13:34:22 +0900</lastBuildDate>
 <item>
 <title>スマートドアとスマートロックを作る人が集まる場所</title>
 <link>https://door.aiseed.dev/guide/where-developers-meet/</link>
@@ -60,6 +60,22 @@
 <category>解説</category>
 <pubDate>Sun, 18 Oct 2026 00:00:00 +0900</pubDate>
 <description>植物は、動きまわる免疫の細胞も獲得免疫も持たず、一つひとつの細胞が自分で守ります。感染した所の細胞は自ら死んで病原体を閉じ込め、攻撃の知らせは信号として全身と隣の植物に伝わります。一方、同じ株ばかりを植えた畑は、一つの病気で全滅します。植物の守り方を、扉と情報システムの守り方に当てはめ、似ている所と似ていない所を整理します。</description>
+</item>
+<item>
+<title>ルーターは全部の前にある</title>
+<link>https://door.aiseed.dev/guide/routers/</link>
+<guid>https://door.aiseed.dev/guide/routers/</guid>
+<category>解説</category>
+<pubDate>Sun, 18 Oct 2026 00:00:00 +0900</pubDate>
+<description>扉、ミニサーバー、カメラ、事業所のサーバーは、全部ルーターの後ろにあります。更新の止まったルーターや初期のパスワードのままのルーターが、国家が背後にいる集団や犯罪者の足場に使われてきました。回線の事業者の遠隔の設定の仕組みが狙われた例もあります。ルーターの何が問題かを整理し、扉の側で求めることを示します。</description>
+</item>
+<item>
+<title>人に残るのは現場</title>
+<link>https://door.aiseed.dev/guide/on-site/</link>
+<guid>https://door.aiseed.dev/guide/on-site/</guid>
+<category>解説</category>
+<pubDate>Sun, 18 Oct 2026 00:00:00 +0900</pubDate>
+<description>AI の時代に人に残るのは、何を作るかを決めることと、出来た物を見て判断すること、と言われてきました。この言い方は画面の中の仕事しか数えていませんでした。作るのが安くなれば作られる物が増え、一つずつを建物に入れて動かす人が要ります。攻撃が増えれば、線を抜き、区画を止め、戻す人が要ります。網が止まれば、外の AI は届きません。人に残るのは、現場で物に触れ、動かし、確かめ、止め、戻すことです。</description>
 </item>
 <item>
 <title>Matterとは何か</title>
