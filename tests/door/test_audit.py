@@ -2,6 +2,7 @@ from digitalkey.door.audit import Audit, HmacSigner
 
 
 def test_chain_and_signature(tmp_path):
+    """R-CT-11 R-CT-12 R-CT-13 R-CT-15: 連番、前ハッシュの連鎖、署名、連番を指定した差分の取得。"""
     a = Audit(HmacSigner(b"s" * 32), tmp_path / "a.jsonl")
     a.append(at=1, synced=True, kind="操作", event="解錠", subject="A")
     a.append(at=2, synced=True, kind="操作", event="施錠")
@@ -14,6 +15,7 @@ def test_chain_and_signature(tmp_path):
 
 
 def test_tamper_detected(tmp_path):
+    """R-CT-12: 内容の書き換えと一件の削除(欠番)を検査が指摘する。"""
     a = Audit(HmacSigner(b"s" * 32), tmp_path / "a.jsonl")
     a.append(at=1, synced=True, kind="操作", event="解錠", subject="A")
     a.append(at=2, synced=True, kind="操作", event="施錠")

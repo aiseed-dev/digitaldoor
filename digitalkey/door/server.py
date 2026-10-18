@@ -88,16 +88,36 @@ def make_handler(ctl: Controller, lock: threading.Lock):
     return H
 
 
-def serve(ctl: Controller, host: str = "127.0.0.1", port: int = 8797) -> None:
-    lock = threading.Lock()
-    srv = ThreadingHTTPServer((host, port), make_handler(ctl, lock))
+def start_workers(ctl: Controller, lock: threading.Lock, exporter=None, interval: float = 0.5) -> None:
+    """時計と伝票の書き出しを、別々のスレッドで回す。
+
+    時計は判断の排他(lock)を取って自動施錠を進める。書き出し(exporter)は排他を持たずに回すので、
+    箱が網の共有フォルダで固まっても、判断、自動施錠、命令の受け付けは止まらない。
+    """
 
     def ticker():
         while True:
-            time.sleep(0.5)
+            time.sleep(interval)
             with lock:
                 if ctl.synced:
                     ctl.tick(time.time())
 
+    def shipper():
+        while True:
+            time.sleep(interval)
+            try:
+                exporter()
+            except Exception:  # 箱の不調は次の回に持ち越す。判断には響かせない
+                pass
+
     threading.Thread(target=ticker, daemon=True).start()
+    if exporter:
+        threading.Thread(target=shipper, daemon=True).start()
+
+
+def serve(ctl: Controller, host: str = "127.0.0.1", port: int = 8797, exporter=None) -> None:
+    """HTTP の口を開く。exporter を渡すと、伝票の書き出しを判断と別に回し続ける。"""
+    lock = threading.Lock()
+    srv = ThreadingHTTPServer((host, port), make_handler(ctl, lock))
+    start_workers(ctl, lock, exporter)
     srv.serve_forever()

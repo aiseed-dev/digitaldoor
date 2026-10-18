@@ -1,14 +1,12 @@
 """事業所サーバーの中身。扉ごとのコントローラと、鍵の台帳を一つに束ねる。"""
 from __future__ import annotations
 
-import secrets
 import threading
 import time
 from dataclasses import asdict, dataclass
 from datetime import datetime
-from pathlib import Path
 
-from ..door.audit import Audit, HmacSigner
+from ..door.audit import Audit, load_signer
 from ..door.contacts import SimContacts
 from ..door.controller import Config as DoorCfg, Controller
 from ..entrance.keyring import Keyring, LockDriver
@@ -22,14 +20,6 @@ ROLE_WRITES = {"管理者": {"経営者", "AI社員", "錠"}, "受付": {"AI社�
 
 def make_lock(door: DoorConfig) -> LockDriver:
     return make_lock_by_spec(door.id, door.lock)
-
-
-def _signer(keyfile: Path) -> HmacSigner:
-    if not keyfile.exists():
-        keyfile.parent.mkdir(parents=True, exist_ok=True)
-        keyfile.write_bytes(secrets.token_bytes(32))
-        keyfile.chmod(0o600)
-    return HmacSigner(keyfile.read_bytes())
 
 
 @dataclass
@@ -49,7 +39,7 @@ class Site:
         self.doors: dict[str, Door] = {}
         for d in cfg.doors:
             drv = (locks or {}).get(d.id) or make_lock(d)
-            audit = Audit(_signer(cfg.vault / "扉" / d.id / "audit.key"), cfg.vault / "扉" / d.id / "audit.jsonl")
+            audit = Audit(load_signer(cfg.vault / "扉" / d.id), cfg.vault / "扉" / d.id / "audit.jsonl")
             ctl = Controller(SimContacts(), audit, DoorCfg(two_person=d.two_person, autolock_s=d.autolock_s,
                                                           power_policy=d.power_policy))
             ctl.set_time(time.time(), True)

@@ -17,7 +17,7 @@
     <main class="index article-body">
 <h1>デジタルドア ユーザーマニュアル</h1>
 <p>このマニュアルは、ソフトウェアのコードから自動で生成しています。対象は、事業所のサーバーを運用する管理者、受付の担当者、鍵を使う利用者、保守の担当者です。</p>
-<p>生成日: 2026-09-17</p>
+<p>生成日: 2026-10-18</p>
 <h2>事業所サーバー</h2>
 <p>事業所サーバー — 一つの事業所(建物)の扉と鍵を運用する常駐サービス。</p>
 <p>構成ファイル(site.toml)を読み、扉ごとのコントローラ(door)と鍵の台帳(entrance)を一つのプロセスで動かし、
@@ -51,12 +51,12 @@ autolock = 5.0              # 解錠から自動施錠までの秒
 [[token]]
 name = &quot;管理者&quot;
 role = &quot;管理者&quot;
-token = &quot;FtlpmkwYMeiumm43LI8PKSlW3A4usccv&quot;
+token = &quot;qnjkxNNxtsITPTrPANnS43dT3Pc06U9d&quot;
 
 [[token]]
 name = &quot;受付&quot;
 role = &quot;受付&quot;
-token = &quot;OPEejFeMM2bj0utsniJsp1UBBcnjpgoq&quot;
+token = &quot;GfoyIf186uKZSf7axfSm0ThNtsGDkXbt&quot;
 </code></pre>
 <h3>役割</h3>
 <table>
@@ -191,8 +191,7 @@ options:
 </code></pre>
 <h3>digitalkey entrance</h3>
 <pre><code>usage: digitalkey entrance [-h] [--vault VAULT] [--issuer ISSUER]
-                           {forms,form,ddl,append,list,show,verify,reserve,key,report,backup,retention,serve}
-                           ...
+                           {forms,form,ddl,append,list,show,verify,reserve,key,report,backup,retention,serve} ...
 
 entrance の命令行。経営者と AI社員 はここから台帳を扱う(画面は作らない)。
 
@@ -218,31 +217,37 @@ options:
   --issuer ISSUER       伝票の発行者
 </code></pre>
 <h3>digitalkey door</h3>
-<pre><code>usage: digitalkey door [-h] [--dir DIR] [--host HOST] [--port PORT]
-                       [--two-person TWO_PERSON] [--autolock AUTOLOCK]
-                       [--power-policy {release,hold}]
-                       {serve,verify} ...
+<pre><code>usage: digitalkey door [-h] [--dir DIR] [--name NAME] [--host HOST]
+                       [--port PORT] [--two-person TWO_PERSON]
+                       [--autolock AUTOLOCK] [--power-policy {release,hold}]
+                       {serve,verify,pubkey,export,check-box} ...
 
 扉側のコントローラ(中核)
 
 positional arguments:
-  {serve,verify}
+  {serve,verify,pubkey,export,check-box}
     serve               模擬の接点で core を開く
     verify              監査の連鎖を検査
+    pubkey              署名の公開鍵を 16 進で表示する。据付のときに受け手の台帳へ写す
+    export              まだ出していない記録を伝票にして箱へ出す(続きは置き場の export.cursor)
+    check-box           受け手の側で、箱の伝票を公開鍵で検べる(置き場は使わない)
 
 options:
   -h, --help            show this help message and exit
   --dir DIR             記録と鍵の置き場
+  --name NAME           扉の名前。伝票のファイル名と door の欄に入る
   --host HOST
   --port PORT
   --two-person TWO_PERSON
   --autolock AUTOLOCK
   --power-policy {release,hold}
+
+記録の署名は Ed25519 で、鍵は置き場の audit.ed25519 です(前からの置き場で audit.key がある物は HMAC
+のまま)。伝票は一件ずつ &lt;扉&gt;-&lt;連番&gt;.json として箱へ出し、受け手は pubkey で写した公開鍵だけで check-box で検べます。
 </code></pre>
 <h3>digitalkey sesame</h3>
 <pre><code>usage: digitalkey sesame [-h] [-v] [--seconds SECONDS] [--tag TAG]
-                         {scan,keys,register,status,lock,unlock,toggle,version}
-                         ...
+                         {scan,keys,register,status,lock,unlock,toggle,version} ...
 
 Command-line client (no GUI) for CANDY HOUSE Sesame 5/6/6 Pro over BLE via bleak.
 
@@ -269,7 +274,10 @@ options:
 <li>停電: 既定は解放(fail-safe)。設定で保持(fail-secure)にできる。復電で元に戻す</li>
 <li>認証済み: 有効な資格情報が来たら解錠。二人同時が要る扉では窓の秒数内に N 人揃って解錠</li>
 <li>強要: 強要の印が付いた資格情報は解錠し、記録に「強要」を残す(外への通報は上の層)</li>
-<li>自動施錠: 解錠から autolock 秒で、扉が閉じていれば施錠</li>
+<li>自動施錠: 解錠から autolock 秒で、扉が閉じていれば施錠。0 なら自動施錠しない</li>
+<li>施錠の要求: 火災中は受け付けない。停電中は解放の設定なら受け付けない</li>
+<li>時刻: 同期のたびに前と新しい時刻を残す。同期済みから time_jump_s を超えて動いたら「異常/時刻のずれ」</li>
+<li>設定: configure で変える。項目ごとに「設定/(項目名)」に前と新しい値を残す。無い項目と許されない値は全体を拒む</li>
 <li>手動リリース・改ざん: 記録だけ</li>
 </ul>
 <h2>台帳の様式</h2>
@@ -736,10 +744,10 @@ options:
 https://github.com/CANDY-HOUSE/API_document</p>
 <pre><code>digitalkey の錠ドライバ(entry point `digitalkey.locks`)。
 
-  sesame:&lt;機器UUID&gt;      BLE 直結。事前に `digitalkey sesame register` で鍵を登録しておく
-  sesameweb:&lt;機器UUID&gt;   CANDY HOUSE の Web API(Hub 3 経由)。API key と機器の secret key は
-                         $SESAME_KEYS が指す JSON({&quot;api_key&quot;: &quot;...&quot;, &quot;&lt;uuid&gt;&quot;: &quot;&lt;secret hex&gt;&quot;})か、
-                         環境変数 SESAME_API_KEY / SESAME_SECRET_&lt;UUIDの16進を大文字で&gt; で渡す
+sesame:&lt;機器UUID&gt;      BLE 直結。事前に `digitalkey sesame register` で鍵を登録しておく
+sesameweb:&lt;機器UUID&gt;   CANDY HOUSE の Web API(Hub 3 経由)。API key と機器の secret key は
+                       $SESAME_KEYS が指す JSON({&quot;api_key&quot;: &quot;...&quot;, &quot;&lt;uuid&gt;&quot;: &quot;&lt;secret hex&gt;&quot;})か、
+                       環境変数 SESAME_API_KEY / SESAME_SECRET_&lt;UUIDの16進を大文字で&gt; で渡す
 </code></pre>
 
     </main>

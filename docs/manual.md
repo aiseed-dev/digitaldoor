@@ -2,7 +2,7 @@
 
 このマニュアルは、ソフトウェアのコードから自動で生成しています。対象は、事業所のサーバーを運用する管理者、受付の担当者、鍵を使う利用者、保守の担当者です。
 
-生成日: 2026-09-17
+生成日: 2026-10-18
 
 ## 事業所サーバー
 
@@ -47,12 +47,12 @@ autolock = 5.0              # 解錠から自動施錠までの秒
 [[token]]
 name = "管理者"
 role = "管理者"
-token = "FtlpmkwYMeiumm43LI8PKSlW3A4usccv"
+token = "qnjkxNNxtsITPTrPANnS43dT3Pc06U9d"
 
 [[token]]
 name = "受付"
 role = "受付"
-token = "OPEejFeMM2bj0utsniJsp1UBBcnjpgoq"
+token = "GfoyIf186uKZSf7axfSm0ThNtsGDkXbt"
 ```
 
 ### 役割
@@ -135,8 +135,7 @@ options:
 
 ```
 usage: digitalkey entrance [-h] [--vault VAULT] [--issuer ISSUER]
-                           {forms,form,ddl,append,list,show,verify,reserve,key,report,backup,retention,serve}
-                           ...
+                           {forms,form,ddl,append,list,show,verify,reserve,key,report,backup,retention,serve} ...
 
 entrance の命令行。経営者と AI社員 はここから台帳を扱う(画面は作らない)。
 
@@ -165,34 +164,40 @@ options:
 ### digitalkey door
 
 ```
-usage: digitalkey door [-h] [--dir DIR] [--host HOST] [--port PORT]
-                       [--two-person TWO_PERSON] [--autolock AUTOLOCK]
-                       [--power-policy {release,hold}]
-                       {serve,verify} ...
+usage: digitalkey door [-h] [--dir DIR] [--name NAME] [--host HOST]
+                       [--port PORT] [--two-person TWO_PERSON]
+                       [--autolock AUTOLOCK] [--power-policy {release,hold}]
+                       {serve,verify,pubkey,export,check-box} ...
 
 扉側のコントローラ(中核)
 
 positional arguments:
-  {serve,verify}
+  {serve,verify,pubkey,export,check-box}
     serve               模擬の接点で core を開く
     verify              監査の連鎖を検査
+    pubkey              署名の公開鍵を 16 進で表示する。据付のときに受け手の台帳へ写す
+    export              まだ出していない記録を伝票にして箱へ出す(続きは置き場の export.cursor)
+    check-box           受け手の側で、箱の伝票を公開鍵で検べる(置き場は使わない)
 
 options:
   -h, --help            show this help message and exit
   --dir DIR             記録と鍵の置き場
+  --name NAME           扉の名前。伝票のファイル名と door の欄に入る
   --host HOST
   --port PORT
   --two-person TWO_PERSON
   --autolock AUTOLOCK
   --power-policy {release,hold}
+
+記録の署名は Ed25519 で、鍵は置き場の audit.ed25519 です(前からの置き場で audit.key がある物は HMAC
+のまま)。伝票は一件ずつ <扉>-<連番>.json として箱へ出し、受け手は pubkey で写した公開鍵だけで check-box で検べます。
 ```
 
 ### digitalkey sesame
 
 ```
 usage: digitalkey sesame [-h] [-v] [--seconds SECONDS] [--tag TAG]
-                         {scan,keys,register,status,lock,unlock,toggle,version}
-                         ...
+                         {scan,keys,register,status,lock,unlock,toggle,version} ...
 
 Command-line client (no GUI) for CANDY HOUSE Sesame 5/6/6 Pro over BLE via bleak.
 
@@ -221,7 +226,10 @@ options:
 - 停電: 既定は解放(fail-safe)。設定で保持(fail-secure)にできる。復電で元に戻す
 - 認証済み: 有効な資格情報が来たら解錠。二人同時が要る扉では窓の秒数内に N 人揃って解錠
 - 強要: 強要の印が付いた資格情報は解錠し、記録に「強要」を残す(外への通報は上の層)
-- 自動施錠: 解錠から autolock 秒で、扉が閉じていれば施錠
+- 自動施錠: 解錠から autolock 秒で、扉が閉じていれば施錠。0 なら自動施錠しない
+- 施錠の要求: 火災中は受け付けない。停電中は解放の設定なら受け付けない
+- 時刻: 同期のたびに前と新しい時刻を残す。同期済みから time_jump_s を超えて動いたら「異常/時刻のずれ」
+- 設定: configure で変える。項目ごとに「設定/(項目名)」に前と新しい値を残す。無い項目と許されない値は全体を拒む
 - 手動リリース・改ざん: 記録だけ
 
 ## 台帳の様式
@@ -396,8 +404,8 @@ Reference: https://github.com/CANDY-HOUSE/SesameSDK_Android_with_DemoApp
 ```
 digitalkey の錠ドライバ(entry point `digitalkey.locks`)。
 
-  sesame:<機器UUID>      BLE 直結。事前に `digitalkey sesame register` で鍵を登録しておく
-  sesameweb:<機器UUID>   CANDY HOUSE の Web API(Hub 3 経由)。API key と機器の secret key は
-                         $SESAME_KEYS が指す JSON({"api_key": "...", "<uuid>": "<secret hex>"})か、
-                         環境変数 SESAME_API_KEY / SESAME_SECRET_<UUIDの16進を大文字で> で渡す
+sesame:<機器UUID>      BLE 直結。事前に `digitalkey sesame register` で鍵を登録しておく
+sesameweb:<機器UUID>   CANDY HOUSE の Web API(Hub 3 経由)。API key と機器の secret key は
+                       $SESAME_KEYS が指す JSON({"api_key": "...", "<uuid>": "<secret hex>"})か、
+                       環境変数 SESAME_API_KEY / SESAME_SECRET_<UUIDの16進を大文字で> で渡す
 ```

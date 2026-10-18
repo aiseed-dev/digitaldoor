@@ -5,12 +5,15 @@
 - 停電: 既定は解放(fail-safe)。設定で保持(fail-secure)にできる。復電で元に戻す
 - 認証済み: 有効な資格情報が来たら解錠。二人同時が要る扉では窓の秒数内に N 人揃って解錠
 - 強要: 強要の印が付いた資格情報は解錠し、記録に「強要」を残す(外への通報は上の層)
-- 自動施錠: 解錠から autolock 秒で、扉が閉じていれば施錠
+- 自動施錠: 解錠から autolock 秒で、扉が閉じていれば施錠。0 なら自動施錠しない
+- 施錠の要求: 火災中は受け付けない。停電中は解放の設定なら受け付けない
+- 時刻: 同期のたびに前と新しい時刻を残す。同期済みから time_jump_s を超えて動いたら「異常/時刻のずれ」
+- 設定: configure で変える。項目ごとに「設定/(項目名)」に前と新しい値を残す。無い項目と許されない値は全体を拒む
 - 手動リリース・改ざん: 記録だけ
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, fields, replace
 
 from .audit import Audit
 from .contacts import Contacts
@@ -23,6 +26,21 @@ class Config:
     autolock_s: float = 5.0
     power_policy: str = "release"  # release(停電で解放) / hold(停電で保持)
     fire_policy: str = "release"
+    time_jump_s: float = 300.0     # 同期済みの時計がこれを超えて動いたら「時刻のずれ」
+
+    def check(self) -> None:
+        """許されない値なら ValueError。"""
+        for f in fields(self):
+            v = getattr(self, f.name)
+            kind = type(f.default)
+            if isinstance(v, bool) or not isinstance(v, (int, float) if kind is float else kind):
+                raise ValueError(f"{f.name}: 型が違います({v!r})")
+        if self.power_policy not in ("release", "hold") or self.fire_policy not in ("release", "hold"):
+            raise ValueError("power_policy と fire_policy は release か hold です")
+        if self.two_person < 1:
+            raise ValueError("two_person は 1 以上です")
+        if min(self.two_person_window_s, self.autolock_s, self.time_jump_s) < 0:
+            raise ValueError("秒数は 0 以上です")
 
 
 @dataclass
@@ -39,9 +57,26 @@ class Controller:
 
     # ---- 時刻 ----
     def set_time(self, now: float, synced: bool = True) -> None:
-        old = self.now
+        old, was_synced = self.now, self.synced
         self.now, self.synced = now, synced
-        self._log("時刻", "同期", detail=f"{old}->{now}")
+        self._log("時刻", "同期", detail=f"前 {old} 新 {now}")
+        if was_synced and abs(now - old) > self.config.time_jump_s:
+            self._log("異常", "時刻のずれ", result=f"{now - old:+.0f}秒", detail=f"前 {old} 新 {now}")
+
+    # ---- 設定 ----
+    def configure(self, by: str, **changes) -> None:
+        """設定を変える。一つでも無い項目か許されない値があれば ValueError で、何も変えない。"""
+        names = {f.name for f in fields(Config)}
+        unknown = set(changes) - names
+        if unknown:
+            raise ValueError(f"無い項目です: {', '.join(sorted(unknown))}")
+        new = replace(self.config, **changes)
+        new.check()
+        old, self.config = self.config, new
+        for name in changes:
+            before, after = getattr(old, name), getattr(new, name)
+            if before != after:
+                self._log("設定", name, result=str(after), subject=by, detail=f"前 {before} 新 {after}")
 
     def _log(self, kind: str, event: str, **kw) -> None:
         self.audit.append(at=self.now, synced=self.synced, kind=kind, event=event, **kw)
@@ -120,7 +155,7 @@ class Controller:
         self._log("異常", what)
 
     def lock_request(self, by: str = "上位") -> str:
-        if self.mode in ("火災", "停電") and self.config.power_policy == "release":
+        if self.mode == "火災" or (self.mode == "停電" and self.config.power_policy == "release"):
             self._log("操作", "施錠", result="拒否", detail=f"{self.mode}中", subject=by)
             return "拒否"
         if self.contacts.door_open():
@@ -135,7 +170,7 @@ class Controller:
     # ---- 時計 ----
     def tick(self, now: float) -> None:
         self.now = now
-        if (not self.locked and self.unlocked_at is not None and self.mode == "通常"
+        if (self.config.autolock_s > 0 and not self.locked and self.unlocked_at is not None and self.mode == "通常"
                 and now - self.unlocked_at >= self.config.autolock_s and not self.contacts.door_open()):
             self._lock("自動施錠")
 
