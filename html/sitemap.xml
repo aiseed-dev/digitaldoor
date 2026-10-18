@@ -65,4 +65,19 @@
     <lastmod>2026-10-18</lastmod>
     <priority>0.6</priority>
   </url>
+  <url>
+    <loc>https://door.aiseed.dev/guide/vendor-held-keys/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://door.aiseed.dev/guide/people-and-keys-to-keep/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://door.aiseed.dev/guide/ai-and-in-house/</loc>
+    <lastmod>2026-10-18</lastmod>
+    <priority>0.6</priority>
+  </url>
 </urlset>

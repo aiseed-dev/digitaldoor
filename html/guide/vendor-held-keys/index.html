@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'">
+
+
+<title>業者に預けた鍵と権限 — 解説 | デジタルドア</title>
+<meta name="description" content="ConnectWise Cloud Backup、OpenCode Console、CVE-2026-99999(PwnEscape)、Commvault Metallic、Salesloft Drift の五つの件を、業者が顧客の鍵や権限を預かる形と、他人と同じ機械を使う形の二つに分けて並べます。共通するのは、預けた物が一か所に集まり、顧客の側では防げず、止める手段が大きいことです。クラウド型のスマートロックに当てはめ、このサイトの要求仕様が何を求めているかを示します。">
+<link rel="canonical" href="https://door.aiseed.dev/guide/vendor-held-keys/">
+<link rel="alternate" hreflang="ja" href="https://door.aiseed.dev/guide/vendor-held-keys/">
+
+<link rel="alternate" hreflang="x-default" href="https://door.aiseed.dev/guide/vendor-held-keys/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="デジタルドア">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="業者に預けた鍵と権限">
+<meta property="og:description" content="ConnectWise Cloud Backup、OpenCode Console、CVE-2026-99999(PwnEscape)、Commvault Metallic、Salesloft Drift の五つの件を、業者が顧客の鍵や権限を預かる形と、他人と同じ機械を使う形の二つに分けて並べます。共通するのは、預けた物が一か所に集まり、顧客の側では防げず、止める手段が大きいことです。クラウド型のスマートロックに当てはめ、このサイトの要求仕様が何を求めているかを示します。">
+<meta property="og:url" content="https://door.aiseed.dev/guide/vendor-held-keys/">
+<meta property="og:image" content="https://door.aiseed.dev/images/og-default.jpg">
+<meta property="article:section" content="解説">
+<meta property="article:published_time" content="2026.10.18">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="業者に預けた鍵と権限">
+<meta name="twitter:description" content="ConnectWise Cloud Backup、OpenCode Console、CVE-2026-99999(PwnEscape)、Commvault Metallic、Salesloft Drift の五つの件を、業者が顧客の鍵や権限を預かる形と、他人と同じ機械を使う形の二つに分けて並べます。共通するのは、預けた物が一か所に集まり、顧客の側では防げず、止める手段が大きいことです。クラウド型のスマートロックに当てはめ、このサイトの要求仕様が何を求めているかを示します。">
+<meta name="twitter:image" content="https://door.aiseed.dev/images/og-default.jpg">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="alternate" type="application/rss+xml" title="デジタルドア" href="/feed.xml">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+
+<!-- フォントは Web 配信せず、すべて端末のローカルフォントで賄う。
+     和文: UDデジタル教科書体 → BIZ UDP明朝(いずれも Windows 標準搭載の
+     モリサワ UD 書体) → ヒラギノ明朝・游明朝などのシステム明朝。
+     等幅: 端末のシステム等幅フォント。 -->
+
+<style>
+/* ============================================================
+   LOCAL FONT: UDデジタル教科書体(モリサワ)
+   Windows・教育向け端末に無償搭載。端末にあれば local() で拾い、
+   なければ BIZ UDP明朝(同じく Windows 標準搭載)→ システム明朝へ
+   フォールバックする。R と B は別ファミリー名なので、太字(700)を
+   B 書体に明示的にマッピングして疑似ボールドを避ける。
+   ============================================================ */
+@font-face {
+  font-family: "UD Digital Kyokasho";
+  font-weight: 400;
+  src: local("UD デジタル 教科書体 NK-R"), local("UD Digital Kyokasho NK-R"),
+       local("UD デジタル 教科書体 NP-R"), local("UD Digital Kyokasho NP-R"),
+       local("UD デジタル 教科書体 N-R"), local("UD Digital Kyokasho N-R");
+}
+@font-face {
+  font-family: "UD Digital Kyokasho";
+  font-weight: 700;
+  src: local("UD デジタル 教科書体 NK-B"), local("UD Digital Kyokasho NK-B"),
+       local("UD デジタル 教科書体 NP-B"), local("UD Digital Kyokasho NP-B"),
+       local("UD デジタル 教科書体 N-B"), local("UD Digital Kyokasho N-B");
+}
+
+/* ============================================================
+   COLOR & DESIGN TOKENS
+   aiseed.dev 全体のスタイルに合わせる場合は、ここの変数を
+   既存サイトのCSS変数に差し替える。
+   ============================================================ */
+:root {
+  --ink: #1a1a1a;
+  --paper: #f4f1ea;
+  --paper-deep: #ebe6d8;
+  --accent: #c8442a;
+  --rule: #d4cdb8;
+  --whisper: #6b665a;
+  --highlight: #f7e9c8;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+/* 本文: 端末にあれば UDデジタル教科書体を最優先、次に BIZ UDP明朝
+   (Windows 標準搭載)、どちらもなければヒラギノ明朝等のシステム明朝 */
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "UD Digital Kyokasho",
+               "BIZ UDPMincho", "BIZ UDP明朝",
+               "Hiragino Mincho ProN", "ヒラギノ明朝 ProN",
+               "Yu Mincho", "游明朝", "YuMincho",
+               "Noto Serif CJK JP", "Noto Serif JP", serif;
+  font-size: 17px;
+  line-height: 1.9;
+  letter-spacing: 0.02em;
+  font-feature-settings: "palt";
+  overflow-x: hidden;
+}
+
+/* グレインテクスチャ(紙の質感) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image: radial-gradient(rgba(0,0,0,0.04) 1px, transparent 1px);
+  background-size: 3px 3px;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+}
+
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 32px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ============================================================
+   MASTHEAD(シリーズ名・章番号)
+   ============================================================ */
+.masthead {
+  border-bottom: 3px double var(--ink);
+  padding: 24px 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--whisper);
+}
+.masthead-left  { font-weight: 700; color: var(--ink); }
+.masthead-left a { color: inherit; text-decoration: none; }
+.masthead-left a:hover { color: var(--accent); }
+.masthead-home { color: var(--whisper); }
+.masthead-sep { margin: 0 10px; color: var(--whisper); font-weight: 400; }
+.masthead-right { font-style: italic; }
+
+/* ============================================================
+   HERO(タイトル領域)
+   ============================================================ */
+.hero {
+  padding: 80px 0 60px;
+}
+.hero-meta {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  color: var(--accent);
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.hero-meta::before {
+  content: "";
+  width: 40px;
+  height: 1px;
+  background: var(--accent);
+}
+.hero-title {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 800;
+  font-size: clamp(32px, 5.5vw, 56px);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin-bottom: 24px;
+}
+.hero-title .accent {
+  color: var(--accent);
+}
+.hero-subtitle {
+  font-size: 18px;
+  line-height: 1.85;
+  color: var(--whisper);
+  max-width: 580px;
+  border-left: 2px solid var(--accent);
+  padding-left: 20px;
+  margin-top: 32px;
+}
+.hero-byline {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--whisper);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ============================================================
+   ARTICLE BODY
+   ============================================================ */
+article p {
+  margin-bottom: 24px;
+}
+
+article h2 {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1.4;
+  margin: 72px 0 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--ink);
+  position: relative;
+}
+article h2::before {
+  content: "§";
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  color: var(--accent);
+  margin-right: 16px;
+  font-size: 22px;
+}
+
+article h3 {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 600;
+  font-size: 19px;
+  margin: 40px 0 16px;
+  color: var(--ink);
+}
+article h3::before {
+  content: "—";
+  color: var(--accent);
+  margin-right: 12px;
+  font-weight: 400;
+}
+
+article strong {
+  font-weight: 700;
+  background: linear-gradient(to top, var(--highlight) 35%, transparent 35%);
+  padding: 0 2px;
+}
+
+article em {
+  font-style: normal;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+article a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: color 0.2s;
+}
+article a:hover {
+  color: var(--accent);
+}
+
+/* ============================================================
+   BLOCKQUOTE
+   ============================================================ */
+blockquote {
+  margin: 40px 0;
+  padding: 32px 40px;
+  background: var(--paper-deep);
+  border-left: 4px solid var(--accent);
+  position: relative;
+  font-size: 18px;
+  line-height: 1.85;
+  font-style: normal;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "「";
+  position: absolute;
+  top: 4px;
+  left: 8px;
+  font-size: 48px;
+  color: var(--accent);
+  opacity: 0.3;
+  font-family: "Hiragino Mincho ProN", serif;
+}
+blockquote p {
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 32px 0;
+  font-size: 15px;
+  line-height: 1.7;
+}
+article thead th {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 700;
+  text-align: left;
+  padding: 14px 16px;
+  border-bottom: 2px solid var(--ink);
+  color: var(--ink);
+}
+article tbody td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+article tbody tr:last-child td {
+  border-bottom: none;
+}
+@media (max-width: 720px) {
+  article table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ============================================================
+   ORDERED LIST(番号付きリスト)
+   ============================================================ */
+article ol {
+  margin: 32px 0;
+  counter-reset: item;
+  padding: 0;
+}
+article ol li {
+  list-style: none;
+  position: relative;
+  padding: 16px 0 16px 56px;
+  border-bottom: 1px dashed var(--rule);
+  counter-increment: item;
+}
+article ol li::before {
+  content: counter(item, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 16px;
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 14px;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+/* 通常のul(章末の関連リンクなど) */
+article ul {
+  margin: 24px 0;
+  padding-left: 1.5em;
+}
+article ul li {
+  margin-bottom: 8px;
+}
+
+/* ============================================================
+   CODE BLOCK(疑似ターミナル風)
+   ============================================================ */
+article pre {
+  margin: 40px 0;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 24px 28px;
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 13px;
+  line-height: 1.8;
+  position: relative;
+  overflow-x: auto;
+}
+article pre::before {
+  content: "● ● ●";
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  font-size: 8px;
+  color: var(--whisper);
+  letter-spacing: 4px;
+}
+article pre code {
+  display: block;
+  padding-top: 16px;
+  white-space: pre;
+}
+
+/* インラインコード */
+article code {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 0.9em;
+  background: var(--paper-deep);
+  padding: 2px 6px;
+  border-radius: 2px;
+  color: var(--ink);
+}
+article pre code {
+  background: transparent;
+  padding: 16px 0 0 0;
+  color: var(--paper);
+}
+
+/* ============================================================
+   HORIZONTAL RULE(本文中の区切り)
+   ============================================================ */
+article hr {
+  border: none;
+  text-align: center;
+  margin: 64px 0;
+  height: 1em;
+}
+article hr::before {
+  content: "◆ ◆ ◆";
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 14px;
+  color: var(--accent);
+  letter-spacing: 0.5em;
+}
+
+/* ============================================================
+   RELATED LINKS(章末の関連記事)
+   ============================================================ */
+.related-links {
+  margin-top: 64px;
+  padding: 32px 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.related-links h3 {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  color: var(--whisper);
+  margin: 0 0 20px;
+  font-weight: 600;
+}
+.related-links h3::before {
+  content: none;
+}
+.related-links ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.related-links li {
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--rule);
+  margin-bottom: 0;
+}
+.related-links li:last-child {
+  border-bottom: none;
+}
+.related-links a {
+  text-decoration: none;
+  color: var(--ink);
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+}
+.related-links .related-tag {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.related-links a:hover .related-title {
+  color: var(--accent);
+}
+
+/* ============================================================
+   FOOTER(サイト内メニュー+奥付)
+   ============================================================ */
+.site-footer {
+  margin-top: 96px;
+  border-top: 3px double var(--ink);
+  padding-top: 48px;
+}
+.footer-nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 32px 48px;
+}
+.footer-col h4 {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--whisper);
+  font-weight: 700;
+  margin: 0 0 14px;
+}
+.footer-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.footer-col li {
+  padding: 6px 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.footer-col a {
+  color: var(--ink);
+  text-decoration: none;
+}
+.footer-col a:hover { color: var(--accent); }
+
+.colophon {
+  margin-top: 48px;
+  padding: 32px 0 40px;
+  border-top: 1px solid var(--rule);
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--whisper);
+  text-align: center;
+  line-height: 2;
+}
+.colophon-mark {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "Hiragino Mincho ProN", serif;
+  font-size: 32px;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+/* ============================================================
+   SERIES TOC(全章一覧・折りたたみ式)
+   ============================================================ */
+.series-toc {
+  margin: 24px 0 40px;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 8px 0;
+}
+.series-toc details {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+}
+.series-toc summary {
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--whisper);
+  font-weight: 700;
+  padding: 8px 0;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.series-toc summary::-webkit-details-marker { display: none; }
+.series-toc summary::before {
+  content: "▸";
+  color: var(--accent);
+  font-size: 10px;
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+.series-toc details[open] summary::before { transform: rotate(90deg); }
+.series-toc ol {
+  list-style: none;
+  margin: 12px 0 8px;
+  padding: 0;
+  counter-reset: none;
+}
+.series-toc li {
+  list-style: none;
+  padding: 9px 0;
+  border-bottom: 1px dashed var(--rule);
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: 14px;
+  line-height: 1.55;
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+}
+.series-toc li::before { content: none; }
+.series-toc li:last-child { border-bottom: none; }
+.series-toc li a {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+  text-decoration: none;
+  color: var(--ink);
+  flex: 1;
+}
+.series-toc li a:hover .toc-title { color: var(--accent); }
+.series-toc .toc-num {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 5em;
+}
+.series-toc li.current {
+  background: var(--paper-deep);
+  margin: 0 -12px;
+  padding: 9px 12px;
+}
+.series-toc li.current .toc-title {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ============================================================
+   IMAGES
+   ============================================================ */
+article img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 32px auto;
+}
+
+/* ============================================================
+   CUSTOM BLOCKS(:::chain / :::highlight / :::quote / :::compare)
+   ============================================================ */
+.chain-diagram {
+  background: var(--paper-deep);
+  border-left: 4px solid var(--accent);
+  padding: 24px 28px;
+  margin: 32px 0;
+  font-size: 15px;
+  line-height: 2.2;
+}
+.chain-diagram .arrow {
+  color: var(--accent);
+  font-weight: 700;
+  margin: 0 0.3em;
+}
+.highlight-box {
+  background: var(--paper-deep);
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--accent);
+  padding: 24px 28px;
+  margin: 32px 0;
+}
+.highlight-box p { margin-bottom: 12px; }
+.highlight-box p:last-child { margin-bottom: 0; }
+.quote-block {
+  margin: 40px 0;
+  padding: 32px 40px;
+  background: var(--paper-deep);
+  border-left: 4px solid var(--accent);
+}
+.quote-block .quote-text {
+  font-size: 18px;
+  line-height: 1.85;
+  margin: 0;
+}
+
+/* ============================================================
+   CHAPTER NAV(前後の記事へのリンク)
+   ============================================================ */
+.chapter-nav {
+  margin-top: 64px;
+  padding: 24px 0;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  font-size: 14px;
+}
+.chapter-nav a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+  text-underline-offset: 4px;
+}
+.chapter-nav a:hover { color: var(--accent); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 640px) {
+  .container { padding: 0 20px; }
+  .hero { padding: 48px 0 40px; }
+  blockquote { padding: 24px 20px 24px 28px; }
+  article pre { padding: 20px 16px; font-size: 12px; }
+  article ol li { padding-left: 48px; }
+  .series-toc .toc-num { min-width: 4em; font-size: 10px; }
+  .series-toc li { font-size: 13px; gap: 12px; }
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-meta, .hero-title, .hero-subtitle, .hero-byline {
+  animation: rise 0.8s ease-out backwards;
+}
+.hero-meta     { animation-delay: 0.1s; }
+.hero-title    { animation-delay: 0.25s; }
+.hero-subtitle { animation-delay: 0.45s; }
+.hero-byline   { animation-delay: 0.65s; }
+.mermaid {
+  text-align: center;
+  margin: 2.5rem 0;
+  background: var(--paper-warm, #f5f1ea);
+  padding: 1.5rem 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+.mermaid svg { max-width: 100%; height: auto; }
+
+/* ============================================================
+   WIDE LAYOUT(広い画面では目次を左サイドバーに常時展開)
+   ============================================================ */
+@media (min-width: 1200px) {
+  body.has-toc .container {
+    max-width: 1320px;
+    display: grid;
+    grid-template-columns: 280px minmax(0, 880px);
+    column-gap: 64px;
+    justify-content: center;
+  }
+  body.has-toc .masthead,
+  body.has-toc .hero {
+    grid-column: 1 / -1;
+  }
+  /* グリッドアイテム自体は行いっぱいに伸ばし、内側の details を sticky に
+     する(sticky なグリッドアイテムはグリッドエリアではなくコンテナ全体で
+     制約されるブラウザ挙動があり、フッターに重なってしまうため)。 */
+  body.has-toc .series-toc {
+    grid-column: 1;
+    grid-row: 3 / span 2;
+    margin: 0;
+    padding: 0;
+    border-top: none;
+    border-bottom: none;
+  }
+  body.has-toc .series-toc details {
+    position: sticky;
+    top: 32px;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+    padding: 0 12px 12px 0;
+  }
+  /* サイドバーでは折りたたみを無効化し、見出しとして表示 */
+  body.has-toc .series-toc summary {
+    pointer-events: none;
+    cursor: default;
+  }
+  body.has-toc .series-toc summary::before { content: none; }
+  body.has-toc .series-toc li { font-size: 13.5px; }
+  body.has-toc article    { grid-column: 2; grid-row: 3; }
+  body.has-toc .chapter-nav { grid-column: 2; grid-row: 4; }
+  body.has-toc .site-footer { grid-column: 1 / -1; grid-row: 5; }
+}
+
+/* ============================================================
+   DARK MODE(OS の配色設定に追従して自動で暗色に切り替え)
+   ============================================================ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --ink: #e8e3d6;
+    --paper: #16140f;
+    --paper-deep: #211d16;
+    --accent: #e8765a;
+    --rule: #393428;
+    --whisper: #a39b88;
+    --highlight: rgba(220, 168, 78, 0.30);
+  }
+  /* 紙の質感(グレイン)を暗色背景向けに反転 */
+  body::before {
+    background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+    mix-blend-mode: screen;
+    opacity: 0.4;
+  }
+  /* コードブロックは両モードとも暗いターミナル調を維持 */
+  article pre {
+    background: #0d0c0a;
+    color: #e8e3d6;
+  }
+  article pre code {
+    color: #e8e3d6;
+  }
+  /* Mermaid 図の枠を暗色に */
+  .mermaid {
+    background: #211d16;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; opacity: 1 !important; }
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- MASTHEAD(ホーム › シリーズ目次) -->
+  <header class="masthead">
+    <div class="masthead-left"><a href="/" class="masthead-home">デジタルドア</a><span class="masthead-sep">›</span><a href="/guide/">解説</a></div>
+    <div class="masthead-right">No. 09 / 解説</div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-meta">解説 № 09 · 2026</div>
+
+    <h1 class="hero-title">業者に預けた鍵と権限</h1>
+
+    <p class="hero-subtitle">一つの業者が破られると、多くの顧客に届く。2025年から2026年の五つの件と、扉への当てはめ</p>
+
+    <div class="hero-byline">
+      <span>2026.10.18</span>
+      
+    </div>
+  </section>
+
+  <!-- SERIES TOC(全章一覧・現在の章をハイライト) -->
+  
+
+  <!-- ARTICLE BODY -->
+  <article>
+    <p>2026年10月の一週間に、業者に預けた鍵や権限から多くの顧客に被害が及ぶ件が、続けて公表されました。2025年にも同じ形の件があります。この記事では五つの件を同じ項目で並べ、共通する形を取り出し、扉の鍵に当てはめます。調べたのは2026年10月18日です。会社と団体が発表したことと、報道や分析で伝えられたことは分けて書きます。どの件も、調べた時点で調査が続いています。</p>
+<h2>見方</h2>
+<p>件を二つの型に分けます。</p>
+<ul>
+<li><strong>預かり型。</strong> 業者が、多くの顧客の鍵や権限を預かって常に持っている形です。顧客は、連携の手間を省くために、業者のサービスに自分の環境へ入る権限や、他社のサービスの鍵を渡しています。</li>
+<li><strong>相乗り型。</strong> 他人と同じ機械の上で、自分の仕組みを動かしている形です。クラウド、VPS、レンタルサーバーが当たります。</li>
+</ul>
+<p>それぞれの件について、預けていた物、起きたこと、顧客の側で防げたか、業者がどう止めたかを見ます。</p>
+<h2>一覧</h2>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>件(時期)</th>
+<th>型と、預けていた物</th>
+<th>起きたこと</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ConnectWise Cloud Backup(2026年10月)</td>
+<td>預かり型。Microsoft 365 のメール、OneDrive、SharePoint、Teams を読み書きできる、バックアップのアプリの権限</td>
+<td>業者の側にあるアプリの認証情報で、多くの顧客のテナントにサインインされた</td>
+</tr>
+<tr>
+<td>OpenCode Console(2026年10月)</td>
+<td>預かり型。利用者が保存した、AI の事業者(OpenAI、Anthropic、Google など)の鍵</td>
+<td>廃止の途中の古い仕組みへの不正なアクセスで、保存された鍵が漏れたおそれ</td>
+</tr>
+<tr>
+<td>CVE-2026-99999、PwnEscape(2026年10月)</td>
+<td>相乗り型。同じ機械の上の仮想マシン</td>
+<td>仮想マシンから、その機械(ホスト)のメモリを読み書きできる不具合</td>
+</tr>
+<tr>
+<td>Commvault Metallic(2025年5月)</td>
+<td>預かり型。Microsoft 365 のバックアップのアプリの秘密情報</td>
+<td>顧客の環境に入るための秘密情報が盗まれた</td>
+</tr>
+<tr>
+<td>Salesloft Drift(2025年8月)</td>
+<td>預かり型。Salesforce につなぐ連携のトークン</td>
+<td>多くの会社の Salesforce のデータが持ち出された</td>
+</tr>
+</tbody>
+</table>
+<h2>件ごとに見る</h2>
+<h3>ConnectWise Cloud Backup(旧 SkyKick)</h3>
+<p><strong>発表。</strong> ConnectWise は、Cloud Backup の環境で「アプリケーションの ID への不正なアクセス」を見つけたと発表しました。対策として、提携先と顧客の Cloud Backup のアプリのアクセスを止め、バックアップのサービスは再開の見通しが示されないまま止まりました(2026年10月17日。BleepingComputer の報道による)。バックアップのデータが見られた兆しは無いとしています。原因は公表していません。Microsoft は、活動中のサプライチェーン攻撃と判断しました。</p>
+<p><strong>分析。</strong> セキュリティ会社の Huntress の分析(2026年10月16日公開、17日更新)では、盗まれたのはバックアップのアプリの認証情報で、業者のテナントの中にありました。顧客の環境の中で何をしても防げない物です。不正なサインインは10月16日の時点で162のテナントで確かめられ、17日の更新では、約1,000のテナントで試みがあり、300を超えて成功しています。一つのテナントでは、別の ConnectWise のアプリが自分に全体管理者の権限を与え、他のアプリに秘密の鍵を足していました。データが持ち出されたかは確定していません。</p>
+<h3>OpenCode Console</h3>
+<p><strong>発表。</strong> AI のコーディングの道具を提供する OpenCode は、2026年10月17日に自社の X のアカウントで、前夜にセキュリティの侵害があったと公表しました。大規模な蒸留攻撃に関連し、コンソールの利用者の1.4%に影響があり、メールを受け取っていない人は影響を受けていない、としています。Anthropic、OpenAI、Google と協力して対応していて、調査が続いているため詳細は出せないとしています。</p>
+<p><strong>利用者へのメール(報道による)。</strong> 廃止の途中だった古い仕組みへの不正なアクセスを見つけ、作業場所に保存された外部の事業者の鍵(OpenAI、Anthropic など)が漏れたおそれがあるとして、鍵を取り消して作り直すよう求めています(OfficeChai、DEV Community、2026年10月17日〜18日)。</p>
+<p><strong>報道。</strong> 利用者が、身に覚えの無い利用の請求を受けたという声が伝えられています(Crypto Briefing、2026年10月17日)。金額は利用者の報告で、確かめられていません。蒸留攻撃は、一般に、他人のモデルを大量に呼び出し、その答えで別のモデルを育てる使い方を指します。盗んだ鍵がそう使われたのかを、OpenCode は説明していません。鍵がどう保存されていたかも公表されていません。</p>
+<h3>CVE-2026-99999(PwnEscape)</h3>
+<p><strong>発表。</strong> Linux カーネルの IPv4 の処理の不具合で、CVE の記録は2026年10月15日に公開されました。Red Hat と Linux のカーネルの CVE チームは Critical としています。</p>
+<p><strong>研究者の説明。</strong> 仮想マシンが細工したパケットを送ると、ホストのカーネルのメモリを読み、書き換えられます。研究者は、自分の KVM の実験環境で、ホストの root での実行まで示しました。各社の本番の環境で root を取ったとは主張していません。</p>
+<p><strong>告知。</strong> AlmaLinux の告知(2026年10月16日)は、最も危ないのは他人の仮想マシンを動かす機械、つまりクラウド、VPS の事業者、コードを動かすサンドボックスだとしています。Vercel が本番のサンドボックスでメモリの漏れを示し、他の事業者に知らせたとも書いています。回避の手段は無く、直したカーネルに替えるしかありません。ホストの再起動は、その上の全部の仮想マシンを止めます。</p>
+<h3>Commvault Metallic</h3>
+<p><strong>発表。</strong> 米国の CISA は2025年5月22日に、Commvault の Microsoft 365 のバックアップのサービス(Metallic、Azure の上で動く)の秘密情報が盗まれたおそれがあると警告しました。既定の設定と強い権限を持つ SaaS を狙う、より広い攻撃の一部と見ています。Commvault は、影響を受けたのは少数の顧客で、バックアップのデータは見られておらず、該当の顧客の秘密情報を作り直したとしています(The Record、2025年5月23日)。</p>
+<h3>Salesloft Drift</h3>
+<p><strong>分析。</strong> Google の脅威情報の部門と Mandiant は、2025年8月8日から18日に、Salesloft のチャットの道具 Drift が Salesforce につなぐためのトークンが盗まれ、多くの会社の Salesforce からデータが持ち出されたと公表しました。攻撃者は、データの中から AWS の鍵やパスワードなどの秘密を探していました。Salesloft は8月20日に、Drift と Salesforce の連携を全部切りました(Security Affairs、2025年8月28日)。</p>
+<h2>共通する形</h2>
+<ol>
+<li><strong>預けた物が一か所に集まる。</strong> 一社が、多くの顧客の環境に入る権限や、他社の鍵をまとめて持っています。そこを一度破れば、全部の顧客に届きます。</li>
+<li><strong>顧客の側では防げない。</strong> ConnectWise の認証情報は業者のテナントにあり、OpenCode の鍵は業者のサービスに保存され、PwnEscape を直せるのは機械を持つ事業者です。顧客にできるのは、知らされた後の対応だけです。</li>
+<li><strong>止める手段が大きい。</strong> 業者はサービスごと止める(ConnectWise のバックアップの停止)か、全員に鍵の作り直しを頼みます(OpenCode、Commvault)。相乗り型では、直すための再起動で全部の仮想マシンが止まります。</li>
+<li><strong>預けた権限は、用途より広い。</strong> バックアップのためにメールの全部を読む権限を、連携のために顧客の記録を読むトークンを、便利さのために請求の起きる鍵を、業者に渡しています。</li>
+</ol>
+<h2>扉に当てはめると</h2>
+<ul>
+<li><strong>クラウド型のスマートロックは、預かり型そのもの。</strong> 業者のクラウドが、全部の顧客の扉に鍵を出し、遠隔で開ける権限を常に持っています(<a href="/guide/japanese-smart-lock-apps/">日本のスマートロックのアプリの現状と課題</a>)。業者が破られると、メールや請求ではなく、多くの建物の扉が開きえます。業者が被害を止めるためにサービスを止めれば、アプリで開ける扉が全部止まります。</li>
+<li><strong>判定が扉の中で完結しても、発行者の鍵が一か所に集まれば同じ。</strong> <a href="/guide/aliro/">Aliro</a> のように、スマートフォンと読取機だけで判定する方式でも、鍵を作る発行者の秘密鍵を一つの業者が全顧客の分まとめて持てば、その鍵一つで全部の扉の鍵が作れます。</li>
+<li><strong>鍵の台帳を共有の機械に置くと、相乗り型の危険を負う。</strong> 発行者の秘密鍵や鍵の台帳を VPS やレンタルサーバーに置くと、隣の仮想マシンから抜かれうる不具合の影響を受けます。</li>
+<li><strong>分譲マンションでは、住戸の錠の鍵を出すのは区分所有者。</strong> 法律上の持ち主と、鍵を出す実際の力を持つ業者がずれると、預かり型の危険が住戸にまで及びます。</li>
+</ul>
+<h2>このサイトの要求仕様</h2>
+<p>この形を避けるため、要求仕様に次を書いています(2026年10月18日に追加)。</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>番号</th>
+<th>要求</th>
+<th>対応する形</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-AC-09</td>
+<td>一つの発行者の鍵が届く扉は、その発行者が管理する扉に限る。業者が多くの顧客の発行を引き受けても、顧客ごとに別の鍵にする</td>
+<td>一か所に集まる</td>
+</tr>
+<tr>
+<td>R-AC-10</td>
+<td>業者と連携先に、扉を開ける常の権限を持たせない。遠隔の解錠は一回ごとに、発行者の一時の資格情報を錠が自分で確かめる。業者のサービスが止まっても、登録済みの資格情報で開く</td>
+<td>一か所に集まる、止める手段が大きい</td>
+</tr>
+<tr>
+<td>R-AC-11</td>
+<td>発行者の秘密鍵は取り出せない場所に置き、他人と同じ機械を共有する環境に置かない</td>
+<td>相乗り型</td>
+</tr>
+<tr>
+<td>R-AC-12</td>
+<td>錠と読取機が信頼する発行者の変更は、管理者の認証済みの操作だけで行い、記録に残す</td>
+<td>顧客の側で防げない</td>
+</tr>
+<tr>
+<td>R-AP-38、R-AP-39</td>
+<td>住戸の錠の発行者は区分所有者とし、管理会社と管理組合の発行者の鍵では住戸の錠を開けられない</td>
+<td>一か所に集まる</td>
+</tr>
+</tbody>
+</table>
+<p>扉のコントローラの側では、発行者が署名した資格情報を、扉が網も発行者のサーバーも使わずに自分で確かめる形を、<a href="/guide/open-specification/">扉コントローラ仕様書</a> の 5.2a に書きました。仕様を確かめる疑似の扉(digitaldoor-controller)で、この形の試験が通っています。</p>
+<h2>使う人ができること</h2>
+<ul>
+<li>業者に預けている鍵と権限を一覧にします。どの業者に、何への、どれだけの権限を渡しているかです。</li>
+<li>渡す権限を用途に要る分だけにし、期限を付けられる物は付けます。</li>
+<li>業者が止まったとき、止めたときにも使える手段を手元に残します。扉なら、錠に登録した暗証番号、カード、物理鍵です。</li>
+<li>預けた鍵を作り直す手順を、事前に決めておきます。</li>
+<li>秘密鍵を、他人と共有する機械に置きません。</li>
+</ul>
+<h2>出典</h2>
+<ul>
+<li><a href="https://www.huntress.com/blog/vendor-credential-enables-unauthorized-access">Huntress: ConnectWise (SkyKick) Vendor Credentials Abused in M365 Attacks(2026年10月16日公開、17日更新)</a></li>
+<li><a href="https://www.bleepingcomputer.com/news/security/hackers-breach-microsoft-365-tenants-via-connectwise-supply-chain-attack/">BleepingComputer: Hackers breach Microsoft 365 tenants via ConnectWise supply-chain attack(2026年10月17日)</a></li>
+<li><a href="https://x.com/opencode/status/2111519637049319818">OpenCode: X での公表(2026年10月17日)</a></li>
+<li><a href="https://officechai.com/ai/opencode-discloses-security-breach-says-attackers-may-have-accessed-users-openai-anthropic-and-google-api-keys/">OfficeChai: OpenCode Discloses Security Breach(2026年10月18日)</a></li>
+<li><a href="https://dev.to/gabrielanhaia/opencode-told-14-of-console-users-to-revoke-their-openai-and-anthropic-keys-561">DEV Community: OpenCode Told 1.4% of Console Users to Revoke Their OpenAI and Anthropic Keys(2026年10月17日)</a></li>
+<li><a href="https://cryptobriefing.com/opencode-distillation-attack-api-key-breach/">Crypto Briefing: OpenCode discloses distillation attack that hit 1.4% of Console users(2026年10月17日)</a></li>
+<li><a href="https://www.cve.org/CVERecord?id=CVE-2026-99999">CVE: CVE-2026-99999(2026年10月15日公開)</a></li>
+<li><a href="https://pwn.ai/blog/pwnescape">pwn.ai: PwnEscape: Guest-to-Host KVM Escape</a></li>
+<li><a href="https://almalinux.org/blog/2026-10-16-pwnescape-cve-2026-99999/">AlmaLinux: PwnEscape (CVE-2026-99999)(2026年10月16日)</a></li>
+<li><a href="https://therecord.media/commvault-clients-cloud-applications-cyberthreat-cisa-alert">The Record: Commvault clients should beware of campaign targeting cloud applications, CISA says(2025年5月23日)</a></li>
+<li><a href="https://securityaffairs.com/181632/hacking/unc6395-targets-salesloft-in-drift-oauth-token-theft-campaign.html">Security Affairs: UNC6395 targets Salesloft in Drift OAuth token theft campaign(2025年8月28日)</a></li>
+</ul>
+
+  </article>
+
+  <!-- CHAPTER NAV(前後の記事) -->
+  <nav class="chapter-nav">
+  <a href="/guide/japanese-smart-lock-apps/" rel="prev">&larr; 前: 日本のスマートロックのアプリの現状と課題</a>
+  <a href="/guide/people-and-keys-to-keep/" rel="next">次: 自分で持つべき人と物 &rarr;</a>
+</nav>
+
+  <!-- FOOTER(サイト内メニュー+奥付) -->
+  <footer class="site-footer">
+    <nav class="footer-nav" aria-label="サイト内リンク">
+      <div class="footer-col">
+        <h4>解説</h4>
+        <ul>
+          <li><a href="/guide/matter/">Matterとは何か</a></li>
+          <li><a href="/guide/aliro/">Aliroとは何か</a></li>
+          <li><a href="/guide/what-a-smart-door-needs/">スマートドアに求められる条件</a></li>
+          <li><a href="/guide/layers/">玄関まわりの技術の層</a></li>
+          <li><a href="/guide/open-specification/">仕様と参照実装の公開</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>サイト</h4>
+        <ul>
+          <li><a href="/">ホーム</a></li>
+          <li><a href="/guide/">解説の一覧</a></li>
+          <li><a href="/blog/">ブログ</a></li>
+          <li><a href="/#about">このサイトについて</a></li>
+          <li><a href="/license/">ライセンス</a></li>
+          <li><a href="/feed.xml">RSS</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="colophon">
+      <div class="colophon-mark">§</div>
+      解説 09<br>
+      Tokushima · 2026.10.18<br>
+      <a href="/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">デジタルドア</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">CC BY 4.0</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // 広い画面ではサイドバー目次を常時展開する(狭い画面では折りたたみに戻す)
+  (function () {
+    var toc = document.querySelector(".series-toc details");
+    if (!toc) return;
+    var mq = window.matchMedia("(min-width: 1200px)");
+    function sync() { toc.open = mq.matches; }
+    sync();
+    if (mq.addEventListener) mq.addEventListener("change", sync);
+    else mq.addListener(sync);
+  })();
+
+  // Mermaid loads only on pages that contain a .mermaid block.
+  // Self-hosted (no third-party CDN dependency); SRI verified.
+  if (document.querySelector(".mermaid")) {
+    const s = document.createElement("script");
+    s.src = "/js/vendor/mermaid-11.14.0.min.js";
+    s.integrity = "sha384-1CMXl090wj8Dd6YfnzSQUOgWbE6suWCaenYG7pox5AX7apTpY3PmJMeS2oPql4Gk";
+    s.crossOrigin = "anonymous";
+    s.onload = () => {
+      const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      mermaid.initialize({ startOnLoad: false, theme: prefersDark ? "dark" : "default" });
+      mermaid.run();
+    };
+    document.head.appendChild(s);
+  }
+</script>
+
+
+</body>
+</html>
