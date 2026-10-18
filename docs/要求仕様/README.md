@@ -14,6 +14,7 @@
 | [20_interior_business.md](20_interior_business.md) | 室内扉：業務用 | R-IN |
 | [21_interior_home.md](21_interior_home.md) | 室内扉：家庭用(骨子) | R-IH |
 | [30_fire_compartment.md](30_fire_compartment.md) | 防火区画の扉(骨子) | R-FD |
+| [90_installer_program.md](90_installer_program.md) | 施工と保守の人を育てる手順：据付、受入れ試験、点検、切り離し、復元、鍵の作り直しの手順、段階と権限、疑似の扉と実機の練習、年に一度の訓練、認め方（制度と会費は設けない） | R-IP |
 | [70_dev_server.md](70_dev_server.md) | 開発用ミニサーバー：実機なしで開発できる環境、公開 API、疑似デバイス、修正パッチの配布 | R-DV |
 | [../適合の現在.md](../適合の現在.md) | 要求の番号とテストの対応。`tools/taiou.py` が作る。番号の無い要求は未検証 | |
 | [AIで作り続ける原則.md](AIで作り続ける原則.md) | 少人数と AI で作り続ける原則、テストの確実性、パッチ運用、AI でも消えないもの | |

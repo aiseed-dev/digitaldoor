@@ -10,14 +10,12 @@ description: スマートドア、スマートロック、電気錠、扉のコ�
 ## まず手元に置く物
 
 ```bash
-git clone https://github.com/aiseed-dev/digitaldoor                # 仕様
-git clone https://github.com/aiseed-dev/digitaldoor-controller     # 疑似の扉と試験の道具
-cd digitaldoor-controller
+git clone https://github.com/aiseed-dev/digitaldoor
+cd digitaldoor
 python3 -m venv .venv
-.venv/bin/pip install -e ".[dev]"
-.venv/bin/python -m pytest -q          # 疑似の扉のテストが通ることを先に見る
-cd ../digitaldoor
-python3 tools/taiou.py --check         # 要求とテストの対応(docs/適合の現在.md)。隣の digitaldoor-controller のテストも数える
+.venv/bin/pip install -e "./controller[dev]"   # 疑似の扉と試験の道具(controller/、Apache-2.0)
+.venv/bin/python -m pytest -q controller       # 疑似の扉のテストが通ることを先に見る
+python3 tools/taiou.py --check                 # 要求とテストの対応(docs/適合の現在.md)
 ```
 
 リポジトリが取れない環境では、文書を GitHub で読み、要求の番号と試験の対だけを使って自分の言語で作ります。

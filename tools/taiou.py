@@ -7,9 +7,8 @@ docstrings or comments. This script lists, per document, which requirements
 have at least one test and which are still unverified, and writes the result
 to docs/適合の現在.md. Standard library only.
 
-Tests of implementations kept in other repositories are counted too: the
-sibling checkout ../digitaldoor-controller is picked up when present, and
---tests adds any other test directory.
+The door controller's tests (controller/tests) are counted with the rest;
+--tests adds any other test directory, e.g. another implementation's.
 
 Usage:
     python tools/taiou.py            # write docs/適合の現在.md and print a summary
@@ -28,8 +27,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SPEC_FILES = sorted(ROOT.glob("docs/要求仕様/*.md")) + [ROOT / "docs/扉コントローラ仕様書.md"]
-TEST_DIRS = [ROOT / "tests", *ROOT.glob("drivers/*/tests")]
-SIBLINGS = [ROOT.parent / "digitaldoor-controller" / "tests"]
+TEST_DIRS = [ROOT / "tests", ROOT / "controller" / "tests", *ROOT.glob("drivers/*/tests")]
 OUT = ROOT / "docs/適合の現在.md"
 
 ID_RE = re.compile(r"\bR-[A-Z]{2}-\d{2}\b")
@@ -63,9 +61,9 @@ def _shown(path: Path) -> str:
 
 
 def coverage(extra: list[Path] | None = None) -> dict[str, list[str]]:
-    """Return {ID: ["digitaldoor-controller/tests/test_controller.py::test_fire", ...]}."""
+    """Return {ID: ["controller/tests/test_controller.py::test_fire", ...]}."""
     cov: defaultdict[str, list[str]] = defaultdict(list)
-    dirs = TEST_DIRS + [d for d in SIBLINGS if d.is_dir()] + [d.resolve() for d in (extra or [])]
+    dirs = TEST_DIRS + [d.resolve() for d in (extra or [])]
     for d in dirs:
         for path in sorted(d.rglob("test_*.py")):
             func = None
@@ -85,8 +83,7 @@ def render(reqs: dict[str, list[str]], cov: dict[str, list[str]], today: str) ->
         "# 適合の現在 — 要求とテストの対応",
         "",
         f"`tools/taiou.py` が {today} に作った。要求仕様の ID(R-XX-nn)ごとに、"
-        "その ID を名指しするテストを並べる。扉のコントローラのテストは別のリポジトリ"
-        "(digitaldoor-controller)にあり、名前の先頭にその名を付ける。テストの無い要求は「未検証」で、"
+        "その ID を名指しするテストを並べる。テストの無い要求は「未検証」で、"
         "実機の受入れ試験で確かめる物と、まだ書いていない物の両方が入る。"
         "テストが通ることは、ここに並ぶ要求を満たすことの確かめであって、"
         "並んでいない要求については何も言わない。",

@@ -5,7 +5,7 @@ description: 扉と鍵の公開仕様(要求仕様、扉のコントローラー
 
 # digitaldoor を土台に、自分の AI でソフトウェアを作る
 
-digitaldoor は、扉と鍵の技術情報のサイト(https://door.aiseed.dev )と、扉の製造者に「何を満たすか」を伝える要求仕様、扉側のコントローラーの仕様を置く公開のリポジトリです。仕様を確かめる疑似の扉と試験の道具は、別のリポジトリ digitaldoor-controller(https://github.com/aiseed-dev/digitaldoor-controller )にあります。文章は CC BY 4.0、このリポジトリのコードは AGPL-3.0-or-later、digitaldoor-controller は Apache-2.0 です。
+digitaldoor は、扉と鍵の技術情報のサイト(https://door.aiseed.dev )と、扉の製造者に「何を満たすか」を伝える要求仕様、扉側のコントローラーの仕様を置く公開のリポジトリです。仕様を確かめる疑似の扉と試験の道具は、同じリポジトリの `controller/`(パッケージ digitaldoor-controller)にあります。文章は CC BY 4.0、このリポジトリのコードは AGPL-3.0-or-later、`controller/` は Apache-2.0 です。
 
 この手引きは、AI に読ませる物です。会社の人が、ふだん使っている AI にこのファイルを読ませ、自社の範囲を伝えると、AI がこのリポジトリの文書を読みながら、仕様、テスト、実装の順に一緒に作ります。何を作るか、どの要求を満たすかを決めるのは、その仕事を知っている会社の人です。
 
@@ -27,14 +27,14 @@ AI のスキルとして入れて使う場合は、`skills/smart-door-dev/` を�
 2. **仕様を先に読む。** AI に、該当する文書の要求 ID を一覧にさせ、一つずつ「何のための要求か、満たさないと何が起きるか」を言わせます。分からない要求は、推測で実装せず、Issue で聞きます
 3. **テストを仕様から書く。** 実装を見てテストを書かせません。テストの入力と期待値は要求 ID から決め、テストの docstring の先頭にその ID を書きます(例は `tests/door/test_controller.py`)。`python3 tools/taiou.py --check` が、要求とテストの対応を `docs/適合の現在.md` に書き出し、対応の無い要求を未検証として並べます
 4. **実装は、テストと別のセッションで作らせる。** 同じ AI のセッションで実装とテストを一度に作らせません。仕様、テスト(先に固定)、実装の順です。故意にコードを壊してテストが落ちることも確かめます(`docs/要求仕様/AIで作り続ける原則.md` 3.1)
-5. **疑似の機器で全部通す。** 接点は別リポジトリ digitaldoor-controller(https://github.com/aiseed-dev/digitaldoor-controller )の `digitaldoor_controller/contacts.py` の `SimContacts`、後付け錠は `drivers/digitalkey-sesame` の `--fake` で、実機なしに回せます。実機は受入れ試験だけに使います
+5. **疑似の機器で全部通す。** 接点は `controller/digitaldoor_controller/contacts.py` の `SimContacts`、後付け錠は `drivers/digitalkey-sesame` の `--fake` で、実機なしに回せます。実機は受入れ試験だけに使います
 6. **実機の受入れ試験は、同じ要求 ID の下に結果を並べる。** 疑似で通らない物(電波、タップ、再接続、耐久)は、製造者の試験で確かめ、`docs/適合の現在.md` と同じ形で成績を出します
 7. **足りない物は、この仕様に戻す。** 要求の抜け、矛盾、満たせない物、別の方法は、Issue のひな形「製造者からの質問・制約・代わりの案」(https://github.com/aiseed-dev/digitaldoor/issues/new/choose )に、要求の番号と内容と確かめた日を書いて報告します。番号は変えず、追加は理由と試験の手順と日付を添えます。使う人の困りごとがどう要求になり、製造者の答えがどう残るかは `docs/つなぐ.md` にあります
 
 ## いま、何があるか
 
-- 要求仕様 10 の文書、要求 ID 309(2026-10-18)。テストに結び付いているのは 24 で(扉のコントローラーのテストは digitaldoor-controller にあります)、残りは未検証です(`docs/適合の現在.md`)
-- 扉のコントローラーの疑似の扉と試験の道具(別リポジトリ digitaldoor-controller、Apache-2.0。判断、監査の記録、HTTP の口)と、Matter の錠として見せるブリッジ(`digitalkey/panel/`、CircuitMatter)。テストは接点を模擬にして回ります
+- 要求仕様 11 の文書、要求 ID 321(2026-10-18)。テストに結び付いているのは 24 で、残りは未検証です(`docs/適合の現在.md`)
+- 扉のコントローラーの疑似の扉と試験の道具(`controller/`、Apache-2.0。判断、監査の記録、HTTP の口)と、Matter の錠として見せるブリッジ(`digitalkey/panel/`、CircuitMatter)。テストは接点を模擬にして回ります
 - 受け入れの参照実装(`digitalkey/entrance/`。様式は adoc、伝票は追記だけ、前ハッシュで連鎖)、事業所サーバー(`digitalkey/site/`)、スマートフォンのアプリ(`digitalkey/mobile/`、Flet)
 - 後付け錠のドライバーの例(`drivers/digitalkey-sesame/`。BLE 直結と Web API、疑似の機器つき)
 
@@ -48,5 +48,5 @@ AI のスキルとして入れて使う場合は、`skills/smart-door-dev/` を�
 ## ライセンスと、作った物の扱い
 
 - 文書(仕様)は CC BY 4.0 です。仕様を読んで自社で実装したコードは、自社の物です。出所として https://door.aiseed.dev を示してください
-- 扉のコントローラの疑似の扉と試験の道具(digitaldoor-controller)は Apache-2.0 で、写して製品に組み込み、閉じたまま配ることもできます。このリポジトリの `digitalkey/`(受け入れ、事業所サーバー、Matter の橋、アプリ)は AGPL-3.0-or-later で、写して配る、または網の向こうから使わせる場合は、同じライセンスで公開する義務があります。読んで自分で書き直した物には、この義務は及びません
+- 扉のコントローラの疑似の扉と試験の道具(`controller/`)は Apache-2.0 で、写して製品に組み込み、閉じたまま配ることもできます。このリポジトリの `digitalkey/`(受け入れ、事業所サーバー、Matter の橋、アプリ)は AGPL-3.0-or-later で、写して配る、または網の向こうから使わせる場合は、同じライセンスで公開する義務があります。読んで自分で書き直した物には、この義務は及びません
 - 仕様に「適合した」と言うには、公開されたテストを自分で実行して通すだけでよく、認証の制度、会費、商標はありません(解説記事「扉のコントローラの仕様と参照実装を公開する」)

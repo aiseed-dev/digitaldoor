@@ -19,11 +19,11 @@
 
 ## ソフトウェア(digitalkey/)
 
-- テストは `.venv/bin/python -m pytest -q`(entrance・door・panel・site・mobile)と `pytest -q drivers/digitalkey-sesame`(Sesame ドライバ)。commit は全テストが通ってから、別コマンドで行う
+- テストは `.venv/bin/python -m pytest -q`(entrance・panel・site・mobile)と `pytest -q controller`(扉のコントローラ)と `pytest -q drivers/digitalkey-sesame`(Sesame ドライバ)。commit は全テストが通ってから、別コマンドで行う
 - 設計判断は docs/使い方.md の「設計方針」(entrance)と docs/扉コントローラ仕様書.md(door)に書く。実装を変えるときは文書を先に直す
 - 様式(digitalkey/entrance/forms_data/*.adoc)が正。コードに項目名を書くときは様式の名前をそのまま使う
 - 伝票と監査の記録は追記だけで扱う。訂正は新しい伝票・新しい記録として書く。テストもその前提で書く
-- 扉のコントローラは別リポジトリ `../digitaldoor-controller`(Apache-2.0、パッケージ `digitaldoor_controller`)。仕様はこのリポジトリが正で、実装を変えるときは仕様書を先に直す。こちらの `digitalkey/site` は pip で入れて使う。`tools/taiou.py` は隣にあればそのテストも数える
+- 扉のコントローラは `controller/`(別パッケージ `digitaldoor_controller`、Apache-2.0。`controller/LICENSE`)。仕様は docs/ が正で、実装を変えるときは仕様書を先に直す。`digitalkey/site` は pip で入れて使う。テストは `.venv/bin/python -m pytest -q controller`。AGPL のコードを `controller/` に写さない
 - 判断は扉のコントローラが持つ。panel(Matter のブリッジと画面)は翻訳と表示を担当する
 - 錠の銘柄は接点の層(door)か錠ドライバ(digitalkey.locks の登録簿。機器ごとのドライバは drivers/ の別パッケージで、entry point で登録する)の中に閉じる
 - 署名の口(Signer)は後で STSAFE に差し替える

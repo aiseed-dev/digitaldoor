@@ -1,6 +1,6 @@
 # 疑似の扉の口と疑似の機器
 
-扉のコントローラの疑似の扉と試験の道具は、別のリポジトリ digitaldoor-controller(パッケージ `digitaldoor_controller`)にあり、Python で読める大きさにしてあります。Apache-2.0 なので、写して製品に使うこともできます。錠のドライバの登録簿、Matter の橋、事業所サーバーは digitaldoor のリポジトリの `digitalkey/` にあり、こちらは AGPL-3.0-or-later です。ここでは、自社の実装が合わせるべき口の形をまとめます。正は仕様書で、ここは要約です。
+扉のコントローラの疑似の扉と試験の道具は、digitaldoor のリポジトリの `controller/`(パッケージ `digitaldoor_controller`)にあり、Python で読める大きさにしてあります。Apache-2.0 なので、写して製品に使うこともできます。錠のドライバの登録簿、Matter の橋、事業所サーバーは digitaldoor のリポジトリの `digitalkey/` にあり、こちらは AGPL-3.0-or-later です。ここでは、自社の実装が合わせるべき口の形をまとめます。正は仕様書で、ここは要約です。
 
 ## 目次
 1. 接点(錠と扉と建物)

@@ -47,12 +47,12 @@ autolock = 5.0              # 解錠から自動施錠までの秒
 [[token]]
 name = "管理者"
 role = "管理者"
-token = "1HxkQem3HFF4f1iqxJJKRYQVcqLWbRUI"
+token = "4uqJ1vhHXi49mrYclIzvHev2g54fPNtA"
 
 [[token]]
 name = "受付"
 role = "受付"
-token = "oNRCkdEZGHkIPZqHbHKcxnHHo-zVYRzo"
+token = "gGafCDKjjjsnOZy_nYliiqmID1wVE7K1"
 ```
 
 ### 役割
@@ -168,6 +168,7 @@ usage: digitaldoor-controller [-h] [--dir DIR] [--name NAME] [--host HOST]
                               [--port PORT] [--two-person TWO_PERSON]
                               [--autolock AUTOLOCK]
                               [--power-policy {release,hold}]
+                              [--admin-key HEX] [--trust FILE]
                               {serve,verify,pubkey,export,check-box} ...
 
 扉側のコントローラ(中核)
@@ -189,6 +190,9 @@ options:
   --two-person TWO_PERSON
   --autolock AUTOLOCK
   --power-policy {release,hold}
+  --admin-key HEX       管理者の公開鍵(16 進)。据付のときに入れる。この鍵で署名した要求だけが信頼の一覧を変えられる
+  --trust FILE          信頼する発行者の一覧(JSON。{発行者の識別: {"public_key": 16 進, "doors":
+                        [扉の名前, ...]}})。管理者の変更が記録にあるときは、記録の一覧を使う
 
 記録の署名は Ed25519 で、鍵は置き場の audit.ed25519 です(前からの置き場で audit.key がある物は HMAC
 のまま)。伝票は一件ずつ <扉>-<連番>.json として箱へ出し、受け手は pubkey で写した公開鍵だけで check-box で検べます。
@@ -232,6 +236,9 @@ options:
 - 時刻: 同期のたびに前と新しい時刻を残す。同期済みから time_jump_s を超えて動いたら「異常/時刻のずれ」
 - 設定: configure で変える。項目ごとに「設定/(項目名)」に前と新しい値を残す。無い項目と許されない値は全体を拒む
 - 手動リリース・改ざん: 記録だけ
+- 署名つき資格情報: present で、信頼する発行者の署名と範囲と期限を扉が確かめ、通れば上の判断(火災、二人同時、自動施錠)に渡す。
+  一回限りの使用済みの一覧は、起動のときに記録(資格情報/使用)から作り直す(仕様書 5.2a)
+- 信頼の一覧: change_trust で、据付のときに入れた管理者の鍵で署名した変更の要求だけを受ける。受けた変更は記録から読み戻す
 
 ## 台帳の様式
 
