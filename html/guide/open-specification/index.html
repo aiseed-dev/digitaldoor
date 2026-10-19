@@ -8,7 +8,7 @@
 
 
 <title>扉のコントローラの仕様と試験の道具を公開する — 解説 | デジタルドア</title>
-<meta name="description" content="扉側コントローラの仕様と、仕様を確かめるための疑似の扉(Python、Apache-2.0)を公開します。仕様は「何を満たすか」だけを番号付きで書き、認証制度や会費は設けません。ローカルで動作すること、認証と監査を含むAPI、認証を一社に集中させないことを中核に据えます。扉メーカーからは料金を取らず、鍵の発行と業務システムとの連携で事業を成り立たせます。">
+<meta name="description" content="扉側コントローラの仕様と、仕様を確かめるための疑似の扉(Python、Apache-2.0)を公開します。仕様は「何を満たすか」だけを番号付きで書き、認証制度や会費は設けません。ローカルで動作すること、認証と監査を含むAPI、認証を一社に集中させないことを中核に据えます。料金は取りません。">
 <link rel="canonical" href="https://door.aiseed.dev/guide/open-specification/">
 <link rel="alternate" hreflang="ja" href="https://door.aiseed.dev/guide/open-specification/">
 
@@ -17,14 +17,14 @@
 <meta property="og:site_name" content="デジタルドア">
 <meta property="og:locale" content="ja_JP">
 <meta property="og:title" content="扉のコントローラの仕様と試験の道具を公開する">
-<meta property="og:description" content="扉側コントローラの仕様と、仕様を確かめるための疑似の扉(Python、Apache-2.0)を公開します。仕様は「何を満たすか」だけを番号付きで書き、認証制度や会費は設けません。ローカルで動作すること、認証と監査を含むAPI、認証を一社に集中させないことを中核に据えます。扉メーカーからは料金を取らず、鍵の発行と業務システムとの連携で事業を成り立たせます。">
+<meta property="og:description" content="扉側コントローラの仕様と、仕様を確かめるための疑似の扉(Python、Apache-2.0)を公開します。仕様は「何を満たすか」だけを番号付きで書き、認証制度や会費は設けません。ローカルで動作すること、認証と監査を含むAPI、認証を一社に集中させないことを中核に据えます。料金は取りません。">
 <meta property="og:url" content="https://door.aiseed.dev/guide/open-specification/">
 <meta property="og:image" content="https://door.aiseed.dev/images/og-default.jpg">
 <meta property="article:section" content="解説">
 <meta property="article:published_time" content="2026.09.17">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="扉のコントローラの仕様と試験の道具を公開する">
-<meta name="twitter:description" content="扉側コントローラの仕様と、仕様を確かめるための疑似の扉(Python、Apache-2.0)を公開します。仕様は「何を満たすか」だけを番号付きで書き、認証制度や会費は設けません。ローカルで動作すること、認証と監査を含むAPI、認証を一社に集中させないことを中核に据えます。扉メーカーからは料金を取らず、鍵の発行と業務システムとの連携で事業を成り立たせます。">
+<meta name="twitter:description" content="扉側コントローラの仕様と、仕様を確かめるための疑似の扉(Python、Apache-2.0)を公開します。仕様は「何を満たすか」だけを番号付きで書き、認証制度や会費は設けません。ローカルで動作すること、認証と監査を含むAPI、認証を一社に集中させないことを中核に据えます。料金は取りません。">
 <meta name="twitter:image" content="https://door.aiseed.dev/images/og-default.jpg">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="alternate" type="application/rss+xml" title="デジタルドア" href="/feed.xml">
@@ -840,7 +840,7 @@ article img {
 <h2>どのような性格の物か</h2>
 <p>Matterと同じ位置づけで、Matterが対象としていない業務用の扉を対象にします。現在の業務用の入退室管理システムは高価で、ソフトウェアの使い勝手も良くありません。発注するのは総務や設備部門で、使うのは現場であり、仕様は制御盤メーカーの独自形式で、修正のたびに見積もりが必要だからです。公開仕様と動作する参照実装があれば、価格は下がり、ソフトウェアは直せる物になります。</p>
 <p>認証制度ではなく、実用のための仕様です。認証の仕組み、会費、商標は設けません。満たしているかどうかは、公開されたテストを自分で実行すれば分かります。プログラミング言語のPythonが広まったのと同じ形で、無料で、読める形で、動く物とともに置き、使う人が追加していく方式です。</p>
-<p>責任を負う文書ではありません。利用者の要望を整理して扉メーカーに伝える要望書です。責任は、扉に組み込んで認定を取る扉メーカー、鍵を発行する事業者、その建物を運営する管理者が持ちます。したがって、扉メーカーからは料金を取りません。aiseedの収益は、鍵の発行と業務システムとの連携から得ます。</p>
+<p>責任を負う文書ではありません。利用者の要望を整理して扉メーカーに伝える要望書です。責任は、扉に組み込んで認定を取る扉メーカー、鍵を発行する事業者、その建物を運営する管理者が持ちます。仕様、テスト、参照実装は無料で公開し、扉メーカーからも利用者からも料金を取りません。aiseedは収益を得る団体ではありません。</p>
 <p>仕様は「何を満たすか」だけを書き、今後も追加していきます。追加するときは、要求ごとに理由、テスト手順、日付を添えます。既存の番号は変えません。仕様を満たす側は、どの番号を満たすかを申告します。「どう作るか」は書かないため、扉メーカーは仕様の中で自由に工夫できます。</p>
 <h2>仕様の中核</h2>
 <p><strong>セキュリティを含めて自由に使えるAPI。</strong> 業務システムから、プラットフォーム企業のアカウントを経由せずに扉へ直接アクセスできること。呼び出し側は認証され、権限で区切られること。扉で起きたことはすべて署名付きで記録され、改ざんを検出できること。火災や停電時の動作は扉が持ち、外部からの呼び出しで上書きできないこと。</p>
