@@ -4,7 +4,23 @@
 <link>https://door.aiseed.dev/</link>
 <description>扉と鍵の話を、層に分けて書く</description>
 <language>ja</language>
-<lastBuildDate>Sun, 18 Oct 2026 13:41:20 +0900</lastBuildDate>
+<lastBuildDate>Tue, 20 Oct 2026 06:50:39 +0900</lastBuildDate>
+<item>
+<title>サイバー攻撃に耐える扉</title>
+<link>https://door.aiseed.dev/guide/resist-attacks/</link>
+<guid>https://door.aiseed.dev/guide/resist-attacks/</guid>
+<category>解説</category>
+<pubDate>Tue, 20 Oct 2026 00:00:00 +0900</pubDate>
+<description>扉は、攻撃されると「開いてはいけないのに開く」と「開くべきなのに開かない」の両方が起こりえる機械です。デジタルドアは、サイバー攻撃に耐えられることが前提です。入られる前提で、入る口を減らし、中で動く物が本物かを確かめ、入られたら気づいて機械の外に知らせ、切り離して戻す、という重ね方を説明し、要求仕様に足した R-EL-25〜28 と R-RS-11〜15 を紹介します。</description>
+</item>
+<item>
+<title>扉のコントローラを Rust で書く</title>
+<link>https://door.aiseed.dev/guide/controller-in-rust/</link>
+<guid>https://door.aiseed.dev/guide/controller-in-rust/</guid>
+<category>解説</category>
+<pubDate>Mon, 19 Oct 2026 00:00:00 +0900</pubDate>
+<description>扉のコントローラは、火災や停電のときに扉を開けるか閉めるかを決め、署名つきの記録を残します。仕様を確かめる参照実装は Python ですが、製品として長く現場で動かす実装には Rust が向いています。理由、製造者が選ぶ所(マイコンか Linux の基板か、安全側のマイコンとの分け方)、核と入出力の分け方、テストを残したまま実装を移す手順を解説します。</description>
+</item>
 <item>
 <title>スマートドアとスマートロックを作る人が集まる場所</title>
 <link>https://door.aiseed.dev/guide/where-developers-meet/</link>
