@@ -8,7 +8,7 @@
 
 
 <title>デジタルキーは管理者が自分で持つ — 解説 | デジタルドア</title>
-<meta name="description" content="扉と錠は一度作れば変わりませんが、鍵は毎日発行され、失効されます。デジタルドアの一番の課題は、デジタルキーをどう管理するかです。鍵の管理は受託では重すぎ、受託の窓口は攻撃の入口にもなります。それぞれの管理者が責任を持ち、企業では情報システム部門が持ち、道具と手順で自分で行う形を説明し、要求仕様に足した R-AC-14〜19 と R-EB-33〜37 を紹介します。">
+<meta name="description" content="扉と錠は一度作れば変わりませんが、鍵は毎日発行され、失効されます。デジタルドアの一番の課題は、デジタルキーをどう管理するかです。鍵の管理は受託では重すぎ、受託の窓口は攻撃の入口にもなります。それぞれの管理者が責任を持ち、企業では情報システム部門が持ち、道具と手順で自分で行う形を説明し、要求仕様に足した R-AC-14〜22、R-EB-33〜37、R-RS-16〜18 を紹介します。">
 <link rel="canonical" href="https://door.aiseed.dev/guide/keys-belong-to-managers/">
 <link rel="alternate" hreflang="ja" href="https://door.aiseed.dev/guide/keys-belong-to-managers/">
 
@@ -17,14 +17,14 @@
 <meta property="og:site_name" content="デジタルドア">
 <meta property="og:locale" content="ja_JP">
 <meta property="og:title" content="デジタルキーは管理者が自分で持つ">
-<meta property="og:description" content="扉と錠は一度作れば変わりませんが、鍵は毎日発行され、失効されます。デジタルドアの一番の課題は、デジタルキーをどう管理するかです。鍵の管理は受託では重すぎ、受託の窓口は攻撃の入口にもなります。それぞれの管理者が責任を持ち、企業では情報システム部門が持ち、道具と手順で自分で行う形を説明し、要求仕様に足した R-AC-14〜19 と R-EB-33〜37 を紹介します。">
+<meta property="og:description" content="扉と錠は一度作れば変わりませんが、鍵は毎日発行され、失効されます。デジタルドアの一番の課題は、デジタルキーをどう管理するかです。鍵の管理は受託では重すぎ、受託の窓口は攻撃の入口にもなります。それぞれの管理者が責任を持ち、企業では情報システム部門が持ち、道具と手順で自分で行う形を説明し、要求仕様に足した R-AC-14〜22、R-EB-33〜37、R-RS-16〜18 を紹介します。">
 <meta property="og:url" content="https://door.aiseed.dev/guide/keys-belong-to-managers/">
 <meta property="og:image" content="https://door.aiseed.dev/images/og-default.jpg">
 <meta property="article:section" content="解説">
 <meta property="article:published_time" content="2026.10.20">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="デジタルキーは管理者が自分で持つ">
-<meta name="twitter:description" content="扉と錠は一度作れば変わりませんが、鍵は毎日発行され、失効されます。デジタルドアの一番の課題は、デジタルキーをどう管理するかです。鍵の管理は受託では重すぎ、受託の窓口は攻撃の入口にもなります。それぞれの管理者が責任を持ち、企業では情報システム部門が持ち、道具と手順で自分で行う形を説明し、要求仕様に足した R-AC-14〜19 と R-EB-33〜37 を紹介します。">
+<meta name="twitter:description" content="扉と錠は一度作れば変わりませんが、鍵は毎日発行され、失効されます。デジタルドアの一番の課題は、デジタルキーをどう管理するかです。鍵の管理は受託では重すぎ、受託の窓口は攻撃の入口にもなります。それぞれの管理者が責任を持ち、企業では情報システム部門が持ち、道具と手順で自分で行う形を説明し、要求仕様に足した R-AC-14〜22、R-EB-33〜37、R-RS-16〜18 を紹介します。">
 <meta name="twitter:image" content="https://door.aiseed.dev/images/og-default.jpg">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="alternate" type="application/rss+xml" title="デジタルドア" href="/feed.xml">
@@ -994,12 +994,73 @@ article img {
 <p>扉が信頼する発行者を変えられるのは、管理者の鍵だけです(R-AC-12)。管理者の鍵をなくしたら、扉の前で、物理の操作(登録モード)と本人の確かめによって、一覧を作り直します。この操作は遠隔ではできず、記録に残ります(R-AC-17)。</p>
 <p>一番上の鍵の戻し方を、扉の前に立つことに結びつけておけば、遠くの攻撃者は同じことができません。現場にいる人が最後の拠り所になります(<a href="/guide/on-site/">人に残るのは現場</a>)。</p>
 <h2>スマートフォンの財布の鍵</h2>
-<p>Apple と Google の財布に入る鍵(Aliro)は、便利な経路です。ただし、発行と失効がその会社の仕組みを通ります。財布の鍵も発行者の一つとして扱い、発行と失効を管理者の台帳から行い、台帳に記録します。財布の会社のサービスが止まっても、カード、暗証番号、機械の鍵で開けられるようにしておきます(R-AC-18)。</p>
+<p>スマートフォンをかざすだけで開くには、アプリを開かなくても OS がその場で鍵を差し出せる必要があります。つまり、財布に組み込まれたデジタルキー(Aliro)が要ります。自分のアプリを開いてから使う形なら今でも組めますが、毎回アプリを開くのは不便です。</p>
+<p>かざすだけの鍵には、財布の会社への載せ方が要ります。一軒一軒の持ち主がそれを結ぶのは無理なので、載せ方を業者や管理会社に任せる形になりがちです。そのとき業者が発行者の鍵まで持てば、表面化している委託の問題(業者の資格情報が奪われる、窓口への成りすまし、一つの業者に鍵が集まる)に戻ります。</p>
+<h3>Aliro は、決める者と運ぶ者を分けられる</h3>
+<p>Aliro 1.0 の仕様(2026年2月18日版)を読むと、次のことが分かります。</p>
+<ul>
+<li>扉の側で開けるかを決める者(Access Manager)、鍵に署名する者(Credential Issuer)、読取機の証明書を出す者(Reader System Issuer)は、別の役として定められています。同じ者か別の者かは、仕様の外です(6.1)。</li>
+<li>鍵の中身(Access Document)は発行者の秘密鍵で署名し、読取機はその発行者の公開鍵か、その CA の証明書を知っている必要があります(6.5)。</li>
+<li>財布の中の鍵は端末ごとに一つの鍵の対を持ち、署名された中身にその公開鍵が入ります。写しを送り直しても開きません(6.4)。</li>
+<li>端末と読取機への載せ方と、その後の管理は、仕様の外です(6.2)。</li>
+<li>網につながらない読取機には、端末が発行者の署名つきの失効の一覧(Revocation Document)を運べます(6.6、7.6)。</li>
+</ul>
+<p>つまり、発行者の鍵を管理者が持ち、財布への載せ方だけを業者に任せる形は、Aliro の仕組みの上で取れます。ただし、載せ方は仕様の外なので、仕様だけでは保証されません。</p>
+<h3>分け方を要求にする</h3>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>役</th>
+<th>誰が</th>
+<th>持つ物</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>決める</td>
+</tr>
+<tr>
+<td>管理者</td>
+</tr>
+<tr>
+<td>発行者の鍵と台帳。誰に、どの扉を、いつまで</td>
+</tr>
+<tr>
+<td>運ぶ</td>
+</tr>
+<tr>
+<td>財布への載せ方を担う業者、財布の会社</td>
+</tr>
+<tr>
+<td>管理者が署名した資格情報を、財布まで届ける仕組みだけ</td>
+</tr>
+<tr>
+<td>判定する</td>
+</tr>
+<tr>
+<td>扉</td>
+</tr>
+<tr>
+<td>管理者の署名を確かめる。業者の鍵は信じない</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>財布への載せ方を担う業者は、発行者の秘密鍵を持ちません。資格情報は管理者が自分の機械か鍵を取り出せない所で署名し、業者は運ぶだけです。扉が信じる発行者の鍵は、管理者の鍵の操作でだけ入れ替えます(R-AC-20)。業者が破られても、管理者の署名の無い資格情報は扉が拒みます。</li>
+<li>資格情報は持ち主の端末の鍵に結び、扉は毎回違う問いかけへの署名を確かめます(R-AC-21)。</li>
+<li>網の届かない扉は、利用者の端末が運んできた失効の一覧を受けて使えるようにします(R-AC-22)。失効が有効期限でしか効かない問題(R-AC-14)を縮められます。</li>
+<li>財布の鍵も発行者の一つとして台帳から発行と失効を行い、財布の会社の仕組みが止まっても、カード、暗証番号、機械の鍵で開けられるようにしておきます(R-AC-18)。</li>
+</ul>
+<p>財布の会社の載せ方の仕組み(Aliro の載せ方の手引きは会員の場で公開待ち)が、この分け方を許すかどうかは、これから確かめます。許さないなら、それは CSA と財布の会社への要望になります。</p>
 <h2>管理者が自分でやれる道具</h2>
 <p>道具は、管理者が自分の機械で動かせる形で渡します。発行者の鍵と台帳を、道具を作った業者のクラウドに置く必要はありません(R-AC-19)。網が止まっても、建物の中で発行と失効ができます。</p>
 <p>このリポジトリの受け入れの参照実装(<a href="https://github.com/aiseed-dev/digitaldoor/tree/main/digitalkey/entrance">digitalkey/entrance</a>)は、民泊や貸家の管理者が、自分の機械で、本人の確かめ、鍵の発行と失効、台帳を扱うための物です。</p>
+<h2>デジタルドアを売るとは</h2>
+<p>ここまでをまとめると、デジタルドアを売るとは、扉という物を渡すことではなく、買った側が鍵を管理し続けられる状態を渡すことです。売る側が鍵を管理すれば委託に戻るので、売る側の仕事は、買った側の管理者を育てることになります。</p>
+<p>人に教えられるのは、自分でやったことだけです。売る物と同じ扉と鍵の管理を自社の建物で運用していない売り手は、売り先の管理者を育てられません。だから、自社でできないうちは売りません(R-RS-16〜18)。引き渡しの受入れ試験には、売り先の管理者が自分で鍵を発行し、止め、紛失に手当てし、管理者の鍵をなくしたときに戻せることを含めます。</p>
+<p>急ぐ理由もありません。サイバー攻撃への対策として、各社が自分で鍵とルートを持つ体制を作れば、それがそのままデジタルドアを入れる下地になります(<a href="/guide/doors-and-cyber-defense/">デジタルドアはサイバー攻撃対策そのもの</a>)。</p>
 <h2>このサイトの要求仕様</h2>
-<p>共通コアの 7.4 と、事業所の玄関のプロファイルの 2.5 に、次の要求を足しました(2026年10月20日)。理由と確かめ方は、要求仕様の <a href="https://github.com/aiseed-dev/digitaldoor/blob/main/docs/要求仕様/00_core.md">00_core.md</a> の 7.6 と、<a href="https://github.com/aiseed-dev/digitaldoor/blob/main/docs/要求仕様/12_entrance_business.md">12_entrance_business.md</a> の 2.5 にあります。</p>
+<p>共通コアの 7.4 と 8.3、事業所の玄関のプロファイルの 2.5 に、次の要求を足しました(2026年10月20日)。理由と確かめ方は、要求仕様の <a href="https://github.com/aiseed-dev/digitaldoor/blob/main/docs/要求仕様/00_core.md">00_core.md</a> の 7.6、7.7 と、<a href="https://github.com/aiseed-dev/digitaldoor/blob/main/docs/要求仕様/12_entrance_business.md">12_entrance_business.md</a> の 2.5 にあります。</p>
 <table class="comparison-table fade-in">
 <thead>
 <tr>
@@ -1040,6 +1101,36 @@ article img {
 <td>製造者</td>
 </tr>
 <tr>
+<td>R-AC-20</td>
+<td>財布への載せ方を担う業者は発行者の秘密鍵を持たず、管理者が署名した資格情報を運ぶだけ</td>
+<td>製造者と運営者</td>
+</tr>
+<tr>
+<td>R-AC-21</td>
+<td>資格情報を持ち主の端末の鍵に結び、写しの送り直しでは開かない</td>
+<td>製造者</td>
+</tr>
+<tr>
+<td>R-AC-22</td>
+<td>網の届かない扉は、端末が運ぶ署名つきの失効の一覧を受けて使える</td>
+<td>製造者</td>
+</tr>
+<tr>
+<td>R-RS-16</td>
+<td>売る物と同じ扉と鍵の管理を自社で運用している。無いうちは売らない</td>
+<td>製造者と売り手</td>
+</tr>
+<tr>
+<td>R-RS-17</td>
+<td>売り先の管理者を育てる人を社内に持つ</td>
+<td>製造者と売り手</td>
+</tr>
+<tr>
+<td>R-RS-18</td>
+<td>引き渡しの受入れ試験で、売り先の管理者が自分で発行、失効、紛失の手当て、戻しを行えることを確かめる</td>
+<td>製造者と売り手</td>
+</tr>
+<tr>
 <td>R-EB-33</td>
 <td>事業所の鍵の発行者は情報システム部門とする</td>
 <td>運営者</td>
@@ -1070,6 +1161,7 @@ article img {
 <ul>
 <li><a href="https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-320a">CISA、FBI: Scattered Spider(AA23-320A、2023年11月16日)</a></li>
 <li><a href="https://csa-iot.org/newsroom/introducing-aliro-1-0-a-unified-standard-to-transform-the-access-control-ecosystem/">Connectivity Standards Alliance: Introducing Aliro 1.0(2026年2月26日)</a></li>
+<li><a href="https://csa-iot.org/wp-content/uploads/2026/02/26-42802-001_Aliro_1.0_specification.pdf">Connectivity Standards Alliance: Aliro Specification v1.0(文書 26-42802-001、2026年2月18日)</a></li>
 </ul>
 
   </article>
@@ -1077,7 +1169,7 @@ article img {
   <!-- CHAPTER NAV(前後の記事) -->
   <nav class="chapter-nav">
   <a href="/guide/resist-attacks/" rel="prev">&larr; 前: サイバー攻撃に耐える扉</a>
-  <a href="/guide/">目次 &rarr;</a>
+  <a href="/guide/doors-and-cyber-defense/" rel="next">次: デジタルドアはサイバー攻撃対策そのもの &rarr;</a>
 </nav>
 
   <!-- FOOTER(サイト内メニュー+奥付) -->
