@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>デジタルドア</title>
-    <meta name="description" content="電子錠、ドアホン、扉のコントローラ、鍵の発行、通信規格(Aliro、Matter)など、扉と鍵に関する技術情報を解説するサイトです。">
+    <meta name="description" content="スマートドアの仕組みと課題を、鍵の発行、扉のコントローラ、電子錠の層に分けて説明し、要求仕様、試験の道具、解説を無料で公開しています。">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'">
     <link rel="canonical" href="https://door.aiseed.dev/">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="デジタルドア">
     <meta property="og:locale" content="ja_JP">
     <meta property="og:title" content="デジタルドア">
-    <meta property="og:description" content="電子錠、ドアホン、扉のコントローラ、鍵の発行、通信規格(Aliro、Matter)など、扉と鍵に関する技術情報を解説するサイトです。">
+    <meta property="og:description" content="スマートドアの仕組みと課題を、鍵の発行、扉のコントローラ、電子錠の層に分けて説明し、要求仕様、試験の道具、解説を無料で公開しています。">
     <meta property="og:url" content="https://door.aiseed.dev/">
     <meta property="og:image" content="https://door.aiseed.dev/images/og-default.jpg">
     <meta name="twitter:card" content="summary_large_image">
@@ -20,6 +20,85 @@
     <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
     <link rel="alternate" type="application/rss+xml" title="デジタルドア" href="/feed.xml">
     <link rel="stylesheet" href="/css/style.css?v=3f72e750">
+    <style>
+        .hero h1 { line-height: 1.35; }
+        .hero .lead { color: var(--ink); margin-top: 0.8rem; }
+        .entry-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .entry { background: var(--paper-deep); border: 1px solid var(--rule); border-radius: 4px; padding: 1.1rem 1.2rem; }
+        .entry h3 { margin: 0 0 0.4rem; font-size: 1.05rem; }
+        .entry p { margin: 0 0 0.6rem; color: var(--whisper); font-size: 0.92rem; line-height: 1.75; }
+        .entry ul { margin: 0; padding-left: 1.1em; font-size: 0.92rem; line-height: 1.9; }
+        .published { list-style: none; padding: 0; margin: 1rem 0 0; }
+        .published li { padding: 0.75rem 0; border-bottom: 1px solid var(--rule); }
+        .published li:first-child { border-top: 1px solid var(--rule); }
+        .published a { font-weight: 700; }
+        .published span { display: block; color: var(--whisper); font-size: 0.92rem; }
+        .flow { margin-top: 1.4rem; }
+        .flow-row { display: flex; align-items: stretch; gap: 0.5rem; flex-wrap: nowrap; }
+        .flow-box { flex: 1; background: var(--paper-deep); border: 1px solid var(--rule); border-radius: 4px; padding: 0.7rem 0.8rem; font-size: 0.88rem; line-height: 1.6; }
+        .flow-box b { display: block; font-size: 0.95rem; color: var(--ink); }
+        .flow-box small { color: var(--whisper); font-size: 0.82rem; }
+        .flow-box.key { border-color: var(--accent); flex: 1.4; }
+        .flow-arrow { align-self: center; color: var(--whisper); font-family: var(--font-mono); }
+        .flow-down { text-align: center; color: var(--whisper); font-family: var(--font-mono); margin: 0.3rem 0; font-size: 0.85rem; }
+        .mark { display: inline-block; min-width: 1.4em; height: 1.4em; line-height: 1.4em; border-radius: 50%; background: var(--accent); color: var(--paper); font-size: 0.75rem; text-align: center; font-family: var(--font-mono); margin-right: 0.3em; vertical-align: 0.1em; }
+        .issues { list-style: none; padding: 0; margin: 1.2rem 0 0; }
+        .issues li { padding: 0.7rem 0; border-bottom: 1px solid var(--rule); }
+        .issues li:first-child { border-top: 1px solid var(--rule); }
+        .issues b { color: var(--ink); }
+        .issues .desc { display: block; color: var(--whisper); font-size: 0.92rem; margin-top: 0.15rem; }
+        @media (max-width: 640px) {
+            .flow-row { flex-direction: column; }
+            .flow-arrow { transform: rotate(90deg); }
+        }
+        .issue { padding: 1.4rem 0 1.2rem; border-bottom: 1px solid var(--rule); }
+        .issue:first-of-type { border-top: 1px solid var(--rule); }
+        .issue h3 { margin: 0 0 0.4rem; font-size: 1.12rem; }
+        .issue p { margin: 0.3rem 0; }
+        .issue .more-link { font-size: 0.92rem; }
+        .dg { background: var(--paper-deep); border: 1px solid var(--rule); border-radius: 4px; padding: 0.9rem; margin: 0.8rem 0; font-size: 0.88rem; }
+        .dg-row { display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap; }
+        .dg-row + .dg-row { margin-top: 0.5rem; }
+        .chip { border: 1px solid var(--rule); background: var(--paper); border-radius: 3px; padding: 0.3rem 0.55rem; line-height: 1.4; }
+        .chip.ok { border-color: var(--whisper); }
+        .chip.off { color: var(--whisper); text-decoration: line-through; }
+        .chip.bad { border-color: var(--accent); color: var(--accent); font-weight: 700; }
+        .dg-arrow { color: var(--whisper); font-family: var(--font-mono); }
+        .dg-cap { color: var(--whisper); font-size: 0.85rem; margin-top: 0.6rem; }
+        .dg-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.8rem; }
+        .dg-col h4 { margin: 0 0 0.4rem; font-size: 0.92rem; }
+        .tl { display: grid; grid-template-columns: 6.5em 1fr; gap: 0.35rem 0.6rem; align-items: center; }
+        .tl-bar { position: relative; height: 1.4rem; background: var(--paper); border: 1px solid var(--rule); border-radius: 3px; }
+        .tl-seg { position: absolute; top: 0; bottom: 0; border-radius: 2px; font-size: 0.72rem; line-height: 1.4rem; padding-left: 0.3rem; white-space: nowrap; overflow: hidden; color: var(--paper); }
+        .tl-seg.good { background: var(--whisper); }
+        .tl-seg.bad { background: var(--accent); }
+        .tl-mark { position: absolute; top: -0.35rem; bottom: -0.35rem; width: 2px; background: var(--ink); }
+        .tl-scale { grid-column: 2; display: flex; justify-content: space-between; color: var(--whisper); font-size: 0.75rem; font-family: var(--font-mono); }
+        .tl-note { position: relative; height: 1.2rem; font-size: 0.78rem; color: var(--accent); }
+        .tl-note span { position: absolute; transform: translateX(-0.45em); white-space: nowrap; }
+        .stack { display: grid; gap: 0.35rem; }
+        .stack div { background: var(--paper); border: 1px solid var(--rule); border-left: 4px solid var(--accent); border-radius: 3px; padding: 0.35rem 0.6rem; }
+        .door-fig { margin: 1.4rem 0 0.4rem; }
+        .door-svg { width: 100%; height: auto; display: block; background: var(--paper-deep); border: 1px solid var(--rule); border-radius: 4px; }
+        .door-svg .wall { fill: var(--paper-deep); }
+        .door-svg .floor { stroke: var(--whisper); stroke-width: 2; }
+        .door-svg .frame { fill: var(--rule); stroke: var(--ink); stroke-width: 1.5; }
+        .door-svg .leaf { fill: var(--paper); stroke: var(--ink); stroke-width: 2; }
+        .door-svg .panel { fill: none; stroke: var(--rule); stroke-width: 2; }
+        .door-svg .part { fill: var(--paper); stroke: var(--ink); stroke-width: 1.5; }
+        .door-svg .hot { fill: var(--paper); stroke: var(--accent); stroke-width: 2.5; }
+        .door-svg .metal { fill: var(--whisper); }
+        .door-svg .wire { fill: none; stroke: var(--accent); stroke-width: 2; stroke-dasharray: 6 5; }
+        .door-svg .net { fill: none; stroke: var(--whisper); stroke-width: 2; stroke-dasharray: 3 5; }
+        .door-svg .pin { fill: var(--accent); }
+        .door-svg .pin-t { fill: var(--paper); font: 700 15px var(--font-mono); text-anchor: middle; dominant-baseline: central; }
+        .door-svg .lbl { fill: var(--whisper); font-size: 13px; }
+        .legend { list-style: none; padding: 0; margin: 0.6rem 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0.3rem 1rem; font-size: 0.9rem; }
+        .legend li { line-height: 1.6; }
+        .legend b { color: var(--ink); }
+        .legend .k { display: inline-block; width: 1.4em; height: 1.4em; line-height: 1.4em; border-radius: 50%; background: var(--accent); color: var(--paper); text-align: center; font-family: var(--font-mono); font-size: 0.75rem; margin-right: 0.35em; }
+        .legend small { color: var(--whisper); }
+    </style>
 </head>
 <body>
     <header class="site-header">
@@ -36,30 +115,249 @@
     <main>
         <section class="hero">
             <p class="kicker">扉と鍵の情報サイト</p>
-            <h1>扉と鍵の話を、層に分けて書く</h1>
-            <p>電子錠、ドアホン、扉のコントローラ、鍵の発行、業務システムとの連携について、規格の解説と関連ニュースを掲載しています。</p>
+            <h1>スマートドアの仕組みと課題</h1>
+            <p class="lead">スマートドアは、鍵を出す所、開けるかを決めて記録する扉のコントローラ、開け閉めする電子錠に分かれます。開け閉めの部品は買えます。課題は、その周りにあります。</p>
+
+            <figure class="door-fig">
+                <svg class="door-svg" viewBox="0 0 640 400" role="img" aria-label="スマートドアの絵。扉、読取機、電子錠、扉のコントローラ、安全側のマイコン、電源、網">
+                    <rect class="wall" x="0" y="0" width="640" height="400"/>
+                    <line class="floor" x1="0" y1="380" x2="640" y2="380"/>
+                    <!-- 枠と扉 -->
+                    <rect class="frame" x="220" y="70" width="200" height="310"/>
+                    <rect class="leaf" x="234" y="84" width="172" height="296"/>
+                    <rect class="panel" x="252" y="104" width="136" height="110"/>
+                    <rect class="panel" x="252" y="236" width="136" height="124"/>
+                    <!-- 扉のコントローラと安全側のマイコン(枠の上) -->
+                    <rect class="hot" x="240" y="22" width="112" height="38" rx="3"/>
+                    <text class="lbl" x="296" y="46" text-anchor="middle">コントローラ</text>
+                    <rect class="part" x="358" y="22" width="62" height="38" rx="3"/>
+                    <text class="lbl" x="389" y="46" text-anchor="middle">安全側</text>
+                    <!-- 取っ手(内側からは機械で開く) -->
+                    <rect class="metal" x="368" y="232" width="8" height="26" rx="2"/>
+                    <rect class="metal" x="348" y="236" width="28" height="7" rx="3"/>
+                    <!-- 電子錠 -->
+                    <rect class="hot" x="398" y="216" width="14" height="52" rx="2"/>
+                    <rect class="metal" x="412" y="236" width="12" height="10"/>
+                    <!-- 読取機、ドアホン -->
+                    <rect class="hot" x="456" y="190" width="46" height="74" rx="6"/>
+                    <circle class="part" cx="479" cy="210" r="8"/>
+                    <rect class="part" x="466" y="228" width="26" height="26" rx="3"/>
+                    <!-- スマートフォン -->
+                    <rect class="part" x="532" y="214" width="30" height="54" rx="5"/>
+                    <path class="net" d="M528 240 L506 236"/>
+                    <!-- 電源 -->
+                    <rect class="part" x="60" y="220" width="44" height="58" rx="3"/>
+                    <text class="lbl" x="82" y="298" text-anchor="middle">電源</text>
+                    <!-- 網(ルーター) -->
+                    <rect class="part" x="540" y="24" width="66" height="30" rx="4"/>
+                    <text class="lbl" x="573" y="72" text-anchor="middle">網</text>
+                    <!-- 配線 -->
+                    <path class="wire" d="M104 248 H170 V41 H240"/>
+                    <path class="wire" d="M479 190 V66 H330 V60"/>
+                    <path class="wire" d="M405 60 V216"/>
+                    <path class="net" d="M540 39 H520 V8 H300 V22"/>
+                    <!-- 印 -->
+                    <circle class="pin" cx="512" cy="182" r="12"/><text class="pin-t" x="512" y="182">A</text>
+                    <circle class="pin" cx="436" cy="214" r="12"/><text class="pin-t" x="436" y="214">B</text>
+                    <circle class="pin" cx="246" cy="14" r="12"/><text class="pin-t" x="246" y="14">C</text>
+                    <circle class="pin" cx="414" cy="14" r="12"/><text class="pin-t" x="414" y="14">D</text>
+                    <circle class="pin" cx="340" cy="252" r="12"/><text class="pin-t" x="340" y="252">E</text>
+                    <circle class="pin" cx="112" cy="212" r="12"/><text class="pin-t" x="112" y="212">F</text>
+                    <circle class="pin" cx="616" cy="20" r="12"/><text class="pin-t" x="616" y="20">G</text>
+                    <circle class="pin" cx="574" cy="208" r="12"/><text class="pin-t" x="574" y="208">H</text>
+                </svg>
+                <ul class="legend">
+                    <li><span class="k">A</span><b>読取機、ドアホン</b> <small>鍵を読み、結果を渡す。差し替えられる部品</small></li>
+                    <li><span class="k">B</span><b>電子錠</b> <small>開け閉めする部品。買えばすむ</small></li>
+                    <li><span class="k">C</span><b>扉のコントローラ</b> <small>開けるかを決め、記録する。網が無くても動く(課題 3、4)</small></li>
+                    <li><span class="k">D</span><b>安全側のマイコン</b> <small>無線を持たない。通信の側が暴走しても、誤って開けない</small></li>
+                    <li><span class="k">E</span><b>取っ手、サムターン</b> <small>内側からは、いつでも機械で開く</small></li>
+                    <li><span class="k">F</span><b>電源</b> <small>建物から扉の機器へ</small></li>
+                    <li><span class="k">G</span><b>網(ルーター)</b> <small>鍵と知らせを運ぶ。止まることも、破られることもある(課題 3)</small></li>
+                    <li><span class="k">H</span><b>スマートフォン、カード</b> <small>本人が持つ鍵の入れ物。中の鍵の管理が本題(課題 1、2)</small></li>
+                </ul>
+            </figure>
+            <div class="flow" aria-label="スマートドアの仕組み">
+                <div class="flow-row">
+                    <div class="flow-box key"><b><span class="mark">1</span><span class="mark">2</span>鍵の発行</b>誰に、どの扉を、いつまで。<br><small>管理者、発行者の鍵、台帳。人事の届けから入社と退職を受ける</small></div>
+                    <div class="flow-box"><b><span class="mark">3</span>網とクラウド、業者</b>鍵や知らせを運ぶ。<br><small>止まることも、破られることもある</small></div>
+                </div>
+                <p class="flow-down">↓ 署名つきの鍵(資格情報)</p>
+                <div class="flow-row">
+                    <div class="flow-box"><b>スマートフォン、カード、暗証番号</b><small>本人が持つ鍵の入れ物</small></div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-box"><b>読取機、ドアホン</b><small>鍵を読み、結果を渡す</small></div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-box key"><b><span class="mark">4</span>扉のコントローラ</b>開けるかを決め、記録する。<br><small>網が無くても動く</small></div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-box"><b>電子錠</b><small>開け閉めする部品</small></div>
+                </div>
+                <p class="flow-down">↑ 管理し、点検し、止まったら現場で戻す <span class="mark">5</span>人</p>
+            </div>
         </section>
 
         <section>
-            <h2>解説</h2>
+            <h2>どこに課題があるか</h2>
+
+            <div class="issue">
+                <h3><span class="mark">1</span>鍵の発行と失効</h3>
+                <p>入居、退去、退職、端末の紛失。鍵は毎日変わります。しかも、一人の鍵がスマートフォン、カード、暗証番号に散ります。一つだけ止めても、ほかの経路で開きます。</p>
+                <div class="dg" role="img" aria-label="一人の鍵が三つの経路に散り、一つだけ止めてもほかで開く図">
+                    <div class="dg-row">
+                        <span class="chip ok">辞めた人</span><span class="dg-arrow">→</span>
+                        <span class="chip off">スマートフォンの鍵(止めた)</span>
+                        <span class="chip bad">カード(生きている)</span>
+                        <span class="chip bad">暗証番号(生きている)</span>
+                        <span class="dg-arrow">→</span><span class="chip bad">扉が開く</span>
+                    </div>
+                    <p class="dg-cap">台帳で一人を一覧にし、全部の経路を一度に止めます(R-AC-15)。</p>
+                </div>
+                <p class="more-link">→ <a href="/guide/keys-belong-to-managers/">デジタルキーは管理者が自分で持つ</a></p>
+            </div>
+
+            <div class="issue">
+                <h3><span class="mark">2</span>一番上の鍵を誰が持つか</h3>
+                <p>鍵に署名する発行者の鍵を、業者や管理会社にまとめて預けると、そこが一か所破られただけで、預けた全部の建物の扉が開きます。</p>
+                <div class="dg" role="img" aria-label="業者が鍵を集めると全部が開き、管理者ごとに持てばその建物だけで済む図">
+                    <div class="dg-cols">
+                        <div class="dg-col">
+                            <h4>業者が預かる</h4>
+                            <div class="dg-row"><span class="chip bad">業者の鍵(破られた)</span></div>
+                            <div class="dg-row"><span class="dg-arrow">→</span><span class="chip bad">建物 A</span><span class="chip bad">建物 B</span><span class="chip bad">建物 C</span></div>
+                            <p class="dg-cap">全部が開く</p>
+                        </div>
+                        <div class="dg-col">
+                            <h4>管理者ごとに持つ</h4>
+                            <div class="dg-row"><span class="chip bad">A の鍵(破られた)</span><span class="chip ok">B の鍵</span><span class="chip ok">C の鍵</span></div>
+                            <div class="dg-row"><span class="dg-arrow">→</span><span class="chip bad">建物 A</span><span class="chip ok">建物 B</span><span class="chip ok">建物 C</span></div>
+                            <p class="dg-cap">その建物だけで済む</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="more-link">→ <a href="/guide/vendor-held-keys/">業者に預けた鍵と権限</a></p>
+            </div>
+
+            <div class="issue">
+                <h3><span class="mark">3</span>網とクラウドが止まったら</h3>
+                <p>網が切れた扉には、失効の知らせが届きません。扉が止めるのは、鍵の期限が切れたときだけです。だから、本当の守りは期限の長さです。</p>
+                <div class="dg" role="img" aria-label="網が切れた扉で、30日の鍵は失効の後も開き続け、1日の鍵は翌日に止まる図">
+                    <div class="tl">
+                        <span></span><div class="tl-note"><span style="left:10%">↓ 3 日目に台帳で失効</span></div>
+                        <span>30 日の鍵</span>
+                        <div class="tl-bar"><div class="tl-seg good" style="left:0;width:10%"></div><div class="tl-seg bad" style="left:10%;width:90%">台帳では失効。でも扉は開く</div><div class="tl-mark" style="left:10%"></div></div>
+                        <span>1 日の鍵</span>
+                        <div class="tl-bar"><div class="tl-seg good" style="left:0;width:10%"></div><div class="tl-seg bad" style="left:10%;width:3.3%"></div><div class="tl-mark" style="left:10%"></div></div>
+                        <span class="tl-scale"><span>発行</span><span>30 日</span></span>
+                    </div>
+                    <p class="dg-cap">期限を短くして、網が届くときに出し直します(R-AC-14)。端末が失効の一覧を運ぶ方法もあります(R-AC-22)。</p>
+                </div>
+                <p class="more-link">→ <a href="/guide/open-specification/">扉のコントローラの仕様</a></p>
+            </div>
+
+            <div class="issue">
+                <h3><span class="mark">4</span>攻撃</h3>
+                <p>攻撃を全部防ぐことはできません。入られる前提で、守りを重ねます。扉が乗っ取られると、判断も記録も攻撃者の物になります。</p>
+                <div class="dg" role="img" aria-label="入られる前提で重ねる守りの五段">
+                    <div class="stack">
+                        <div>入る口を減らす(外に開く口、実行できる物、部品を少なく)</div>
+                        <div>中で動く物が本物かを、更新と起動のたびに署名で確かめる</div>
+                        <div>実行してよい物を決めておき、増えた物に気づく</div>
+                        <div>知らせと記録を、機械の外へ出す(入られた機械の記録は消される)</div>
+                        <div>現場で切り離し、予備に入れ替え、戻す</div>
+                    </div>
+                </div>
+                <p class="more-link">→ <a href="/guide/resist-attacks/">サイバー攻撃に耐える扉</a></p>
+            </div>
+
+            <div class="issue">
+                <h3><span class="mark">5</span>管理し、戻せる人</h3>
+                <p>道具があっても、使う人がいなければ守れません。鍵の管理は、アカウントやルートの管理と同じ仕事です。自社で地道に続け、攻撃や事故のときに現場で切り離して戻せる人を育てます。</p>
+                <div class="dg" role="img" aria-label="一つの扉の上で出会う部署">
+                    <div class="dg-row"><span class="chip">人事(入社と退職)</span><span class="chip">情報システム(鍵と台帳)</span><span class="chip">設備(扉と錠)</span><span class="dg-arrow">→</span><span class="chip ok">一つの扉</span></div>
+                    <p class="dg-cap">止めるのは自動、出すのは人が確かめる、一番上の操作は人の手に残す。</p>
+                </div>
+                <p class="more-link">→ <a href="/guide/doors-and-cyber-defense/">デジタルドアはサイバー攻撃対策そのもの</a></p>
+            </div>
+
+            <p>このサイトでは、これらの課題に答える要求仕様、試験の道具、解説を無料で公開しています。各社はこれを参考に、自社で開発し、自社で運用します。</p>
+        </section>
+
+        <section>
+            <h2>読む人ごとの入口</h2>
+            <div class="entry-grid">
+                <div class="entry">
+                    <h3>情報システム部門の方</h3>
+                    <p>鍵の管理は、アカウントやルートの管理と同じ仕事です。</p>
+                    <ul>
+                        <li><a href="/guide/keys-belong-to-managers/">デジタルキーは管理者が自分で持つ</a></li>
+                        <li><a href="/guide/doors-and-cyber-defense/">デジタルドアはサイバー攻撃対策そのもの</a></li>
+                        <li><a href="https://github.com/aiseed-dev/digitaldoor/blob/main/docs/権限の申請の雛形.md">権限の申請の雛形(下書き)</a></li>
+                    </ul>
+                </div>
+                <div class="entry">
+                    <h3>扉、錠、読取機をつくる方</h3>
+                    <p>何を満たすかを、番号と理由と確かめ方で書いています。</p>
+                    <ul>
+                        <li><a href="https://github.com/aiseed-dev/digitaldoor/blob/main/docs/要求仕様/README.md">要求仕様</a></li>
+                        <li><a href="https://github.com/aiseed-dev/digitaldoor/blob/main/docs/扉コントローラ仕様書.md">扉コントローラ仕様書</a></li>
+                        <li><a href="/guide/open-specification/">仕様と試験の道具を公開する</a></li>
+                    </ul>
+                </div>
+                <div class="entry">
+                    <h3>施工と保守の方</h3>
+                    <p>据付、受入れ試験、切り離して戻す手順です。</p>
+                    <ul>
+                        <li><a href="https://github.com/aiseed-dev/digitaldoor/blob/main/docs/要求仕様/90_installer_program.md">施工と保守の人を育てる手順</a></li>
+                        <li><a href="/guide/on-site/">人に残るのは現場</a></li>
+                    </ul>
+                </div>
+                <div class="entry">
+                    <h3>民泊や小さな事業の方</h3>
+                    <p>鍵は業者に預けず、自分で持ちます。</p>
+                    <ul>
+                        <li><a href="/guide/vendor-held-keys/">業者に預けた鍵と権限</a></li>
+                        <li><a href="/manual/">受け入れの道具のマニュアル</a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>まず読む解説</h2>
             <div class="article-list">
-                <a href="/guide/matter/" class="activity-link"><div class="activity-item">
-                    <div class="activity-number">01</div>
-                    <h3>Matterとは何か</h3>
-                    <p>家庭用スマートホーム機器の共通規格。仕組みと電子錠向けの機能、業務用の扉に向かない理由。</p>
+                <a href="/guide/keys-belong-to-managers/" class="activity-link"><div class="activity-item">
+                    <div class="activity-number">17</div>
+                    <h3>デジタルキーは管理者が自分で持つ</h3>
+                    <p>扉は変わらないが、鍵は毎日変わる。受託では重すぎる仕事を、管理者が道具と手順で引き受けます。</p>
                 </div></a>
-                <a href="/guide/aliro/" class="activity-link"><div class="activity-item">
-                    <div class="activity-number">02</div>
-                    <h3>Aliroとは何か</h3>
-                    <p>スマートフォンを鍵として使うための共通規格。規定している範囲と、扉の側から見た利点。</p>
+                <a href="/guide/doors-and-cyber-defense/" class="activity-link"><div class="activity-item">
+                    <div class="activity-number">18</div>
+                    <h3>デジタルドアはサイバー攻撃対策そのもの</h3>
+                    <p>同じ問いを、扉の側とシステムの側から見ています。自社で地道に続ける対策の、目に見える教材です。</p>
                 </div></a>
-                <a href="/guide/what-a-smart-door-needs/" class="activity-link"><div class="activity-item">
-                    <div class="activity-number">03</div>
-                    <h3>デジタルドアに望まれるもの</h3>
-                    <p>物理鍵を無くせる六つの条件と、読取機の本命と見るAppleの顔認証ドアホン。</p>
+                <a href="/guide/resist-attacks/" class="activity-link"><div class="activity-item">
+                    <div class="activity-number">16</div>
+                    <h3>サイバー攻撃に耐える扉</h3>
+                    <p>入られる前提で、口を減らし、本物かを確かめ、気づいて外に知らせ、切り離して戻します。</p>
+                </div></a>
+                <a href="/guide/layers/" class="activity-link"><div class="activity-item">
+                    <div class="activity-number">04</div>
+                    <h3>玄関まわりの技術を層に分けて見る</h3>
+                    <p>どの層が買えばすむ部品になり、どの層に人の責任が残るか。</p>
                 </div></a>
             </div>
             <p class="more"><a href="/guide/">すべての解説 →</a></p>
+        </section>
+
+        <section>
+            <h2>公開している物</h2>
+            <ul class="published">
+                <li><a href="https://github.com/aiseed-dev/digitaldoor/blob/main/docs/要求仕様/README.md">要求仕様</a><span>扉の製造者に「何を満たすか」を伝える文書。要求ごとに理由と確かめ方を付けています。</span></li>
+                <li><a href="https://github.com/aiseed-dev/digitaldoor/tree/main/controller">疑似の扉と試験の道具</a><span>扉のコントローラの判断と、改ざんの分かる記録。Apache-2.0 で、製品に組み込めます。</span></li>
+                <li><a href="https://github.com/aiseed-dev/digitaldoor/blob/main/docs/適合の現在.md">適合の現在</a><span>要求の番号とテストの対応。満たしているかは、自分でテストを回して確かめます。</span></li>
+                <li><a href="https://github.com/aiseed-dev/digitaldoor/blob/main/docs/使い方.md">実演の道具</a><span>開け閉めは簡単なこと、鍵の管理には課題があることを、その場で見せる道具。</span></li>
+                <li><a href="https://github.com/aiseed-dev/digitaldoor/blob/main/SKILL.md">AI に読ませる入口</a><span>ふだん使っている AI に読ませると、仕様、テスト、実装の順に一緒に作ります。</span></li>
+            </ul>
         </section>
 
         <section>
@@ -89,23 +387,14 @@
 
                 <!-- LATEST_BLOG_POSTS_END -->
             </div>
-            <p class="more"><a href="/blog/">すべてのブログ →</a></p>
-        </section>
-
-        <section>
-            <h2>ニュース</h2>
-            <div class="article-list">
-            <!-- LATEST_NEWS_START --><p>まだ記事がありません。</p>
-            <!-- LATEST_NEWS_END -->
-            </div>
-            <p class="more"><a href="/news/">すべてのニュース →</a></p>
+            <p class="more"><a href="/blog/">すべてのブログ →</a> &nbsp; <a href="/news/">ニュース →</a></p>
         </section>
 
         <section id="about">
             <h2>このサイトについて</h2>
-            <p>玄関まわりの技術を、扉の製造、電子錠、扉のコントローラ、ドアホン、スマートフォン、周辺機器、通信規格、鍵の発行、業務システムとの連携、業務システム、管理者、という層に分けて整理し、各層の役割と責任の所在を解説します。</p>
-            <p>主に扱う規格は、スマートフォンを鍵として使うための Aliro と、家庭用機器を接続するための Matter です。それぞれの仕組みと適用範囲を説明します。</p>
-            <p>ニュースは AI が収集して要約し、掲載する記事は編集者が選んでいます。各記事には、発表・報道・噂・解説の種別と出典を付けています。</p>
+            <p>aiseed が運営しています。aiseed は収益を目的としない団体です。料金、会費、認証の制度はありません。</p>
+            <p>仕様と道具は、各社が参考にして自社で開発し、自社で運用するための物です。問題や困りごとに気づいたら、<a href="https://github.com/aiseed-dev/digitaldoor/issues">Issues</a> で知らせてください。要求の番号に整えて、仕様に反映します。</p>
+            <p>文章は CC BY 4.0、コードは AGPL-3.0-or-later、扉のコントローラは Apache-2.0 です。</p>
         </section>
     </main>
 
