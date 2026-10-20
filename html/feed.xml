@@ -4,7 +4,7 @@
 <link>https://door.aiseed.dev/</link>
 <description>扉と鍵の話を、層に分けて書く</description>
 <language>ja</language>
-<lastBuildDate>Tue, 20 Oct 2026 10:47:09 +0900</lastBuildDate>
+<lastBuildDate>Tue, 20 Oct 2026 11:49:55 +0900</lastBuildDate>
 <item>
 <title>サイバー攻撃に耐える扉</title>
 <link>https://door.aiseed.dev/guide/resist-attacks/</link>
@@ -28,6 +28,14 @@
 <category>解説</category>
 <pubDate>Tue, 20 Oct 2026 00:00:00 +0900</pubDate>
 <description>デジタルドアの鍵の管理と、サイバー攻撃対策は、同じ問いを扉の側とシステムの側から見ています。一番上の鍵を誰が持つか、人の出入りをどう管理するか、委託をどう扱うか、網が止まったらどうするか。関係は両方向で、サイバーの侵入は物理の侵入になり、物理の侵入はサイバーの侵入になります。サイバー攻撃対策は自社で地道に続けるしかなく、デジタルドアはその目に見える教材になります。要求の確かめ方から、日課と年課の表を作ります。</description>
+</item>
+<item>
+<title>デジタルドアが遅れている理由</title>
+<link>https://door.aiseed.dev/guide/why-digital-doors-lag/</link>
+<guid>https://door.aiseed.dev/guide/why-digital-doors-lag/</guid>
+<category>解説</category>
+<pubDate>Tue, 20 Oct 2026 00:00:00 +0900</pubDate>
+<description>電子錠も読取機も買える部品になり、スマートフォンを鍵にする規格も出ました。それでも、会社や建物の扉の多くは機械の鍵のままです。遅れている理由は扉の側ではなく、鍵を管理する仕組みと、それを持つ人の側にあります。顧客、サーバー、Web、PC の管理の中に扉の管理を含める仕組みは、扉を作るよりも難しい仕事です。</description>
 </item>
 <item>
 <title>扉のコントローラを Rust で書く</title>
