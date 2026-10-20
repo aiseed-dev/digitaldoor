@@ -1,0 +1,44 @@
+# door.aiseed.dev の Caddy の設定の見本(deb2)。
+#
+# 写し方:
+#   1. このファイルの中身を、deb2 の /etc/caddy/Caddyfile に写す(または import で取り込む)。
+#      `import cf` は、Caddyfile の先頭にある設定の束(スニペット cf)を使う
+#   2. sudo caddy validate --config /etc/caddy/Caddyfile      # 書き方を確かめる
+#   3. sudo systemctl reload caddy                            # 取り込む
+#
+# 配る物は /srv/door/www(tools/publish.py が付け替えるシンボリックリンク)。
+# 応答ヘッダは html/_headers と同じ物。CSP は各 HTML の <meta> で出している。
+# アクセスの記録(log)は書かない。計測は本人が決め、プライバシーポリシーの頁と一緒に入れる。
+
+(door_headers) {
+	header {
+		Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "geolocation=(), camera=(), microphone=(), payment=(), usb=(), interest-cohort=()"
+		Cross-Origin-Opener-Policy "same-origin"
+		Cross-Origin-Resource-Policy "same-site"
+	}
+}
+
+door.aiseed.dev {
+	import cf
+	root * /srv/door/www
+
+	import door_headers
+
+	# キャッシュの長さは例。運用で決める
+	@assets path /css/* /js/* /images/* /favicon.ico
+	header @assets Cache-Control "public, max-age=86400"
+	header !Cache-Control "no-cache"
+
+	file_server
+
+	# 見つからないときは 404.html を、404 のまま返す。エラー応答にも同じヘッダを付ける
+	handle_errors {
+		import door_headers
+		rewrite * /404.html
+		file_server
+	}
+}
