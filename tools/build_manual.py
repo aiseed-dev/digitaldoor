@@ -105,8 +105,23 @@ def section_mobile() -> str:
 
 
 def section_door() -> str:
+    from digitaldoor_controller import cli as door_cli
     from digitaldoor_controller import controller
-    return "\n".join(["## 扉のコントローラの動作", "", doc(controller).replace("判断 — ", ""), ""])
+    from digitalkey import contacts
+    out = ["## 扉のコントローラの動作", "", doc(controller).replace("判断 — ", ""), ""]
+    out += ["### 鍵と資格情報を作る命令", "", "発行者と管理者の側で使う三つの命令です。置き場を使わず、網も要りません。", ""]
+    for cmd in ("keygen", "issue", "trust-change"):
+        out += [f"#### digitaldoor-controller {cmd}", "", "```", help_of(door_cli.main, (cmd, "--help")), "```", ""]
+    out += ["### 錠のドライバで動く接点", "", "```", doc(contacts), "```", ""]
+    return "\n".join(out)
+
+
+def section_jitsuen() -> str:
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("jitsuen", SITE / "tools" / "jitsuen.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return "\n".join(["## 実演の道具", "", "```", doc(mod), "```", ""])
 
 
 def section_forms() -> str:
@@ -143,7 +158,7 @@ def md_to_html(md: str) -> str:
 
 def main() -> int:
     parts = [f"# {TEXT['title']}", "", TEXT["intro"], "", f"生成日: {datetime.now().strftime('%Y-%m-%d')}", "",
-             section_site(), section_mobile(), section_cli(), section_door(), section_forms(), section_drivers()]
+             section_site(), section_mobile(), section_cli(), section_door(), section_jitsuen(), section_forms(), section_drivers()]
     md = "\n".join(parts)
     (SITE / "docs" / "manual.md").write_text(md, encoding="utf-8")
     css_v = re.search(r'style\.css\?v=([0-9a-f]+)', (SITE / "html/index.html").read_text(encoding="utf-8"))

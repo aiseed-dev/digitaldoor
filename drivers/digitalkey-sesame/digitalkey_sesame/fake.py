@@ -159,3 +159,39 @@ class FakeConnection:
 
 async def fake_adapter_available() -> tuple[bool, str]:
     return True, "FAKE (demo mode, no real Bluetooth)"
+
+
+class FakeSesameLock:
+    """疑似の Sesame を、digitalkey の錠のドライバの口(`unlock()` / `lock()`。`digitalkey.entrance.keyring.LockDriver`)で動かす。
+
+    実機と同じ道を通る: 呼ぶたびに SesameDevice を作り、疑似の機器にログインして(秘密は 16 バイトの 0)、LOCK か UNLOCK を送る。
+    疑似の機器(`fake`)は呼びの間も残るので、`locked` で今の状態を読める。`reachable = False` にすると、
+    実機が見つからないときと同じ RuntimeError を出す(錠に届かないときの試験用)。実機にも Bluetooth にも触れない。
+    """
+
+    def __init__(self, lock_id: str = "fake", *, reachable: bool = True) -> None:
+        self.id = lock_id
+        self.reachable = reachable
+        self.fake = FakeSesame(registered_secret=bytes(16))
+
+    @property
+    def locked(self) -> bool:
+        return self.fake.locked
+
+    async def _run(self, action: str) -> None:
+        if not self.reachable:
+            raise RuntimeError(f"{self.id}: 錠が見つかりません")
+        fake = self.fake
+        fake.rx = p.SegmentReceiver()
+        device = SesameDevice(fake.write, history_tag="entrance")
+        fake.app = device
+        fake.publish_initial()
+        await device.wait_for_token()
+        await device.login(bytes(16))
+        await (device.unlock() if action == "unlock" else device.lock())
+
+    async def unlock(self) -> None:
+        await self._run("unlock")
+
+    async def lock(self) -> None:
+        await self._run("lock")

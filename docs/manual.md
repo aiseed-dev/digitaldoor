@@ -2,7 +2,7 @@
 
 このマニュアルは、ソフトウェアのコードから自動で生成しています。対象は、事業所のサーバーを運用する管理者、受付の担当者、鍵を使う利用者、保守の担当者です。
 
-生成日: 2026-10-18
+生成日: 2026-10-20
 
 ## 事業所サーバー
 
@@ -47,12 +47,12 @@ autolock = 5.0              # 解錠から自動施錠までの秒
 [[token]]
 name = "管理者"
 role = "管理者"
-token = "4uqJ1vhHXi49mrYclIzvHev2g54fPNtA"
+token = "8ftxnIF407TZuu8ri3Bce94UHfCtzVSW"
 
 [[token]]
 name = "受付"
 role = "受付"
-token = "gGafCDKjjjsnOZy_nYliiqmID1wVE7K1"
+token = "06ZW9IfIFjmXhPRKpR6GnotKf1QaolTg"
 ```
 
 ### 役割
@@ -169,17 +169,21 @@ usage: digitaldoor-controller [-h] [--dir DIR] [--name NAME] [--host HOST]
                               [--autolock AUTOLOCK]
                               [--power-policy {release,hold}]
                               [--admin-key HEX] [--trust FILE]
-                              {serve,verify,pubkey,export,check-box} ...
+                              {serve,verify,pubkey,export,check-box,keygen,issue,trust-change} ...
 
 扉側のコントローラ(中核)
 
 positional arguments:
-  {serve,verify,pubkey,export,check-box}
+  {serve,verify,pubkey,export,check-box,keygen,issue,trust-change}
     serve               模擬の接点で core を開く
     verify              監査の連鎖を検査
     pubkey              署名の公開鍵を 16 進で表示する。据付のときに受け手の台帳へ写す
     export              まだ出していない記録を伝票にして箱へ出す(続きは置き場の export.cursor)
     check-box           受け手の側で、箱の伝票を公開鍵で検べる(置き場は使わない)
+    keygen              発行者か管理者の Ed25519 の鍵の対を作る。秘密鍵は --out のファイル(権限
+                        600)に書き、公開鍵と発行者の識別を JSON で出す
+    issue               発行者の鍵で署名した資格情報(5.2a)を JSON で出す
+    trust-change        管理者の鍵で署名した、信頼の一覧の変更の要求を JSON で出す
 
 options:
   -h, --help            show this help message and exit
@@ -195,7 +199,9 @@ options:
                         [扉の名前, ...]}})。管理者の変更が記録にあるときは、記録の一覧を使う
 
 記録の署名は Ed25519 で、鍵は置き場の audit.ed25519 です(前からの置き場で audit.key がある物は HMAC
-のまま)。伝票は一件ずつ <扉>-<連番>.json として箱へ出し、受け手は pubkey で写した公開鍵だけで check-box で検べます。
+のまま)。伝票は一件ずつ <扉>-<連番>.json として箱へ出し、受け手は pubkey で写した公開鍵だけで check-box
+で検べます。発行者と管理者の側では keygen で鍵を作り(秘密鍵のファイルは権限 600)、issue で資格情報を、trust-change
+で信頼の一覧の変更の要求を、JSON で出します。この三つは置き場(--dir)を使わず、網も要りません。
 ```
 
 ### digitalkey sesame
@@ -239,6 +245,121 @@ options:
 - 署名つき資格情報: present で、信頼する発行者の署名と範囲と期限を扉が確かめ、通れば上の判断(火災、二人同時、自動施錠)に渡す。
   一回限りの使用済みの一覧は、起動のときに記録(資格情報/使用)から作り直す(仕様書 5.2a)
 - 信頼の一覧: change_trust で、据付のときに入れた管理者の鍵で署名した変更の要求だけを受ける。受けた変更は記録から読み戻す
+
+### 鍵と資格情報を作る命令
+
+発行者と管理者の側で使う三つの命令です。置き場を使わず、網も要りません。
+
+#### digitaldoor-controller keygen
+
+```
+usage: digitaldoor-controller keygen [-h] --out FILE
+
+秘密鍵(32 バイト)を権限 600 で --out に書く。ある名前には書かない。公開鍵の 16 進(信頼の一覧と --admin-key
+に入れる)と、発行者の識別(公開鍵の SHA-256 の先頭 16 桁。資格情報の issuer)を JSON で出す。
+
+options:
+  -h, --help  show this help message and exit
+  --out FILE  秘密鍵を書くファイル。無い名前にする
+```
+
+#### digitaldoor-controller issue
+
+```
+usage: digitaldoor-controller issue [-h] --key FILE --id ID --subject SUBJECT
+                                    --doors NAME[,NAME...] --from TIME
+                                    --until TIME [--once]
+
+資格情報 {"body": ..., "sig": ...} を標準出力に出す。扉の POST /credential にそのまま送れる。
+
+options:
+  -h, --help            show this help message and exit
+  --key FILE            発行者の秘密鍵のファイル(keygen の --out)
+  --id ID               資格情報の識別。一回限りの使用済みの印に使う
+  --subject SUBJECT     仮名化した主体
+  --doors NAME[,NAME...]
+                        開けてよい扉の名前(コンマで区切る)
+  --from TIME           有効の始まり。unix 秒か ISO
+                        8601(2026-10-21T09:00:00+09:00)。時差の無い日時はこの機械の地方時
+  --until TIME          有効の終わり。--from と同じ書き方
+  --once                一回限りの資格情報にする
+```
+
+#### digitaldoor-controller trust-change
+
+```
+usage: digitaldoor-controller trust-change [-h] --admin-key FILE --door DOOR
+                                           --action {add,remove}
+                                           --issuer-key HEX
+                                           [--doors NAME[,NAME...]] [--id ID]
+
+要求 {"body": ..., "sig": ...} を標準出力に出す。扉の POST /trust
+に送る。扉は据付のときに入れた管理者の公開鍵で署名を検べる。
+
+options:
+  -h, --help            show this help message and exit
+  --admin-key FILE      管理者の秘密鍵のファイル。(サブコマンドの前に置く --admin-key は公開鍵の 16 進で、別の物)
+  --door DOOR           この要求が効く扉の名前
+  --action {add,remove}
+                        発行者を足すか、外すか
+  --issuer-key HEX      対象の発行者の公開鍵(16 進)
+  --doors NAME[,NAME...]
+                        その発行者に許す扉の名前(add のとき要る。コンマで区切る)
+  --id ID               要求の識別。扉は同じ識別を二度受けない。省くと乱数で作る
+```
+
+### 錠のドライバで動く接点
+
+```
+錠のドライバで動く接点 — 扉のコントローラの接点の口を、digitalkey.locks の錠のドライバにつなぐ。
+
+扉のコントローラ(digitaldoor_controller)が見る錠は、`fire()`、`mains()`、`door_open()`、`bolt_out()`、`set_lock(locked)` の
+束だけ(扉コントローラ仕様書 R-CT-03)。この接点は `set_lock` を、非同期の錠のドライバ(`unlock()` / `lock()`。
+`digitalkey.entrance.keyring.LockDriver`)に渡す。Sesame でも `dummy` でも、錠の銘柄はこの下に隠れ、判断の側は変わらない(R-CT-04)。
+
+- 火災・電源・扉の開閉は、SimContacts と同じく属性(`_fire`、`_mains`、`_door_open`)で持つ。HTTP の `/event` が書き換え、
+  基板の入力に替えるときはここだけを差し替える。
+- 非同期のドライバは、この接点が持つ専用のイベントループ(別のスレッド)で動かす。扉の側の呼びは同期で、
+  HTTP の口の複数のスレッドから呼ばれてよい。同じループを使うほかの非同期の処理(鍵の台帳の `Keyring.open` など)は `run()` で渡す。
+
+錠に届かないとき(ドライバが例外を出す、`timeout_s` の内に終わらない):
+- `set_lock` は例外を出さず、錠の位置の記録(`bolt_out()`)を動かさない。位置は「届いて確かめた最後の側」で、起動のときは施錠側。
+  届かなかった命令で位置を動いたことにしない。
+- `failures` を一つ増やし、`last_error` に短い理由を残す。`outputs` には届いた命令だけを足す(`lock` か `unlock`)。
+- 時間切れのときはドライバの処理を取り消す。取り消しの前に錠へ届いていた命令は取り消せないので、位置は確かめるまで分からない。
+- 扉の判断は止めない。コントローラは命令を出した側として記録を続け、錠が動いたかは `bolt_out()` と `/state` の `bolt_out` が示す。
+  命令を出した時点の `failures` と比べれば、呼び手(実演の道具など)は届かなかったことを知れる。
+```
+
+## 実演の道具
+
+```
+実演の道具 — デジタル錠の開け閉めは簡単で、鍵の管理は難しいことを、場面ごとに見せる。
+
+    python tools/jitsuen.py --fake kantan                          # 疑似の Sesame で見せる
+    python tools/jitsuen.py --lock sesame:<機器の UUID> check      # 実機の Sesame に届くか確かめる
+    python tools/jitsuen.py --fake --yes all                       # Enter を待たずに全部
+
+場面(手順は docs/使い方.md の「実演」):
+  check    錠に届くことを確かめる(施錠の命令を一つ送る)
+  kantan   開け閉めは部品の仕事。錠のドライバで直接、次に疑似の扉の口(POST /unlock)から開け閉めする
+  sono-hi  その日の鍵。扉は網が無くても、発行者の署名と期間を自分で確かめる
+  kigen    止めたつもり。網の届かない扉では、台帳で失効しても、期限が来るまで開く
+  keiro    経路が散る。同じ人の鍵を一つの経路で失効しても、別の経路で開く
+  more     発行者の鍵が漏れたら。信頼の一覧を変えられるのは管理者の鍵だけ
+  kiroku   記録で確かめる。記録の連鎖を検べ、一字の書き換えを見つける
+  all      check を除く全部を順に(kantan から kiroku まで)
+
+しくみ: 疑似の扉(digitaldoor_controller の Controller と HTTP の口)を同じプロセスの中で開き、接点に
+digitalkey.contacts.LockDriverContacts を差す。錠は --fake の疑似の Sesame か、--lock の錠のドライバ
+(digitalkey.locks の登録簿。`sesame:<UUID>` は BLE の実機)。一つの場面は一つの手順ずつ進み、Enter で次へ行く
+(--yes なら待たない)。場面ごとに一時の置き場(扉の記録、鍵、台帳)を作り直し、終わったら消すので、どの場面からでも
+何度でも始められる。時計は扉の時計を POST /time で進める。実時間は待たない。
+
+結果は短い日本語で出す(「開きました」「拒みました: 期限の外」)。拒む理由の言葉は扉コントローラ仕様書 5.2a の言葉そのまま。
+錠に届かないときは、例外を見せずに「Sesame に届きません。電源と Bluetooth を確かめてください」と出して止まる。
+実機の Sesame の鍵(sesame-keys.json)は読まない。ここで作る鍵は一時の置き場の中だけで、終われば消える。
+```
 
 ## 台帳の様式
 

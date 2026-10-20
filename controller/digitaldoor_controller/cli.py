@@ -3,22 +3,95 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import secrets
 import sys
 import time
+from datetime import datetime
 from pathlib import Path
 
-from .audit import Audit, load_signer
+from . import credentials
+from .audit import Audit, Ed25519Signer, load_signer
 from .contacts import SimContacts
 from .controller import Config, Controller
 from .server import serve
-from .slips import check_box, export
+from .slips import check_box, export, key_id
+
+
+def write_key_file(path: Path | str) -> Ed25519Signer:
+    """Ed25519 の鍵の対を作り、秘密鍵(32 バイト)を権限 600 のファイルに書く。あるファイルは上書きしない(FileExistsError)。"""
+    signer = Ed25519Signer.generate()
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(fd, "wb") as f:
+        f.write(signer.private_bytes())
+    return signer
+
+
+def read_key_file(path: Path | str) -> Ed25519Signer:
+    """write_key_file で書いた秘密鍵のファイルを開く。読めない形なら ValueError(OSError はそのまま)。"""
+    raw = Path(path).read_bytes()
+    if len(raw) != 32:
+        raise ValueError(f"鍵のファイルの形が違います(32 バイトの秘密鍵が要ります): {path}")
+    return Ed25519Signer(raw)
+
+
+def parse_time(text: str) -> int:
+    """unix 秒(整数)か、ISO 8601 の日時(2026-10-21T09:00:00+09:00 など)を unix 秒にする。
+    時差の無い日時は、この機械の地方時として読む。"""
+    try:
+        return int(text)
+    except ValueError:
+        pass
+    try:
+        return int(datetime.fromisoformat(text).timestamp())
+    except ValueError:
+        raise ValueError(f"時刻を読めません: {text}(unix 秒か 2026-10-21T09:00:00+09:00 の形で書いてください)") from None
+
+
+def _names(text: str) -> list[str]:
+    return [x.strip() for x in text.split(",") if x.strip()]
+
+
+def _key_command(args) -> int:
+    """keygen、issue、trust-change。置き場(--dir)は使わず、記録も作らない。出力は JSON を一つ。"""
+    try:
+        if args.cmd == "keygen":
+            signer = write_key_file(args.out)
+            out = {"public_key": signer.public_key().hex(), "issuer": key_id(signer.public_key())}
+        elif args.cmd == "issue":
+            doors = _names(args.doors)
+            if not doors:
+                raise ValueError("--doors に扉の名前を一つ以上書いてください")
+            out = credentials.issue(read_key_file(args.key), cred_id=args.id, subject=args.subject, doors=doors,
+                                    not_before=parse_time(args.from_), not_after=parse_time(args.until),
+                                    once=args.once)
+        else:
+            try:
+                issuer_public = bytes.fromhex(args.issuer_key)
+            except ValueError:
+                raise ValueError("--issuer-key は公開鍵の 16 進です") from None
+            if len(issuer_public) != 32:
+                raise ValueError("--issuer-key は 32 バイト(64 桁)の公開鍵です")
+            doors = _names(args.doors) if args.doors else None
+            out = credentials.trust_change(read_key_file(args.admin_key_file), door=args.door, action=args.action,
+                                           issuer_public_key=issuer_public, doors=doors,
+                                           req_id=args.id or secrets.token_hex(8))
+    except FileExistsError:
+        print(f"鍵のファイルが既にあります(上書きしません): {args.out}", file=sys.stderr)
+        return 1
+    except (OSError, ValueError) as e:
+        print(str(e), file=sys.stderr)
+        return 1
+    print(json.dumps(out, ensure_ascii=False))
+    return 0
 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(
         prog="digitaldoor-controller", description="扉側のコントローラ(中核)",
         epilog="記録の署名は Ed25519 で、鍵は置き場の audit.ed25519 です(前からの置き場で audit.key がある物は HMAC のまま)。"
-               "伝票は一件ずつ <扉>-<連番>.json として箱へ出し、受け手は pubkey で写した公開鍵だけで check-box で検べます。")
+               "伝票は一件ずつ <扉>-<連番>.json として箱へ出し、受け手は pubkey で写した公開鍵だけで check-box で検べます。"
+               "発行者と管理者の側では keygen で鍵を作り(秘密鍵のファイルは権限 600)、issue で資格情報を、trust-change で信頼の一覧の変更の要求を、"
+               "JSON で出します。この三つは置き場(--dir)を使わず、網も要りません。")
     ap.add_argument("--dir", default=os.environ.get("DIGITALKEY_DOOR_DIR", "vault"), help="記録と鍵の置き場")
     ap.add_argument("--name", default="door", help="扉の名前。伝票のファイル名と door の欄に入る")
     ap.add_argument("--host", default="127.0.0.1")
@@ -42,7 +115,33 @@ def main(argv=None) -> int:
     c.add_argument("--box", required=True, help="伝票の箱")
     c.add_argument("--door", required=True, help="扉の名前")
     c.add_argument("--pubkey", required=True, help="台帳に写した公開鍵(16 進)")
+    k = sub.add_parser("keygen", help="発行者か管理者の Ed25519 の鍵の対を作る。秘密鍵は --out のファイル(権限 600)に書き、公開鍵と発行者の識別を JSON で出す",
+                       description="秘密鍵(32 バイト)を権限 600 で --out に書く。ある名前には書かない。"
+                                   "公開鍵の 16 進(信頼の一覧と --admin-key に入れる)と、発行者の識別(公開鍵の SHA-256 の先頭 16 桁。資格情報の issuer)を JSON で出す。")
+    k.add_argument("--out", required=True, metavar="FILE", help="秘密鍵を書くファイル。無い名前にする")
+    i = sub.add_parser("issue", help="発行者の鍵で署名した資格情報(5.2a)を JSON で出す",
+                       description="資格情報 {\"body\": ..., \"sig\": ...} を標準出力に出す。扉の POST /credential にそのまま送れる。")
+    i.add_argument("--key", required=True, metavar="FILE", help="発行者の秘密鍵のファイル(keygen の --out)")
+    i.add_argument("--id", required=True, help="資格情報の識別。一回限りの使用済みの印に使う")
+    i.add_argument("--subject", required=True, help="仮名化した主体")
+    i.add_argument("--doors", required=True, metavar="NAME[,NAME...]", help="開けてよい扉の名前(コンマで区切る)")
+    i.add_argument("--from", dest="from_", required=True, metavar="TIME",
+                   help="有効の始まり。unix 秒か ISO 8601(2026-10-21T09:00:00+09:00)。時差の無い日時はこの機械の地方時")
+    i.add_argument("--until", required=True, metavar="TIME", help="有効の終わり。--from と同じ書き方")
+    i.add_argument("--once", action="store_true", help="一回限りの資格情報にする")
+    t = sub.add_parser("trust-change", help="管理者の鍵で署名した、信頼の一覧の変更の要求を JSON で出す",
+                       description="要求 {\"body\": ..., \"sig\": ...} を標準出力に出す。扉の POST /trust に送る。"
+                                   "扉は据付のときに入れた管理者の公開鍵で署名を検べる。")
+    t.add_argument("--admin-key", dest="admin_key_file", required=True, metavar="FILE",
+                   help="管理者の秘密鍵のファイル。(サブコマンドの前に置く --admin-key は公開鍵の 16 進で、別の物)")
+    t.add_argument("--door", required=True, help="この要求が効く扉の名前")
+    t.add_argument("--action", required=True, choices=["add", "remove"], help="発行者を足すか、外すか")
+    t.add_argument("--issuer-key", required=True, metavar="HEX", help="対象の発行者の公開鍵(16 進)")
+    t.add_argument("--doors", metavar="NAME[,NAME...]", help="その発行者に許す扉の名前(add のとき要る。コンマで区切る)")
+    t.add_argument("--id", help="要求の識別。扉は同じ識別を二度受けない。省くと乱数で作る")
     args = ap.parse_args(argv)
+    if args.cmd in ("keygen", "issue", "trust-change"):
+        return _key_command(args)
     d = Path(args.dir)
     if args.cmd == "check-box":
         ok, n, why = check_box(args.box, args.door, bytes.fromhex(args.pubkey))
