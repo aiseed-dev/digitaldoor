@@ -16,7 +16,7 @@ from typing import Optional
 import flet as ft
 
 from digitalkey_sesame import protocol as p
-from digitalkey_sesame.keystore import DeviceKey, KeyStore
+from digitalkey_sesame.keystore import DeviceKey, KeyStore, fake_path, format_secret_hex
 
 FAKE_MODE = "--fake" in sys.argv
 MOBILE_PLATFORMS = {ft.PagePlatform.ANDROID, ft.PagePlatform.ANDROID_TV, ft.PagePlatform.IOS}
@@ -114,6 +114,7 @@ class SesameApp:
                                       on_click=self.on_register, visible=False)
         self.btn_disconnect = ft.OutlinedButton(content="切断", icon=ft.Icons.LINK_OFF, on_click=self.on_disconnect)
         self.btn_forget_key = ft.TextButton(content="鍵を削除", icon=ft.Icons.DELETE_OUTLINE, on_click=self.on_forget_key)
+        self.btn_export_key = ft.TextButton(content="鍵を書き出す", icon=ft.Icons.KEY, on_click=self.on_export_key)
         self.tag_field = ft.TextField(label="履歴タグ (Sesame の履歴に残る名前)", value="flet", dense=True,
                                       width=280, on_change=self.on_tag_change)
 
@@ -129,7 +130,7 @@ class SesameApp:
                                 ft.Column([self.battery_text, self.position_text], spacing=2)],
                                spacing=16),
                         self.version_text,
-                        ft.Row([self.btn_register, self.btn_forget_key], wrap=True),
+                        ft.Row([self.btn_register, self.btn_export_key, self.btn_forget_key], wrap=True),
                         ft.Row([self.btn_unlock, self.btn_lock, self.btn_toggle], wrap=True),
                         ft.Row([self.btn_status, self.btn_version, self.btn_disconnect], wrap=True),
                         self.tag_field,
@@ -198,6 +199,7 @@ class SesameApp:
         self.btn_register.visible = bool(connected and not logged_in)
         self.btn_register.disabled = self.busy
         self.btn_forget_key.visible = has_key
+        self.btn_export_key.visible = has_key   # 鍵が保存されている Sesame を選んでいるときだけ
         if not connected:
             self.dev_title.value = "未接続"
             self.state_icon.icon = ft.Icons.HELP_OUTLINE
@@ -265,8 +267,7 @@ class SesameApp:
         pf = self.page.platform
         desktop = pf in (ft.PagePlatform.LINUX, ft.PagePlatform.WINDOWS, ft.PagePlatform.MACOS) or self.page.web
         if FAKE_MODE:
-            from digitalkey_sesame.keystore import default_path
-            self.keystore = KeyStore(path=default_path().with_name("sesame-keys-fake.json"))
+            self.keystore = KeyStore(path=fake_path())
         elif desktop:
             self.keystore = KeyStore()  # JSON file shared with `digitalkey sesame`
         else:
@@ -478,6 +479,51 @@ class SesameApp:
                      ft.TextButton(content="キャンセル", on_click=lambda _: self._close_dialog(dlg))],
         )
         self.page.show_dialog(dlg)
+
+    async def on_export_key(self, e=None) -> None:
+        """保存した鍵の 32 桁を、確かめた上で一度だけ画面に出す(別の機械へ写すため。`digitalkey sesame import`)。
+
+        鍵を持つ人は、この Sesame を開けられる。だから確かめのダイアログを挟み、了承されたときだけ出す。
+        出すのはダイアログの中の選べる文字だけで、ログ欄にも logging にも書かない。閉じたら画面から消す。
+        """
+        adv = self.current_adv
+        key = self.keys.get(str(adv.device_uuid)) if adv and adv.device_uuid else None
+        if key is None:
+            return
+
+        def close(dlg):
+            self._close_dialog(dlg)
+
+        def reveal(_):
+            close(confirm)
+            secret_text = ft.Text(format_secret_hex(key.secret_hex), size=20, font_family="monospace", selectable=True)
+
+            def done(_):
+                secret_text.value = ""   # 閉じたら、画面の部品からも鍵を消す
+                close(shown)
+
+            shown = ft.AlertDialog(
+                modal=True,
+                title=ft.Text("Sesame の鍵"),
+                content=ft.Column([
+                    secret_text,
+                    ft.Text("選んでコピーできます。人に見せず、チャットやメールに貼らないでください。閉じると画面から消えます。",
+                            size=12, color=ft.Colors.ON_SURFACE_VARIANT),
+                ], tight=True),
+                actions=[ft.TextButton(content="閉じる", on_click=done)],
+            )
+            self.page.show_dialog(shown)
+
+        confirm = ft.AlertDialog(
+            modal=True,
+            title=ft.Text("鍵を書き出しますか？"),
+            content=ft.Text("この 32 桁を持つ人は、この Sesame を開けられます。"
+                            "人に見せず、チャットやメールに貼らないでください。"
+                            "写す先の機械の `digitalkey sesame import` に、自分で入力してください。"),
+            actions=[ft.TextButton(content="書き出す", on_click=reveal),
+                     ft.TextButton(content="キャンセル", on_click=lambda _: close(confirm))],
+        )
+        self.page.show_dialog(confirm)
 
 
 async def main(page: ft.Page) -> None:

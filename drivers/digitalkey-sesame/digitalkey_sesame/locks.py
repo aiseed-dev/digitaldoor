@@ -1,6 +1,6 @@
 """digitalkey の錠ドライバ(entry point `digitalkey.locks`)。
 
-  sesame:<機器UUID>      BLE 直結。事前に `digitalkey sesame register` で鍵を登録しておく
+  sesame:<機器UUID>      BLE 直結。事前に `digitalkey sesame register`(新しい Sesame)か `import`(スマートフォンの鍵を写す)で鍵を置いておく
   sesameweb:<機器UUID>   CANDY HOUSE の Web API(Hub 3 経由)。API key と機器の secret key は
                          $SESAME_KEYS が指す JSON({"api_key": "...", "<uuid>": "<secret hex>"})か、
                          環境変数 SESAME_API_KEY / SESAME_SECRET_<UUIDの16進を大文字で> で渡す
@@ -33,13 +33,13 @@ class SesameLock:
 
     async def _run(self, action: str) -> None:
         from .keystore import KeyStore
-        from .transport_bleak import BleakSesameConnection, scan_once
+        from .transport_bleak import BleakSesameConnection, SesameScanner
 
         ks = KeyStore(path=self.keystore_path) if self.keystore_path else KeyStore()
         key = await ks.get(self.device_uuid)
         if key is None:
-            raise RuntimeError(f"{self.id}: 登録された鍵がありません(digitalkey sesame register を先に)")
-        found = await scan_once(self.scan_seconds)
+            raise RuntimeError(f"{self.id}: 登録された鍵がありません(digitalkey sesame register か import を先に)")
+        found = await SesameScanner.scan_once(self.scan_seconds)
         dev = None
         for adv, d in found:
             if str(adv.device_uuid) == self.device_uuid:

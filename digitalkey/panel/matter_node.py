@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import io
+import shutil
 import threading
 import time
 from pathlib import Path
@@ -13,10 +14,34 @@ from .door_client import Door
 from .door_lock import DoorLockDevice
 
 
+AVAHI_COMMAND = "avahi-publish-service"
+AVAHI_MISSING = ("avahi-utils が入っていません。`sudo apt install avahi-utils` で入れてください"
+                 f"(Matter の広告に `{AVAHI_COMMAND}` を使います。avahi-daemon も動いている必要があります)")
+AVAHI_SOCKET = Path("/run/avahi-daemon/socket")
+
+
+class AvahiMissing(RuntimeError):
+    """Matter の広告に使う avahi-publish-service が無い。メッセージは利用者に見せてよい文。"""
+
+
+def avahi_problem() -> str | None:
+    """盤を起動する前の確かめ。avahi-publish-service が無ければ、利用者に見せる文を返す(CircuitMatter は無いと FileNotFoundError で落ちる)。"""
+    return None if shutil.which(AVAHI_COMMAND) else AVAHI_MISSING
+
+
+def avahi_daemon_warning() -> str | None:
+    """avahi-daemon が動いていないように見えるときの注意(止めはしない。ソケットの場所は配布で違うことがある)。"""
+    if AVAHI_SOCKET.exists():
+        return None
+    return f"avahi-daemon が動いていないようです({AVAHI_SOCKET} がありません)。`systemctl status avahi-daemon` で確かめてください"
+
+
 class MatterNode:
     def __init__(self, door: Door, state_dir: Path | str = "vault", vendor_id: int = 0xFFF4,
                  product_id: int = 0x1234, product_name: str = "door 扉") -> None:
         # CircuitMatter の試験用証明書は vendor 0xFFF4 / product 0x1234 だけを認める(製品にするときは自前の DAC)
+        if (problem := avahi_problem()) is not None:
+            raise AvahiMissing(problem)   # CircuitMatter を作る前に止める(作ると UDP 5541 を開いたまま落ちる)
         self.door = door
         d = Path(state_dir)
         d.mkdir(parents=True, exist_ok=True)
@@ -86,8 +111,12 @@ class MatterNode:
         for proc in list(getattr(self.matter.mdns_server, "active_services", {}).values()):
             try:
                 proc.terminate()
+                proc.wait(timeout=2)
             except Exception:
-                pass
+                try:
+                    proc.kill()
+                except Exception:
+                    pass
 
     def mirror(self) -> dict:
         s = self.door.state()

@@ -47,12 +47,12 @@ autolock = 5.0              # 解錠から自動施錠までの秒
 [[token]]
 name = "管理者"
 role = "管理者"
-token = "8ftxnIF407TZuu8ri3Bce94UHfCtzVSW"
+token = "0Vjki8I1oIXBc8Yke_eODB8KL8lQ5Rph"
 
 [[token]]
 name = "受付"
 role = "受付"
-token = "06ZW9IfIFjmXhPRKpR6GnotKf1QaolTg"
+token = "Bz4qJeloUXaPeAbFIpAuWwmG9DDmYcXk"
 ```
 
 ### 役割
@@ -109,6 +109,7 @@ token = "06ZW9IfIFjmXhPRKpR6GnotKf1QaolTg"
 ```
 digitalkey entrance <命令> ...   様式・台帳・鍵・本人確認・報告・控え(--help で一覧)
   digitalkey door <命令> ...       扉のコントローラ(別パッケージ digitaldoor-controller。serve | verify | pubkey | export | check-box)
+  digitalkey door-serve (--lock sesame:<UUID> | --fake) ...   錠のドライバで動く扉。door serve と同じ引数に、錠の指定を足す(実機の Sesame や疑似の錠で、扉の HTTP の口を開く)
   digitalkey panel                 盤(Flet)。$DIGITALKEY_DOOR_URL の door に結び、$DIGITALKEY_PANEL_PORT(既定 8798)で開く
   digitalkey <ドライバ名> ...       pip で入れた錠ドライバのコマンド(例: digitalkey-sesame を入れると `digitalkey sesame scan`)
   digitalkey site init <dir> | serve --config site.toml   事業所サーバー(扉のコントローラ+鍵の台帳+HTTP API)
@@ -207,23 +208,33 @@ options:
 ### digitalkey sesame
 
 ```
-usage: digitalkey sesame [-h] [-v] [--seconds SECONDS] [--tag TAG]
-                         {scan,keys,register,status,lock,unlock,toggle,version} ...
+usage: digitalkey sesame [-h] [-v] [--fake] [--seconds SECONDS] [--tag TAG]
+                         {scan,keys,register,import,status,lock,unlock,toggle,version} ...
 
 Command-line client (no GUI) for CANDY HOUSE Sesame 5/6/6 Pro over BLE via bleak.
 
   digitalkey sesame scan [--seconds 5]
   digitalkey sesame register <uuid-or-address> [--name 玄関]
+  digitalkey sesame import <uuid-or-address> [--name 玄関]
   digitalkey sesame status|lock|unlock|toggle|version <uuid-or-address>
   digitalkey sesame keys
+  digitalkey sesame --fake <command> ...      疑似の Sesame(実機も Bluetooth も使わない。鍵は sesame-keys-fake.json)
 Keys are stored in ~/.config/digitalkey/sesame-keys.json (or $SESAME_KEYSTORE).
 
+鍵(16 バイト、32 桁の 16 進)は、この Sesame を開けられる唯一の物です。ログにも標準出力にも出しません。
+別の端末(スマートフォンのアプリ)の鍵を写すときは、アプリの「鍵を書き出す」で 32 桁を出し、
+この機械で `import` します(鍵は引数で受けず、伏せた入力で受けます)。
+
 positional arguments:
-  {scan,keys,register,status,lock,unlock,toggle,version}
+  {scan,keys,register,import,status,lock,unlock,toggle,version}
+    keys                保存した鍵の一覧(鍵そのものは出さない)
+    import              別の端末で登録した Sesame の鍵を取り込む(鍵は伏せた入力で受ける)
 
 options:
   -h, --help            show this help message and exit
   -v, --verbose
+  --fake                疑似の Sesame を使う(実機も Bluetooth も使わない。鍵は sesame-keys-
+                        fake.json)
   --seconds SECONDS     scan duration
   --tag TAG             history tag written into the lock's log
 ```
@@ -329,6 +340,57 @@ options:
 - 時間切れのときはドライバの処理を取り消す。取り消しの前に錠へ届いていた命令は取り消せないので、位置は確かめるまで分からない。
 - 扉の判断は止めない。コントローラは命令を出した側として記録を続け、錠が動いたかは `bolt_out()` と `/state` の `bolt_out` が示す。
   命令を出した時点の `failures` と比べれば、呼び手(実演の道具など)は届かなかったことを知れる。
+```
+
+### 錠のドライバで動く扉(digitalkey door-serve)
+
+```
+usage: digitalkey door-serve [-h] (--lock SPEC | --fake) [--timeout TIMEOUT]
+                             [--dir DIR] [--name NAME] [--host HOST]
+                             [--port PORT] [--two-person TWO_PERSON]
+                             [--autolock AUTOLOCK]
+                             [--power-policy {release,hold}] [--admin-key HEX]
+                             [--trust FILE] [--box BOX]
+
+錠のドライバで動く扉 — `digitalkey door-serve`。
+
+扉のコントローラ(digitaldoor_controller)の HTTP の口(/state /lock /unlock /event /audit /verify ほか)を、
+模擬の接点ではなく、錠のドライバ(`digitalkey.locks` の登録簿)につないだ接点で開く。
+盤(`digitalkey panel`)や Matter の橋は、この口を叩いて本物の錠を動かす。
+
+  digitalkey door-serve --lock sesame:<機器のUUID>      実機の Sesame(BLE 直結。鍵は `digitalkey sesame import` か `register` で置いておく)
+  digitalkey door-serve --fake                          疑似の Sesame(実機にも Bluetooth にも触れない)
+  digitalkey door-serve --lock dummy                    配線確認用の錠(何も動かさない)
+
+引数は `digitaldoor-controller serve` と揃えてある(--dir --name --host --port --two-person --autolock --power-policy
+--admin-key --trust --box)。違いは、錠の指定(--lock か --fake)と、錠に一回の命令を待つ秒数(--timeout)だけである。
+
+しくみ: `Controller` に `digitalkey.contacts.LockDriverContacts` を差す。tools/jitsuen.py と同じ組み立てを、
+実演の場面から切り離して常駐させたもの。錠の銘柄は接点の下に隠れ、扉の判断は変わらない(扉コントローラ仕様書 R-CT-03、R-CT-04)。
+この命令は digitalkey(AGPL)の側にある。扉のコントローラ(Apache-2.0)は digitalkey を読み込まない。
+
+- 錠の位置は、起動のとき施錠側として始まる。実機を読みには行かない。実機が解錠のままなら、先に施錠してから立てる。
+- 錠に届かなかった命令は、扉の判断を止めず、錠の位置の記録を動かさない。`LockDriverContacts.failures` と標準エラーの行に残る。
+- 実機の鍵(sesame-keys.json)はドライバが開く。この命令は鍵を読まず、出さない。
+
+options:
+  -h, --help            show this help message and exit
+  --lock SPEC           錠のドライバの指定 <種類>:<引数>(例: sesame:<機器のUUID>)。使える種類は pip
+                        で入れたドライバが決める。dummy は配線確認用
+  --fake                疑似の Sesame で動かす(digitalkey-sesame が要る。実機にも Bluetooth
+                        にも触れない)
+  --timeout TIMEOUT     錠への一回の施錠・解錠を待つ秒数。実機の BLE は探して、つないで、送るので長め(既定 30.0)
+  --dir DIR             記録と鍵の置き場
+  --name NAME           扉の名前。伝票のファイル名と door の欄に入る
+  --host HOST
+  --port PORT
+  --two-person TWO_PERSON
+  --autolock AUTOLOCK
+  --power-policy {release,hold}
+  --admin-key HEX       管理者の公開鍵(16 進)。据付のときに入れる。この鍵で署名した要求だけが信頼の一覧を変えられる
+  --trust FILE          信頼する発行者の一覧(JSON。{発行者の識別: {"public_key": 16 進, "doors":
+                        [扉の名前, ...]}})。管理者の変更が記録にあるときは、記録の一覧を使う
+  --box BOX             伝票を出す箱(フォルダ)。動いている間、増えた記録を続けて出す
 ```
 
 ## 実演の道具
@@ -533,8 +595,48 @@ Reference: https://github.com/CANDY-HOUSE/SesameSDK_Android_with_DemoApp
 ```
 digitalkey の錠ドライバ(entry point `digitalkey.locks`)。
 
-sesame:<機器UUID>      BLE 直結。事前に `digitalkey sesame register` で鍵を登録しておく
+sesame:<機器UUID>      BLE 直結。事前に `digitalkey sesame register`(新しい Sesame)か `import`(スマートフォンの鍵を写す)で鍵を置いておく
 sesameweb:<機器UUID>   CANDY HOUSE の Web API(Hub 3 経由)。API key と機器の secret key は
                        $SESAME_KEYS が指す JSON({"api_key": "...", "<uuid>": "<secret hex>"})か、
                        環境変数 SESAME_API_KEY / SESAME_SECRET_<UUIDの16進を大文字で> で渡す
+```
+
+#### digitalkey sesame(命令行)
+
+```
+Command-line client (no GUI) for CANDY HOUSE Sesame 5/6/6 Pro over BLE via bleak.
+
+  digitalkey sesame scan [--seconds 5]
+  digitalkey sesame register <uuid-or-address> [--name 玄関]
+  digitalkey sesame import <uuid-or-address> [--name 玄関]
+  digitalkey sesame status|lock|unlock|toggle|version <uuid-or-address>
+  digitalkey sesame keys
+  digitalkey sesame --fake <command> ...      疑似の Sesame(実機も Bluetooth も使わない。鍵は sesame-keys-fake.json)
+Keys are stored in ~/.config/digitalkey/sesame-keys.json (or $SESAME_KEYSTORE).
+
+鍵(16 バイト、32 桁の 16 進)は、この Sesame を開けられる唯一の物です。ログにも標準出力にも出しません。
+別の端末(スマートフォンのアプリ)の鍵を写すときは、アプリの「鍵を書き出す」で 32 桁を出し、
+この機械で `import` します(鍵は引数で受けず、伏せた入力で受けます)。
+```
+
+#### digitalkey sesame import
+
+```
+usage: digitalkey sesame import [-h] [--name NAME] target
+
+別の端末(スマートフォンのアプリ)で登録した Sesame の鍵を、この機械の鍵の置き場に取り込む。
+
+流れ: 伏せた入力で 32 桁を受ける → 形を確かめる(32 桁の 16 進でなければ断る) → Sesame を探して BLE でつなぐ →
+その鍵でログインできることを確かめる → できたときだけ、機種(広告の model_id)と一緒に保存する。
+ログインできなければ何も保存しない。確かめを飛ばす選択肢は置かない(間違った鍵を置くと、使う場面で初めて動かないと分かるため)。
+保存した鍵は鍵の置き場の権限(600)で守られる。鍵を画面にもログにも出さない。
+
+positional arguments:
+  target       Sesame の UUID か BLE の住所
+
+options:
+  -h, --help   show this help message and exit
+  --name NAME  鍵の置き場に残す名前(既定は機種名)
+
+鍵はコマンドの引数に書かせません(シェルの履歴に残るため)。実行すると 32 桁を尋ねます。区切りの空白とハイフンは読み飛ばすので、アプリの「鍵を書き出す」の表示をそのまま貼れます。
 ```

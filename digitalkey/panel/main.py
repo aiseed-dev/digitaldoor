@@ -8,7 +8,7 @@ import threading
 import flet as ft
 
 from .door_client import Door
-from .matter_node import MatterNode
+from .matter_node import AvahiMissing, MatterNode
 
 _lock = threading.Lock()
 _node: MatterNode | None = None
@@ -24,10 +24,25 @@ def shared_node(door: Door) -> MatterNode:
         return _node
 
 
+def stop_shared_node() -> None:
+    """Matter の機器を止め、mDNS の広告の子プロセス(avahi-publish-service)も終わらせる。何度呼んでもよい。"""
+    global _node
+    with _lock:
+        node, _node = _node, None
+    if node is not None:
+        node.stop()
+
+
 async def main(page: ft.Page):
     page.title = "digitalkey 扉の盤"
     door = Door(os.environ.get("DIGITALKEY_DOOR_URL", "http://127.0.0.1:8797"))
-    node = shared_node(door)
+    try:
+        node = shared_node(door)
+    except AvahiMissing as e:   # 例外の山ではなく、画面に直し方を出す
+        page.add(ft.Text("Matter の広告ができません", size=18, weight=ft.FontWeight.BOLD),
+                 ft.Text(str(e), color=ft.Colors.RED, selectable=True))
+        page.update()
+        return
 
     status = ft.Text("door に接続中…", size=18)
     mode = ft.Text("")

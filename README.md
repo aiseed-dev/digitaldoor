@@ -41,6 +41,7 @@
 | `digitalkey/entrance/` | 鍵の発行と失効、本人確認、台帳、報告、バックアップ。民泊・貸家・WWOOF の受け入れ向け |
 | `controller/` | 扉側のコントローラ(別パッケージ digitaldoor-controller)。仕様を確かめる疑似の扉と試験の道具(Apache-2.0)。火災・停電・避難時の判断、監査ログ、接点の抽象化、HTTP API。`digitalkey/site` はこれを pip で入れて使います |
 | `digitalkey/panel/` | 扉を Matter の電子錠として見せるブリッジと、操作画面(Flet) |
+| `digitalkey/door_serve.py` | `digitalkey door-serve`。錠のドライバ(実機の Sesame など)で動く扉の HTTP の口。盤はこの口を叩いて本物の錠を動かします |
 | `digitalkey/site/` | 事業所サーバー。設定ファイル、扉のコントローラと鍵の台帳、HTTP API、systemd 用のファイルは `deploy/` |
 | `digitalkey/mobile/` | 管理者と利用者のスマートフォンアプリ(Flet)。`flet build` で Android/iOS 向けに組めます |
 | `digitalkey/locks.py` | 錠ドライバの登録簿。`dummy` は組み込み、それ以外は pip で入れたドライバのパッケージが登録します |

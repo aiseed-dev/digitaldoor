@@ -37,7 +37,7 @@ AI のスキルとして入れて使う場合は、`skills/smart-door-dev/` を�
 - 扉のコントローラーの疑似の扉と試験の道具(`controller/`、Apache-2.0。判断、監査の記録、HTTP の口)と、Matter の錠として見せるブリッジ(`digitalkey/panel/`、CircuitMatter)。テストは接点を模擬にして回ります
 - 受け入れの参照実装(`digitalkey/entrance/`。様式は adoc、伝票は追記だけ、前ハッシュで連鎖)、事業所サーバー(`digitalkey/site/`)、スマートフォンのアプリ(`digitalkey/mobile/`、Flet)
 - 後付け錠のドライバーの例(`drivers/digitalkey-sesame/`。BLE 直結と Web API、疑似の機器つき)
-- 実演の道具(`tools/jitsuen.py`。疑似の Sesame か実機の錠で、開け閉めと鍵の管理の難しさを場面ごとに見せる。手順は `docs/使い方.md` の「実演」)と、錠のドライバで動く接点(`digitalkey/contacts.py`)、鍵と資格情報を作る命令(`digitaldoor-controller keygen`、`issue`、`trust-change`)
+- 実演の道具(`tools/jitsuen.py`。疑似の Sesame か実機の錠で、開け閉めと鍵の管理の難しさを場面ごとに見せる。手順は `docs/使い方.md` の「実演」)と、錠のドライバで動く接点(`digitalkey/contacts.py`)、それで扉の HTTP の口を開く命令(`digitalkey door-serve`。実機の Sesame を Matter の電子錠として見せる手順は `docs/使い方.md` の「実演」)、鍵と資格情報を作る命令(`digitaldoor-controller keygen`、`issue`、`trust-change`)
 - 権限の申請の雛形(下書き。`docs/権限の申請の雛形.md`)。社員がどこからでも申請し、情報システム部門が確かめて出し、止め、記録する流れを学ぶ教材。部品(PocketBase の認証、会員、本人確認、知らせ)は aiai-tools(https://github.com/aiseed-dev/aiai-tools)の物を使う。各社はこれを参考に独自に開発し、問題は Issues で指摘する
 
 ## まだ無い物

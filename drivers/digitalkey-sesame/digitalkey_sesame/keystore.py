@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from dataclasses import dataclass, asdict
 from pathlib import Path
 from typing import Optional, Protocol
@@ -29,6 +30,26 @@ class DeviceKey:
     @property
     def secret(self) -> bytes:
         return bytes.fromhex(self.secret_hex)
+
+
+SECRET_DIGITS = 32   # 16 バイトの鍵は 32 桁の 16 進
+
+
+def parse_secret_hex(text: str) -> bytes:
+    """人が書き写した 32 桁の 16 進を、16 バイトの鍵にする。
+
+    空白とハイフンは区切りとして読み飛ばす(`format_secret_hex` の出力をそのまま貼れる)。32 桁の 16 進でなければ ValueError。
+    エラーの文に入力は入れない(鍵がログや画面に残らないように)。
+    """
+    digits = re.sub(r"[\s-]", "", text or "")
+    if len(digits) != SECRET_DIGITS or not re.fullmatch(r"[0-9a-fA-F]+", digits):
+        raise ValueError(f"鍵は 32 桁の 16 進です(0-9 と a-f。{SECRET_DIGITS} 桁。区切りの空白とハイフンは読み飛ばします)")
+    return bytes.fromhex(digits)
+
+
+def format_secret_hex(secret_hex: str, group: int = 4) -> str:
+    """32 桁の 16 進を、`group` 桁ずつ空白で区切って読みやすくする(既定は 4 桁ずつの 8 組)。`parse_secret_hex` で戻せる。"""
+    return " ".join(secret_hex[i:i + group] for i in range(0, len(secret_hex), group))
 
 
 class AsyncKV(Protocol):
@@ -96,6 +117,11 @@ class KeyStore:
         if not self._loaded:
             await self.load()
         return dict(self._cache)
+
+
+def fake_path() -> Path:
+    """疑似の Sesame(`--fake`)の鍵の置き場。実機の鍵のファイルとは別の名前にして、混ざらないようにする。"""
+    return default_path().with_name("sesame-keys-fake.json")
 
 
 def default_path() -> Path:

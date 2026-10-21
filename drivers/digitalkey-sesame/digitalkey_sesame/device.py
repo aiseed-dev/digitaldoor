@@ -190,7 +190,7 @@ class SesameDevice:
         session_key = p.session_key_from_secret(self.device_secret, token)
         self._cipher = p.SesameCipher(session_key, token)
         self.logged_in = True
-        self._log(f"registered; secret={self.device_secret.hex()} state={self.state}")
+        self._log(f"registered; state={self.state}")   # 鍵は log に出さない(R-CM-12)
         self._notify_status()
         return self.device_secret
 

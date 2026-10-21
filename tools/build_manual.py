@@ -107,12 +107,13 @@ def section_mobile() -> str:
 def section_door() -> str:
     from digitaldoor_controller import cli as door_cli
     from digitaldoor_controller import controller
-    from digitalkey import contacts
+    from digitalkey import contacts, door_serve
     out = ["## 扉のコントローラの動作", "", doc(controller).replace("判断 — ", ""), ""]
     out += ["### 鍵と資格情報を作る命令", "", "発行者と管理者の側で使う三つの命令です。置き場を使わず、網も要りません。", ""]
     for cmd in ("keygen", "issue", "trust-change"):
         out += [f"#### digitaldoor-controller {cmd}", "", "```", help_of(door_cli.main, (cmd, "--help")), "```", ""]
     out += ["### 錠のドライバで動く接点", "", "```", doc(contacts), "```", ""]
+    out += ["### 錠のドライバで動く扉(digitalkey door-serve)", "", "```", help_of(door_serve.main, ("--help",)), "```", ""]
     return "\n".join(out)
 
 
@@ -144,8 +145,11 @@ def section_drivers() -> str:
     out.append("")
     try:
         import digitalkey_sesame
+        from digitalkey_sesame import cli as sesame_cli
         from digitalkey_sesame import locks as L
         out += ["### digitalkey-sesame", "", doc(digitalkey_sesame), "", "```", doc(L), "```", ""]
+        out += ["#### digitalkey sesame(命令行)", "", "```", doc(sesame_cli), "```", "",
+                "#### digitalkey sesame import", "", "```", help_of(sesame_cli.main, ("import", "--help")), "```", ""]
     except ImportError:
         out += ["digitalkey-sesame は入っていません。CANDY HOUSE Sesame を使うときは `pip install digitalkey-sesame`。", ""]
     return "\n".join(out)

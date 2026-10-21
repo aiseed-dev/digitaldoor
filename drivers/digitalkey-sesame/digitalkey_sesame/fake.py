@@ -103,11 +103,23 @@ _FAKE_ADVS: list[p.Advertisement] = [
 ]
 
 
+_INITIALLY_REGISTERED = {str(a.device_uuid): a.is_registered for a in _FAKE_ADVS}   # 広告の印は後で書き換わるので、始めの状態を控える
+
+
 def _fake_device(adv: p.Advertisement) -> FakeSesame:
     key = str(adv.device_uuid)
     if key not in _FAKE_DEVICES:
-        _FAKE_DEVICES[key] = FakeSesame(registered_secret=bytes(16) if adv.is_registered else None)
+        _FAKE_DEVICES[key] = FakeSesame(registered_secret=bytes(16) if _INITIALLY_REGISTERED.get(key, adv.is_registered) else None)
     return _FAKE_DEVICES[key]
+
+
+async def fake_scan_once(timeout: float = 5.0) -> list[tuple[p.Advertisement, p.Advertisement]]:
+    """`SesameScanner.scan_once` の疑似。待たずに、疑似の機器の広告を返す(登録済みかは疑似の機器の今の状態)。"""
+    out = []
+    for adv in _FAKE_ADVS:
+        adv.is_registered = _fake_device(adv).secret is not None
+        out.append((adv, adv))
+    return out
 
 
 class FakeScanner:
