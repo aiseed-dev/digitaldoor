@@ -1,5 +1,57 @@
 [
  {
+  "id": "ed4e985f17adb7b2",
+  "link": "https://news.google.com/rss/articles/CBMihAFBVV95cUxPWVNhTE4zTTFtMW9QMXhEQVZhLXMzMzdaNWU5c0NOV3Byb3BlbXpSSm1zNGRQcjExN1I4SlRuZjY5ZXFIaTJ0UDNjaG5VWVpySmhNcGU2SUZMbTdOOGYwcG10d3NBZFNNWDloa3BPMkVuNThwWFlxWXp6NWdYOVRrc3QwclI?oc=5",
+  "source": "Google News(video doorbell)",
+  "publisher": "BGR",
+  "lang": "en",
+  "published": "2026-10-31T11:47:00Z",
+  "title_raw": "Setting Your Video Doorbell To Record Longer Isn't Always Better - Here's Why - BGR",
+  "summary_raw": "Setting Your Video Doorbell To Record Longer Isn't Always Better - Here's Why BGR",
+  "collected": "2026-10-31T23:54:32Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "b1eac1b901f325c4",
+  "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE12Uzh4MC10TXZIOHNIYW03SndkcnhwNWhjSHZHV0NhUXFLQ0FoSnB5c08xOFVsNG1kaUlwMjg3REduTHJuVkdaeEJ1SHFXY3VtMnUwWEh2YnU0S0Nt?oc=5",
+  "source": "Google News(ドアホン)",
+  "publisher": "YouTube",
+  "lang": "ja",
+  "published": "2026-10-31T11:37:01Z",
+  "title_raw": "去年はアンデジ、今年は魔改造ドアホンで国際フォトコンに挑戦する写真家。 - YouTube",
+  "summary_raw": "去年はアンデジ、今年は魔改造ドアホンで国際フォトコンに挑戦する写真家。 YouTube",
+  "collected": "2026-10-31T23:54:31Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "7c6f6e9c5b3c7e77",
+  "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxNS2Q4VmF1YVQ0UFc2bDdzWDRQRllnaHhEVm5zalpQLTZyWE9aT2ZCWVMtR0NreFZPOVlBcm9tOUVwNlUzTkVTVmVYekRIY0hwWTVfeUpDTUQzOFdLcEdRTkRoZk9uc3JOcWZrcTdBaGtPVFhVWlRxMXJOSnF1bGVXVG1wTXMxQjQ?oc=5",
+  "source": "Google News(smart lock)",
+  "publisher": "Sportskeeda Tech",
+  "lang": "en",
+  "published": "2026-10-31T07:39:44Z",
+  "title_raw": "5 best smart home devices for every house - Sportskeeda Tech",
+  "summary_raw": "5 best smart home devices for every house Sportskeeda Tech",
+  "collected": "2026-10-31T23:54:31Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "82ed72afcffe9882",
+  "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE9jLTdYdHE1ZElyYjJ2anJueGRqSTYyMEZiM3AxMVZnMGFwUGZjZ2NCTE1kZkprWFhFbTY3bE4xTVk5LWVPN2d6RjlCUW0tQlZNNGVEdlFsUkxZTEVKVER0ekVSQ3UxNHRNVkI1MUhB0gFzQVVfeXFMT2RTTXdTUUF2VVRFeXViZ2ZjdlROcEFpMGxObmNIdVY2eVNva1Z5SlUtWlJrV0p6WHoteGgxdUZSUG9vNy1WdlFyWEtEQ1BVVUV0ekJfU2tWUXp3Sko2YVNsaDZycHBCRFA3VElpd3ZBNE5GNA?oc=5",
+  "source": "Google News(スマートロック)",
+  "publisher": "CoRRiENTE",
+  "lang": "ja",
+  "published": "2026-10-31T05:58:08Z",
+  "title_raw": "SwitchBot「顔認証スマートロック」がAmazonで15％オフセール。鍵が要らない生活を実現しよう - CoRRiENTE",
+  "summary_raw": "SwitchBot「顔認証スマートロック」がAmazonで15％オフセール。鍵が要らない生活を実現しよう CoRRiENTE",
+  "collected": "2026-10-31T23:54:24Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "cb14ce4f906518dd",
   "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxQSVo2Ql9LRGZVbDVHWGhzOXpfcVU2UzlsSEVIbUlwdEZwTnRxSXBzcWxXTld1YXM4cVVuQk9xT1h2U3FZblgtSXN0emZheVNDbHJ2NGVlTnN2WGJxV0J3dnBYSTZlT3VtWmVaS0xheTl5am5JZGlCcC1LUW1lMG5DSmg0c2k2MS1DWTlLQVVTY2FlSzNXOXc0V3M5cjJDUQ?oc=5",
   "source": "Google News(smart lock)",
@@ -9,6 +61,19 @@
   "title_raw": "Cinematic Savings: Score Over $1,200 Off This 77-Inch Sony 4K Smart TV - PCMag",
   "summary_raw": "Cinematic Savings: Score Over $1,200 Off This 77-Inch Sony 4K Smart TV PCMag",
   "collected": "2026-10-31T00:19:11Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "9ee639c2bab0e3e5",
+  "link": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxPUE5LQ1AzMDdvWnNRRmJFd1FfdkNWQnFoLTVOdWFLQVNPQV9SWFBzMVBmWmN3b1MzNmRhSUc2U2FLbnBjSVJ4cnFkc2lMLXRvU2pjNHJBTG9qdk5OWWNicnZoNk9iVEtDMjdYd19VM1dvbENjLTVOWjlmTFlueGpVeERUQ2J6V2xrdjN3?oc=5",
+  "source": "Google News(video doorbell)",
+  "publisher": "How-To Geek",
+  "lang": "en",
+  "published": "2026-10-30T14:00:16Z",
+  "title_raw": "3 spooky Home Assistant projects to try this weekend (Oct 30-Nov 1) - How-To Geek",
+  "summary_raw": "3 spooky Home Assistant projects to try this weekend (Oct 30-Nov 1) How-To Geek",
+  "collected": "2026-10-31T23:54:32Z",
   "status": "raw",
   "picked": false
  },
@@ -221,6 +286,19 @@
   "picked": false
  },
  {
+  "id": "c6337a6733cb751d",
+  "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxPblBiX2lkMk1Fa3RyOFBlZTVPdzM1TnRqZ0tPSmtrLUhrMzdydlgxdXU4Mjgzc2N6RTJPWTdKMFpmOGxjQjRpUGdnUXlyZXdSOTZCejI0QmJmeHVFV2NFZFZFc0V1TFM3LTEzdzRjVEJNV3k1MDZmSWpRTGtDeldGY1FIczd3dm9uelZkX1RUVFZxV1hnOFduMg?oc=5",
+  "source": "Google News(Home Key UWB)",
+  "publisher": "AppleInsider",
+  "lang": "en",
+  "published": "2026-10-29T16:13:54Z",
+  "title_raw": "Review: Yale Assure Lever Lock Brings HomeKit to All Doors - AppleInsider",
+  "summary_raw": "Review: Yale Assure Lever Lock Brings HomeKit to All Doors AppleInsider",
+  "collected": "2026-10-31T23:54:29Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "483e07e40be54c4a",
   "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxOMF9BUkdDSWFjdURSUVA4QnBKd0lJQ1ZsUFdPZEllYno2eHUySUV3aGtmeU1lOW05Nmk5cFBQNDM2dDdTSnNFREtSaGt5OTVUTFFCcWdYNWt1enNpMGFCenFyN3dWdHRGTlVEMWZma1RHSHlmRk1tcGFNQ1NWWE1QRTNnRU9YS3RkOUNPZkFiVFZUcGxLdk1GeEczVjNMVHpo?oc=5",
   "source": "Google News(video doorbell)",
@@ -243,6 +321,19 @@
   "title_raw": "クラウド型入退室管理「SECURE AC Cloud サブスク for RICOH」を発売 - ニコニコニュース",
   "summary_raw": "クラウド型入退室管理「SECURE AC Cloud サブスク for RICOH」を発売 ニコニコニュース",
   "collected": "2026-10-31T00:19:03Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "20416879ac8be59f",
+  "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE1qMUgyOUtnRTFrblloa0QwUU1CR2dVTzFHYWdKRXd1RVRObjIybjUyOXNwbzR6UW1zNzVGcnBScGxyQWRCZ0ozWnlaYVpoNWFQNzRIYw?oc=5",
+  "source": "Google News(入退室管理)",
+  "publisher": "ニコニコニュース",
+  "lang": "ja",
+  "published": "2026-10-29T15:00:44Z",
+  "title_raw": "クラウド型入退室管理「SECURE AC Cloud サブスク for RICOH」を発売 - ニコニコニュース",
+  "summary_raw": "クラウド型入退室管理「SECURE AC Cloud サブスク for RICOH」を発売 ニコニコニュース",
+  "collected": "2026-10-31T23:54:26Z",
   "status": "raw",
   "picked": false
  },
@@ -468,6 +559,19 @@
   "picked": false
  },
  {
+  "id": "15f71aacfdc9fffb",
+  "link": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1zYmV5MFhDM28yU2oyTUhySUxydk55LTlIOVBmOElVeERlYi1YYThBNGllSDNXTzZXb2V4ejh2X3NaNWRMQm9vQU1lczhoSC1vMUI3XzgzaFRGQQ?oc=5",
+  "source": "Google News(入退室管理)",
+  "publisher": "Panasonic Newsroom Global",
+  "lang": "ja",
+  "published": "2026-10-29T04:00:00Z",
+  "title_raw": "入退室管理システム「eX-SG」シリーズがAppleウォレットの社員証に対応 - Panasonic Newsroom Global",
+  "summary_raw": "入退室管理システム「eX-SG」シリーズがAppleウォレットの社員証に対応 Panasonic Newsroom Global",
+  "collected": "2026-10-31T23:54:26Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "0e96dfc46802a6e7",
   "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9Wd2VPa1NFZkFULXUtTGFnU0ZDYzJSTGhEck5WR0dPSmNsNW52WkFCRjE1SFVOQjM4aVVUT1p2NUdwWGxkb0RyM1hUM1EyU3hubW4ySmtKLThwRzREejdGOGgwSWdfbFRZ?oc=5",
   "source": "Google News(入退室管理)",
@@ -581,6 +685,45 @@
   "title_raw": "WELOCK Smart Lock on Sale for Halloween: Save Up to €63 - Basic Tutorials",
   "summary_raw": "WELOCK Smart Lock on Sale for Halloween: Save Up to €63 Basic Tutorials",
   "collected": "2026-10-29T00:33:28Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "1de24064201f6031",
+  "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxNRmQ4ZEZJRi0tSEJwN0FyQ09Tb0M1NHMwNHpGVGpzSkpZSjJ5cEZCdGxrdlJVNGZ2bVhCN2tUS2dmVUVYc1NyNFh3R29WTXJSM0FqYkJlLWtpN2pCZFMycy1lUkZnYjNFWjRsQzJpMk1wcEVFLWx0Sl9fc2szOW9FUktSRnA5OXc3S0tUcnZGN3ZUVGRhaFJseWxSWHRxZk4yRFJ5Z2VZUDViQW4xd0F3MElR?oc=5",
+  "source": "Google News(digital key car)",
+  "publisher": "Autohled.cz",
+  "lang": "en",
+  "published": "2026-10-28T07:00:00Z",
+  "title_raw": "Škoda Elroq and Enyaq for 2026: LFP battery, frunk, V2L and digital key - Autohled.cz",
+  "summary_raw": "Škoda Elroq and Enyaq for 2026: LFP battery, frunk, V2L and digital key Autohled.cz",
+  "collected": "2026-10-31T23:54:33Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "567d29513d74a233",
+  "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQVENoWUczX3BRNlUzcXlrVTdXYkpHQy1lRXFpbFZxeHhRejVnZ2FsNnZycl8wd2QwaUo4VnVScXFKbVpMNEdqUmpXSUd5NXRlT2JwWU9RbjNMM21YbTUwWDFYcEN1Z2gzb1k5eEhMN1NZS2p5SG9RTGM5MUFQNWhKbDlRczIyR3pmWERyZkNKc0FSYnVrLXRyZ3dvamVGV0d2LUktc3FlWEs1di03T3pUY21B?oc=5",
+  "source": "Google News(digital key car)",
+  "publisher": "Autohled.cz",
+  "lang": "en",
+  "published": "2026-10-28T07:00:00Z",
+  "title_raw": "Škoda Elroq and Enyaq for 2026: LFP battery, frunk, V2L and digital key - Autohled.cz",
+  "summary_raw": "Škoda Elroq and Enyaq for 2026: LFP battery, frunk, V2L and digital key Autohled.cz",
+  "collected": "2026-10-31T23:54:33Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "61a01edde3318645",
+  "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxNd2JIVHdSa2pqdTczbXIyb1ZBbEpzTXJiWFZSRHRRbC1pdzBnQmZ0UHVYZEJRM2hlVGppcVlHMS02X2lwakNEd0ViTWVNYjhmdWhOeU0wMDNhSXBYc2xoc3N4UzFraVV3Tnp0SzgzS0hZaXlNY1hNSmxWSWRNVC1iSmFGS05fbk5RbFU5c2NMV2g1UU14dkdJU3hjX2c1bXYxSTk5T21yMTFGbi1jTUJVTTVuZ0o0NUYxSGUyaGtWYk52WXBO?oc=5",
+  "source": "Google News(digital key car)",
+  "publisher": "scanx.trade",
+  "lang": "en",
+  "published": "2026-10-27T22:27:08Z",
+  "title_raw": "NXP Trimension UWB to power BMW Group digital key and safety systems - scanx.trade",
+  "summary_raw": "NXP Trimension UWB to power BMW Group digital key and safety systems scanx.trade",
+  "collected": "2026-10-31T23:54:33Z",
   "status": "raw",
   "picked": false
  },
@@ -828,6 +971,19 @@
   "title_raw": "ホームセキュリティーブランド「Ring」、越谷市と「防犯ドアホンを活用した防犯対策」の実証実験で連携 - BCN Retail",
   "summary_raw": "ホームセキュリティーブランド「Ring」、越谷市と「防犯ドアホンを活用した防犯対策」の実証実験で連携 BCN Retail",
   "collected": "2026-10-29T00:33:27Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "7dbdfa3372444966",
+  "link": "https://news.google.com/rss/articles/CBMif0FVX3lxTE85WUFHNzVsSmR4NTZoT25VdmkzQUFxYmJqSGE2dklpcENsNU1SRGJSbDJyNGMtZUlXc1hrUktpdkRvajdEVjdXUFdsdHBUaG5jOUhUYkxacXdrYlA5T0FCV0c0Ni1XSkRkbmNSOENONHFBNUZPREVIUk1tUVNoOE0?oc=5",
+  "source": "Google News(ドアホン)",
+  "publisher": "Yahoo!ニュース",
+  "lang": "ja",
+  "published": "2026-10-27T09:00:00Z",
+  "title_raw": "ホームセキュリティーブランド「Ring」、越谷市と「防犯ドアホンを活用した防犯対策」の実証実験で連携（BCN） - Yahoo!ニュース",
+  "summary_raw": "ホームセキュリティーブランド「Ring」、越谷市と「防犯ドアホンを活用した防犯対策」の実証実験で連携（BCN） Yahoo!ニュース",
+  "collected": "2026-10-31T23:54:31Z",
   "status": "raw",
   "picked": false
  },
@@ -1807,6 +1963,19 @@
   "picked": false
  },
  {
+  "id": "1893d40b6747d547",
+  "link": "https://news.google.com/rss/articles/CBMimgFBVV95cUxPX2cybVZ2aHFxXzdBMEdhdUNiQXVpcWhwVkQyM2Fsc2hWZ3g0UVhPUHFIR21rbXJwdVZ6d3hGVDF3d082ODdoZ2JQejd6Z0RFN3VEWFBmdlBwdVNmVDZJeW5UcmRGWUxuYkVVM2VpRzgteG1uVjBodk1VMjdXMV9vZEx5eFV4WExLWDVyVk1zMEQtbjJ5N1E4ckxB?oc=5",
+  "source": "Google News(digital key car)",
+  "publisher": "SC Media",
+  "lang": "en",
+  "published": "2026-10-22T07:00:00Z",
+  "title_raw": "Lazarus Group adopts post-quantum encryption in new cyberattacks - SC Media",
+  "summary_raw": "Lazarus Group adopts post-quantum encryption in new cyberattacks SC Media",
+  "collected": "2026-10-31T23:54:33Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "5bf966a698bce35d",
   "link": "https://news.google.com/rss/articles/CBMiggFBVV95cUxPR3Y4Z1JXMEJWQWM2cDJnVE00SzJfVnU1SmFGX00xUXQ2bDlQbnhTRVc2N3VER3RFZWt1ZTZLWVEyQS10ZFhUZTZQSXJESG42OThNLUkxTEgyaVFyR3RUUE5yZlN0Yk1CT2JibWJlLTh6czdBN0pqdGlmQmFZS3RGRGtn?oc=5",
   "source": "Google News(video doorbell)",
@@ -2080,6 +2249,19 @@
   "picked": false
  },
  {
+  "id": "cb12b20794b6d298",
+  "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1yS285SWhoei1ULUlONklEM29UOElXVmgzT0xjdi1zUTczTFA2M2Y0YTIyallEc3JKRGhiU1ZPLTBlNUNidEdLNkhWZmRZMEpCV2tqVzFzTUV2RDE3aW9V?oc=5",
+  "source": "Google News(顔認証 入退室)",
+  "publisher": "高知新聞",
+  "lang": "ja",
+  "published": "2026-10-21T07:00:00Z",
+  "title_raw": "ワールドサプライ、AI顔認証技術を用いた無人入退館管理システム「スマイルパスゲート」の販売を開始 - 高知新聞",
+  "summary_raw": "ワールドサプライ、AI顔認証技術を用いた無人入退館管理システム「スマイルパスゲート」の販売を開始 高知新聞",
+  "collected": "2026-10-31T23:54:30Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "b7ecf1115a399e85",
   "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1PR3hfS2N3TlhTRWxDaVZPbnhjM3pJRjN0U0dVLXM1Znkxb2p4MVdrTHU4UWM2N3A1NkdKME0tYmhUUWQ1a1pzSmJkX0RPSzdVZWItOWZhMmpZczhIZE1j?oc=5",
   "source": "Google News(顔認証 入退室)",
@@ -2297,6 +2479,19 @@
   "title_raw": "品川区住まいの防犯対策補助金交付制度（個人の住宅における防犯設備の設置）｜品川区公式ウェブサイト - www.city.shinagawa.tokyo.jp",
   "summary_raw": "品川区住まいの防犯対策補助金交付制度（個人の住宅における防犯設備の設置）｜品川区公式ウェブサイト www.city.shinagawa.tokyo.jp",
   "collected": "2026-10-24T22:49:32Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "6c92b7960343235a",
+  "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9IcXFKS3JXMUhfenhVWVFLU0Q0LUl4U3pEdkc0dUFLQnlQOXFrOTlKd2gwWl9sZENQOUFyLUx2VjZFZG1WN2FlbE1KNXpTNUNnU0hSRWVIRjlfdW1ZZnVRaHk0eDVsWEJ6TDY0?oc=5",
+  "source": "Google News(入退室管理)",
+  "publisher": "時事ドットコム",
+  "lang": "ja",
+  "published": "2026-10-20T08:46:00Z",
+  "title_raw": "カード認証0.1秒の高速処理で打刻ロスをゼロへ。KJ TECH japan、入退室管理リーダー「TSG-550PC」を用いた高セキュリティな勤怠管理ソリューションを展開 - 時事ドットコム",
+  "summary_raw": "カード認証0.1秒の高速処理で打刻ロスをゼロへ。KJ TECH japan、入退室管理リーダー「TSG-550PC」を用いた高セキュリティな勤怠管理ソリューションを展開 時事ドットコム",
+  "collected": "2026-10-31T23:54:26Z",
   "status": "raw",
   "picked": false
  },
@@ -2817,6 +3012,19 @@
   "title_raw": "スマートロック企業ランキング2026 - pando.life",
   "summary_raw": "スマートロック企業ランキング2026 pando.life",
   "collected": "2026-10-20T00:04:17Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "7d5c61f5c4d74ac7",
+  "link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQX2kwSUJwR1pYNHhIVDI0eldwMm5QdFRSQkJnQThMRUc3TzlvZUZ6WDZ5Xy1RcGUyUjlJWDFKd0dZbHVoWjQ4c19MNjlqRVYxUE5qazJZSEJaV2w0SDVKU0Y0T0NtTGI1VXBEdXc5TGtOalJ3RFd3b0tqUDZHLThkTHZya19VX1lZTDRnYkZUVnZBM0JnVFVYT3FiQQ?oc=5",
+  "source": "Google News(digital key car)",
+  "publisher": "Yahoo Autos",
+  "lang": "en",
+  "published": "2026-10-19T07:00:00Z",
+  "title_raw": "GM Adds Apple, Google, and Samsung Wallet Car Keys to Cadillac, Chevrolet, and GMC - Yahoo Autos",
+  "summary_raw": "GM Adds Apple, Google, and Samsung Wallet Car Keys to Cadillac, Chevrolet, and GMC Yahoo Autos",
+  "collected": "2026-10-31T23:54:33Z",
   "status": "raw",
   "picked": false
  },
