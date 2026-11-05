@@ -1,5 +1,57 @@
 [
  {
+  "id": "176c51fb6860dbb3",
+  "link": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNSHdCalN1TlVYcGJUU0VPbHlGVk1ycE45OERVUUZwaTFEWXBUbXNVVHViak1YMkhPWjNLR2NpWFh3cmZlR216aG5kWEdLamllVERPb1RNS1R1VjdPRGVMem9ONVEySHlPbEM0ZHpEcDFhV3o0VEM4S0hQTE13c3ZJSXJnZTU?oc=5",
+  "source": "Google News(video doorbell)",
+  "publisher": "Android Authority",
+  "lang": "en",
+  "published": "2026-11-04T15:18:00Z",
+  "title_raw": "Ring Battery Doorbell 2K falls back to its $39.99 all-time low - Android Authority",
+  "summary_raw": "Ring Battery Doorbell 2K falls back to its $39.99 all-time low Android Authority",
+  "collected": "2026-11-05T01:15:02Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "24e11d5135db57bd",
+  "link": "https://news.google.com/rss/articles/CBMinwFBVV95cUxPSFRVQlpOYm13RTRKWmFtTHNlZmhMVElSc0I4T0hUc2gxQmFUUHd2VmdNNXRpMmtSVHBYeUhSZTlTT3d2dDdReTNmUzg3dTdzR0dobEpzalR1T014NXV0Ul9kNFZBV2JMTjVnaVdhWEc3RjkzRjI0UzhOYU1sTEJFY2VsdVFtaW5UOHdGRFNaaUVFb2t2VFhjcTBMSW9EMDTSAaQBQVVfeXFMTWV3eGZCNmJQRG80TWtMdEd1OUc0QXhWRDhsU1pDeXdNZ0xsLVppRkR0QjdUQVNPYmE0eEZ2ZHoyTk5yY09tUy1tU2dDV3dUb2VGV2loQm9GZTQwX2FCQ1lDbWlJa0tnVnFGX2FvN284WTJhaWZkZ3NNazRLME1fWTVGa0RQbGFDbTl0QmMyUi0wX1N1aG9YanEyVjFQUlpiLW1mS2U?oc=5",
+  "source": "Google News(smart lock)",
+  "publisher": "Birmingham Live",
+  "lang": "en",
+  "published": "2026-11-04T14:04:00Z",
+  "title_raw": "Households in England with smart locks issued insurance warning - Birmingham Live",
+  "summary_raw": "Households in England with smart locks issued insurance warning Birmingham Live",
+  "collected": "2026-11-05T01:15:02Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "bbf391d9243f3f0e",
+  "link": "https://news.google.com/rss/articles/CBMinAFBVV95cUxQVmxuWWVteW1nanFQQzVrTzBVX3VwUTMxTlJjMGFJWC1WNEhOcHlzLTNUYWpzUEpweW4ydkkwSmpGbFNBMEhZZTlqWEt6endVZmRIMXdRY1MzVzRuOXpxdmY4WllCblc0MndnVTVaS0ZqY2lhbjFDeFljdFZ5RTVCYUVobFJQNWc5QTZDd2JSSmpTU0YwZVp3S0Jwd2c?oc=5",
+  "source": "Google News(スマートロック)",
+  "publisher": "Jetstream",
+  "lang": "ja",
+  "published": "2026-11-04T06:48:34Z",
+  "title_raw": "2か月ぶり！「SwitchBot マグネットアクセサリー（ロックシリーズ専用）」Amazon販売再開 - Jetstream",
+  "summary_raw": "2か月ぶり！「SwitchBot マグネットアクセサリー（ロックシリーズ専用）」Amazon販売再開 Jetstream",
+  "collected": "2026-11-05T01:14:56Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "b92fe925fe6e9c91",
+  "link": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNRlUwdGR5TnFkQXJvUUFndElaY1lkdXNrTE5FQ0IzRjFvVnlfbE14R3NvX21KS3FXcXlDSmJHTDhBSU9HOV96OWRqR2tFb2NicDdPX3J0end4ekd1Njl2aEcydnk4UnZoT1p5MVVxYW9DUERCdENJdGVEeFVlZHh2NEk5bzJhREpKdTNJTHBfbV83cXd6RmRORjJDT2VkNjBnTzNLRnZ0cW1oaWYzX09OdDVnVlg2WFRWRjlRbU43T0NmcG8?oc=5",
+  "source": "Google News(video doorbell)",
+  "publisher": "Absolute Geeks",
+  "lang": "en",
+  "published": "2026-11-04T05:22:16Z",
+  "title_raw": "Ring Battery Video Doorbell 4K Pro 2026 review: my front door now sees better than I do - Absolute Geeks",
+  "summary_raw": "Ring Battery Video Doorbell 4K Pro 2026 review: my front door now sees better than I do Absolute Geeks",
+  "collected": "2026-11-05T01:15:02Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "08fa759ae8a8c86f",
   "link": "https://news.google.com/rss/articles/CBMibkFVX3lxTE9qbnNPaGRrTlZVM00zc2d0TlN3cVlDLWZVX2UybnRQN185SmNaRGs4U2dVdUNpTV9vRFJsU0hrblBvY3M4ZDNSNHhIRlQ0V0NiaUdHV2JTYTNmOXJIdjBjbTFSSUhCWGFlbW5pM2lB?oc=5",
   "source": "Google News(smart lock)",
@@ -22,6 +74,19 @@
   "title_raw": "Car Keys Express Launches PhoneKey, Bringing \"Phone-as-a-Key\" Technology to Vehicles Built Without It - Newswire",
   "summary_raw": "Car Keys Express Launches PhoneKey, Bringing \"Phone-as-a-Key\" Technology to Vehicles Built Without It Newswire",
   "collected": "2026-11-04T00:59:57Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "c443e01bfa9e5406",
+  "link": "https://news.google.com/rss/articles/CBMi6AFBVV95cUxNUXBfVXNJeU9idHFIOXVmcjdXVUhwenZSQWwxb05hN0FJYTkxOVZRUk80UVV2UnNOeVl1bHZVbU8xcFFrakQ3c0xaOXZCUTZteTVGN0FkeFl3N25WZ0dmVGtXcTU1eTFyS1U1NEF0Yl9pZ1Bya0VJTmk3Zm5sWW1wclRhdkRIbHUzMGN2WkZ2azlOa0lZRXMweS1mc3B2S0FwMW5HVUtyaG1nYTgxa2xDdWc4emo5NnNNb1B3Qk8ydUxHT1RLeE9NUkxxUHdnSlllaldrZklpc2dHU0FRZjZVVHhIeC1leHgw?oc=5",
+  "source": "Google News(digital key car)",
+  "publisher": "24/7 Wall St.",
+  "lang": "en",
+  "published": "2026-11-03T17:53:00Z",
+  "title_raw": "Applied Digital Surges 9% as AI Data Center Stocks Rebound From Financing Jitters; IREN Jumps 9%, Nebius Climbs 7% - 24/7 Wall St.",
+  "summary_raw": "Applied Digital Surges 9% as AI Data Center Stocks Rebound From Financing Jitters; IREN Jumps 9%, Nebius Climbs 7% 24/7 Wall St.",
+  "collected": "2026-11-05T01:15:03Z",
   "status": "raw",
   "picked": false
  },
@@ -100,6 +165,19 @@
   "title_raw": "Diwali 2026 buying guide: Refrigerators, security cameras, video door locks and more to make your homes s - The Times of India",
   "summary_raw": "Diwali 2026 buying guide: Refrigerators, security cameras, video door locks and more to make your homes s The Times of India",
   "collected": "2026-11-04T00:59:56Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "0ca3807dbf07cce1",
+  "link": "https://news.google.com/rss/articles/CBMidEFVX3lxTE5rVnpPcUtMZ3NycUhTcTJmWlFNSGNCSUl2SmNqdk03SDgxVlhaNTRuS2pJSnlWLXdOVkRyNzFfRHliWnhKcEhMN0R6YWpTWjdqWjZERGhqN0FBY1lSSkkzVHRxRlAtd2V6SHFGUE55U3VWaklZ?oc=5",
+  "source": "Google News(video doorbell)",
+  "publisher": "Tom's Guide",
+  "lang": "en",
+  "published": "2026-11-03T12:48:08Z",
+  "title_raw": "Best video doorbells in 2026: Ring, Nest, Wyze and more tested - Tom's Guide",
+  "summary_raw": "Best video doorbells in 2026: Ring, Nest, Wyze and more tested Tom's Guide",
+  "collected": "2026-11-05T01:15:02Z",
   "status": "raw",
   "picked": false
  },
@@ -299,6 +377,19 @@
   "picked": false
  },
  {
+  "id": "dce748cc98f8ab94",
+  "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOWTlEY09ncFk2eXZwZ0U0STMwU242REt2SjhsRko3SmhJcUZZU0tFN2hreTlKZzJVZ2Q0YlFBMDVTRF8wdnpEY0hqd1RIT1BZWkV4ZXhIX3BXUWlJVWI1YThUYWxaODNfVFRVcnpFcktDWEhxeFJnU1VwZTRQMUdBQ2wyVjZOeFJLS2dMbWU3dVhkUQ?oc=5",
+  "source": "Google News(オートロック マンション)",
+  "publisher": "朝日新聞",
+  "lang": "ja",
+  "published": "2026-11-02T09:30:00Z",
+  "title_raw": "オートロック侵入する「共連れ」の脅威 行動を選んで備えるVR製作 動画 - 朝日新聞",
+  "summary_raw": "オートロック侵入する「共連れ」の脅威 行動を選んで備えるVR製作 動画 朝日新聞",
+  "collected": "2026-11-05T01:15:00Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "3b34b89dee94930f",
   "link": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNSzdZVUtrTi05cG5vZ2R3TE9oWnNDY3R0RlhIQ2F2UF93dk13cUpXVFl6dWxLSjR5Yjl5QlZtTHBPLVN4Yklra0lmd2p6TjBNQTc2MTIyNU44NWJUT2VrMFdydk1NRDRsYnRkQ3AxSkxwd1FqcmxRckNPT0NHRkNyeV9qNEtoeFlQend4VG1yOFdNOVoyX2hUM0NacHdHT2VmcmpEQ3RsU2JTQ3VqMVFoRndYdG9ORlNhU3pYd2lIS2Eyak0?oc=5",
   "source": "Google News(smart lock)",
@@ -373,6 +464,19 @@
   "title_raw": "These 5 Smart Home Devices Will Work Even Without Internet - BGR",
   "summary_raw": "These 5 Smart Home Devices Will Work Even Without Internet BGR",
   "collected": "2026-11-03T02:44:50Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "39b9637d966b0156",
+  "link": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE96T09oSmR6QU1FMko4b3pWRUhaWTdXTTRHV0VuY2FnUzJNcVJXZFBtanNPS1pBelVmdXJKR0VjdENwZXVzNlQxOFhucWlqWDRESVp6S1RGcnRfa0R3eU9Qd242V2x6N29C?oc=5",
+  "source": "Google News(入退室管理)",
+  "publisher": "毎日新聞",
+  "lang": "ja",
+  "published": "2026-11-02T04:23:02Z",
+  "title_raw": "プレスリリース：［Brivo］工場・複数拠点の管理を支援するAI映像監視と入退室管理を展示（PR TIMES） - 毎日新聞",
+  "summary_raw": "プレスリリース：［Brivo］工場・複数拠点の管理を支援するAI映像監視と入退室管理を展示（PR TIMES） 毎日新聞",
+  "collected": "2026-11-05T01:14:57Z",
   "status": "raw",
   "picked": false
  },
@@ -1309,6 +1413,19 @@
   "title_raw": "WELOCKのスマートロックがハロウィンセール開催中！最大33%オフで、従来の鍵から解放されましょう。 - Letem světem Applem",
   "summary_raw": "WELOCKのスマートロックがハロウィンセール開催中！最大33%オフで、従来の鍵から解放されましょう。 Letem světem Applem",
   "collected": "2026-10-30T00:32:53Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "600046cfcd85306c",
+  "link": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE9LblZCY0FxbmdydHNBa1UyR094SnREZ1lpaTFhQXhzNG53THFPVjc0dTVTYzl1SktxV0RCZ25Rd0VKVDhwdHc?oc=5",
+  "source": "Google News(ドアホン)",
+  "publisher": "Togetter",
+  "lang": "ja",
+  "published": "2026-10-28T11:29:16Z",
+  "title_raw": "Panasonicのドアホンをデジカメに改造し写真撮影、その写真が世界的な賞を受賞してしまう、なお投稿者は去年アンパンマンのキッズカメラで賞を受賞 - Togetter",
+  "summary_raw": "Panasonicのドアホンをデジカメに改造し写真撮影、その写真が世界的な賞を受賞してしまう、なお投稿者は去年アンパンマンのキッズカメラで賞を受賞 Togetter",
+  "collected": "2026-11-05T01:15:01Z",
   "status": "raw",
   "picked": false
  },
@@ -3233,6 +3350,19 @@
   "title_raw": "Bringing an enhanced living experience to reality, EZVIZ kicks off its roadshow in Indonesia to redefine the smart home, starting with smarter access through its smart entry portfolio - The Manila Times",
   "summary_raw": "Bringing an enhanced living experience to reality, EZVIZ kicks off its roadshow in Indonesia to redefine the smart home, starting with smarter access through its smart entry portfolio The Manila Times",
   "collected": "2026-11-03T02:44:50Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "5510ec83efca68c8",
+  "link": "https://news.google.com/rss/articles/CBMiyAJBVV95cUxOLVU3US1ValdXV2dDVEFPeEk2OWV3NkZxbm9kWVZEMEZ6UHJJbWVtd0cxUzZ4V2lkM1dON2RnVHFIdEs3WURVR3lQQno2RE03Zm5ROTJCM19YbjlxY0UwcW96c0tIbVk5Y0RndmMwRHZBLWpKMkR5Sk1Kc2pmN01lUE1rcmpUWWJDYzZmMFRHR09DYVhWMFBMTzEzWlNEZzBKcDVtX1lLNk1ESzVxZU9xdERMcEF0eGU0a0xVVmNidXJndDFrZTFRNUY3Zm12V3BndFBVTXI1SXVydW5CSk1JTHZ2NFBqNWhNNVNMYXdEVUxVYXN1Um83cTV6YzIxSUFjVHU5NkVPOExHUTlTdFB0S21QSU1SNXo3OEhSUmtqLUNtN291RUdZcDFBQ0pkRWFNVnNUQS1rS3hRRVZSa1A1QWNELVNaRzNk?oc=5",
+  "source": "Google News(smart lock)",
+  "publisher": "The Malaysian Reserve",
+  "lang": "en",
+  "published": "2026-10-20T07:00:00Z",
+  "title_raw": "Bringing an enhanced living experience to reality, EZVIZ kicks off its roadshow in Indonesia to redefine the smart home, starting with smarter access through its smart entry portfolio - The Malaysian Reserve",
+  "summary_raw": "Bringing an enhanced living experience to reality, EZVIZ kicks off its roadshow in Indonesia to redefine the smart home, starting with smarter access through its smart entry portfolio The Malaysian Reserve",
+  "collected": "2026-11-05T01:15:02Z",
   "status": "raw",
   "picked": false
  },
@@ -6561,6 +6691,19 @@
   "title_raw": "アップル、ホームセキュリティに本腰 防犯カメラやスマートロックなど注目の新製品 (CNET Japan) - NewsPicks",
   "summary_raw": "アップル、ホームセキュリティに本腰 防犯カメラやスマートロックなど注目の新製品 (CNET Japan) NewsPicks",
   "collected": "2026-10-23T23:43:21Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "af71f6fe649b06cc",
+  "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxOWl9yM1A0N3VGNXl6ckxMU1IzYTVzenlSYzFBNHJ5OFlPWVh4NEJkODFfeDZOWmpoOFNEWUlkaWEzejEzRDNEOEY0Wm11S1lJYnQyemRhMnlZOEM3NUVWbHJoRjJReURUTXBZQy1IeWRSNmlkXzdHSl9DdjQtNldkdXhQY01pcHUx?oc=5",
+  "source": "Google News(smart lock)",
+  "publisher": "DesignWanted",
+  "lang": "en",
+  "published": "2026-10-13T07:00:00Z",
+  "title_raw": "Apple Home Collection: Smart Home Devices by LG & Schneider - DesignWanted",
+  "summary_raw": "Apple Home Collection: Smart Home Devices by LG & Schneider DesignWanted",
+  "collected": "2026-11-05T01:15:02Z",
   "status": "raw",
   "picked": false
  },
