@@ -1,5 +1,70 @@
 [
  {
+  "id": "be96a2f7f8ab8052",
+  "link": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxOYWhnTGhmLUpMMllFcXhYRmlWblVqNjh3cTdvNFdUOTl3Ym10SE9LNXFBbURrN2c1Y2JaU3dlOUpqMlJfT0ZQbnNCSlRfTm5aZUUyX2w2TUZ1bEN5SVRkeVpEZWVTWWxuc29CbXQ4VjJQdWhNR3hicllhNXYwZkliZ2hod21QMUVvUjY5d2JORVoyZExSUXNnWUV1TTVVbUhCdHh3bDFVRU9mSzVWbHREVF9fcmd3Z2Y0aFBYRXRZZEJGdw?oc=5",
+  "source": "Google News(smart lock)",
+  "publisher": "AppleInsider",
+  "lang": "en",
+  "published": "2026-11-05T18:09:00Z",
+  "title_raw": "Future Apple smart locks could distinguish between you approaching or leaving - AppleInsider",
+  "summary_raw": "Future Apple smart locks could distinguish between you approaching or leaving AppleInsider",
+  "collected": "2026-11-06T01:20:10Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "63ee571c33ddcb63",
+  "link": "https://www.macrumors.com/how-to/stop-siri-search-accessing-iphone-apps/",
+  "source": "MacRumors",
+  "publisher": "",
+  "lang": "en",
+  "published": "2026-11-05T17:10:37Z",
+  "title_raw": "Prevent Siri and Search From Accessing Specific iPhone Apps",
+  "summary_raw": "In iOS 27.2, Apple has a new settings menu that lets you choose which apps Siri, Search, and suggestions can access, all from one list. Here's what's changed and how to use the new menu. With iOS 27.2, Apple has replaced the old App Access controls with a redesigned Excluded Apps feature that makes it a lot simpler to keep specific apps away from Siri, Search, and suggestions. It's actually a bigg",
+  "collected": "2026-11-06T01:20:12Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "a2b64f86b9b7760a",
+  "link": "https://news.google.com/rss/articles/CBMiYkFVX3lxTFB0bDNzd0J5WjUxWE1VWjN3TVRZMDNZX3VFcV9FMy11d1pjY2hJRVR6VHJiQnBlRHBndVptVG1RcHIzR3JOd2FWamhDcVIwc3RoeWtsNzRRaUhFbklGVnltYmlB?oc=5",
+  "source": "Google News(入退室管理)",
+  "publisher": "Excite エキサイト",
+  "lang": "ja",
+  "published": "2026-11-05T09:12:00Z",
+  "title_raw": "フォトシンス、LINEの友だち登録で無人店舗を解錠 - 「Akerun」新機能を実証 - Excite エキサイト",
+  "summary_raw": "フォトシンス、LINEの友だち登録で無人店舗を解錠 - 「Akerun」新機能を実証 Excite エキサイト",
+  "collected": "2026-11-06T01:20:05Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "34c114a744bf1ded",
+  "link": "https://news.google.com/rss/articles/CBMiakFVX3lxTE8xV3dQRkFoQ2E3ckVZQTJFM2Z4TmRBTlRBSnk4SFYzc0dtV0NuTGMyZ0U0bHJObzJtd3N4Y2xBeDZlWWZkQmdxZWhaLWZVamo5T21BdDRONlZoT1NSU1FLVjlveHB4UWhzRHc?oc=5",
+  "source": "Google News(入退室管理)",
+  "publisher": "PR TIMES",
+  "lang": "ja",
+  "published": "2026-11-05T06:30:02Z",
+  "title_raw": "Akerun、LINEの友だち登録だけで入店できる新機能を開発、小売店などの無人販売における収益機会の拡大を支援 - PR TIMES",
+  "summary_raw": "Akerun、LINEの友だち登録だけで入店できる新機能を開発、小売店などの無人販売における収益機会の拡大を支援 PR TIMES",
+  "collected": "2026-11-06T01:20:05Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "574c93b9e40ea7bb",
+  "link": "https://news.google.com/rss/articles/CBMifkFVX3lxTE1vdFV5ZlBWYVpCel9NZEgyc2VlNWxQeGF5cEEyV3VhNmxaUFctZHRyNUVzRVQyMU1Nc04zMUJwUUY4R19FYzNlei1aWkJjY2Z2RzBPcWE2c24wS0pual9EbXRBV1hhVTVXNU1KUFZSMlZrbnIzY0V2MzB3ajAxZw?oc=5",
+  "source": "Google News(digital key car)",
+  "publisher": "AdNews",
+  "lang": "en",
+  "published": "2026-11-05T03:07:53Z",
+  "title_raw": "Young Guns: Dominique Cooper at MiQ Digital - AdNews",
+  "summary_raw": "Young Guns: Dominique Cooper at MiQ Digital AdNews",
+  "collected": "2026-11-06T01:20:12Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "176c51fb6860dbb3",
   "link": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNSHdCalN1TlVYcGJUU0VPbHlGVk1ycE45OERVUUZwaTFEWXBUbXNVVHViak1YMkhPWjNLR2NpWFh3cmZlR216aG5kWEdLamllVERPb1RNS1R1VjdPRGVMem9ONVEySHlPbEM0ZHpEcDFhV3o0VEM4S0hQTE13c3ZJSXJnZTU?oc=5",
   "source": "Google News(video doorbell)",
@@ -208,6 +273,19 @@
   "picked": false
  },
  {
+  "id": "97f99334604af666",
+  "link": "https://news.google.com/rss/articles/CBMiowFBVV95cUxNX1UybUJ2S1pLdGVlaS1QS01pSkVtTzJfWk5ZTGQxeFNvOVB3bzNxTU1JMkNZNmZULUExNWIyZmN2TzlGWUV0ZmVJdWlsV1JRZXoyOXBGTnVHRDhDOW1ZZHBaNkJsOVRvQ0RvOHhzQUZsZ3hDRGRBMk1TNG82VzFuY3NfSTNEVmtWYWVqMWI0dHRTcm9iRGp1LWJUR0VGdXgwLWRZ?oc=5",
+  "source": "Google News(digital key car)",
+  "publisher": "Fibre2Fashion",
+  "lang": "en",
+  "published": "2026-11-03T06:16:32Z",
+  "title_raw": "Tomer Artzi | President | Kornit Digital Asia Pacific Ltd - Fibre2Fashion",
+  "summary_raw": "Tomer Artzi | President | Kornit Digital Asia Pacific Ltd Fibre2Fashion",
+  "collected": "2026-11-06T01:20:12Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
   "id": "d2a10c5796f3ef34",
   "link": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxPUGpqSUdsY3FoSVlfMmZMMFZsMWUwaXdNRVUwTWIyNXVPUjhkd1VBQ3ZSU19jVmlJTmJLS19ucnkzNE0wV1I0RWRhV04ydkRvbVNsaDY1cFp3aThEY0RORENDM2J1TGt4ZEt6MUdZYUYxaG14TlRZaVNMY011WDZpcUdOdzlHYVI2ck1J?oc=5",
   "source": "Google News(smart lock)",
@@ -386,6 +464,19 @@
   "title_raw": "オートロック侵入する「共連れ」の脅威 行動を選んで備えるVR製作 動画 - 朝日新聞",
   "summary_raw": "オートロック侵入する「共連れ」の脅威 行動を選んで備えるVR製作 動画 朝日新聞",
   "collected": "2026-11-05T01:15:00Z",
+  "status": "raw",
+  "picked": false
+ },
+ {
+  "id": "57aa7c65c6d751c5",
+  "link": "https://news.google.com/rss/articles/CBMib0FVX3lxTFBvYmdwb0d6UzBMTXBZV1hXN1FRV1JqYnFSYUJjNm5CUFgzamtUeFZFUFBVc3hLTGdjYUc1MkxHR25aSEJiLWE2SWZ0dDJ4aXBXbmU2Y1VXVE9nY0MxVHJwUWlwZTZ5STg1T0FKUUdwdw?oc=5",
+  "source": "Google News(オートロック マンション)",
+  "publisher": "朝日新聞",
+  "lang": "ja",
+  "published": "2026-11-02T09:30:00Z",
+  "title_raw": "オートロック侵入する「共連れ」の脅威 行動を選んで備えるVR製作 動画 - 朝日新聞",
+  "summary_raw": "オートロック侵入する「共連れ」の脅威 行動を選んで備えるVR製作 動画 朝日新聞",
+  "collected": "2026-11-06T01:20:08Z",
   "status": "raw",
   "picked": false
  },
