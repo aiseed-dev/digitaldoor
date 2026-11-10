@@ -117,6 +117,12 @@ def section_door() -> str:
     return "\n".join(out)
 
 
+def section_update() -> str:
+    from digitalkey import update
+    return "\n".join(["## 更新の配布(digitalkey update)", "", "```", doc(update), "```", "",
+                      "```", help_of(update.main, ("--help",)), "```", ""])
+
+
 def section_jitsuen() -> str:
     import importlib.util
     spec = importlib.util.spec_from_file_location("jitsuen", SITE / "tools" / "jitsuen.py")
@@ -162,7 +168,7 @@ def md_to_html(md: str) -> str:
 
 def main() -> int:
     parts = [f"# {TEXT['title']}", "", TEXT["intro"], "", f"生成日: {datetime.now().strftime('%Y-%m-%d')}", "",
-             section_site(), section_mobile(), section_cli(), section_door(), section_jitsuen(), section_forms(), section_drivers()]
+             section_site(), section_mobile(), section_cli(), section_door(), section_update(), section_jitsuen(), section_forms(), section_drivers()]
     md = "\n".join(parts)
     (SITE / "docs" / "manual.md").write_text(md, encoding="utf-8")
     css_v = re.search(r'style\.css\?v=([0-9a-f]+)', (SITE / "html/index.html").read_text(encoding="utf-8"))

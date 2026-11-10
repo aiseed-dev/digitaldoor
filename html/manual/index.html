@@ -58,12 +58,12 @@ max_hours = 24
 [[token]]
 name = &quot;管理者&quot;
 role = &quot;管理者&quot;
-token_sha256 = &quot;43013bc739bfd92fa6574271665ccf84fc7881c5d6eb6c12d8a0d307b1cbea23&quot;
+token_sha256 = &quot;8cd90ca4aeef57b5d5913eefccc87add7ba30df241f0df96af287a17abb1cf9f&quot;
 
 [[token]]
 name = &quot;受付&quot;
 role = &quot;受付&quot;
-token_sha256 = &quot;5bb59867678b5eb89427c279bc27f04ebef17fe1728bdf30b96f028c7ddeda86&quot;
+token_sha256 = &quot;863591122e9410968360760acbcdef3330ff9568b80473ecd4ca1ddeb98bc97f&quot;
 </code></pre>
 <h3>役割</h3>
 <table>
@@ -228,6 +228,7 @@ token_sha256 = &quot;5bb59867678b5eb89427c279bc27f04ebef17fe1728bdf30b96f028c7dd
   digitalkey &lt;ドライバ名&gt; ...       pip で入れた錠ドライバのコマンド(例: digitalkey-sesame を入れると `digitalkey sesame scan`)
   digitalkey site init &lt;dir&gt; | serve --config site.toml   事業所サーバー(扉のコントローラ+鍵の台帳+HTTP API)
   digitalkey mobile [--web]        管理者と利用者のスマートフォンアプリ(Flet)
+  digitalkey update &lt;命令&gt; ...     更新の配布(署名つきの包み、段階配布の表、当てる、自動で戻す、サポート期限)
 </code></pre>
 <h3>digitalkey site</h3>
 <pre><code>usage: digitalkey site [-h] {init,token,serve} ...
@@ -477,6 +478,61 @@ options:
   --trust FILE          信頼する発行者の一覧(JSON。{発行者の識別: {&quot;public_key&quot;: 16 進, &quot;doors&quot;:
                         [扉の名前, ...]}})。管理者の変更が記録にあるときは、記録の一覧を使う
   --box BOX             伝票を出す箱(フォルダ)。動いている間、増えた記録を続けて出す
+</code></pre>
+<h2>更新の配布(digitalkey update)</h2>
+<pre><code>更新の配布 — 署名つきの包みを、段階配布の表に沿って当て、失敗したら戻す(使い方.md「更新の配布」、R-DV-30〜40)。
+
+製造者の側:
+  digitalkey update keygen --out maker.key                 署名の鍵を作る(権限 600)。公開鍵を JSON で出す
+  digitalkey update pack --key maker.key --version 1.2.0 --reason 不具合 --summary &quot;...&quot; --from &lt;置き場&gt; --out x.ddupd
+                       [--compat 'matter-controller=1.4,1.5'] ...
+  digitalkey update index --key maker.key --serial N --entry 1.2.0:全棟[:2027-12-31] [--halt 1.1.0]
+                       [--emergency 1.2.1:誰:なぜ] --out index.json     配布の表(index.json と index.sig)を作る
+サーバーの側(設定は update.toml):
+  digitalkey update status [--json]                        今の版、サポート期限、互換の警告
+  digitalkey update apply --package x.ddupd --index index.json   確かめて当てる(網の無い現場は USB から同じ命令)
+  digitalkey update rollback                               直前の版へ戻す
+  digitalkey update notice --package x.ddupd               管理会社へ送る事前の知らせの文
+  digitalkey update fleet &lt;status の JSON を集めた置き場&gt;     サポートの切れた版で動くサーバーの一覧
+
+update.toml:
+  product = &quot;digitalkey&quot;
+  root = &quot;/opt/digitaldoor/update&quot;     # releases/、current、backups/、update-log.jsonl を置く
+  data = &quot;/var/lib/digitaldoor&quot;         # 当てる前に tar で取るデータの置き場
+  stage = &quot;全棟&quot;                         # 開発 | 試験導入棟 | 全棟
+  trusted_keys = [&quot;&lt;製造者の公開鍵の 16 進&gt;&quot;]
+  check = &quot;systemctl is-active digitaldoor-site&quot;    # 付け替えた後の確かめ(省けば確かめない)
+  restart = &quot;systemctl restart digitaldoor-site&quot;    # 付け替えた後に回す命令(省けば回さない)
+  notify = &quot;logger -t digitaldoor-update&quot;           # 自動で戻したとき、文を標準入力に渡す命令
+  block_on_incompatible = false
+  [components]                           # この機械の部品の版(互換表と照らす)
+  matter-controller = &quot;1.4&quot;
+
+当てる順: 表の署名 → 表の通し番号 → 包みの署名と中身の SHA-256 → 段と止めと緊急 → 互換 → 控え → 展開 →
+付け替え → 再起動 → 確かめ → (失敗なら)戻して知らせる。どこで拒んでも、置き場の current は変わらない。
+</code></pre>
+<pre><code>usage: digitalkey update [-h] [--config CONFIG]
+                         {keygen,pack,index,status,apply,rollback,notice,fleet,log} ...
+
+更新の配布(署名、段階配布、自動で戻す)
+
+positional arguments:
+  {keygen,pack,index,status,apply,rollback,notice,fleet,log}
+    keygen              製造者の署名の鍵を作る(権限 600、上書きしない)
+    pack                置き場のファイルを、署名つきの包みにする
+    index               配布の表(index.json と index.sig)を作る
+    status              今の版とサポート期限
+    apply               確かめてから当てる。失敗したら直前の版へ自動で戻す
+    rollback            直前の版へ戻す
+    notice              管理会社へ送る事前の知らせの文を出す
+    fleet               status --json を集めた置き場から、サポートの切れたサーバーを並べる
+    log                 更新の記録と、その連鎖の検査
+
+options:
+  -h, --help            show this help message and exit
+  --config CONFIG
+
+設定は update.toml。段は 開発 / 試験導入棟 / 全棟。詳しくはこのモジュールの説明
 </code></pre>
 <h2>実演の道具</h2>
 <pre><code>実演の道具 — デジタル錠の開け閉めは簡単で、鍵の管理は難しいことを、場面ごとに見せる。

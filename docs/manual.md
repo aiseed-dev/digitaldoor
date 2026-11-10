@@ -54,12 +54,12 @@ max_hours = 24
 [[token]]
 name = "管理者"
 role = "管理者"
-token_sha256 = "43013bc739bfd92fa6574271665ccf84fc7881c5d6eb6c12d8a0d307b1cbea23"
+token_sha256 = "8cd90ca4aeef57b5d5913eefccc87add7ba30df241f0df96af287a17abb1cf9f"
 
 [[token]]
 name = "受付"
 role = "受付"
-token_sha256 = "5bb59867678b5eb89427c279bc27f04ebef17fe1728bdf30b96f028c7ddeda86"
+token_sha256 = "863591122e9410968360760acbcdef3330ff9568b80473ecd4ca1ddeb98bc97f"
 ```
 
 ### 役割
@@ -130,6 +130,7 @@ digitalkey entrance <命令> ...   様式・台帳・鍵・本人確認・報告
   digitalkey <ドライバ名> ...       pip で入れた錠ドライバのコマンド(例: digitalkey-sesame を入れると `digitalkey sesame scan`)
   digitalkey site init <dir> | serve --config site.toml   事業所サーバー(扉のコントローラ+鍵の台帳+HTTP API)
   digitalkey mobile [--web]        管理者と利用者のスマートフォンアプリ(Flet)
+  digitalkey update <命令> ...     更新の配布(署名つきの包み、段階配布の表、当てる、自動で戻す、サポート期限)
 ```
 
 ### digitalkey site
@@ -409,6 +410,66 @@ options:
   --trust FILE          信頼する発行者の一覧(JSON。{発行者の識別: {"public_key": 16 進, "doors":
                         [扉の名前, ...]}})。管理者の変更が記録にあるときは、記録の一覧を使う
   --box BOX             伝票を出す箱(フォルダ)。動いている間、増えた記録を続けて出す
+```
+
+## 更新の配布(digitalkey update)
+
+```
+更新の配布 — 署名つきの包みを、段階配布の表に沿って当て、失敗したら戻す(使い方.md「更新の配布」、R-DV-30〜40)。
+
+製造者の側:
+  digitalkey update keygen --out maker.key                 署名の鍵を作る(権限 600)。公開鍵を JSON で出す
+  digitalkey update pack --key maker.key --version 1.2.0 --reason 不具合 --summary "..." --from <置き場> --out x.ddupd
+                       [--compat 'matter-controller=1.4,1.5'] ...
+  digitalkey update index --key maker.key --serial N --entry 1.2.0:全棟[:2027-12-31] [--halt 1.1.0]
+                       [--emergency 1.2.1:誰:なぜ] --out index.json     配布の表(index.json と index.sig)を作る
+サーバーの側(設定は update.toml):
+  digitalkey update status [--json]                        今の版、サポート期限、互換の警告
+  digitalkey update apply --package x.ddupd --index index.json   確かめて当てる(網の無い現場は USB から同じ命令)
+  digitalkey update rollback                               直前の版へ戻す
+  digitalkey update notice --package x.ddupd               管理会社へ送る事前の知らせの文
+  digitalkey update fleet <status の JSON を集めた置き場>     サポートの切れた版で動くサーバーの一覧
+
+update.toml:
+  product = "digitalkey"
+  root = "/opt/digitaldoor/update"     # releases/、current、backups/、update-log.jsonl を置く
+  data = "/var/lib/digitaldoor"         # 当てる前に tar で取るデータの置き場
+  stage = "全棟"                         # 開発 | 試験導入棟 | 全棟
+  trusted_keys = ["<製造者の公開鍵の 16 進>"]
+  check = "systemctl is-active digitaldoor-site"    # 付け替えた後の確かめ(省けば確かめない)
+  restart = "systemctl restart digitaldoor-site"    # 付け替えた後に回す命令(省けば回さない)
+  notify = "logger -t digitaldoor-update"           # 自動で戻したとき、文を標準入力に渡す命令
+  block_on_incompatible = false
+  [components]                           # この機械の部品の版(互換表と照らす)
+  matter-controller = "1.4"
+
+当てる順: 表の署名 → 表の通し番号 → 包みの署名と中身の SHA-256 → 段と止めと緊急 → 互換 → 控え → 展開 →
+付け替え → 再起動 → 確かめ → (失敗なら)戻して知らせる。どこで拒んでも、置き場の current は変わらない。
+```
+
+```
+usage: digitalkey update [-h] [--config CONFIG]
+                         {keygen,pack,index,status,apply,rollback,notice,fleet,log} ...
+
+更新の配布(署名、段階配布、自動で戻す)
+
+positional arguments:
+  {keygen,pack,index,status,apply,rollback,notice,fleet,log}
+    keygen              製造者の署名の鍵を作る(権限 600、上書きしない)
+    pack                置き場のファイルを、署名つきの包みにする
+    index               配布の表(index.json と index.sig)を作る
+    status              今の版とサポート期限
+    apply               確かめてから当てる。失敗したら直前の版へ自動で戻す
+    rollback            直前の版へ戻す
+    notice              管理会社へ送る事前の知らせの文を出す
+    fleet               status --json を集めた置き場から、サポートの切れたサーバーを並べる
+    log                 更新の記録と、その連鎖の検査
+
+options:
+  -h, --help            show this help message and exit
+  --config CONFIG
+
+設定は update.toml。段は 開発 / 試験導入棟 / 全棟。詳しくはこのモジュールの説明
 ```
 
 ## 実演の道具
