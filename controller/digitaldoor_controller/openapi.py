@@ -5,7 +5,8 @@
 """
 from __future__ import annotations
 
-API_VERSION = "1.1.0"   # 1.0.0: 状態、命令、出来事、記録、資格情報、信頼の一覧 / 1.1.0: 定義、配信、故障注入
+API_VERSION = "1.2.0"   # 1.0.0: 状態、命令、出来事、記録、資格情報、信頼の一覧 / 1.1.0: 定義、配信、故障注入
+                        # 1.2.0: 故障注入に、錠への通信が途中で切れる、配信が途中で切れる
 
 _OBJ = {"type": "object"}
 _ENTRY = {
@@ -26,8 +27,10 @@ _STATE = {
 _RESULT = {"type": "object", "properties": {"result": {"type": "string"}}}
 _FAULT = {
     "type": "object",
-    "properties": {"lock": {"type": "string", "enum": ["正常", "応答しない"]}, "clock_offset_s": {"type": "number"},
-                   "failures": {"type": "integer"}},
+    "properties": {"lock": {"type": "string", "enum": ["正常", "応答しない", "途中で切断"]},
+                   "clock_offset_s": {"type": "number"}, "failures": {"type": "integer"},
+                   "actual_bolt_out": {"type": "boolean", "description": "錠の本当の位置(試験の窓。判断には使わない)"},
+                   "cut": {"type": "integer", "description": "events に切断を指示したとき、切った配信の数"}},
 }
 
 
@@ -95,8 +98,9 @@ def document() -> dict:
             "get": {"summary": "今の故障注入", "x-dev-only": True, "responses": _ok(_FAULT)},
             "post": {"summary": "故障注入(開発のときだけ。同じ機械の相手だけ)", "x-dev-only": True,
                      "requestBody": _body({"type": "object", "additionalProperties": False, "properties": {
-                         "lock": {"type": "string", "enum": ["正常", "応答しない"]},
-                         "clock_offset_s": {"type": "number"}}}),
+                         "lock": {"type": "string", "enum": ["正常", "応答しない", "途中で切断"]},
+                         "clock_offset_s": {"type": "number"},
+                         "events": {"type": "string", "enum": ["切断"]}}}),
                      "responses": {**_ok(_FAULT), **_LOOPBACK, "400": {"description": "無い項目か許されない値。何も変えない"},
                                    "404": {"description": "開発でない扉"}}},
         },

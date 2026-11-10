@@ -12,7 +12,8 @@ GET  /audit?since=N    監査の差分
 GET  /verify           連鎖の検査
 GET  /openapi.json     この口の全部の定義(OpenAPI 3.1)。応答のすべてに API-Version の見出しが付く
 GET  /events?since=N   出来事の配信(WebSocket)。監査の記録を連番の順に一件ずつ送る
-GET  /fault  POST /fault  故障注入(開発のときだけ。同じ機械の相手だけ){"lock": "応答しない"|"正常", "clock_offset_s": 秒}
+GET  /fault  POST /fault  故障注入(開発のときだけ。同じ機械の相手だけ)
+                       {"lock": "応答しない"|"途中で切断"|"正常", "clock_offset_s": 秒, "events": "切断"}
 
 開発の口(定義、配信、故障注入)は扉コントローラ仕様書 5.5 による。
 """
@@ -30,7 +31,8 @@ from . import events
 from .controller import Controller
 from .openapi import API_VERSION, document
 
-FAULT_LOCK = ("正常", "応答しない")
+FAULT_LOCK = ("正常", "応答しない", "途中で切断")
+FAULT_EVENTS = ("切断",)
 
 
 class Clock:
@@ -85,22 +87,25 @@ def make_handler(ctl: Controller, lock: threading.Lock, *, dev: bool = False, cl
 
         def _faults(self) -> dict:
             return {"lock": ctl.contacts.fault_lock, "clock_offset_s": clock.offset_s,
-                    "failures": ctl.contacts.failures}
+                    "failures": ctl.contacts.failures, "actual_bolt_out": ctl.contacts.actual_bolt_out}
 
         def _set_fault(self, b: dict) -> None:
             """無い項目か許されない値が一つでもあれば 400 で、何も変えない。"""
-            bad = set(b) - {"lock", "clock_offset_s"}
+            bad = set(b) - {"lock", "clock_offset_s", "events"}
             off = b.get("clock_offset_s", clock.offset_s)
             if (bad or not b or ("lock" in b and b["lock"] not in FAULT_LOCK)
                     or isinstance(off, bool) or not isinstance(off, (int, float)) or off != off
-                    or abs(off) == float("inf")):
+                    or abs(off) == float("inf") or ("events" in b and b["events"] not in FAULT_EVENTS)):
                 return self._json(400, {"error": "無い項目か許されない値です", "accepts": {
-                    "lock": list(FAULT_LOCK), "clock_offset_s": "秒(数)"}})
+                    "lock": list(FAULT_LOCK), "clock_offset_s": "秒(数)", "events": list(FAULT_EVENTS)}})
             if "lock" in b:
                 ctl.contacts.fault_lock = b["lock"]
             clock.offset_s = float(off)
             ctl.note_fault(json.dumps(b, ensure_ascii=False, sort_keys=True))
-            return self._json(200, self._faults())
+            out = self._faults()
+            if "events" in b:
+                out["cut"] = hub.cut_all()
+            return self._json(200, out)
 
         def _events(self, query: str) -> None:
             if self.headers.get("Upgrade", "").lower() != "websocket" or not self.headers.get("Sec-WebSocket-Key"):
@@ -109,7 +114,7 @@ def make_handler(ctl: Controller, lock: threading.Lock, *, dev: bool = False, cl
                 since = int(parse_qs(query).get("since", ["0"])[0])
             except ValueError:
                 return self._json(400, {"error": "since は整数です"})
-            if not hub.enter():
+            if not hub.enter(self.connection):
                 return self._json(503, {"error": "配信を受ける相手が上限に達しています"})
             try:
                 # WebSocket の切り替えは HTTP/1.1 の応答で返す(この口のほかの応答は HTTP/1.0 のまま)
@@ -120,7 +125,7 @@ def make_handler(ctl: Controller, lock: threading.Lock, *, dev: bool = False, cl
             except (OSError, ConnectionError, ValueError):
                 pass  # 受け手が切れた。判断には響かせない
             finally:
-                hub.leave()
+                hub.leave(self.connection)
                 self.close_connection = True
 
         def do_GET(self):

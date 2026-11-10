@@ -29,6 +29,11 @@ FAULT_KEYS = {"lock", "clock_offset_s", "failures"}
 
 # ---- 道具 ----
 
+
+def sub(faults: dict) -> dict:
+    """版 1 の間は欄が足されうる(仕様書 5.5 版)。ここで確かめる三つの欄だけを取り出す。"""
+    return {k: faults[k] for k in ("lock", "clock_offset_s", "failures")}
+
 def new_ctl(autolock_s=999.0, now=None):
     ctl = Controller(SimContacts(), Audit(HmacSigner(b"k" * 32)), Config(autolock_s=autolock_s))
     ctl.set_time(time.time() if now is None else now, True)
@@ -427,10 +432,10 @@ def test_fault_lock_unresponsive_then_normal():
     """R-DV-03: 錠が応答しないを注入して解錠すると錠の位置は動かず失敗の数が増える。正常に戻して解錠すると動く。注入は記録に残る。"""
     ctl = new_ctl()
     with serve(ctl, dev=True) as (_, base):
-        assert call(base, "GET", "/fault") == {"lock": "正常", "clock_offset_s": 0, "failures": 0}
+        assert sub(call(base, "GET", "/fault")) == {"lock": "正常", "clock_offset_s": 0, "failures": 0}
 
         got = call(base, "POST", "/fault", {"lock": "応答しない"})
-        assert set(got) == FAULT_KEYS and got["lock"] == "応答しない" and got["failures"] == 0
+        assert FAULT_KEYS <= set(got) and got["lock"] == "応答しない" and got["failures"] == 0
         before = len(ctl.audit.entries)
         inject = fault_records(audit_rows(base))
         assert len(inject) == 1 and "応答しない" in record_text(inject[0])
@@ -462,12 +467,12 @@ def test_fault_both_in_one_request():
     clock = Clock()
     with serve(ctl, dev=True, clock=clock) as (_, base):
         got = call(base, "POST", "/fault", {"lock": "応答しない", "clock_offset_s": 42})
-        assert got == {"lock": "応答しない", "clock_offset_s": 42, "failures": 0}
+        assert sub(got) == {"lock": "応答しない", "clock_offset_s": 42, "failures": 0}
         assert call(base, "GET", "/fault") == got
         assert clock.offset_s == 42
         assert abs(clock.now() - (time.time() + 42)) < 1
         got = call(base, "POST", "/fault", {"lock": "正常", "clock_offset_s": 0})
-        assert got == {"lock": "正常", "clock_offset_s": 0, "failures": 0} and clock.offset_s == 0
+        assert sub(got) == {"lock": "正常", "clock_offset_s": 0, "failures": 0} and clock.offset_s == 0
 
 
 def test_clock_default():

@@ -65,23 +65,38 @@ def read_frame(sock: socket.socket) -> tuple[int, bytes]:
 
 
 class Hub:
-    """同時に受ける相手の数を数える。"""
+    """今つながっている受け手を持つ。数を限り、故障注入では全部を途中で切る。"""
 
     def __init__(self, limit: int = MAX_SUBSCRIBERS) -> None:
         self.limit = limit
-        self.count = 0
+        self.socks: set[socket.socket] = set()
         self._m = threading.Lock()
 
-    def enter(self) -> bool:
+    @property
+    def count(self) -> int:
+        return len(self.socks)
+
+    def enter(self, sock: socket.socket) -> bool:
         with self._m:
-            if self.count >= self.limit:
+            if len(self.socks) >= self.limit:
                 return False
-            self.count += 1
+            self.socks.add(sock)
             return True
 
-    def leave(self) -> None:
+    def leave(self, sock: socket.socket) -> None:
         with self._m:
-            self.count -= 1
+            self.socks.discard(sock)
+
+    def cut_all(self) -> int:
+        """close の文を送らずに、今の受け手を全部切る(仕様書 5.5 配信が途中で切れる)。切った数を返す。"""
+        with self._m:
+            socks = list(self.socks)
+        for s in socks:
+            try:
+                s.shutdown(socket.SHUT_RDWR)
+            except OSError:
+                pass
+        return len(socks)
 
 
 def stream(sock: socket.socket, audit, lock: threading.Lock, since: int) -> None:

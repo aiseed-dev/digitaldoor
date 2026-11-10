@@ -49,12 +49,12 @@ autolock = 5.0              # 解錠から自動施錠までの秒
 [[token]]
 name = "管理者"
 role = "管理者"
-token_sha256 = "afeadfdac322d9e3cea8e679c45eb476bf9f2a83bdd8143b969b7ec41461cfb7"
+token_sha256 = "8ddc5cb73f447c7c5da5cda5f17382c2b9bf80b4cb79c32cb8b8b8075d9a170f"
 
 [[token]]
 name = "受付"
 role = "受付"
-token_sha256 = "1a38c6563f3fa7289427f9baf9a20e6b233ae60694e6d832587044afb540f5d0"
+token_sha256 = "ef6fe355e22f27731f36ea10fffa57adad8e901d29b67617e1c4c0d25d375edf"
 ```
 
 ### 役割
