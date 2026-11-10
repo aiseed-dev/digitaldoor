@@ -43,18 +43,23 @@ lock = "dummy"
 two_person = 1              # 2 にすると二人同時認証
 autolock = 5.0              # 解錠から自動施錠までの秒
 
+# 扉が自分で確かめる署名つき資格情報。有効の終わりは、鍵の終わりと「作った時刻 + max_hours」の早い方。
+# 網が届かない扉で失効が効くまでの最長の時間になる(R-AC-14)。値は管理者が扉ごとの事情で決める
+[credentials]
+max_hours = 24
+
 # アクセストークン。role は 管理者 | 受付 | 利用者 | 保守。利用者は subject(鍵の主体名)を書く
 # トークンそのものは書かず、SHA-256 だけを書く。足すのは digitalkey site token
 
 [[token]]
 name = "管理者"
 role = "管理者"
-token_sha256 = "8ddc5cb73f447c7c5da5cda5f17382c2b9bf80b4cb79c32cb8b8b8075d9a170f"
+token_sha256 = "43013bc739bfd92fa6574271665ccf84fc7881c5d6eb6c12d8a0d307b1cbea23"
 
 [[token]]
 name = "受付"
 role = "受付"
-token_sha256 = "ef6fe355e22f27731f36ea10fffa57adad8e901d29b67617e1c4c0d25d375edf"
+token_sha256 = "5bb59867678b5eb89427c279bc27f04ebef17fe1728bdf30b96f028c7ddeda86"
 ```
 
 ### 役割
@@ -81,6 +86,14 @@ token_sha256 = "ef6fe355e22f27731f36ea10fffa57adad8e901d29b67617e1c4c0d25d375edf
 | GET | `/keys` | 管理者・受付は全部、利用者は自分の分(保守は見ない) |
 | POST | `/keys` | {subject,door,start,end,route} 管理者・受付 |
 | DELETE | `/keys/{key_id}` |  |
+| POST | `/reservations` | {subject,layer,arrival,departure,door,contact} 管理者・受付 |
+| GET | `/reservations` | 管理者・受付 |
+| GET | `/reservations/{rid}` |  |
+| POST | `/reservations/{rid}/keys` |  |
+| POST | `/reservations/{rid}/cancel` |  |
+| POST | `/keys/{key_id}/credential` |  |
+| GET | `/issuer` | 管理者・受付・保守(発行者の公開鍵、最長の有効時間) |
+| POST | `/doors/{door_id}/credential` |  |
 | GET | `/events/{door_id}` |  |
 | GET | `/operations` | 管理者・受付(鍵の操作の記録) |
 | GET | `/verify` | 管理者・保守(記録の連鎖の検査) |
@@ -446,6 +459,15 @@ digitalkey.contacts.LockDriverContacts を差す。錠は --fake の疑似の Se
 | 連絡先 | varchar(100) |
 | 受付符号 | varchar(64), not null |
 
+### 予約の取消(予約_取消)
+
+書ける役割: 経営者, AI社員
+
+| 項目 | 型と制約 |
+|---|---|
+| 予約番号 | varchar(40), not null |
+| 理由 | varchar(200), not null |
+
 ### 会議室・場所貸し(利用_会議室)
 
 書ける役割: 経営者, AI社員
@@ -531,6 +553,20 @@ digitalkey.contacts.LockDriverContacts を差す。錠は --fake の疑似の Se
 | 事前説明日 | date, not null — 定期借家であることの、書面による事前説明の日 |
 | 中途解約 | varchar(200), not null — 例「不可(借地借家法第38条第7項による解約を除く)」 |
 | 用途 | varchar(10), in ('居住', '事業'), not null |
+
+### 資格情報の発行(資格情報_発行)
+
+書ける役割: 経営者, AI社員
+
+| 項目 | 型と制約 |
+|---|---|
+| 鍵番号 | varchar(40), not null |
+| 錠 | varchar(40), not null |
+| 識別 | varchar(64), not null — 資格情報の識別(一回限りの使用済みの印に使う) |
+| 発行者 | varchar(16), not null — 発行者の公開鍵の識別 |
+| 開始 | datetime, not null |
+| 終了 | datetime, not null |
+| 一回限り | boolean, not null |
 
 ### 鍵の失効(鍵_失効)
 

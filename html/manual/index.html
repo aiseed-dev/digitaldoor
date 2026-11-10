@@ -47,18 +47,23 @@ lock = &quot;dummy&quot;
 two_person = 1              # 2 にすると二人同時認証
 autolock = 5.0              # 解錠から自動施錠までの秒
 
+# 扉が自分で確かめる署名つき資格情報。有効の終わりは、鍵の終わりと「作った時刻 + max_hours」の早い方。
+# 網が届かない扉で失効が効くまでの最長の時間になる(R-AC-14)。値は管理者が扉ごとの事情で決める
+[credentials]
+max_hours = 24
+
 # アクセストークン。role は 管理者 | 受付 | 利用者 | 保守。利用者は subject(鍵の主体名)を書く
 # トークンそのものは書かず、SHA-256 だけを書く。足すのは digitalkey site token
 
 [[token]]
 name = &quot;管理者&quot;
 role = &quot;管理者&quot;
-token_sha256 = &quot;8ddc5cb73f447c7c5da5cda5f17382c2b9bf80b4cb79c32cb8b8b8075d9a170f&quot;
+token_sha256 = &quot;43013bc739bfd92fa6574271665ccf84fc7881c5d6eb6c12d8a0d307b1cbea23&quot;
 
 [[token]]
 name = &quot;受付&quot;
 role = &quot;受付&quot;
-token_sha256 = &quot;ef6fe355e22f27731f36ea10fffa57adad8e901d29b67617e1c4c0d25d375edf&quot;
+token_sha256 = &quot;5bb59867678b5eb89427c279bc27f04ebef17fe1728bdf30b96f028c7ddeda86&quot;
 </code></pre>
 <h3>役割</h3>
 <table>
@@ -141,6 +146,46 @@ token_sha256 = &quot;ef6fe355e22f27731f36ea10fffa57adad8e901d29b67617e1c4c0d25d3
 <tr>
 <td>DELETE</td>
 <td><code>/keys/{key_id}</code></td>
+<td></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/reservations</code></td>
+<td>{subject,layer,arrival,departure,door,contact} 管理者・受付</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/reservations</code></td>
+<td>管理者・受付</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/reservations/{rid}</code></td>
+<td></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/reservations/{rid}/keys</code></td>
+<td></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/reservations/{rid}/cancel</code></td>
+<td></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/keys/{key_id}/credential</code></td>
+<td></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/issuer</code></td>
+<td>管理者・受付・保守(発行者の公開鍵、最長の有効時間)</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/doors/{door_id}/credential</code></td>
 <td></td>
 </tr>
 <tr>
@@ -502,6 +547,26 @@ digitalkey.contacts.LockDriverContacts を差す。錠は --fake の疑似の Se
 </tr>
 </tbody>
 </table>
+<h3>予約の取消(予約_取消)</h3>
+<p>書ける役割: 経営者, AI社員</p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>型と制約</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>予約番号</td>
+<td>varchar(40), not null</td>
+</tr>
+<tr>
+<td>理由</td>
+<td>varchar(200), not null</td>
+</tr>
+</tbody>
+</table>
 <h3>会議室・場所貸し(利用_会議室)</h3>
 <p>書ける役割: 経営者, AI社員</p>
 <table>
@@ -763,6 +828,46 @@ digitalkey.contacts.LockDriverContacts を差す。錠は --fake の疑似の Se
 <tr>
 <td>用途</td>
 <td>varchar(10), in ('居住', '事業'), not null</td>
+</tr>
+</tbody>
+</table>
+<h3>資格情報の発行(資格情報_発行)</h3>
+<p>書ける役割: 経営者, AI社員</p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>型と制約</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>鍵番号</td>
+<td>varchar(40), not null</td>
+</tr>
+<tr>
+<td>錠</td>
+<td>varchar(40), not null</td>
+</tr>
+<tr>
+<td>識別</td>
+<td>varchar(64), not null — 資格情報の識別(一回限りの使用済みの印に使う)</td>
+</tr>
+<tr>
+<td>発行者</td>
+<td>varchar(16), not null — 発行者の公開鍵の識別</td>
+</tr>
+<tr>
+<td>開始</td>
+<td>datetime, not null</td>
+</tr>
+<tr>
+<td>終了</td>
+<td>datetime, not null</td>
+</tr>
+<tr>
+<td>一回限り</td>
+<td>boolean, not null</td>
 </tr>
 </tbody>
 </table>

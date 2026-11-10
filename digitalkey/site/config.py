@@ -54,6 +54,7 @@ class SiteConfig:
     tokens: list[TokenConfig] = field(default_factory=list)
     host: str = "127.0.0.1"
     port: int = 8800
+    credential_max_hours: float = 24.0   # 資格情報の最長の有効時間(R-AC-14。[credentials] max_hours)
 
     def door(self, door_id: str) -> DoorConfig | None:
         return next((d for d in self.doors if d.id == door_id), None)
@@ -64,6 +65,10 @@ def load(path: Path | str) -> SiteConfig:
     site = raw.get("site", {})
     cfg = SiteConfig(name=site.get("name", "事業所"), vault=Path(site.get("vault", "vault")),
                      host=raw.get("api", {}).get("host", "127.0.0.1"), port=int(raw.get("api", {}).get("port", 8800)))
+    mh = raw.get("credentials", {}).get("max_hours", cfg.credential_max_hours)
+    if isinstance(mh, bool) or not isinstance(mh, (int, float)) or not 0 < mh <= 24 * 366:
+        raise ValueError("[credentials] max_hours は 0 より大きい時間(数)です")
+    cfg.credential_max_hours = float(mh)
     for d in raw.get("door", []):
         cfg.doors.append(DoorConfig(id=d["id"], lock=d.get("lock", "dummy"), two_person=int(d.get("two_person", 1)),
                                     autolock_s=float(d.get("autolock", 5.0)), power_policy=d.get("power_policy", "release")))
@@ -130,6 +135,11 @@ id = "正面玄関"
 lock = "dummy"
 two_person = 1              # 2 にすると二人同時認証
 autolock = 5.0              # 解錠から自動施錠までの秒
+
+# 扉が自分で確かめる署名つき資格情報。有効の終わりは、鍵の終わりと「作った時刻 + max_hours」の早い方。
+# 網が届かない扉で失効が効くまでの最長の時間になる(R-AC-14)。値は管理者が扉ごとの事情で決める
+[credentials]
+max_hours = 24
 
 # アクセストークン。role は 管理者 | 受付 | 利用者 | 保守。利用者は subject(鍵の主体名)を書く
 # トークンそのものは書かず、SHA-256 だけを書く。足すのは digitalkey site token
