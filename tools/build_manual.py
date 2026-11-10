@@ -72,7 +72,7 @@ def section_site() -> str:
     out = ["## 事業所サーバー", "", site_doc.strip(), ""]
     out += ["### 導入", "", "`deploy/install.sh` を root で実行すると、専用ユーザーの作成、仮想環境の作成、設定の雛形の生成、systemd への登録まで行います。設定は `/var/lib/digitaldoor/site.toml` です。", "",
             "```", "sh deploy/install.sh", "systemctl status digitaldoor-site", "```", ""]
-    out += ["### 設定ファイル(site.toml)", "", "`digitalkey site init <ディレクトリ>` で次の雛形が作られます。トークンは自動生成されます。", "", "```toml", config.sample("本社", "/var/lib/digitaldoor/vault").strip(), "```", ""]
+    out += ["### 設定ファイル(site.toml)", "", "`digitalkey site init <ディレクトリ>` で次の雛形が作られます。トークンは作ったときに一度だけ画面に出し、設定には SHA-256(`token_sha256`)だけを書きます。トークンを足すのは `digitalkey site token --name <名前> --role <役割>` です。", "", "```toml", config.sample("本社", "/var/lib/digitaldoor/vault").strip(), "```", ""]
     out += ["### 役割", "", "| 役割 | できること |", "|---|---|"] + [f"| {r} | {d} |" for r, d in TEXT["roles"]] + [""]
     # API from the app's routes
     import tempfile

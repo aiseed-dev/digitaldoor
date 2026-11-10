@@ -1,11 +1,15 @@
-"""事業所サーバーの HTTP API(FastAPI)。Bearer トークンで役割を分ける。
+"""事業所サーバーの HTTP API(FastAPI)。Bearer トークンで役割を分ける(R-DV-12)。
+
+トークンは事業所サーバーの中だけで確かめる(SHA-256 にしてから設定の値と照らす)。違うトークンは 401、役割の外は 403。
+役割と共通コア 7.1 の主体: 管理者=管理者、受付=運用者、利用者=利用者、保守=保守者。
 
   GET  /health                       誰でも
+  GET  /me                           トークンを持つ全員(名前、役割、主体、鍵の主体名)
   GET  /state                        管理者・受付・保守
   GET  /doors                        全員(扉の一覧)
   POST /doors/{id}/unlock {key}      鍵を持つ人(利用者は自分の鍵だけ)、管理者・受付
   POST /doors/{id}/lock              管理者・受付・保守
-  GET  /keys                         管理者・受付は全部、利用者は自分の分
+  GET  /keys                         管理者・受付は全部、利用者は自分の分(保守は見ない)
   POST /keys {subject,door,start,end,route}   管理者・受付
   DELETE /keys/{id}?reason=          管理者
   GET  /events/{door}?since=         管理者・保守(扉の監査記録)
@@ -56,6 +60,10 @@ def create_app(site: Site) -> FastAPI:
     def health():
         return {"ok": True, "site": site.cfg.name}
 
+    @app.get("/me")
+    def me(t: TokenConfig = Depends(who)):
+        return {"name": t.name, "role": t.role, "principal": t.principal, "subject": t.subject}
+
     @app.get("/state")
     def state(t: TokenConfig = Depends(need("管理者", "受付", "保守"))):
         return site.state()
@@ -79,7 +87,7 @@ def create_app(site: Site) -> FastAPI:
             raise HTTPException(404, "扉がありません")
 
     @app.get("/keys")
-    def keys(t: TokenConfig = Depends(who)):
+    def keys(t: TokenConfig = Depends(need("管理者", "受付", "利用者"))):
         if t.role == "利用者":
             return site.keys(subject=t.subject or t.name)
         return site.keys()

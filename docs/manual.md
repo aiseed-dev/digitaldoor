@@ -23,7 +23,7 @@ systemctl status digitaldoor-site
 
 ### 設定ファイル(site.toml)
 
-`digitalkey site init <ディレクトリ>` で次の雛形が作られます。トークンは自動生成されます。
+`digitalkey site init <ディレクトリ>` で次の雛形が作られます。トークンは作ったときに一度だけ画面に出し、設定には SHA-256(`token_sha256`)だけを書きます。トークンを足すのは `digitalkey site token --name <名前> --role <役割>` です。
 
 ```toml
 # digitaldoor 事業所サーバーの設定
@@ -44,15 +44,17 @@ two_person = 1              # 2 にすると二人同時認証
 autolock = 5.0              # 解錠から自動施錠までの秒
 
 # アクセストークン。role は 管理者 | 受付 | 利用者 | 保守。利用者は subject(鍵の主体名)を書く
+# トークンそのものは書かず、SHA-256 だけを書く。足すのは digitalkey site token
+
 [[token]]
 name = "管理者"
 role = "管理者"
-token = "Nvf-IEpl4rI20Mxd2qXf_AJHG5hP3JGR"
+token_sha256 = "afeadfdac322d9e3cea8e679c45eb476bf9f2a83bdd8143b969b7ec41461cfb7"
 
 [[token]]
 name = "受付"
 role = "受付"
-token = "uu5w4PAmwGehocrp5bYUKq5fS8k4kQ7w"
+token_sha256 = "1a38c6563f3fa7289427f9baf9a20e6b233ae60694e6d832587044afb540f5d0"
 ```
 
 ### 役割
@@ -71,11 +73,12 @@ token = "uu5w4PAmwGehocrp5bYUKq5fS8k4kQ7w"
 | メソッド | パス | 説明 |
 |---|---|---|
 | GET | `/health` | 誰でも |
+| GET | `/me` | トークンを持つ全員(名前、役割、主体、鍵の主体名) |
 | GET | `/state` | 管理者・受付・保守 |
 | GET | `/doors` | 全員(扉の一覧) |
 | POST | `/doors/{door_id}/unlock` |  |
 | POST | `/doors/{door_id}/lock` |  |
-| GET | `/keys` | 管理者・受付は全部、利用者は自分の分 |
+| GET | `/keys` | 管理者・受付は全部、利用者は自分の分(保守は見ない) |
 | POST | `/keys` | {subject,door,start,end,route} 管理者・受付 |
 | DELETE | `/keys/{key_id}` |  |
 | GET | `/events/{door_id}` |  |
@@ -119,17 +122,18 @@ digitalkey entrance <命令> ...   様式・台帳・鍵・本人確認・報告
 ### digitalkey site
 
 ```
-usage: digitalkey site [-h] {init,serve} ...
+usage: digitalkey site [-h] {init,token,serve} ...
 
 事業所サーバー
 
 positional arguments:
-  {init,serve}
-    init        設定の雛形(site.toml)を書く
-    serve       サーバーを起動する
+  {init,token,serve}
+    init              設定の雛形(site.toml)を書く
+    token             トークンを一つ足す(設定には SHA-256 だけを書き、トークンは一度だけ出す)
+    serve             サーバーを起動する
 
 options:
-  -h, --help    show this help message and exit
+  -h, --help          show this help message and exit
 ```
 
 ### digitalkey entrance

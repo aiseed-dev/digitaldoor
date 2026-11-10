@@ -12,7 +12,7 @@ from digitaldoor_controller.controller import Config as DoorCfg, Controller
 from ..entrance.keyring import Keyring, LockDriver
 from ..locks import make_lock as make_lock_by_spec
 from ..entrance.ledger import Ledger, Slip
-from .config import DoorConfig, SiteConfig, TokenConfig
+from .config import DoorConfig, SiteConfig, TokenConfig, token_hash
 
 # 役割 → 台帳に書ける名前(様式の :書ける: に合わせる)
 ROLE_WRITES = {"管理者": {"経営者", "AI社員", "錠"}, "受付": {"AI社員", "錠"}, "利用者": {"錠"}, "保守": {"錠"}}
@@ -45,11 +45,14 @@ class Site:
             ctl.set_time(time.time(), True)
             self.doors[d.id] = Door(d, ctl, drv, threading.Lock())
         self.keyring = Keyring(self.ledger, {d: door.driver for d, door in self.doors.items()})
-        self.tokens = {t.token: t for t in cfg.tokens}
+        self.tokens = {t.token_sha256: t for t in cfg.tokens}
 
     # ---- 認証 ----
     def who(self, token: str) -> TokenConfig | None:
-        return self.tokens.get(token or "")
+        """届いたトークンを SHA-256 にしてから照らす。設定はトークンそのものを持たない。"""
+        if not token:
+            return None
+        return self.tokens.get(token_hash(token))
 
     # ---- 鍵 ----
     def issue(self, *, subject: str, door_id: str, start: str, end: str, by: TokenConfig, route: str = "遠隔解錠") -> Slip:
