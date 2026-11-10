@@ -54,12 +54,12 @@ max_hours = 24
 [[token]]
 name = "管理者"
 role = "管理者"
-token_sha256 = "8cd90ca4aeef57b5d5913eefccc87add7ba30df241f0df96af287a17abb1cf9f"
+token_sha256 = "1459f369edf3fad9a865d9501b7d888fe33b780accd9a823055f8da16f4023cf"
 
 [[token]]
 name = "受付"
 role = "受付"
-token_sha256 = "863591122e9410968360760acbcdef3330ff9568b80473ecd4ca1ddeb98bc97f"
+token_sha256 = "7006390ad3b446339da5c0dfb7e33742234271675b42cd9b0e19c9c6045e4ee4"
 ```
 
 ### 役割
@@ -130,6 +130,7 @@ digitalkey entrance <命令> ...   様式・台帳・鍵・本人確認・報告
   digitalkey <ドライバ名> ...       pip で入れた錠ドライバのコマンド(例: digitalkey-sesame を入れると `digitalkey sesame scan`)
   digitalkey site init <dir> | serve --config site.toml   事業所サーバー(扉のコントローラ+鍵の台帳+HTTP API)
   digitalkey mobile [--web]        管理者と利用者のスマートフォンアプリ(Flet)
+  digitalkey aliro <命令> ...      Aliro の読取機を Matter で設定する値を作る(実装の例。reader-config | issuer-key | matter-fields)
   digitalkey update <命令> ...     更新の配布(署名つきの包み、段階配布の表、当てる、自動で戻す、サポート期限)
 ```
 

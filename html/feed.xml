@@ -4,7 +4,7 @@
 <link>https://door.aiseed.dev/</link>
 <description>扉と鍵の話を、層に分けて書く</description>
 <language>ja</language>
-<lastBuildDate>Tue, 20 Oct 2026 11:49:55 +0900</lastBuildDate>
+<lastBuildDate>Wed, 11 Nov 2026 01:13:43 +0900</lastBuildDate>
 <item>
 <title>サイバー攻撃に耐える扉</title>
 <link>https://door.aiseed.dev/guide/resist-attacks/</link>
@@ -123,7 +123,7 @@
 <guid>https://door.aiseed.dev/guide/matter/</guid>
 <category>解説</category>
 <pubDate>Thu, 17 Sep 2026 00:00:00 +0900</pubDate>
-<description>Matterは、家庭用のスマートホーム機器をメーカーを問わず接続するための共通規格です。仕組み、電子錠向けの機能、対応バージョンの変遷を説明し、業務用の扉に適用しにくい三つの理由を解説します。</description>
+<description>Matterは、家庭用のスマートホーム機器をメーカーを問わず接続するための共通規格です。登録の手順、電子錠(Door Lockクラスタ)の属性と命令、版の変遷、実装の例を説明し、業務用の扉に適用しにくい三つの理由を解説します。</description>
 </item>
 <item>
 <title>Aliroとは何か</title>
@@ -131,7 +131,7 @@
 <guid>https://door.aiseed.dev/guide/aliro/</guid>
 <category>解説</category>
 <pubDate>Thu, 17 Sep 2026 00:00:00 +0900</pubDate>
-<description>Aliroは、スマートフォンやスマートウォッチを鍵として電子錠のリーダーに提示するための規格です。2026年2月に1.0が公開されました。規定している範囲と規定していない範囲、扉の側から見た利点、Walletとの契約という課題を解説します。</description>
+<description>Aliroは、スマートフォンやスマートウォッチを鍵として電子錠のリーダーに提示するための規格です。2026年2月に1.0が公開されました。規定している範囲と規定していない範囲、役割と鍵の仕組み、Matterでのリーダーの設定、認証と財布の状況、実装の例を解説します。</description>
 </item>
 <item>
 <title>スマートドアに求められる条件</title>

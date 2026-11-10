@@ -12,6 +12,7 @@ USAGE = """使い方:
   digitalkey <ドライバ名> ...       pip で入れた錠ドライバのコマンド(例: digitalkey-sesame を入れると `digitalkey sesame scan`)
   digitalkey site init <dir> | serve --config site.toml   事業所サーバー(扉のコントローラ+鍵の台帳+HTTP API)
   digitalkey mobile [--web]        管理者と利用者のスマートフォンアプリ(Flet)
+  digitalkey aliro <命令> ...      Aliro の読取機を Matter で設定する値を作る(実装の例。reader-config | issuer-key | matter-fields)
   digitalkey update <命令> ...     更新の配布(署名つきの包み、段階配布の表、当てる、自動で戻す、サポート期限)
 """
 
@@ -53,6 +54,9 @@ def main(argv: list[str] | None = None) -> int:
         return m(argv[1:])
     if argv and argv[0] == "site":
         from .site.cli import main as m
+        return m(argv[1:])
+    if argv and argv[0] == "aliro":
+        from .aliro import main as m
         return m(argv[1:])
     if argv and argv[0] == "update":
         from .update import main as m

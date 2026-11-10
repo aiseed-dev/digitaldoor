@@ -15,7 +15,7 @@ title.ja: Matterとは何か
 title.en: What Matter is
 subtitle.ja: 家庭用スマートホーム機器の共通規格と、業務用の扉に向かない理由
 subtitle.en: The common standard for home devices, and why it does not fit commercial doors
-description.ja: Matterは、家庭用のスマートホーム機器をメーカーを問わず接続するための共通規格です。仕組み、電子錠向けの機能、対応バージョンの変遷を説明し、業務用の扉に適用しにくい三つの理由を解説します。
+description.ja: Matterは、家庭用のスマートホーム機器をメーカーを問わず接続するための共通規格です。登録の手順、電子錠(Door Lockクラスタ)の属性と命令、版の変遷、実装の例を説明し、業務用の扉に適用しにくい三つの理由を解説します。
 description.en: Matter is a common standard for connecting home smart devices across manufacturers. This article explains how it works, what it offers for door locks, and three reasons it is hard to apply to commercial doors.
 ---
 ifdef::lang-ja[]
@@ -31,25 +31,87 @@ Matterは、Connectivity Standards Alliance(CSA、旧Zigbee Alliance)が策定�
 * 仕様は公開されており、参照実装(SDK)もオープンソースで公開されています。
 * Matter対応製品として販売するには、CSAの認証を取得する必要があります。各機器は製造者の証明書(DAC)を持ち、登録時に検証されます。
 
-バージョンは年に1〜2回更新されています。CSAの発表によると、1.2(2023年)で冷蔵庫や洗濯機などの家電、1.3(2024年)でエネルギー管理、1.4(2024年末)で家庭用ルーターと、電子錠向けのAliro資格情報への対応、1.5(2025年11月)でカメラが追加されました。
+(2026年11月11日に、登録の手順、Door Lockクラスタの中身、版の表、実装の例を足し、版の説明の誤りを直しました。)
+
+== 版の変遷
+
+版は年に1〜2回出ています。下の表の「中身」は、CSAの発表文に書かれている物のうち、扉と錠とカメラに関わる物です。
+
+[cols="1,2,4"]
+|===
+| 版 | 公開 | 中身
+
+| 1.0 | 2022年10月4日 | 最初の版。電子錠(Door Lock)を含む
+| 1.1 | 2023年5月18日 | 電池で動く機器への対応の改善(報道による。9to5Mac など)
+| 1.2 | 2023年10月23日 | 家電の機器種別。欧州に多いラッチとボルトの錠への対応
+| 1.3 | 2024年5月 | 電力の報告、電気自動車の充電器など
+| 1.4 | 2024年11月7日 | 複数の管理者の扱いの強化、家庭用ルーター、エネルギー管理
+| 1.4.1 | 2025年5月 | 一度に複数台を登録するQR、NFCタグ
+| 1.4.2 | 2025年8月 | Wi-Fiだけでの登録
+| 1.5 | 2025年11月20日 | カメラ(WebRTC)、ドアホン、閉鎖物(シャッター、門扉など)
+| 1.5.1 | 2026年3月31日 | カメラの複数の配信
+| 1.6 | 2026年6月17日 | NFCによる登録、複数の管理者が一つの網を共有する仕組み(Joint Fabric)
+|===
+
+電子錠でのAliroの鍵の登録は、1.4の発表文には書かれていません。規格のデータモデル(Matterの参照実装connectedhomeipの `data_model` の下にある版ごとの定義)を見ると、1.4のDoor Lockクラスタ(改訂8)で、Aliroの機能、属性、命令が入っています。この記事の前の版は「1.4の発表で電子錠向けのAliro資格情報に対応した」と書いていましたが、発表文にはその記述が無く、規格の本文の側で入った物です。
 
 == 仕組み
 
-Matter機器は、「ファブリック」と呼ばれる管理者のネットワークに登録して使います。登録は、機器のQRコードまたは手動コードを管理者アプリで読み取って行います。管理者となるのは、Apple Home、Google Home、Amazon Alexa、Samsung SmartThingsなどのアプリや、Home Assistantのように自分で運用するコントローラーです。
+Matter機器は、「ファブリック」と呼ばれる管理者のネットワークに登録して使います。管理者となるのは、Apple Home、Google Home、Amazon Alexa、Samsung SmartThingsなどのアプリや、Home Assistantのように自分で運用するコントローラーです。1台の機器を複数の管理者に登録することもできます。たとえば、同じ電子錠をApple HomeとGoogle Homeの両方から操作できます。
 
-1台の機器を複数の管理者に登録することもできます。たとえば、同じ電子錠をApple HomeとGoogle Homeの両方から操作できます。
+=== 登録(コミッショニング)の手順
 
-== 電子錠向けの機能
+登録は、機器のQRコードまたは手入力のコードを管理者アプリで読み取って始めます。Googleの開発者向けの解説によると、流れは次のとおりです。
 
-Matterの電子錠(Door Lockクラスタ)は、家庭用の玄関に必要な機能を一通り備えています。
+. 機器を見つける。最初の登録ではBluetooth LEを使うことが多い
+. パスコードで一時の暗号の通り道を作る(PASE。SPAKE2+という、パスコードを相手に渡さずに共有の鍵を作る方式)
+. 機器の基本の情報を読み、設置する国の設定を書く
+. 機器の認証。機器の中にある製造者の証明書(DAC)と、その上の証明書(PAI)を取り出し、管理者が出した問いかけに機器の秘密鍵で署名させて、本物のMatter機器か確かめる
+. 機器に鍵の対を作らせ(CSR)、管理者の根の証明書と、このファブリックでの機器の証明書(NOC)を入れる
+. Wi-FiかThreadの網の情報を渡す
+. 機器が網に入ったら、証明書どうしで暗号の通り道を作り直す(CASE)。以後の操作はこの通り道を通る
 
-* 施錠、解錠、ラッチのみの解除
-* ユーザーと認証情報の管理。暗証番号、カード、指紋、顔、Aliroの鍵
-* 曜日、日付、休日ごとのスケジュール
-* ドアの状態検知。開、閉、半開き、こじ開け、ラッチの引っかかり
-* 操作の通知
-* 動作モード。通常、不在、プライバシー、遠隔操作の禁止、通行モード
-* 自動再施錠と警報
+QRコードの中身は「MT:」で始まる文字列で、製造者の番号(VID)、製品の番号(PID)、見つけ方、見分けの番号(discriminator)、パスコードが入っています。手入力のコードは11桁(長い形は21桁)です。
+
+=== 電子錠(Door Lockクラスタ)
+
+電子錠は、機器種別Door Lock(0x000A)に、Door Lockクラスタ(0x0101)を載せた物です。以下の名前と番号は、connectedhomeipのデータモデルによる物です。
+
+*必須の属性。* 錠の状態(LockState)、錠の種類(LockType)、駆動部が動くか(ActuatorEnabled)、動作のモード(OperatingMode)、対応するモード(SupportedOperatingModes)。モードは、通常、不在、プライバシー、遠隔操作の禁止、通行の五つです。
+
+*機能のビット。* 錠ごとに、持っている機能をビットで示します。暗証番号(PIN)、カード(RID)、指紋(FGP)、扉の開閉の検知(DPS)、顔(FACE)、網を通した資格情報(COTA)、利用者(USR)、曜日・日付・休日の予定、ラッチの解除(UBOLT)、Aliro(ALIRO と、BLEとUWBの ALBU)です。記録(LOG)と通知(NOT)のビットは1.3まであり、1.4で無くなりました。
+
+*命令と権限。* 施錠(LockDoor)、解錠(UnlockDoor)、時間つき解錠(UnlockWithTimeout)は「操作」の権限で送れます。利用者と資格情報の登録(SetUser、SetCredential)と、Aliroの読取機の設定(SetAliroReaderConfig)は「管理」の権限が要ります。施解錠と登録の命令はどれも、Timed Invokeという、決めた時間内に届かなければ無効にする送り方を求めます。命令を途中で止め、遅らせて届ける攻撃を防ぐためです。暗証番号を持つ錠は、遠隔の操作に暗証番号を求める設定(RequirePINforRemoteOperation)も持てます。
+
+*出来事(イベント)。* 警報(DoorLockAlarm)、操作(LockOperation)、操作の失敗(LockOperationError)は必須です。操作の出来事には、どこから(暗証番号、遠隔、Aliroなど)、どの利用者が、どの管理者のファブリックから行ったかが入ります。扉の開閉(DoorStateChange)と利用者の変更(LockUserChange)は、その機能を持つ錠で必須です。
+
+*資格情報の種類。* 暗証番号、カード、指紋、指の静脈、顔に加えて、1.4からAliroの鍵が三種類あります(発行者の鍵、入れ替えられる端末の鍵、入れ替えない端末の鍵)。
+
+=== 通信の方式
+
+錠は電池で動くことが多いので、Wi-FiよりもThreadが多く使われます。Threadは低い電力の無線の網で、家の中にあるボーダールーター(Apple TV、HomePod、Google Nest Hubなど)を通してIPの網とつながります。
+
+== 日本で買える錠
+
+* 美和ロック PiACK HOME PG。2024年12月26日に発売し、2025年1月14日に美和ロックが発表しました。国内の錠前の会社として初めてMatterに対応した錠で、Threadを使います(美和ロックの発表)。CSAの認証の番号は、発表文と報道では確かめられませんでした
+* Aqara スマートロック J200。2026年6月4日に発売されたと報じられています(Aqaraのプレスリリースを元にした報道)。Matter over Threadで、Appleのホームキーに対応します
+
+== 実装の例
+
+参照実装には次の物があります。
+
+* connectedhomeip(CSA、Apache-2.0)の `examples/lock-app`。Linux、ESP32、nRF Connect、Silicon Labsなど多くの基板に対応しています。Aliroの属性と命令も持ちますが、読取機の設定は保存するだけで、NFCやBLEでの読み取りは含みません
+* matter.js(Apache-2.0)。JavaScriptで書かれ、電子錠のサーバーは施解錠、利用者、資格情報、予定を持ちます。Pythonから使われてきたpython-matter-serverは開発を終え、matter.jsを元にしたサーバーに移りました
+* CircuitMatter(Adafruit、MIT)。Pythonで書かれた趣味向けの実装で、認証は取っていません。電子錠のクラスタはありません
+
+このサイトの扉は、CircuitMatterの上に電子錠のクラスタを自前で定義して、扉のコントローラーをMatterの電子錠として見せています(`digitalkey/panel/door_lock.py`)。
+
+* 必須の属性五つと扉の開閉(DoorState)を持ち、施錠と解錠の命令だけを受けます
+* 命令は、扉のコントローラーのHTTPの口(同じ機械の中だけ)に渡します。火災中の施錠のように扉が拒んだときは、錠の状態の属性を変えません。判断は扉が持ちます
+* 暗証番号、利用者、予定は出しません。鍵の発行と失効は、発行者の台帳が持つからです
+* 必須の出来事とTimed Invokeは、CircuitMatterに仕組みが無いため持っていません。誰がいつ開けたかの記録は、扉の監査の記録(署名つき、連鎖)が正です。認証を受けた製品にするには、connectedhomeipやmatter.jsのように、これらを扱える実装に載せ替えます
+
+手元で試す手順は、ソフトウェアの使い方(`docs/使い方.md` の「実機のSesameをminiPCのMatterの電子錠として見せる」)にあります。
 
 == 業務用の扉に向かない理由
 
@@ -70,7 +132,22 @@ Matter対応のセンサーやスピーカーは、周辺機器として活用�
 == 出典
 
 * https://csa-iot.org/all-solutions/matter/[Connectivity Standards Alliance: Matter]
-* https://github.com/project-chip/connectedhomeip[Matter の参照実装(connectedhomeip)]
+* https://csa-iot.org/newsroom/matter-arrives/[CSA: Matter Arrives(1.0、2022年10月4日)]
+* https://csa-iot.org/newsroom/matter-1-2-arrives-with-nine-new-device-types-improvements-across-the-board/[CSA: Matter 1.2(2023年10月23日)]
+* https://csa-iot.org/newsroom/matter-1-3-specification-released[CSA: Matter 1.3(2024年5月)]
+* https://csa-iot.org/newsroom/matter-1-4-enables-more-capable-smart-homes/[CSA: Matter 1.4(2024年11月7日)]
+* https://csa-iot.org/newsroom/a-smarter-start-matter-1-4-1-makes-setup-easier/[CSA: Matter 1.4.1(2025年5月)]
+* https://csa-iot.org/newsroom/matter-1-4-2-enhancing-security-and-scalability-for-smart-homes/[CSA: Matter 1.4.2(2025年8月)]
+* https://csa-iot.org/newsroom/matter-1-5-introduces-cameras-closures-and-enhanced-energy-management-capabilities/[CSA: Matter 1.5(2025年11月20日)]
+* https://csa-iot.org/newsroom/matter-1-5-1-enhancing-camera-performance-and-expanding-device-flexibility/[CSA: Matter 1.5.1(2026年3月31日)]
+* https://csa-iot.org/newsroom/matter-1-6-enables-more-intuitive-setup-multi-ecosystem-experiences-and-context-driven-control/[CSA: Matter 1.6(2026年6月17日)]
+* https://9to5mac.com/2023/05/18/matter-gets-its-first-update/[9to5Mac: Matter 1.1 の報道(2023年5月18日)]
+* https://github.com/project-chip/connectedhomeip[Matter の参照実装(connectedhomeip)。Door Lock クラスタの定義は data_model/<版>/clusters/DoorLock.xml、電子錠の例は examples/lock-app]
+* https://developers.home.google.com/matter/primer/commissioning[Google Home Developers: Matter の登録の手順]
+* https://www.miwa-lock.co.jp/news/pdf/release_PiACK%20HOME%20PG_20250114.pdf[美和ロック: PiACK HOME PG の発表(2025年1月14日)]
+* https://github.com/matter-js/matter.js[matter.js]
+* https://github.com/adafruit/CircuitMatter[CircuitMatter]
+* Aqara スマートロック J200 の発売の報道(smartwatchlife.jp、2026年6月4日。Aqara のプレスリリースによる)
 endif::[]
 
 // ===== article: 02-aliro =====
@@ -85,7 +162,7 @@ title.ja: Aliroとは何か
 title.en: What Aliro is
 subtitle.ja: スマートフォンを鍵として使うための共通規格
 subtitle.en: The common standard for using a phone as a key
-description.ja: Aliroは、スマートフォンやスマートウォッチを鍵として電子錠のリーダーに提示するための規格です。2026年2月に1.0が公開されました。規定している範囲と規定していない範囲、扉の側から見た利点、Walletとの契約という課題を解説します。
+description.ja: Aliroは、スマートフォンやスマートウォッチを鍵として電子錠のリーダーに提示するための規格です。2026年2月に1.0が公開されました。規定している範囲と規定していない範囲、役割と鍵の仕組み、Matterでのリーダーの設定、認証と財布の状況、実装の例を解説します。
 description.en: Aliro defines how a phone or watch presents itself as a key to a lock reader. Released in February 2026, it covers the reader-facing side only. This article explains its scope, its benefits for the door side, and the wallet-agreement hurdle.
 ---
 ifdef::lang-ja[]
@@ -99,13 +176,17 @@ Aliroは、Matterと同じConnectivity Standards Alliance(CSA)が策定する規
 
 それまで、スマートフォンを鍵にする仕組みは企業ごとに分かれていました。たとえばAppleのHome Keyは、iOS 15(2021年)でNFCによる鍵をWalletに追加し、iOS 18(2024年)でUWBによる近接解錠に対応しましたが、Home Key対応の錠でしか使えませんでした。Aliroは、この部分を共通化する規格です。
 
+(2026年11月11日に、役割と鍵の仕組み、Matterでの設定、認証と財布の状況、実装の例を足し、確かめられなかった暗号の細部の記述を改めました。)
+
 == 規定している範囲
 
-* スマートフォンとリーダーの間の相互認証。楕円曲線暗号P-256、AES-256-GCM、圧縮X.509証明書を使います。
-* 入館資格を示すデータの形式(mdoc)。
-* 通信方式は三つ。NFC(かざす)、Bluetooth LE(近づく)、UWB(手を触れずに通る)。
+* スマートフォンとリーダーの間の相互認証。非対称鍵の暗号を使います(CSAの発表)。Aliro 1.0の仕様の第6章は、資格情報の文書の署名にP-256の楕円曲線の鍵を使うと定めています。
+* 入館の資格を示す文書(Access Document)と、失効の一覧の文書(Revocation Document)の形。
+* 通信方式は三つ。NFC(かざす)、Bluetooth LE(利用者の操作で少し離れて)、Bluetooth LEとUWB(手を触れずに通る)。認証ではNFCが必須とされています(Silicon Labsの文書)。
 * 認証はリーダーの中で完結します。インターネットに接続していなくても、スマートフォンとリーダーの二者だけで解錠できます。
-* オフラインでの資格情報の失効。
+* オフラインでの資格情報の失効。網につながらないリーダーには、スマートフォンが発行者の署名つきの失効の一覧を運びます。
+
+この記事の前の版は、AES-256-GCM、圧縮X.509証明書、mdocという細部を挙げていました。CSAの公開の資料ではこれらを確かめられなかったため、外しました。有志の研究者による解析(kormax/aliro、非公式)は、その場限りの鍵どうしのECDH、HKDF-SHA256などによる鍵の導出、ECDSAの署名、AES-GCMの暗号化を挙げています。
 
 == 規定していない範囲
 
@@ -116,6 +197,57 @@ Aliroは、規定する範囲を意図的に絞っています。
 * 鍵の共有と監査記録。これらは将来のバージョンで扱う予定とされています。
 
 つまりAliroは、扉に対して何かを命令する規格ではありません。誰が来たかを確実に示すだけで、その後の処理は扉のコントローラーと鍵の発行者に委ねられます。このため、扉の側の設計の自由度が保たれます。ここでいう鍵の発行者とは、誰に鍵を発行し、いつ失効させるかを決めて記録する主体のことです。
+
+== 役割と鍵
+
+Aliro 1.0の仕様の第6章は、三つの役を別々に定めています。同じ者が兼ねるか、別の者が担うかは、仕様の外です。
+
+[cols="1,3"]
+|===
+| 役 | すること
+
+| Access Manager | 誰にどの扉の資格を与えるかを決める。建物の管理者にあたる
+| Credential Issuer | 資格の文書(Access Document)に、自分の秘密鍵で署名する。リーダーは、この発行者の公開鍵か、その上の証明書を知っている必要がある
+| Reader System Issuer | リーダーの側の身元を作り、リーダーに入れる
+|===
+
+スマートフォンには、端末ごとに一つの鍵の対(Access Credential)があり、資格の文書はその公開鍵を含みます。リーダーは毎回違う問いかけへの、端末の鍵の署名を確かめるので、文書の写しを別の端末に移しても開きません。失効の一覧には発行者ごとの世代の番号(ValidityIteration)があり、古い世代で新しい失効を取り消すことはできません。
+
+端末とリーダーへの資格の載せ方と、その後の管理は、仕様の外です。CSAの手引きは会員向けに公開を待つとされています。このため、載せ方を業者に任せると、業者が発行者の秘密鍵まで持つ形になりやすい点に注意が要ります。このサイトの要求仕様は、発行者の秘密鍵を管理者が持ち、業者は署名済みの文書を運ぶだけとする要求(R-AC-20)を置いています。
+
+== 取引の流れ
+
+Nordic Semiconductorの開発者向けの文書は、取引を次の三つに分けて説明しています。
+
+* *標準の取引(必須)。* その場限りの鍵から会話の鍵を作り、リーダーが先に自分の身元を端末に示し、端末が資格の証明を返します。
+* *速い取引。* 一度目の成功で持続の鍵を作り、二度目からはそれを使って手順を短くします。
+* *追加の取引(任意)。* リーダーが、資格の文書や失効の一覧を端末から受け取ります。
+
+Matterと組み合わせた錠は、時刻をMatterの時刻の同期から取ります。期限の判定に時計が要るためです。
+
+== Matterでのリーダーの設定
+
+リーダーに「どの読取機として名乗るか」と「どの発行者を信じるか」を入れる道の一つが、MatterのDoor Lockクラスタです。Matter 1.4のデータモデル(Door Lockクラスタの改訂8)で入りました。名前と番号は、connectedhomeipのデータモデルによる物です。
+
+* *機能のビット。* ALIRO(Aliroの設定)と、ALBU(BLEとUWB。ALIROが前提)。
+* *リーダーの設定の命令(SetAliroReaderConfig)。* 欄は四つです。リーダーの署名の秘密鍵(32バイト)、その公開鍵(非圧縮の65バイト)、リーダーの組の識別(16バイト)、BLEとUWBのための組の鍵(16バイト。ALBUの錠で必須)。「管理」の権限とTimed Invokeが要ります。消すのはClearAliroReaderConfigです。
+* *属性。* リーダーの公開鍵、組の識別、対応する手順の版などです。鍵に関わる属性は「管理」の権限でだけ読めます。入れられる発行者の鍵と端末の鍵の数は誰でも読めます。
+* *発行者の鍵の登録。* 資格情報の登録(SetCredential)の種類に、Aliroの発行者の鍵、入れ替えられる端末の鍵、入れ替えない端末の鍵の三つがあります。
+
+AppleのMatterの開発用の枠組みと、Google Homeの開発用のAPIにも、この命令と属性が載っています。EspressifのAliroの解説(2026年7月16日)も、Matterの管理者がこの命令でリーダーを設定する形を説明しています。
+
+== 認証と製品の状況
+
+* CSAは認証の制度と、認められた試験所での試験を用意しています(CSAの発表)。CSAの認証製品の一覧には、Aliro 1.0の錠が載っています(例: GCS Times GroupのElectronic Lock、2026年9月21日、NFC)。
+* 日本では、アリオンが2026年3月2日に、国内で初めてAliro 1.0の認められた試験所として試験を始めたと報じられています(BUSINESS NETWORK)。
+* ULTRALOQ(Xthings)は、5機種でAliro 1.0の認証を取ったと報じられています(Matter Alpha、2026年5月4日)。
+* 日本向けのAliro対応の錠の発表は、2026年11月11日の時点で見つかりませんでした。Aqara U400(UWBとAliro)の販売地域に日本は含まれていないと報じられています。
+
+== 財布(Wallet)との関係
+
+* Googleは、2025年3月のGoogle Playサービスの更新で、Google WalletがNFCの読取機向けにAliroに対応したと報じられています(9to5Google)。
+* Samsungは2026年3月2日に、Samsung Walletのデジタルホームキーを発表しました。SmartThingsで錠をMatterの機器として登録する途中で、財布に鍵を足す流れです。最初はNFCで、UWBは2026年4月からとされています(Samsungの発表)。
+* Appleは2026年10月13日に、LGのスマートデッドボルト錠を含む家庭用の機器の一式を発表しました。Matterに対応し、Aliroに対応し、UWBで近づいて開けられるとしています。錠を売るのは米国とカナダで、日本は含まれていません(Appleの発表)。Appleのホームキーと Aliro の関係を、Apple自身が説明した文は見つかりませんでした。
 
 == 扉の側から見た利点
 
@@ -134,6 +266,23 @@ Aliroは、規定する範囲を意図的に絞っています。
 
 リーダーを開発する側には参照設計があります。Espressif、Nordic Semiconductor、STMicroelectronicsが、Aliro対応リーダーの開発キットとソフトウェアを提供しています。リーダーは既製品として調達できるようになりつつあり、扉メーカーが自社開発する必要はありません。
 
+== 実装の例
+
+公開されている物は次のとおりです。
+
+* CSAの公開の置き場(aliro-access-control)。認証の試験の道具と、リーダーと利用者の端末を模擬する道具が、Apache-2.0で公開されています。
+* Espressifのesp-aliro(Apache-2.0)。最初の版はNFCだけで、BLEとUWBは今後とされています。
+* 有志の研究(kormax/aliro)と、PythonでNFCのリーダーを試す例(kormax/python-aliro-reader、Apache-2.0)。どちらも非公式です。
+* connectedhomeipの電子錠の例(examples/lock-app)は、MatterでのAliroの属性と命令を持ちますが、リーダーの設定を保存するだけで、端末との取引は含みません。
+
+このサイトのソフトウェアには、MatterでAliroのリーダーを設定する値を作る例があります(`digitalkey/aliro.py`、`digitalkey aliro`)。
+
+* `reader-config` は、リーダーのP-256の鍵の対と組の識別を作り、権限600のファイルに書きます。画面には公開の欄だけを出します。
+* `issuer-key` は、発行者の鍵の対を作ります。リーダーに入れるのは公開鍵(65バイト)だけで、秘密鍵は管理者の機械に残します。
+* `matter-fields` は、リーダーの設定の命令と、発行者の鍵を登録する命令の欄を、16進の値で出します。管理者のアプリやコントローラー(connectedhomeipのchip-tool、matter.jsなど)から送るときに使います。送る前に、長さと、鍵の対が合っていることと、公開鍵が曲線の上にあることを確かめます。
+
+端末とリーダーの間の取引は作りません。リーダーは、Aliroの認証を受けた製品を買います。このサイトの扉がMatterの電子錠として見せている部分(`digitalkey/panel/door_lock.py`)は、Timed Invokeを扱わない実装の上にあるため、Aliroの機能を出していません。
+
 == まとめ
 
 Aliroリーダーから得られる「認証成功、誰であるか」という結果を、扉のコントローラーの入力の一つとして扱います。カメラによる顔認証、マイクによる音声、ドアの開閉センサーも同じ形式の入力として扱い、それらを組み合わせた判断は扉の側で行います。リーダーはいつでも別の製品に交換できる設計にしておくことが重要です。
@@ -141,6 +290,21 @@ Aliroリーダーから得られる「認証成功、誰であるか」という
 == 出典
 
 * https://csa-iot.org/all-solutions/aliro/[Connectivity Standards Alliance: Aliro]
+* https://csa-iot.org/newsroom/introducing-aliro-1-0-a-unified-standard-to-transform-the-access-control-ecosystem/[CSA: Introducing Aliro 1.0(2026年2月26日)]
+* Aliro 1.0 の仕様(CSA 文書 26-42802-001、2026年2月18日)の第6章と第7章。CSA の頁から入手できます
+* https://github.com/project-chip/connectedhomeip[connectedhomeip。Door Lock クラスタの定義は data_model/1.4/clusters/DoorLock.xml 以降]
+* https://nrfconnectdocs.nordicsemi.com/addons/door_lock_and_access_control/latest/wireless_technologies/aliro/aliro_advanced_features.html[Nordic Semiconductor: Aliro の取引と Matter での登録]
+* https://developer.apple.com/documentation/matter/mtrbaseclusterdoorlock/setaliroreaderconfigwith(_:completion:)[Apple: MTRBaseClusterDoorLock setAliroReaderConfig]
+* Espressif のブログの Aliro の解説(2026年7月16日)
+* https://csa-iot.org/csa_product/electronic-lock-6/[CSA の認証製品の一覧: Electronic Lock(Aliro 1.0、2026年9月21日)]
+* アリオンの Aliro の試験所の報道(BUSINESS NETWORK、2026年3月)
+* ULTRALOQ の Aliro 1.0 の認証の報道(Matter Alpha、2026年5月4日)
+* Google Wallet の Aliro への対応の報道(9to5Google、2025年3月)
+* https://news.samsung.com/us/samsung-wallet-launches-digital-home-key-smart-door-locks[Samsung: Samsung Wallet Digital Home Key(2026年3月2日)]
+* https://www.apple.com/newsroom/2026/10/introducing-apple-home-collection-a-new-lineup-of-smart-home-accessories/[Apple: Apple Home Collection(2026年10月13日)]
+* https://github.com/aliro-access-control[CSA: aliro-access-control]
+* https://github.com/espressif/esp-aliro[Espressif: esp-aliro]
+* https://github.com/kormax/aliro[kormax/aliro(有志の研究、非公式)]
 endif::[]
 
 // ===== article: 03-what-a-smart-door-needs =====

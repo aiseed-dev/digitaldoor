@@ -1,6 +1,22 @@
 """Matter の Door Lock クラスタ(0x0101)と Door Lock 機器種別(0x000A)。CircuitMatter に無いので、ここで定義する。
 
 見せるのは施解錠と扉の開閉だけ。資格情報(暗証番号・カード)は door と発行者の層が持つので、PIN 系の機能は出さない。
+
+作った物(Matter 1.3 の水準。クラスタの rev 7、機器種別の rev 3):
+- 必須の属性 LockState(0x0000)、LockType(0x0001)、ActuatorEnabled(0x0002)、OperatingMode(0x0025)、
+  SupportedOperatingModes(0x0026。通常だけ)と、扉の開閉の DoorState(0x0003。機能 DPS)
+- 命令 LockDoor(0x00)と UnlockDoor(0x01)。扉のコントローラの HTTP の口(POST /lock、/unlock)に渡し、
+  扉が受けたら LockState を写す。扉が拒んだら(火災中の施錠など)属性は変えない。判断は扉が持つ
+- `mirror` で扉の状態(locked、door_open)を LockState と DoorState に写す。盤が扉の /state を見て呼ぶ
+
+作っていない物と、その訳:
+- 必須のイベント(DoorLockAlarm、LockOperation、LockOperationError)と DPS の DoorStateChange。CircuitMatter 0.4.1 に
+  イベントを報告する仕組みが無い。誰がいつ開けたかの記録は、扉の監査の記録(署名つき、連鎖)が正
+- Timed Invoke。規格は施解錠の命令に Timed Invoke を求めるが、CircuitMatter 0.4.1 は TimedRequest を扱わない。
+  認証を受けた製品にするときは、Timed Invoke を扱う実装(connectedhomeip や matter.js)に載せ替える
+- 利用者、資格情報、予定(SetUser、SetCredential、曜日・日付・休日の予定)。鍵の発行と失効は発行者の層(台帳)が持つ
+- Aliro(機能 ALIRO と ALBU、属性 0x0080〜0x0088、命令 SetAliroReaderConfig と ClearAliroReaderConfig)。
+  Matter 1.4 のデータモデル(rev 8)で入った。値の作り方の例は `digitalkey.aliro`。Timed Invoke が要るので、ここでは出さない
 """
 from __future__ import annotations
 
@@ -16,7 +32,7 @@ class Feature(enum.IntFlag):
     PIN_CREDENTIAL = 1 << 0
     RFID_CREDENTIAL = 1 << 1
     FINGER_CREDENTIALS = 1 << 2
-    LOGGING = 1 << 3
+    LOGGING = 1 << 3                     # Matter 1.3 まで。1.4(rev 8)で消えた
     WEEK_DAY_ACCESS_SCHEDULES = 1 << 4
     DOOR_POSITION_SENSOR = 1 << 5
     FACE_CREDENTIALS = 1 << 6
@@ -25,7 +41,8 @@ class Feature(enum.IntFlag):
     YEAR_DAY_ACCESS_SCHEDULES = 1 << 10
     HOLIDAY_SCHEDULES = 1 << 11
     UNBOLTING = 1 << 12
-    ALIRO = 1 << 13
+    ALIRO = 1 << 13                      # AliroProvisioning(1.4 から)
+    ALIRO_BLE_UWB = 1 << 14              # AliroBLEUWB(1.4 から。ALIRO が前提)
 
 
 class LockState(data_model.Enum8):
