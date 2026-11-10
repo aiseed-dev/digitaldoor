@@ -10,6 +10,11 @@ POST /trust            管理者の署名つきの信頼の一覧の変更 {"req
 GET  /trust            信頼の一覧(公開鍵と範囲。秘密は無い)
 GET  /audit?since=N    監査の差分
 GET  /verify           連鎖の検査
+GET  /openapi.json     この口の全部の定義(OpenAPI 3.1)。応答のすべてに API-Version の見出しが付く
+GET  /events?since=N   出来事の配信(WebSocket)。監査の記録を連番の順に一件ずつ送る
+GET  /fault  POST /fault  故障注入(開発のときだけ。同じ機械の相手だけ){"lock": "応答しない"|"正常", "clock_offset_s": 秒}
+
+開発の口(定義、配信、故障注入)は扉コントローラ仕様書 5.5 による。
 """
 from __future__ import annotations
 
@@ -21,7 +26,21 @@ from dataclasses import asdict
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlparse
 
+from . import events
 from .controller import Controller
+from .openapi import API_VERSION, document
+
+FAULT_LOCK = ("正常", "応答しない")
+
+
+class Clock:
+    """扉の時計。開発のときは故障注入で実際の時刻からずらせる(仕様書 5.5)。"""
+
+    def __init__(self, offset_s: float = 0.0) -> None:
+        self.offset_s = offset_s
+
+    def now(self) -> float:
+        return time.time() + self.offset_s
 
 
 def is_loopback(addr: str) -> bool:
@@ -35,8 +54,19 @@ def is_loopback(addr: str) -> bool:
     return ip.is_loopback
 
 
-def make_handler(ctl: Controller, lock: threading.Lock):
+def make_handler(ctl: Controller, lock: threading.Lock, *, dev: bool = False, clock: Clock | None = None):
+    """dev=True で故障注入(/fault)を開く。接点が模擬(故障の印を持つ)ときだけ開くこと。"""
+    if dev and not hasattr(ctl.contacts, "fault_lock"):
+        raise ValueError("故障注入は、故障の印を持つ模擬の接点の扉だけで開けます")
+    clock = clock or Clock()
+    hub = events.Hub()
+    spec = document()
+
     class H(BaseHTTPRequestHandler):
+        def end_headers(self) -> None:
+            self.send_header("API-Version", API_VERSION)
+            super().end_headers()
+
         def _json(self, code: int, obj) -> None:
             data = json.dumps(obj, ensure_ascii=False).encode("utf-8")
             self.send_response(code)
@@ -53,9 +83,55 @@ def make_handler(ctl: Controller, lock: threading.Lock):
         def log_message(self, *a):  # 静かに
             pass
 
+        def _faults(self) -> dict:
+            return {"lock": ctl.contacts.fault_lock, "clock_offset_s": clock.offset_s,
+                    "failures": ctl.contacts.failures}
+
+        def _set_fault(self, b: dict) -> None:
+            """無い項目か許されない値が一つでもあれば 400 で、何も変えない。"""
+            bad = set(b) - {"lock", "clock_offset_s"}
+            off = b.get("clock_offset_s", clock.offset_s)
+            if (bad or not b or ("lock" in b and b["lock"] not in FAULT_LOCK)
+                    or isinstance(off, bool) or not isinstance(off, (int, float)) or off != off
+                    or abs(off) == float("inf")):
+                return self._json(400, {"error": "無い項目か許されない値です", "accepts": {
+                    "lock": list(FAULT_LOCK), "clock_offset_s": "秒(数)"}})
+            if "lock" in b:
+                ctl.contacts.fault_lock = b["lock"]
+            clock.offset_s = float(off)
+            ctl.note_fault(json.dumps(b, ensure_ascii=False, sort_keys=True))
+            return self._json(200, self._faults())
+
+        def _events(self, query: str) -> None:
+            if self.headers.get("Upgrade", "").lower() != "websocket" or not self.headers.get("Sec-WebSocket-Key"):
+                return self._json(426, {"error": "WebSocket で接続してください。差分だけなら /audit?since=N"})
+            try:
+                since = int(parse_qs(query).get("since", ["0"])[0])
+            except ValueError:
+                return self._json(400, {"error": "since は整数です"})
+            if not hub.enter():
+                return self._json(503, {"error": "配信を受ける相手が上限に達しています"})
+            try:
+                # WebSocket の切り替えは HTTP/1.1 の応答で返す(この口のほかの応答は HTTP/1.0 のまま)
+                self.wfile.write(("HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\n"
+                                  f"Sec-WebSocket-Accept: {events.accept_key(self.headers['Sec-WebSocket-Key'])}\r\n"
+                                  f"API-Version: {API_VERSION}\r\n\r\n").encode("ascii"))
+                events.stream(self.connection, ctl.audit, lock, since)
+            except (OSError, ConnectionError, ValueError):
+                pass  # 受け手が切れた。判断には響かせない
+            finally:
+                hub.leave()
+                self.close_connection = True
+
         def do_GET(self):
             u = urlparse(self.path)
+            if u.path == "/openapi.json":
+                return self._json(200, spec)
+            if u.path == "/events":
+                return self._events(u.query)
             with lock:
+                if u.path == "/fault" and dev:
+                    return self._json(200, self._faults())
                 if u.path == "/state":
                     return self._json(200, ctl.state())
                 if u.path == "/audit":
@@ -72,7 +148,12 @@ def make_handler(ctl: Controller, lock: threading.Lock):
             u = urlparse(self.path)
             b = self._body()
             with lock:
-                ctl.tick(time.time()) if ctl.synced else None
+                ctl.tick(clock.now()) if ctl.synced else None
+                if u.path == "/fault" and dev:
+                    if not is_loopback(self.client_address[0]):
+                        ctl.note_fault(f"同じ機械以外からの要求 {self.client_address[0]}", result="拒否", route="網")
+                        return self._json(403, {"error": "forbidden", "result": "拒否"})
+                    return self._set_fault(b)
                 if u.path in ("/lock", "/unlock") and not is_loopback(self.client_address[0]):
                     # Matter の橋のための口。外の網には開かない(網を通した解錠は /credential の署名つき資格情報だけ)
                     ctl.refuse_remote(u.path[1:], self.client_address[0])
@@ -115,7 +196,8 @@ def make_handler(ctl: Controller, lock: threading.Lock):
     return H
 
 
-def start_workers(ctl: Controller, lock: threading.Lock, exporter=None, interval: float = 0.5) -> None:
+def start_workers(ctl: Controller, lock: threading.Lock, exporter=None, interval: float = 0.5,
+                  clock: Clock | None = None) -> None:
     """時計と伝票の書き出しを、別々のスレッドで回す。
 
     時計は判断の排他(lock)を取って自動施錠を進める。書き出し(exporter)は排他を持たずに回すので、
@@ -127,7 +209,7 @@ def start_workers(ctl: Controller, lock: threading.Lock, exporter=None, interval
             time.sleep(interval)
             with lock:
                 if ctl.synced:
-                    ctl.tick(time.time())
+                    ctl.tick(clock.now())
 
     def shipper():
         while True:
@@ -137,14 +219,19 @@ def start_workers(ctl: Controller, lock: threading.Lock, exporter=None, interval
             except Exception:  # 箱の不調は次の回に持ち越す。判断には響かせない
                 pass
 
+    clock = clock or Clock()
     threading.Thread(target=ticker, daemon=True).start()
     if exporter:
         threading.Thread(target=shipper, daemon=True).start()
 
 
-def serve(ctl: Controller, host: str = "127.0.0.1", port: int = 8797, exporter=None) -> None:
-    """HTTP の口を開く。exporter を渡すと、伝票の書き出しを判断と別に回し続ける。"""
-    lock = threading.Lock()
-    srv = ThreadingHTTPServer((host, port), make_handler(ctl, lock))
-    start_workers(ctl, lock, exporter)
+def serve(ctl: Controller, host: str = "127.0.0.1", port: int = 8797, exporter=None, dev: bool = False) -> None:
+    """HTTP の口を開く。exporter を渡すと、伝票の書き出しを判断と別に回し続ける。
+
+    dev=True で故障注入を開く。接点が模擬(SimContacts)のときだけ渡す。本物の錠の扉では開かない。
+    """
+    lock, clock = threading.Lock(), Clock()
+    srv = ThreadingHTTPServer((host, port), make_handler(ctl, lock, dev=dev, clock=clock))
+    srv.daemon_threads = True
+    start_workers(ctl, lock, exporter, clock=clock)
     srv.serve_forever()

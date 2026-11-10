@@ -42,7 +42,7 @@ AI のスキルとして入れて使う場合は、`skills/smart-door-dev/` を�
 
 ## まだ無い物
 
-- `70_dev_server.md` が求める公開 API の OpenAPI の定義と、WebSocket の配信、故障注入の API。コントローラーの HTTP の口は `http.server` の小さな物です
+- `70_dev_server.md` が求める口のうち、認証のトークン(R-DV-12)、上の層の管理ソフトの口(予約、資格情報の発行と失効、デバイスの発見)、更新の配布。扉のコントローラーの HTTP の口には、OpenAPI の定義(`GET /openapi.json`)、WebSocket の出来事の配信(`GET /events`)、故障注入(`POST /fault`)があります(扉コントローラ仕様書 5.5)
 - 読取機からコントローラーへ渡す判定結果の、経路と信頼度と生体検知の欄(`02_reader.md` R-RD-08)
 - 顔と属性(衣服、名札、全身、行動)の認識の実装。参照実装にあるのは、本人確認の顔照合の差し替え口(`Matcher`)と配線確認用の stub だけです
 - 英語版の文書

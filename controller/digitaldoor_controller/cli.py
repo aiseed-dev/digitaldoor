@@ -105,7 +105,7 @@ def main(argv=None) -> int:
                     help="信頼する発行者の一覧(JSON。{発行者の識別: {\"public_key\": 16 進, \"doors\": [扉の名前, ...]}})。"
                          "管理者の変更が記録にあるときは、記録の一覧を使う")
     sub = ap.add_subparsers(dest="cmd", required=True)
-    s = sub.add_parser("serve", help="模擬の接点で core を開く")
+    s = sub.add_parser("serve", help="模擬の接点で core を開く(開発の口の故障注入も開く)")
     s.add_argument("--box", help="伝票を出す箱(フォルダ)。動いている間、増えた記録を続けて出す")
     sub.add_parser("verify", help="監査の連鎖を検査")
     sub.add_parser("pubkey", help="署名の公開鍵を 16 進で表示する。据付のときに受け手の台帳へ写す")
@@ -174,5 +174,7 @@ def main(argv=None) -> int:
     ctl.set_time(time.time(), True)
     print(f"digitaldoor-controller http://{args.host}:{args.port}  記録: {d}")
     box = (lambda: export(audit, args.box, args.name, d / "export.cursor")) if args.box else None
-    serve(ctl, args.host, args.port, exporter=box)
+    print(f"  公開 API の定義: http://{args.host}:{args.port}/openapi.json  出来事の配信: ws://{args.host}:{args.port}/events"
+          "  故障注入: POST /fault(模擬の扉なので開く)")
+    serve(ctl, args.host, args.port, exporter=box, dev=True)
     return 0

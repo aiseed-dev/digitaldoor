@@ -2,7 +2,7 @@
 
 このマニュアルは、ソフトウェアのコードから自動で生成しています。対象は、事業所のサーバーを運用する管理者、受付の担当者、鍵を使う利用者、保守の担当者です。
 
-生成日: 2026-10-20
+生成日: 2026-11-11
 
 ## 事業所サーバー
 
@@ -47,12 +47,12 @@ autolock = 5.0              # 解錠から自動施錠までの秒
 [[token]]
 name = "管理者"
 role = "管理者"
-token = "0Vjki8I1oIXBc8Yke_eODB8KL8lQ5Rph"
+token = "Nvf-IEpl4rI20Mxd2qXf_AJHG5hP3JGR"
 
 [[token]]
 name = "受付"
 role = "受付"
-token = "Bz4qJeloUXaPeAbFIpAuWwmG9DDmYcXk"
+token = "uu5w4PAmwGehocrp5bYUKq5fS8k4kQ7w"
 ```
 
 ### 役割
@@ -176,7 +176,7 @@ usage: digitaldoor-controller [-h] [--dir DIR] [--name NAME] [--host HOST]
 
 positional arguments:
   {serve,verify,pubkey,export,check-box,keygen,issue,trust-change}
-    serve               模擬の接点で core を開く
+    serve               模擬の接点で core を開く(開発の口の故障注入も開く)
     verify              監査の連鎖を検査
     pubkey              署名の公開鍵を 16 進で表示する。据付のときに受け手の台帳へ写す
     export              まだ出していない記録を伝票にして箱へ出す(続きは置き場の export.cursor)
@@ -253,6 +253,7 @@ options:
 - 時刻: 同期のたびに前と新しい時刻を残す。同期済みから time_jump_s を超えて動いたら「異常/時刻のずれ」
 - 設定: configure で変える。項目ごとに「設定/(項目名)」に前と新しい値を残す。無い項目と許されない値は全体を拒む
 - 手動リリース・改ざん: 記録だけ
+- 故障注入(開発のときだけ): 指示を種別「試験」で記録するだけ。判断は変えない(仕様書 5.5)
 - 署名つき資格情報: present で、信頼する発行者の署名と範囲と期限を扉が確かめ、通れば上の判断(火災、二人同時、自動施錠)に渡す。
   一回限りの使用済みの一覧は、起動のときに記録(資格情報/使用)から作り直す(仕様書 5.2a)
 - 信頼の一覧: change_trust で、据付のときに入れた管理者の鍵で署名した変更の要求だけを受ける。受けた変更は記録から読み戻す
@@ -628,7 +629,7 @@ usage: digitalkey sesame import [-h] [--name NAME] target
 
 流れ: 伏せた入力で 32 桁を受ける → 形を確かめる(32 桁の 16 進でなければ断る) → Sesame を探して BLE でつなぐ →
 その鍵でログインできることを確かめる → できたときだけ、機種(広告の model_id)と一緒に保存する。
-ログインできなければ何も保存しない。確かめを飛ばす選択肢は置かない(間違った鍵を置くと、使う場面で初めて動かないと分かるため)。
+ログインできなければ何も保存しない。確かめは必ず行う(間違った鍵を置くと、使う場面で初めて動かないと分かるため。飛ばす選択肢は置かない)。
 保存した鍵は鍵の置き場の権限(600)で守られる。鍵を画面にもログにも出さない。
 
 positional arguments:
