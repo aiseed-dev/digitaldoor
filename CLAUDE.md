@@ -12,7 +12,7 @@
 - README、docs、サイトの説明文は、一般的な技術用語と です・ます調で書く。記事も普通の解説とブログの文体で書く
 - `html/guide/`、`html/blog/`、`html/news/`、`sitemap.xml`、`feed.xml` はビルドで作る。直すときは `articles/`、`news/`、テンプレートを直してビルドし直す
 - アクセス計測を入れるときは本人が決め、プライバシーポリシーの頁と一緒に入れる
-- ニュースは広めに集め、載せる物は人が選ぶ(`picked`)。AI の relevant は参考の見立てとして扱う。`news/items.json` が正で、手で直すときは title/summary/kind/category を直し、status は ai のままにする。収集元を足すときは `news/sources.json`。AI への指示文は `tools/collect_news.py` の SYSTEM(原文にあることだけ書く、発表と報道を分ける、製品名と会社名は原文のまま)
+- ニュースは aiai と同じ作り方にする。開発機の AI の CLI が `news/SKILL.md`(手引き)と `news/好み.adoc`(分野、まず見る所、件数)に沿って、元の記事を開いて確かめ、`news/YYYY-MM-DD.adoc` を 1 日 1 つ書く(`news/tsukuru.py`)。人が読んで直し、commit した物だけが載る。サーバーと GitHub Actions では作らず、API キーも置かない。分野や件数を変えるときは `好み.adoc`、書く決まり(発表と報道を分ける、製品名と会社名は原文のまま、確かめた日つきの出典)は `SKILL.md` を直す
 
 - 要求を足すときは、理由に出どころ(Issue の番号か、使う人の困りごとの文)を書く。番号は変えない。製造者の制約と代わりの案は、同じ番号の下に残す(docs/つなぐ.md)
 - SKILL.md は、各社の AI に読ませる入口。文書やコードの置き場や進め方を変えたら SKILL.md も直す

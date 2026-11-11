@@ -1,4 +1,4 @@
-# deb2 の dev の crontab の例(crontab -e で足す)。間隔と時刻は例。決めるのは運営者。
+# deb2 の dev の crontab の例(crontab -e で足す)。間隔は例。決めるのは運営者。
 # cron の時刻は deb2 の時刻帯で読まれる(timedatectl で確かめる)。ログの置き場も例。
 #
 # ログの置き場を先に作る(例):
@@ -8,10 +8,8 @@
 #       写しの .venv は miniforge で作った python(publish.py は標準ライブラリだけで動く)。
 */10 * * * * cd ~/dev/digitaldoor && .venv/bin/python tools/publish.py --repo ~/dev/digitaldoor --root /srv/door >> ~/log/digitaldoor/publish.log 2>&1
 #
-# ニュース: ニュースの写し ~/dev/digitaldoor-news で、news の枝を origin/main から作り直し、
-#           集めて整え、news/items.json だけを commit する。push はしない。
-#           写しの .venv は miniforge で作った python と anthropic。API キーは ~/.config/digitaldoor/news.env。
-0 6 * * * cd ~/dev/digitaldoor-news && .venv/bin/python deploy/news/news_daily.py --max 40 >> ~/log/digitaldoor/news.log 2>&1
+# ニュースは deb2 では作らない。開発機の AI の CLI で news/tsukuru.py を動かし、人が読んで直して commit する
+# (docs/使い方.md の「ニュースの仕組み」)。push された main を、上の公開の仕事が取りに行く。
 #
 # ログは追記で増えるので、残す長さは運営者が決める(logrotate 等)。
 # 失敗は終了コード 0 以外で終わり、ログに「エラー:」の行が残る。見張りに使うときは、この行を見る。

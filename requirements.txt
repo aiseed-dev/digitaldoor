@@ -6,5 +6,3 @@ pyasciidoc>=0.5
 pywashi>=0.10
 Pillow
 watchdog
-# ニュースの整理(tools/collect_news.py)
-anthropic>=1.0
