@@ -8,6 +8,20 @@
 
 このリポジトリは公開です。扉メーカー、錠メーカー、ドアホンやカメラのメーカー、設備工事会社、管理会社が、ここにある仕様と参照実装を土台にして、自分の AI と一緒に自社のソフトウェアを作れるようにしています。進め方は [SKILL.md](SKILL.md) にあります。ふだん使っている AI に読ませ、自社の範囲を伝えると、仕様、テスト、実装の順に一緒に作ります。
 
+## 自社のシステムを AI で確かめる
+
+2026年10月から、守る側の会社は、申し込めば AI で自社のシステムの穴を確かめられるようになりました。鍵の管理の仕組みも、攻撃に耐えるかを試してから使う物です。どこから確かめるか、AI に何を読ませるか、業者にどう知らせるかを、解説 20「AI で自社のシステムを確かめる」(サイトの /guide/check-your-systems-with-ai/、元は [articles/guide.adoc](articles/guide.adoc))に書いています。申し込みから最初の一つまでの始め方は [docs/確かめの始め方.md](docs/確かめの始め方.md)(サイトの /check/)にあります。
+
+ふだん使っている AI に読ませる手引きと、道具は次のとおりです。
+
+| 置き場 | 内容 |
+|---|---|
+| [skills/system-check/](skills/system-check/SKILL.md) | 自社のシステムと納められたコードを読んで穴を見つけ、記録し、直してもう一度確かめる手引き |
+| [skills/incident-response/](skills/incident-response/SKILL.md) | 事故(不正なアクセス、ランサムウェア、鍵やパスワードの漏れ、端末の紛失)が起きた時と、その備えの手引き。連絡先の表、記録の様式、知らせの文の雛形つき |
+| [skills/detection/](skills/detection/SKILL.md) | 自社の機械とアカウントの見張りを作る手引き。何を見張り、何を異常と見て、誰に知らせるか |
+| [skills/kagi/](skills/kagi/SKILL.md) | 道具 kagi の使い方の手引き |
+| [kagi/](kagi/) | 道具 kagi(別パッケージ digitaldoor-kagi、AGPL-3.0-or-later)。サーバーと業務システムの秘密の在庫表、口の表、追記だけの記録、Linux の機械の今の形を表と突き合わせます |
+
 ## 使う人と製造者をつなぐ
 
 開発の間も、扉を使う人と扉を作る製造者の間に立ちます。使う人は困りごとを自分の言葉で Issue に書き、運営と AI がそれを要求の番号に整え、製造者は満たす番号を申告し、満たせない物と代わりの案を同じ番号の下に返します。確かめるのはテストと記録です。流れは [docs/つなぐ.md](docs/つなぐ.md) に、入り口は [Issues](https://github.com/aiseed-dev/digitaldoor/issues/new/choose) にあります。
@@ -46,6 +60,7 @@
 | `digitalkey/mobile/` | 管理者と利用者のスマートフォンアプリ(Flet)。`flet build` で Android/iOS 向けに組めます |
 | `digitalkey/locks.py` | 錠ドライバの登録簿。`dummy` は組み込み、それ以外は pip で入れたドライバのパッケージが登録します |
 | `drivers/digitalkey-sesame/` | 錠ドライバの例。CANDY HOUSE 製 Sesame を BLE 直結または Web API で操作します。別パッケージとして PyPI に公開できます(機器ごとの詳しい説明はコード内) |
+| `kagi/` | 扉の鍵ではなく、サーバーと業務システムの秘密の在庫・口・記録・機械の形を表と突き合わせる道具(別パッケージ digitaldoor-kagi、AGPL-3.0-or-later)。使い方は `skills/kagi/` |
 | `tests/` | テスト |
 
 セットアップとテストの手順は [docs/使い方.md](docs/使い方.md) を見てください。

@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=77"]  # license を SPDX の文字列で書くため
+build-backend = "setuptools.build_meta"
+
+[project]
+# 扉の鍵(digitalkey)ではなく、サーバーと業務システムの秘密の在庫・口・記録を見る道具
+name = "digitaldoor-kagi"
+version = "0.0.1"
+description = "kagi — サーバーと業務システムの秘密の在庫表、口の表、追記だけの記録、Linux の機械の今の形を、表と突き合わせる道具。鍵の値を読まず、機械を変えない"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "AGPL-3.0-or-later"
+license-files = ["LICENSE"]
+dependencies = []
+
+[project.optional-dependencies]
+# 机の画面(kagi app)だけが使う。本体は標準ライブラリだけで動く
+app = ["flet>=1.0"]
+dev = ["pytest"]
+
+[project.urls]
+Site = "https://door.aiseed.dev"
+Repository = "https://github.com/aiseed-dev/digitaldoor/tree/main/kagi"
+Origin = "https://github.com/aiseed-dev/seed"
+
+[project.scripts]
+kagi = "kagi.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["kagi*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
