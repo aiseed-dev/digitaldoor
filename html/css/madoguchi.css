@@ -1,0 +1,102 @@
+/* デジタルドア — お問い合わせと照会(/contact/)の見た目。style.css の変数(紙・墨・朱・罫)を使い、明るい表示と暗い表示の両方で読めるようにする。 */
+
+.madoguchi [hidden] { display: none !important; }
+.madoguchi h2 { margin-top: 2.6rem; }
+.madoguchi .lead { font-size: 1.08rem; line-height: 1.9; }
+.madoguchi .note { color: var(--whisper); font-size: 0.93rem; }
+.madoguchi ul li { line-height: 1.85; }
+
+/* 知らせ(role="status") */
+.madoguchi-msg { min-height: 1em; color: var(--accent); font-weight: 600; }
+.madoguchi-msg:empty { margin: 0; }
+
+/* ボタン */
+.madoguchi-button,
+.madoguchi-form button {
+  font: inherit;
+  font-size: 1rem;
+  min-height: 44px;
+  padding: 0.45rem 1.2rem;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--accent);
+  cursor: pointer;
+}
+.madoguchi-button:hover,
+.madoguchi-form button:hover { background: var(--paper-deep); }
+.madoguchi-button:focus-visible,
+.madoguchi-form button:focus-visible,
+.madoguchi-form input:focus-visible,
+.madoguchi-form select:focus-visible,
+.madoguchi-form textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.madoguchi-button:disabled,
+.madoguchi-form button:disabled { opacity: 0.55; cursor: default; }
+.madoguchi-form button[type="submit"] { background: var(--accent); color: var(--paper); }
+
+.madoguchi-buttons { display: flex; flex-wrap: wrap; gap: 0.8rem; margin: 1rem 0; }
+
+/* 上の帯 */
+.madoguchi-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1rem;
+  margin: 1.5rem 0 0;
+  padding: 0.7rem 1rem;
+  background: var(--paper-deep);
+  border-radius: 4px;
+}
+.madoguchi-bar p { margin: 0; overflow-wrap: anywhere; }
+
+/* 送る欄 */
+.madoguchi-form { margin: 1rem 0 1.5rem; }
+.madoguchi-field { margin: 0 0 1rem; }
+.madoguchi-field label { display: block; font-weight: 600; margin-bottom: 0.25rem; }
+.madoguchi-form input[type="text"],
+.madoguchi-form select,
+.madoguchi-form textarea {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  font: inherit;
+  font-size: 1rem;
+  min-height: 44px;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--ink);
+}
+.madoguchi-form textarea { min-height: 10rem; resize: vertical; line-height: 1.7; }
+.madoguchi-check { display: flex; align-items: center; gap: 0.5rem; margin: 0 0 1rem; }
+.madoguchi-check input { width: 1.3rem; height: 1.3rem; accent-color: var(--accent); }
+.madoguchi-check label { font-weight: 600; }
+
+/* 送った物の一覧 */
+.madoguchi-items { list-style: none; padding: 0; margin: 1rem 0; border-top: 1px solid var(--rule); }
+.madoguchi-item { padding: 0.9rem 0; margin: 0; border-bottom: 1px solid var(--rule); }
+.madoguchi-item-head { margin: 0 0 0.3rem; display: flex; flex-wrap: wrap; gap: 0.3rem 0.7rem; align-items: baseline; font-size: 0.9rem; color: var(--whisper); }
+.madoguchi-when { font-family: var(--font-mono); font-size: 0.85rem; }
+.madoguchi-tag { border: 1px solid var(--rule); border-radius: 2px; padding: 0 6px; }
+.madoguchi-item .madoguchi-subject { margin: 0 0 0.3rem; font-weight: 600; overflow-wrap: anywhere; }
+.madoguchi-item details { margin: 0 0 0.5rem; }
+.madoguchi-item summary { cursor: pointer; color: var(--whisper); font-size: 0.93rem; }
+.madoguchi-body-text { white-space: pre-wrap; overflow-wrap: anywhere; margin: 0.4rem 0; }
+.madoguchi-delete { min-height: 36px; padding: 0.2rem 0.9rem; font-size: 0.93rem; }
+.madoguchi-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.7rem; }
+.madoguchi-confirm-note { flex-basis: 100%; color: var(--accent); font-size: 0.93rem; font-weight: 600; }
+.madoguchi-button.madoguchi-delete-do { background: var(--accent); color: var(--paper); }
+
+/* 自分の鍵 */
+.madoguchi-table { width: 100%; border-collapse: collapse; font-size: 0.93rem; }
+.madoguchi-table th,
+.madoguchi-table td { text-align: left; vertical-align: top; padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--rule); line-height: 1.6; }
+.madoguchi-table th { white-space: nowrap; font-weight: 600; color: var(--whisper); }
+.madoguchi-table td { overflow-wrap: normal; white-space: nowrap; }
+
+@media (max-width: 600px) {
+  .madoguchi-bar { padding: 0.6rem 0.8rem; }
+  .madoguchi-buttons .madoguchi-button { width: 100%; }
+}

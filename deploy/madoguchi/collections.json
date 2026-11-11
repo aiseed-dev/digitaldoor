@@ -1,0 +1,56 @@
+[
+  {
+    "name": "kikai",
+    "type": "auth",
+    "listRule": null,
+    "viewRule": null,
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "manageRule": null,
+    "fields": [
+      {"name": "yaku", "type": "select", "required": true, "maxSelect": 1, "values": ["shoukai", "asa"]},
+      {"name": "created", "type": "autodate", "onCreate": true, "onUpdate": false},
+      {"name": "updated", "type": "autodate", "onCreate": true, "onUpdate": true}
+    ],
+    "indexes": []
+  },
+  {
+    "name": "toiawase",
+    "type": "base",
+    "listRule": "(@request.auth.collectionName = \"users\" && owner = @request.auth.id) || (@request.auth.collectionName = \"kikai\" && @request.auth.yaku = \"asa\")",
+    "viewRule": "(@request.auth.collectionName = \"users\" && owner = @request.auth.id) || (@request.auth.collectionName = \"kikai\" && @request.auth.yaku = \"asa\")",
+    "createRule": "@request.auth.collectionName = \"users\" && @request.body.owner = @request.auth.id && @request.body.status = \"新しい\"",
+    "updateRule": null,
+    "deleteRule": "@request.auth.collectionName = \"users\" && owner = @request.auth.id",
+    "fields": [
+      {"name": "owner", "type": "relation", "required": true, "collectionId": "_pb_users_auth_", "cascadeDelete": true, "minSelect": 0, "maxSelect": 1},
+      {"name": "kind", "type": "select", "required": true, "maxSelect": 1, "values": ["質問", "相談", "教室", "そのほか"]},
+      {"name": "subject", "type": "text", "required": true, "min": 0, "max": 200, "pattern": ""},
+      {"name": "body", "type": "text", "required": true, "min": 0, "max": 5000, "pattern": ""},
+      {"name": "reply", "type": "bool", "required": false},
+      {"name": "status", "type": "select", "required": true, "maxSelect": 1, "values": ["新しい", "返事済み", "閉じた"]},
+      {"name": "created", "type": "autodate", "onCreate": true, "onUpdate": false},
+      {"name": "updated", "type": "autodate", "onCreate": true, "onUpdate": true}
+    ],
+    "indexes": []
+  },
+  {
+    "name": "shoukai",
+    "type": "base",
+    "listRule": "(@request.auth.collectionName = \"users\" && owner = @request.auth.id) || (@request.auth.collectionName = \"kikai\" && @request.auth.yaku = \"shoukai\")",
+    "viewRule": "(@request.auth.collectionName = \"users\" && owner = @request.auth.id) || (@request.auth.collectionName = \"kikai\" && @request.auth.yaku = \"shoukai\")",
+    "createRule": "@request.auth.collectionName = \"kikai\" && @request.auth.yaku = \"shoukai\"",
+    "updateRule": "@request.auth.collectionName = \"kikai\" && @request.auth.yaku = \"shoukai\"",
+    "deleteRule": "@request.auth.collectionName = \"kikai\" && @request.auth.yaku = \"shoukai\"",
+    "fields": [
+      {"name": "owner", "type": "relation", "required": true, "collectionId": "_pb_users_auth_", "cascadeDelete": true, "minSelect": 0, "maxSelect": 1},
+      {"name": "sheet", "type": "json", "required": true, "maxSize": 0},
+      {"name": "made_at", "type": "text", "required": true, "min": 0, "max": 16, "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$"},
+      {"name": "issuer", "type": "text", "required": true, "min": 0, "max": 16, "pattern": "^[0-9a-f]{16}$"},
+      {"name": "created", "type": "autodate", "onCreate": true, "onUpdate": false},
+      {"name": "updated", "type": "autodate", "onCreate": true, "onUpdate": true}
+    ],
+    "indexes": ["CREATE UNIQUE INDEX `idx_shoukai_owner` ON `shoukai` (`owner`)"]
+  }
+]

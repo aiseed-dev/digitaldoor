@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>お問い合わせと照会 | デジタルドア</title>
+    <meta name="description" content="質問と、相談・教室の申し込みを受ける頁です。鍵の管理ソフトで鍵を出してもらっている人は、自分の権限と鍵の今の状態を見られます。">
+    <link rel="canonical" href="https://door.aiseed.dev/contact/">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://auth.aiseed.dev">
+    <link rel="stylesheet" href="/css/style.css?v=193e0497">
+    <link rel="stylesheet" href="/css/madoguchi.css?v=58839ecc">
+</head>
+<body>
+    <header class="site-header">
+        <a href="/" class="brand">デジタルドア</a>
+        <nav><a href="/guide/">解説</a><a href="/3d/">立体図</a><a href="/check/">始め方</a><a href="/manual/">マニュアル</a><a href="/news/">ニュース</a><a href="/blog/">ブログ</a><a href="/consult/">相談と教室</a></nav>
+    </header>
+    <main class="madoguchi" data-pb="https://auth.aiseed.dev">
+        <h1>お問い合わせと照会</h1>
+        <p class="lead">質問と、相談・教室の申し込みを受けます。鍵の管理ソフトで鍵を出してもらっている人は、自分の権限と鍵の今の状態を見られます。</p>
+
+        <h2>受け取る物</h2>
+        <ul>
+            <li>サインインの時に Google から受け取る名前とメールアドレス(後で Apple も使えるようにします)。</li>
+            <li>お問い合わせに書いた中身(種類、件名、本文、返事が要るか)と、受けた日時。</li>
+        </ul>
+        <p>使い道と置き場は、<a href="/privacy/">プライバシーポリシー</a>に書いています。</p>
+        <p class="note">仕様や解説への質問は、<a href="https://github.com/aiseed-dev/digitaldoor/issues">Issues</a> でも受けています。Issues は誰でも読めるので、会社の中の事は書かないでください。</p>
+
+        <noscript><p>この頁のサインインには JavaScript が要ります。動かない時は、Issues か、プライバシーポリシーにある問い合わせ先をお使いください。</p></noscript>
+        <p id="madoguchi-nojs" class="note">この頁のサインインには JavaScript が要ります。動かない時は、Issues か、プライバシーポリシーにある問い合わせ先をお使いください。</p>
+
+        <section id="madoguchi-signin" hidden>
+            <h2>サインイン</h2>
+            <p id="madoguchi-signin-status" class="madoguchi-msg" role="status"></p>
+            <div id="madoguchi-providers" class="madoguchi-buttons"></div>
+            <p id="madoguchi-preparing" hidden><span id="madoguchi-preparing-text"></span>それまでの質問は、<a href="https://github.com/aiseed-dev/digitaldoor/issues">Issues</a> で受けています。Issues は誰でも読めるので、会社の中の事は書かないでください。</p>
+        </section>
+
+        <section id="madoguchi-app" hidden>
+            <div class="madoguchi-bar">
+                <p><span id="madoguchi-email"></span> でサインインしています</p>
+                <button type="button" id="madoguchi-signout" class="madoguchi-button">サインアウト</button>
+            </div>
+            <p id="madoguchi-status" class="madoguchi-msg" role="status"></p>
+
+            <h2>お問い合わせを送る</h2>
+            <p class="note">会社の秘密、パスワード、鍵の値は書かないでください。</p>
+            <form id="madoguchi-form" class="madoguchi-form" novalidate>
+                <div class="madoguchi-field">
+                    <label for="madoguchi-kind">種類</label>
+                    <select id="madoguchi-kind">
+                        <option value="質問" selected>質問</option>
+                        <option value="相談">相談</option>
+                        <option value="教室">教室</option>
+                        <option value="そのほか">そのほか</option>
+                    </select>
+                </div>
+                <div class="madoguchi-field">
+                    <label for="madoguchi-subject">件名</label>
+                    <input type="text" id="madoguchi-subject" maxlength="200" required>
+                </div>
+                <div class="madoguchi-field">
+                    <label for="madoguchi-body">本文</label>
+                    <textarea id="madoguchi-body" maxlength="5000" rows="8" required></textarea>
+                </div>
+                <div class="madoguchi-check">
+                    <input type="checkbox" id="madoguchi-reply" checked>
+                    <label for="madoguchi-reply">返事が要る</label>
+                </div>
+                <button type="submit" id="madoguchi-send">送る</button>
+            </form>
+
+            <h2>送った物</h2>
+            <div id="madoguchi-list"></div>
+
+            <h2>自分の鍵</h2>
+            <p>あなたの窓口の番号: <code id="madoguchi-number"></code></p>
+            <p>鍵を出してもらっている所(会社、家、宿)の名簿の係に、この番号を伝えてください。名簿の係は、対面かビデオ通話で本人を確かめてから結びます。メールアドレスは伝えなくてかまいません。</p>
+            <div id="madoguchi-sheet"></div>
+        </section>
+    </main>
+    <footer class="site-footer"><p>デジタルドア — aiseed · <a href="/#about">このサイトについて</a> · <a href="/contact/">お問い合わせ</a> · <a href="/privacy/">プライバシーポリシー</a> · <a href="/license/">ライセンス</a> · <a href="/feed.xml">RSS</a></p></footer>
+    <script src="/js/madoguchi.js?v=bc960f7a"></script>
+</body>
+</html>

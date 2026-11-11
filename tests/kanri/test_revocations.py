@@ -91,7 +91,7 @@ def test_unit_has_six_mixins():
 
 
 def test_ledger_has_two_new_forms(make_unit):
-    """R-AC-22 21.2、21.5: 台帳は 失効_一覧 と 失効_配布 を持つ(22 枚の数は test_devices の試験で見る)。"""
+    """R-AC-22 21.2、21.5: 台帳は 失効_一覧 と 失効_配布 を持つ(様式の枚数は test_devices の試験で見る)。"""
     u = make_unit()
     assert {"失効_一覧", "失効_配布"} <= set(u.ledger.form_set)
 

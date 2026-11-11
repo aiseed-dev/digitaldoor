@@ -2,7 +2,8 @@
 
 ここが正。記事のビルド(build_article の雛形 index.html・chapter.html)、
 build_manual.py、build_check.py、build_news.py はここから読む。手書きの頁
-(html/index.html、html/consult/、html/license/、html/404.html)は、
+(html/index.html、html/consult/、html/license/、html/404.html、
+html/contact/、html/privacy/)は、
 nav_html() と footer_html() と同じ形を手で書く。ずれは
 tests/sitebuild/test_site_nav.py が見つける。
 
@@ -24,6 +25,8 @@ NAV = [
 FOOTER_NAME = "デジタルドア — aiseed"
 FOOTER_LINKS = [
     ("このサイトについて", "/#about"),
+    ("お問い合わせ", "/contact/"),
+    ("プライバシーポリシー", "/privacy/"),
     ("ライセンス", "/license/"),
     ("RSS", "/feed.xml"),
 ]

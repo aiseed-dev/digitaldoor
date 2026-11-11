@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""命令 `digitalkey kanri`(設計書 19.12、20.12、21.12)。鍵の管理の置き場を、網を使わず、置き場のファイルだけで扱います(R-AC-19)。
+"""命令 `digitalkey kanri`(設計書 19.12、20.12、21.12、22.9)。鍵の管理の置き場を、網を使わず、置き場のファイルだけで扱います(R-AC-19)。
 
     digitalkey kanri init --dir /srv/kanri --admin adm --admin-name 管理者A
     digitalkey kanri request --dir /srv/kanri --by adm --role 名簿の係 --subject s1 --door 玄関 --from 2026-12-01T09:00 ...
@@ -17,6 +17,14 @@ revoke --out か revocation show --out でファイルに出します。網の�
 
     digitalkey kanri revoke --dir /srv/kanri --by adm --role 管理者 --subject s2 --reason 退職 --out /media/usb/rev.json
     digitalkey kanri revocation delivered --dir /srv/kanri --by ops --role 運用 --door 通用口 --generation 1
+
+窓口(お問い合わせと照会の頁)で本人が自分の権限と鍵を見るために、portal で名簿の主体と窓口の番号を結びます。
+本人が頁に出る番号を名簿の係に伝え、名簿の係は本人を対面かビデオ通話で確かめてから portal link を書きます。
+portal export --out は、結んだ人の照会用の写し(本人が見てよい物だけ。呼び名、仮名、理由は入らない)を権限 600 の
+ファイルに出します。この命令は網を使わず、写しを窓口へ置きに行くのは digitalkey madoguchi push です。
+
+    digitalkey kanri portal link --dir /srv/kanri --by ros --role 名簿の係 --subject s1 --account k3x9m2p7q1w8e5r --how 対面
+    digitalkey kanri portal export --dir /srv/kanri --out /media/usb/shoukai.json
 
 置き場は --dir か環境変数 DIGITALKEY_KANRI_DIR。書く命令には --by(操作する人)と --role(この操作で使う役)が要ります。
 --json で出力を JSON 一つにします。鍵の値は、どの引数でも受けません(R-CM-13)。発行者の鍵は init --issuer-key の
@@ -333,6 +341,29 @@ def _revocation_delivered(u, a):
     return _slip(a, u.record_delivery(a.door, a.generation, at=a.at, note=a.note, **_w(a)))
 
 
+def _portal_link(u, a):
+    return _slip(a, u.link_portal(a.subject, a.account, a.how, **_w(a)))
+
+
+def _portal_unlink(u, a):
+    return _slip(a, u.unlink_portal(a.subject, reason=a.reason, **_w(a)))
+
+
+def _portal_list(u, a):
+    links = u.portal_links()
+    _emit(a, [f"{x.主体}\t{x.窓口の番号}\t{x.確かめ方}\t{x.伝票}" for x in links],
+          {"items": [dataclasses.asdict(x) for x in links]})
+    return 0
+
+
+def _portal_export(u, a):
+    out = _out_path(a)
+    items = u.portal_export(at=a.at)
+    write_private(out, (json.dumps(items, ensure_ascii=False) + "\n").encode("utf-8"))
+    _emit(a, [f"写し {len(items)} 人", f"ファイル {out}"], {"人数": len(items), "ファイル": str(out)})
+    return 0
+
+
 def _verify(u, a):
     ok, n, why = u.ledger.verify_chain()
     if a.json:
@@ -618,6 +649,23 @@ def build() -> argparse.ArgumentParser:
     p.add_argument("--generation", required=True, type=int, metavar="N", help="扉が受けたと確かめた世代")
     p.add_argument("--note", default="", help="備考(運び方など)")
     p.add_argument("--at", type=_at, help="扉が受けたと確かめた日時(省けば今)")
+
+    s = group("portal", "窓口の照会(名簿の主体と窓口の番号の結び、照会用の写し)")
+    p = cmd(s, "link", _portal_link,
+            "主体に窓口の番号を結ぶ(名簿の係)。本人を対面かビデオ通話で確かめてから書く。結び直すと後の番号が今の結び")
+    p.add_argument("--subject", required=True, help="名簿の主体の識別")
+    p.add_argument("--account", required=True,
+                   help="窓口の番号(窓口の頁に出る番号。英数字だけ。メールアドレスは書かない)")
+    p.add_argument("--how", required=True, help="本人を確かめた方法(対面 か ビデオ通話。様式で確かめる)")
+    p = cmd(s, "unlink", _portal_unlink, "主体の今の結びを外す(名簿の係)。停止、退出の主体も外せる")
+    p.add_argument("--subject", required=True, help="名簿の主体の識別")
+    p.add_argument("--reason", required=True, help="理由")
+    cmd(s, "list", _portal_list, "今の結び。一件一行 <主体> <窓口の番号> <確かめ方> <伝票>", write=False)
+    p = cmd(s, "export", _portal_export,
+            "照会用の写しをファイルに出す。結んだ主体のうち有効と停止の人の分。網は使わない。"
+            "窓口へ置くのは digitalkey madoguchi push", write=False)
+    p.add_argument("--out", required=True, help="写しの JSON を書くファイル(権限 600 で新しく作る。既にあれば拒否)")
+    at(p)
 
     cmd(sub, "verify", _verify, "台帳の連鎖を検べる", write=False)
     return ap

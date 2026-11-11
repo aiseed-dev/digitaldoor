@@ -8,6 +8,11 @@
 #       写しの .venv は miniforge で作った python(publish.py は標準ライブラリだけで動く)。
 */10 * * * * cd ~/dev/digitaldoor && .venv/bin/python tools/publish.py --repo ~/dev/digitaldoor --root /srv/door >> ~/log/digitaldoor/publish.log 2>&1
 #
+# 窓口の毎朝の一覧: 状態が「新しい」のお問い合わせの件数と、一件ごとの日時・種類・件名をログに書く
+#       (docs/窓口仕様書.md の 9 章)。入る値は ~/.config/digitaldoor/toiawase.env(役 asa の kikai。権限 600。
+#       見本は deploy/madoguchi/madoguchi.env.example)。届け方(ログを読む、cron のメールで受ける)は運営者が決める。
+0 7 * * * cd ~/dev/digitaldoor && .venv/bin/python deploy/madoguchi/toiawase_daily.py >> ~/log/digitaldoor/toiawase.log 2>&1
+#
 # ニュースは deb2 では作らない。開発機の AI の CLI で news/tsukuru.py を動かし、人が読んで直して commit する
 # (docs/使い方.md の「ニュースの仕組み」)。push された main を、上の公開の仕事が取りに行く。
 #

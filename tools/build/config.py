@@ -175,6 +175,8 @@ PAGE_ASSETS = (
     "css/door3d.css",
     "js/door3d.js",
     "js/three.min.js",
+    "css/madoguchi.css",
+    "js/madoguchi.js",
 )
 
 

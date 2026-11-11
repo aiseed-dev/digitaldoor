@@ -12,7 +12,7 @@ import pytest
 
 import digitalkey.kanri as kanri
 from digitalkey.kanri import reasons, routes
-from kanri_common import (ACCESS, ACCESS_WORK, ALL4, FINDINGS_1B, FORMS_2A, GATE, ISSUE_AT, REFUSALS_1B, RB, dt)
+from kanri_common import (ACCESS, ACCESS_WORK, ALL4, FINDINGS_1B, FORMS_5A, GATE, ISSUE_AT, REFUSALS_1B, RB, dt)
 
 AT = dt(ISSUE_AT)
 REV = "2026-12-10T12:00"
@@ -71,12 +71,12 @@ def test_unit_has_five_mixins():
     assert issubclass(kanri.Unit, DevicesMixin)
 
 
-def test_ledger_opens_with_twenty_two_forms(make_unit):
-    """20.2、21.2: 台帳は 22 枚の様式で開く(20.2 で 区画、機器_登録、機器_変更、機器_確かめ、機器_更新、管理者の口_削除、
-    21.2 で 失効_一覧、失効_配布 を足す)。"""
+def test_ledger_opens_with_twenty_three_forms(make_unit):
+    """20.2、21.2、22.2: 台帳は 23 枚の様式で開く(20.2 で 区画、機器_登録、機器_変更、機器_確かめ、機器_更新、管理者の口_削除、
+    21.2 で 失効_一覧、失効_配布、22.2 で 主体_結び を足す)。"""
     u = make_unit()
-    assert set(u.ledger.form_set) == set(FORMS_2A)
-    assert len(u.ledger.form_set) == 22
+    assert set(u.ledger.form_set) == set(FORMS_5A)
+    assert len(u.ledger.form_set) == 23
 
 
 def test_default_routes_are_four(make_unit):

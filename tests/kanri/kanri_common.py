@@ -112,6 +112,29 @@ class R2A:
 REFUSALS_2A = ["NO_REVOCATION_LIST", "UNKNOWN_GENERATION"]
 
 
+# ---- 段 5a(設計書 22 章) ----
+# 段 5a の言葉も、実装より先に書くので文字で持つ(22.8「言葉で比べてかまいません」)。
+
+# 22.2 の様式の 23 枚(22 枚に 主体_結び を足す)
+FORMS_5A = FORMS_2A + ["主体_結び"]
+
+
+class R5A:
+    """22.8 の拒否の言葉。"""
+    ACCOUNT_LINKED = "その番号は、ほかの主体に結ばれています"
+    NOT_LINKED = "結ばれていません"
+
+
+REFUSALS_5A = ["ACCOUNT_LINKED", "NOT_LINKED"]
+
+SHEET_FORMAT = "digitalkey-shoukai/1"          # 22.7 の 形式
+ELLIPSIS = "…"                            # 22.7 の識別の出し方の「…」
+EXPORT_KEYS = ["owner", "issuer", "made_at", "sheet"]
+SHEET_KEYS = ["形式", "時刻", "権限", "鍵"]
+PERM_KEYS = ["番号", "対象の種類", "対象", "開始", "終了", "状態"]
+KEY_KEYS = ["権限", "経路", "扉", "機器", "識別", "状態", "効くまで"]
+
+
 def at_minute_up(t: int) -> str:
     """21.8 の「時刻の書き方」: unix 秒を地方時の datetime に直し、秒があれば次の分に切り上げて 19.5 の形にする。"""
     d = datetime.fromtimestamp(t)

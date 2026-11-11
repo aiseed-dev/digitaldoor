@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""動かす単位 `Unit`(設計書 19.2、19.3、20.1、21.1)。置き場の作成と読み込み、役の確かめ、台帳への書き込み。
+"""動かす単位 `Unit`(設計書 19.2、19.3、20.1、21.1、22.1)。置き場の作成と読み込み、役の確かめ、台帳への書き込み。
 
 一つの置き場が、一人の管理者、一つの発行者の鍵、一つの台帳の分です(R-AC-09)。
 
@@ -9,7 +9,7 @@
 
 状態は台帳の伝票から毎回導き、別の表やファイルに持ちません。名簿、扉と群、設定は roster、
 申請から実体までは permissions、門番は routes.gate、失効は revoke、区画と機器の台帳は devices、
-失効の一覧と配った記録は revocations の各モジュールが、
+失効の一覧と配った記録は revocations、窓口の結びと照会用の写しは portal の各モジュールが、
 Unit のメソッドとして持ちます。
 """
 from __future__ import annotations
@@ -30,6 +30,7 @@ from digitalkey.entrance.ledger import Ledger, Slip
 from . import reasons as R
 from .devices import DevicesMixin
 from .permissions import PermissionsMixin
+from .portal import PortalMixin
 from .reasons import Refused
 from .revocations import RevocationsMixin
 from .revoke import RevokeMixin
@@ -43,7 +44,7 @@ INIT = "初期化"        # 置き場を作る時の最初の二枚だけの役�
 
 
 def load_forms() -> dict[str, Y.FormSpec]:
-    """鍵の管理の様式(digitalkey/kanri/forms_data/*.adoc の 22 枚)だけを読む。受け入れの様式は混ぜない。"""
+    """鍵の管理の様式(digitalkey/kanri/forms_data/*.adoc の 23 枚)だけを読む。受け入れの様式は混ぜない。"""
     base = resources.files("digitalkey.kanri").joinpath("forms_data")
     specs = [Y.load_file(Path(str(p))) for p in sorted(base.iterdir(), key=lambda p: p.name)
              if p.name.endswith(".adoc")]
@@ -104,7 +105,7 @@ def _check_signer(signer) -> None:
         raise Refused(R.NO_KEY)
 
 
-class Unit(RosterMixin, PermissionsMixin, GateMixin, RevokeMixin, DevicesMixin, RevocationsMixin):
+class Unit(RosterMixin, PermissionsMixin, GateMixin, RevokeMixin, DevicesMixin, RevocationsMixin, PortalMixin):
     """一つの発行者の鍵の管理の置き場。`Unit.create` で作り、`Unit.open` で開く。
 
     書くメソッドは、どれもキーワード引数 `by`(操作する人。名簿の主体の識別)と `role`(この操作で使う役)を取り、

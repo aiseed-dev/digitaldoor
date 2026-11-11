@@ -2039,6 +2039,7 @@ STATIC_PAGES_FOR_ASSETS = [
     "consult/index.html",
     "check/index.html",
     "3d/index.html",
+    "contact/index.html",
     "manual/index.html",
     "news/index.html",
     "en/index.html",
@@ -2376,6 +2377,8 @@ def build_sitemap():
     urls.append((f"{site_url}/consult/", latest, "0.6"))
     # 手で置いた頁: デジタルドアの立体図(html/3d/index.html、three.js は html/js/ に置く)
     urls.append((f"{site_url}/3d/", latest, "0.5"))
+    # 手で置いた頁: お問い合わせと照会(html/contact/index.html、docs/窓口仕様書.md 5 章)
+    urls.append((f"{site_url}/contact/", latest, "0.4"))
     urls.append((f"{site_url}/light-farming/", latest, "0.8"))
     urls.append((f"{site_url}/en/light-farming/", latest, "0.7"))
     urls.append((f"{site_url}/privacy/", latest, "0.3"))

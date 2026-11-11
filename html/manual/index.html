@@ -58,12 +58,12 @@ max_hours = 24
 [[token]]
 name = &quot;管理者&quot;
 role = &quot;管理者&quot;
-token_sha256 = &quot;c777c4a9964e8faf823cf82d4d19c530f630ad0c5c25be57cfc1fe8400c7f245&quot;
+token_sha256 = &quot;66e08bdbd788e6edb775554b2bc3ba6684fb76d84997126c0eb3fe3ae65dce88&quot;
 
 [[token]]
 name = &quot;受付&quot;
 role = &quot;受付&quot;
-token_sha256 = &quot;a4fc47089443e560b1d9de8638e8e87e2278ca9fef128c0168b08260a208786c&quot;
+token_sha256 = &quot;0e62a8080f19e7cbbace33e536bd313a84d02aa4aaed5257374c771b21dc7d2c&quot;
 </code></pre>
 <h3>役割</h3>
 <div class="table-wrap"><table>
@@ -231,6 +231,7 @@ token_sha256 = &quot;a4fc47089443e560b1d9de8638e8e87e2278ca9fef128c0168b08260a20
   digitalkey aliro &lt;命令&gt; ...      Aliro の読取機を Matter で設定する値を作る(実装の例。reader-config | issuer-key | matter-fields)
   digitalkey update &lt;命令&gt; ...     更新の配布(署名つきの包み、段階配布の表、当てる、自動で戻す、サポート期限)
   digitalkey kanri &lt;命令&gt; ...      鍵の管理(名簿、役、扉と群、権限の申請・承認・発行、経路の実体、一人の全経路の失効。--help で一覧)
+  digitalkey madoguchi push --file FILE [--dry-run]   kanri portal export の写しを窓口(お問い合わせと照会)へ置きに行く
 </code></pre>
 <h3>digitalkey site</h3>
 <pre><code>usage: digitalkey site [-h] {init,token,serve} ...
@@ -1206,6 +1207,6 @@ options:
 </code></pre>
 
     </main>
-    <footer class="site-footer"><p>デジタルドア — aiseed · <a href="/#about">このサイトについて</a> · <a href="/license/">ライセンス</a> · <a href="/feed.xml">RSS</a></p></footer>
+    <footer class="site-footer"><p>デジタルドア — aiseed · <a href="/#about">このサイトについて</a> · <a href="/contact/">お問い合わせ</a> · <a href="/privacy/">プライバシーポリシー</a> · <a href="/license/">ライセンス</a> · <a href="/feed.xml">RSS</a></p></footer>
 </body>
 </html>

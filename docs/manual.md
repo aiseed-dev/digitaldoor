@@ -54,12 +54,12 @@ max_hours = 24
 [[token]]
 name = "管理者"
 role = "管理者"
-token_sha256 = "c777c4a9964e8faf823cf82d4d19c530f630ad0c5c25be57cfc1fe8400c7f245"
+token_sha256 = "66e08bdbd788e6edb775554b2bc3ba6684fb76d84997126c0eb3fe3ae65dce88"
 
 [[token]]
 name = "受付"
 role = "受付"
-token_sha256 = "a4fc47089443e560b1d9de8638e8e87e2278ca9fef128c0168b08260a208786c"
+token_sha256 = "0e62a8080f19e7cbbace33e536bd313a84d02aa4aaed5257374c771b21dc7d2c"
 ```
 
 ### 役割
@@ -133,6 +133,7 @@ digitalkey entrance <命令> ...   様式・台帳・鍵・本人確認・報告
   digitalkey aliro <命令> ...      Aliro の読取機を Matter で設定する値を作る(実装の例。reader-config | issuer-key | matter-fields)
   digitalkey update <命令> ...     更新の配布(署名つきの包み、段階配布の表、当てる、自動で戻す、サポート期限)
   digitalkey kanri <命令> ...      鍵の管理(名簿、役、扉と群、権限の申請・承認・発行、経路の実体、一人の全経路の失効。--help で一覧)
+  digitalkey madoguchi push --file FILE [--dry-run]   kanri portal export の写しを窓口(お問い合わせと照会)へ置きに行く
 ```
 
 ### digitalkey site

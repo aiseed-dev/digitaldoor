@@ -38,6 +38,7 @@ AI のスキルとして入れて使う場合は、`skills/smart-door-dev/` を�
 - 受け入れの参照実装(`digitalkey/entrance/`。様式は adoc、伝票は追記だけ、前ハッシュで連鎖)、事業所サーバー(`digitalkey/site/`)、スマートフォンのアプリ(`digitalkey/mobile/`、Flet)
 - 後付け錠のドライバーの例(`drivers/digitalkey-sesame/`。BLE 直結と Web API、疑似の機器つき)
 - 実演の道具(`tools/jitsuen.py`。疑似の Sesame か実機の錠で、開け閉めと鍵の管理の難しさを場面ごとに見せる。手順は `docs/使い方.md` の「実演」)と、錠のドライバで動く接点(`digitalkey/contacts.py`)、それで扉の HTTP の口を開く命令(`digitalkey door-serve`。実機の Sesame を Matter の電子錠として見せる手順は `docs/使い方.md` の「実演」)、鍵と資格情報を作る命令(`digitaldoor-controller keygen`、`issue`、`trust-change`)
+- 窓口(お問い合わせと照会。仕様は `docs/窓口仕様書.md`)。サイトの頁 `/contact/` と `/privacy/`、鍵の管理ソフトの照会用の写し(`digitalkey kanri portal`。設計は `docs/鍵の管理ソフト設計書.md` 22 章)、写しを閉じる機械から窓口の PocketBase へ置きに行く道具(`digitalkey/madoguchi/`、`digitalkey madoguchi push`)、deb2 で動かす毎朝の一覧とコレクションの見本と入る値の見本(`deploy/madoguchi/`)。テストは疑似の PocketBase を相手にします(`tests/madoguchi/`)
 - 権限の申請の雛形(下書き。`docs/権限の申請の雛形.md`)。社員がどこからでも申請し、情報システム部門が確かめて出し、止め、記録する流れを学ぶ教材。部品(PocketBase の認証、会員、本人確認、知らせ)は aiai-tools(https://github.com/aiseed-dev/aiai-tools)の物を使う。各社はこれを参考に独自に開発し、問題は Issues で指摘する
 - 自社のシステムを守る側の手引きと道具。人が読む始め方のマニュアル(`docs/確かめの始め方.md`、サイトの /check/。Defense Access の申し込み、運用の決まり、AI に渡す物、最初の一つ)と、AI に読ませる手引き四つ(`skills/system-check/` コードを読んで穴を見つける、`skills/incident-response/` 事故の対応と備え、`skills/detection/` 見張りを作る、`skills/kagi/` kagi の使い方)、道具 kagi(`kagi/`、別パッケージ digitaldoor-kagi、AGPL-3.0-or-later。扉の鍵ではなく、サーバーと業務システムの秘密の在庫・口・記録・機械の形を表と突き合わせる。鍵の値を読まず、機械を変えない)
 

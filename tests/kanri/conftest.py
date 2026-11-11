@@ -6,6 +6,7 @@
 
 段 1b(設計書 20.13)の下ごしらえ `setup_devices` と、置き場 `dunit`、`dfile_unit`、機器の権限と管理者の口を出す `access` も置く。
 段 2a(設計書 21.13)の下ごしらえ `setup_revocations` と、置き場 `runit`、`rfile_unit`、署名つき資格情報を出す `cred` も置く。
+段 5a(設計書 22.10)の下ごしらえ `setup_portal` と、置き場 `punit`、`pfile_unit`、名簿の係 ros が結ぶ `link` も置く。
 
 `digitalkey.kanri` は、ここでは関数の中で import する(まだ無い時も conftest は読める)。
 """
@@ -231,3 +232,37 @@ def _cred(u, subject="s1", target="玄関", kind="扉", start=T0, end=T1, *, unt
 @pytest.fixture
 def cred():
     return _cred
+
+
+# ---- 段 5a(設計書 22 章)の下ごしらえ ----
+
+def setup_portal(u) -> None:
+    """22.10 の共通の下ごしらえ(19.13 の adm、apr、s1 に足す): ros(名簿の係)、s2(社員)。
+    呼び名は、写しに出ていないことを文字列で確かめられるよう、ほかの値と重ならない架空の文字列にする。"""
+    u.register_subject("ros", "名簿係の架空の呼び名ロ", "社員", False, by="adm", role="名簿の係")
+    u.assign_role("ros", "名簿の係", reason="名簿の当番", by="adm", role="管理者")
+    u.register_subject("s2", "照会の架空の呼び名ニ", "社員", False, by="adm", role="名簿の係")
+
+
+@pytest.fixture
+def punit(unit):
+    """22.10 の共通の下ごしらえを済ませた置き場。"""
+    setup_portal(unit)
+    return unit
+
+
+@pytest.fixture
+def pfile_unit(file_unit):
+    """命令で開ける置き場に、22.10 の共通の下ごしらえを足した物。"""
+    setup_portal(file_unit)
+    return file_unit
+
+
+def _link(u, subject="s1", account="k3x9m2p7q1w8e5r", how="対面", *, by="ros", role="名簿の係"):
+    """名簿の係 ros が結ぶ(22.6)。"""
+    return u.link_portal(subject, account, how, by=by, role=role)
+
+
+@pytest.fixture
+def link():
+    return _link
