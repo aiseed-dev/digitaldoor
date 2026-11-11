@@ -25,6 +25,7 @@ include = ["digitalkey*"]
 
 [tool.setuptools.package-data]
 "digitalkey.entrance" = ["forms_data/*.adoc", "static/*.html"]
+"digitalkey.kanri" = ["forms_data/*.adoc"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -9,7 +9,7 @@
   digitalkey door-serve --lock dummy                    配線確認用の錠(何も動かさない)
 
 引数は `digitaldoor-controller serve` と揃えてある(--dir --name --host --port --two-person --autolock --power-policy
---admin-key --trust --box)。違いは、錠の指定(--lock か --fake)と、錠に一回の命令を待つ秒数(--timeout)だけである。
+--admin-key --trust --revocation-max-age --box)。違いは、錠の指定(--lock か --fake)と、錠に一回の命令を待つ秒数(--timeout)だけである。
 
 しくみ: `Controller` に `digitalkey.contacts.LockDriverContacts` を差す。tools/jitsuen.py と同じ組み立てを、
 実演の場面から切り離して常駐させたもの。錠の銘柄は接点の下に隠れ、扉の判断は変わらない(扉コントローラ仕様書 R-CT-03、R-CT-04)。
@@ -60,8 +60,21 @@ def make_parser() -> argparse.ArgumentParser:
     ap.add_argument("--trust", metavar="FILE",
                     help="信頼する発行者の一覧(JSON。{発行者の識別: {\"public_key\": 16 進, \"doors\": [扉の名前, ...]}})。"
                          "管理者の変更が記録にあるときは、記録の一覧を使う")
+    ap.add_argument("--revocation-max-age", type=float, default=0.0, metavar="秒",
+                    help="失効の知らせの古さの上限。発行者の失効の一覧の issued_at からこの秒数を過ぎると、"
+                         "期限の長さがこの秒数より長い資格情報を拒む。0 はこの規則を使わない(既定)。"
+                         "鍵の管理の台帳には、同じ値を分で書く(digitalkey kanri door add --revocation-max-min)")
     ap.add_argument("--box", help="伝票を出す箱(フォルダ)。動いている間、増えた記録を続けて出す")
     return ap
+
+
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    """引数を読む。--revocation-max-age が負なら引数の誤り(終了コード 2。digitaldoor-controller と同じ)。"""
+    ap = make_parser()
+    args = ap.parse_args(argv)
+    if not args.revocation_max_age >= 0:
+        ap.error("--revocation-max-age は 0 以上の秒数です")
+    return args
 
 
 def make_driver(args):
@@ -84,7 +97,8 @@ def build(args, driver=None) -> tuple[Controller, LockDriverContacts, Audit]:
     trust = json.loads(Path(args.trust).read_text(encoding="utf-8")) if args.trust else None
     admin_key = bytes.fromhex(args.admin_key) if args.admin_key else None
     ctl = Controller(contacts, audit, Config(two_person=args.two_person, autolock_s=args.autolock,
-                                             power_policy=args.power_policy),
+                                             power_policy=args.power_policy,
+                                             revocation_max_age_s=args.revocation_max_age),
                      name=args.name, admin_key=admin_key, trust=trust)
     ctl.set_time(time.time(), True)
     return ctl, contacts, audit
@@ -101,7 +115,7 @@ def open_door(args, driver=None) -> tuple[ThreadingHTTPServer, Controller, LockD
 
 
 def main(argv: list[str] | None = None) -> int:
-    args = make_parser().parse_args(argv)
+    args = parse_args(argv)
     try:
         srv, ctl, contacts = open_door(args)
     except (ValueError, OSError) as e:

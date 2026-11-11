@@ -14,6 +14,7 @@ USAGE = """使い方:
   digitalkey mobile [--web]        管理者と利用者のスマートフォンアプリ(Flet)
   digitalkey aliro <命令> ...      Aliro の読取機を Matter で設定する値を作る(実装の例。reader-config | issuer-key | matter-fields)
   digitalkey update <命令> ...     更新の配布(署名つきの包み、段階配布の表、当てる、自動で戻す、サポート期限)
+  digitalkey kanri <命令> ...      鍵の管理(名簿、役、扉と群、権限の申請・承認・発行、経路の実体、一人の全経路の失効。--help で一覧)
 """
 
 
@@ -60,6 +61,9 @@ def main(argv: list[str] | None = None) -> int:
         return m(argv[1:])
     if argv and argv[0] == "update":
         from .update import main as m
+        return m(argv[1:])
+    if argv and argv[0] == "kanri":
+        from .kanri.cli import main as m
         return m(argv[1:])
     if argv and argv[0] == "mobile":
         from .mobile.main import run
