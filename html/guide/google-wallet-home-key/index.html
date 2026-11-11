@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'">
+
+
+<title>Google Wallet に戸建ての家の鍵が入る — 解説 | デジタルドア</title>
+<meta name="description" content="2026年11月9日付の Google Play services v26.44 のリリースノートに、Matter と Aliro に対応した戸建て住宅の鍵を、Google Home から Google Wallet に足せるという一行が載りました。言葉の意味、ここまでの流れ、管理会社が出す住まいの鍵との違い、層ごとの位置、錠を作る側の認証の道筋(CSA の Interop Test Lab)、Apple との比べ、まだ分かっていない事を、会社の発表と報道を分けて整理し、扉のコントローラが鍵を持つかという問いから読みます。">
+<link rel="canonical" href="https://door.aiseed.dev/guide/google-wallet-home-key/">
+<link rel="alternate" hreflang="ja" href="https://door.aiseed.dev/guide/google-wallet-home-key/">
+
+<link rel="alternate" hreflang="x-default" href="https://door.aiseed.dev/guide/google-wallet-home-key/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="デジタルドア">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="Google Wallet に戸建ての家の鍵が入る">
+<meta property="og:description" content="2026年11月9日付の Google Play services v26.44 のリリースノートに、Matter と Aliro に対応した戸建て住宅の鍵を、Google Home から Google Wallet に足せるという一行が載りました。言葉の意味、ここまでの流れ、管理会社が出す住まいの鍵との違い、層ごとの位置、錠を作る側の認証の道筋(CSA の Interop Test Lab)、Apple との比べ、まだ分かっていない事を、会社の発表と報道を分けて整理し、扉のコントローラが鍵を持つかという問いから読みます。">
+<meta property="og:url" content="https://door.aiseed.dev/guide/google-wallet-home-key/">
+<meta property="og:image" content="https://door.aiseed.dev/images/og-default.jpg">
+<meta property="article:section" content="解説">
+<meta property="article:published_time" content="2026.11.11">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Google Wallet に戸建ての家の鍵が入る">
+<meta name="twitter:description" content="2026年11月9日付の Google Play services v26.44 のリリースノートに、Matter と Aliro に対応した戸建て住宅の鍵を、Google Home から Google Wallet に足せるという一行が載りました。言葉の意味、ここまでの流れ、管理会社が出す住まいの鍵との違い、層ごとの位置、錠を作る側の認証の道筋(CSA の Interop Test Lab)、Apple との比べ、まだ分かっていない事を、会社の発表と報道を分けて整理し、扉のコントローラが鍵を持つかという問いから読みます。">
+<meta name="twitter:image" content="https://door.aiseed.dev/images/og-default.jpg">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="alternate" type="application/rss+xml" title="デジタルドア" href="/feed.xml">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+
+<!-- フォントは Web 配信せず、すべて端末のローカルフォントで賄う。
+     和文: UDデジタル教科書体 → BIZ UDP明朝(いずれも Windows 標準搭載の
+     モリサワ UD 書体) → ヒラギノ明朝・游明朝などのシステム明朝。
+     等幅: 端末のシステム等幅フォント。 -->
+
+<style>
+/* ============================================================
+   LOCAL FONT: UDデジタル教科書体(モリサワ)
+   Windows・教育向け端末に無償搭載。端末にあれば local() で拾い、
+   なければ BIZ UDP明朝(同じく Windows 標準搭載)→ システム明朝へ
+   フォールバックする。R と B は別ファミリー名なので、太字(700)を
+   B 書体に明示的にマッピングして疑似ボールドを避ける。
+   ============================================================ */
+@font-face {
+  font-family: "UD Digital Kyokasho";
+  font-weight: 400;
+  src: local("UD デジタル 教科書体 NK-R"), local("UD Digital Kyokasho NK-R"),
+       local("UD デジタル 教科書体 NP-R"), local("UD Digital Kyokasho NP-R"),
+       local("UD デジタル 教科書体 N-R"), local("UD Digital Kyokasho N-R");
+}
+@font-face {
+  font-family: "UD Digital Kyokasho";
+  font-weight: 700;
+  src: local("UD デジタル 教科書体 NK-B"), local("UD Digital Kyokasho NK-B"),
+       local("UD デジタル 教科書体 NP-B"), local("UD Digital Kyokasho NP-B"),
+       local("UD デジタル 教科書体 N-B"), local("UD Digital Kyokasho N-B");
+}
+
+/* ============================================================
+   COLOR & DESIGN TOKENS
+   aiseed.dev 全体のスタイルに合わせる場合は、ここの変数を
+   既存サイトのCSS変数に差し替える。
+   ============================================================ */
+:root {
+  --ink: #1a1a1a;
+  --paper: #f4f1ea;
+  --paper-deep: #ebe6d8;
+  --accent: #c8442a;
+  --rule: #d4cdb8;
+  --whisper: #6b665a;
+  --highlight: #f7e9c8;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+/* 本文: 端末にあれば UDデジタル教科書体を最優先、次に BIZ UDP明朝
+   (Windows 標準搭載)、どちらもなければヒラギノ明朝等のシステム明朝 */
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "UD Digital Kyokasho",
+               "BIZ UDPMincho", "BIZ UDP明朝",
+               "Hiragino Mincho ProN", "ヒラギノ明朝 ProN",
+               "Yu Mincho", "游明朝", "YuMincho",
+               "Noto Serif CJK JP", "Noto Serif JP", serif;
+  font-size: 17px;
+  line-height: 1.9;
+  letter-spacing: 0.02em;
+  font-feature-settings: "palt";
+  overflow-x: hidden;
+}
+
+/* グレインテクスチャ(紙の質感) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image: radial-gradient(rgba(0,0,0,0.04) 1px, transparent 1px);
+  background-size: 3px 3px;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+}
+
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 32px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ============================================================
+   MASTHEAD(シリーズ名・章番号)
+   ============================================================ */
+.masthead {
+  border-bottom: 3px double var(--ink);
+  padding: 24px 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--whisper);
+}
+.masthead-left  { font-weight: 700; color: var(--ink); }
+.masthead-left a { color: inherit; text-decoration: none; }
+.masthead-left a:hover { color: var(--accent); }
+.masthead-home { color: var(--whisper); }
+.masthead-sep { margin: 0 10px; color: var(--whisper); font-weight: 400; }
+.masthead-right { font-style: italic; }
+
+/* ============================================================
+   HERO(タイトル領域)
+   ============================================================ */
+.hero {
+  padding: 80px 0 60px;
+}
+.hero-meta {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  color: var(--accent);
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.hero-meta::before {
+  content: "";
+  width: 40px;
+  height: 1px;
+  background: var(--accent);
+}
+.hero-title {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 800;
+  font-size: clamp(32px, 5.5vw, 56px);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin-bottom: 24px;
+}
+.hero-title .accent {
+  color: var(--accent);
+}
+.hero-subtitle {
+  font-size: 18px;
+  line-height: 1.85;
+  color: var(--whisper);
+  max-width: 580px;
+  border-left: 2px solid var(--accent);
+  padding-left: 20px;
+  margin-top: 32px;
+}
+.hero-byline {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--whisper);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ============================================================
+   ARTICLE BODY
+   ============================================================ */
+article p {
+  margin-bottom: 24px;
+}
+
+article h2 {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1.4;
+  margin: 72px 0 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--ink);
+  position: relative;
+}
+article h2::before {
+  content: "§";
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  color: var(--accent);
+  margin-right: 16px;
+  font-size: 22px;
+}
+
+article h3 {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 600;
+  font-size: 19px;
+  margin: 40px 0 16px;
+  color: var(--ink);
+}
+article h3::before {
+  content: "—";
+  color: var(--accent);
+  margin-right: 12px;
+  font-weight: 400;
+}
+
+article strong {
+  font-weight: 700;
+  background: linear-gradient(to top, var(--highlight) 35%, transparent 35%);
+  padding: 0 2px;
+}
+
+article em {
+  font-style: normal;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+article a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: color 0.2s;
+}
+article a:hover {
+  color: var(--accent);
+}
+
+/* ============================================================
+   BLOCKQUOTE
+   ============================================================ */
+blockquote {
+  margin: 40px 0;
+  padding: 32px 40px;
+  background: var(--paper-deep);
+  border-left: 4px solid var(--accent);
+  position: relative;
+  font-size: 18px;
+  line-height: 1.85;
+  font-style: normal;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "「";
+  position: absolute;
+  top: 4px;
+  left: 8px;
+  font-size: 48px;
+  color: var(--accent);
+  opacity: 0.3;
+  font-family: "Hiragino Mincho ProN", serif;
+}
+blockquote p {
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 32px 0;
+  font-size: 15px;
+  line-height: 1.7;
+}
+article thead th {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 700;
+  text-align: left;
+  padding: 14px 16px;
+  border-bottom: 2px solid var(--ink);
+  color: var(--ink);
+}
+article tbody td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+article tbody tr:last-child td {
+  border-bottom: none;
+}
+@media (max-width: 720px) {
+  article table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ============================================================
+   ORDERED LIST(番号付きリスト)
+   ============================================================ */
+article ol {
+  margin: 32px 0;
+  counter-reset: item;
+  padding: 0;
+}
+article ol li {
+  list-style: none;
+  position: relative;
+  padding: 16px 0 16px 56px;
+  border-bottom: 1px dashed var(--rule);
+  counter-increment: item;
+}
+article ol li::before {
+  content: counter(item, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 16px;
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 14px;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+/* 通常のul(章末の関連リンクなど) */
+article ul {
+  margin: 24px 0;
+  padding-left: 1.5em;
+}
+article ul li {
+  margin-bottom: 8px;
+}
+
+/* ============================================================
+   CODE BLOCK(疑似ターミナル風)
+   ============================================================ */
+article pre {
+  margin: 40px 0;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 24px 28px;
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 13px;
+  line-height: 1.8;
+  position: relative;
+  overflow-x: auto;
+}
+article pre::before {
+  content: "● ● ●";
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  font-size: 8px;
+  color: var(--whisper);
+  letter-spacing: 4px;
+}
+article pre code {
+  display: block;
+  padding-top: 16px;
+  white-space: pre;
+}
+
+/* インラインコード */
+article code {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 0.9em;
+  background: var(--paper-deep);
+  padding: 2px 6px;
+  border-radius: 2px;
+  color: var(--ink);
+}
+article pre code {
+  background: transparent;
+  padding: 16px 0 0 0;
+  color: var(--paper);
+}
+
+/* ============================================================
+   HORIZONTAL RULE(本文中の区切り)
+   ============================================================ */
+article hr {
+  border: none;
+  text-align: center;
+  margin: 64px 0;
+  height: 1em;
+}
+article hr::before {
+  content: "◆ ◆ ◆";
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 14px;
+  color: var(--accent);
+  letter-spacing: 0.5em;
+}
+
+/* ============================================================
+   RELATED LINKS(章末の関連記事)
+   ============================================================ */
+.related-links {
+  margin-top: 64px;
+  padding: 32px 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.related-links h3 {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  color: var(--whisper);
+  margin: 0 0 20px;
+  font-weight: 600;
+}
+.related-links h3::before {
+  content: none;
+}
+.related-links ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.related-links li {
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--rule);
+  margin-bottom: 0;
+}
+.related-links li:last-child {
+  border-bottom: none;
+}
+.related-links a {
+  text-decoration: none;
+  color: var(--ink);
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+}
+.related-links .related-tag {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.related-links a:hover .related-title {
+  color: var(--accent);
+}
+
+/* ============================================================
+   FOOTER(サイト内メニュー+奥付)
+   ============================================================ */
+.site-footer {
+  margin-top: 96px;
+  border-top: 3px double var(--ink);
+  padding-top: 48px;
+}
+.footer-nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 32px 48px;
+}
+.footer-col h4 {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--whisper);
+  font-weight: 700;
+  margin: 0 0 14px;
+}
+.footer-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.footer-col li {
+  padding: 6px 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.footer-col a {
+  color: var(--ink);
+  text-decoration: none;
+}
+.footer-col a:hover { color: var(--accent); }
+
+.colophon {
+  margin-top: 48px;
+  padding: 32px 0 40px;
+  border-top: 1px solid var(--rule);
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--whisper);
+  text-align: center;
+  line-height: 2;
+}
+.colophon-mark {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "Hiragino Mincho ProN", serif;
+  font-size: 32px;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+/* ============================================================
+   SERIES TOC(全章一覧・折りたたみ式)
+   ============================================================ */
+.series-toc {
+  margin: 24px 0 40px;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 8px 0;
+}
+.series-toc details {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+}
+.series-toc summary {
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--whisper);
+  font-weight: 700;
+  padding: 8px 0;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.series-toc summary::-webkit-details-marker { display: none; }
+.series-toc summary::before {
+  content: "▸";
+  color: var(--accent);
+  font-size: 10px;
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+.series-toc details[open] summary::before { transform: rotate(90deg); }
+.series-toc ol {
+  list-style: none;
+  margin: 12px 0 8px;
+  padding: 0;
+  counter-reset: none;
+}
+.series-toc li {
+  list-style: none;
+  padding: 9px 0;
+  border-bottom: 1px dashed var(--rule);
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: 14px;
+  line-height: 1.55;
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+}
+.series-toc li::before { content: none; }
+.series-toc li:last-child { border-bottom: none; }
+.series-toc li a {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+  text-decoration: none;
+  color: var(--ink);
+  flex: 1;
+}
+.series-toc li a:hover .toc-title { color: var(--accent); }
+.series-toc .toc-num {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 5em;
+}
+.series-toc li.current {
+  background: var(--paper-deep);
+  margin: 0 -12px;
+  padding: 9px 12px;
+}
+.series-toc li.current .toc-title {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ============================================================
+   IMAGES
+   ============================================================ */
+article img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 32px auto;
+}
+
+/* ============================================================
+   CUSTOM BLOCKS(:::chain / :::highlight / :::quote / :::compare)
+   ============================================================ */
+.chain-diagram {
+  background: var(--paper-deep);
+  border-left: 4px solid var(--accent);
+  padding: 24px 28px;
+  margin: 32px 0;
+  font-size: 15px;
+  line-height: 2.2;
+}
+.chain-diagram .arrow {
+  color: var(--accent);
+  font-weight: 700;
+  margin: 0 0.3em;
+}
+.highlight-box {
+  background: var(--paper-deep);
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--accent);
+  padding: 24px 28px;
+  margin: 32px 0;
+}
+.highlight-box p { margin-bottom: 12px; }
+.highlight-box p:last-child { margin-bottom: 0; }
+.quote-block {
+  margin: 40px 0;
+  padding: 32px 40px;
+  background: var(--paper-deep);
+  border-left: 4px solid var(--accent);
+}
+.quote-block .quote-text {
+  font-size: 18px;
+  line-height: 1.85;
+  margin: 0;
+}
+
+/* ============================================================
+   CHAPTER NAV(前後の記事へのリンク)
+   ============================================================ */
+.chapter-nav {
+  margin-top: 64px;
+  padding: 24px 0;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  font-size: 14px;
+}
+.chapter-nav a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+  text-underline-offset: 4px;
+}
+.chapter-nav a:hover { color: var(--accent); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 640px) {
+  .container { padding: 0 20px; }
+  .hero { padding: 48px 0 40px; }
+  blockquote { padding: 24px 20px 24px 28px; }
+  article pre { padding: 20px 16px; font-size: 12px; }
+  article ol li { padding-left: 48px; }
+  .series-toc .toc-num { min-width: 4em; font-size: 10px; }
+  .series-toc li { font-size: 13px; gap: 12px; }
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-meta, .hero-title, .hero-subtitle, .hero-byline {
+  animation: rise 0.8s ease-out backwards;
+}
+.hero-meta     { animation-delay: 0.1s; }
+.hero-title    { animation-delay: 0.25s; }
+.hero-subtitle { animation-delay: 0.45s; }
+.hero-byline   { animation-delay: 0.65s; }
+.mermaid {
+  text-align: center;
+  margin: 2.5rem 0;
+  background: var(--paper-warm, #f5f1ea);
+  padding: 1.5rem 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+.mermaid svg { max-width: 100%; height: auto; }
+
+/* ============================================================
+   WIDE LAYOUT(広い画面では目次を左サイドバーに常時展開)
+   ============================================================ */
+@media (min-width: 1200px) {
+  body.has-toc .container {
+    max-width: 1320px;
+    display: grid;
+    grid-template-columns: 280px minmax(0, 880px);
+    column-gap: 64px;
+    justify-content: center;
+  }
+  body.has-toc .masthead,
+  body.has-toc .hero {
+    grid-column: 1 / -1;
+  }
+  /* グリッドアイテム自体は行いっぱいに伸ばし、内側の details を sticky に
+     する(sticky なグリッドアイテムはグリッドエリアではなくコンテナ全体で
+     制約されるブラウザ挙動があり、フッターに重なってしまうため)。 */
+  body.has-toc .series-toc {
+    grid-column: 1;
+    grid-row: 3 / span 2;
+    margin: 0;
+    padding: 0;
+    border-top: none;
+    border-bottom: none;
+  }
+  body.has-toc .series-toc details {
+    position: sticky;
+    top: 32px;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+    padding: 0 12px 12px 0;
+  }
+  /* サイドバーでは折りたたみを無効化し、見出しとして表示 */
+  body.has-toc .series-toc summary {
+    pointer-events: none;
+    cursor: default;
+  }
+  body.has-toc .series-toc summary::before { content: none; }
+  body.has-toc .series-toc li { font-size: 13.5px; }
+  body.has-toc article    { grid-column: 2; grid-row: 3; }
+  body.has-toc .chapter-nav { grid-column: 2; grid-row: 4; }
+  body.has-toc .site-footer { grid-column: 1 / -1; grid-row: 5; }
+}
+
+/* ============================================================
+   DARK MODE(OS の配色設定に追従して自動で暗色に切り替え)
+   ============================================================ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --ink: #e8e3d6;
+    --paper: #16140f;
+    --paper-deep: #211d16;
+    --accent: #e8765a;
+    --rule: #393428;
+    --whisper: #a39b88;
+    --highlight: rgba(220, 168, 78, 0.30);
+  }
+  /* 紙の質感(グレイン)を暗色背景向けに反転 */
+  body::before {
+    background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+    mix-blend-mode: screen;
+    opacity: 0.4;
+  }
+  /* コードブロックは両モードとも暗いターミナル調を維持 */
+  article pre {
+    background: #0d0c0a;
+    color: #e8e3d6;
+  }
+  article pre code {
+    color: #e8e3d6;
+  }
+  /* Mermaid 図の枠を暗色に */
+  .mermaid {
+    background: #211d16;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; opacity: 1 !important; }
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- MASTHEAD(ホーム › シリーズ目次) -->
+  <header class="masthead">
+    <div class="masthead-left"><a href="/" class="masthead-home">デジタルドア</a><span class="masthead-sep">›</span><a href="/guide/">解説</a></div>
+    <div class="masthead-right">No. 21 / 解説</div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-meta">解説 № 21 · 2026</div>
+
+    <h1 class="hero-title">Google Wallet に戸建ての家の鍵が入る</h1>
+
+    <p class="hero-subtitle">リリースノートの一行を読む。書かれている事、書かれていない事、扉のコントローラが鍵を持つかという問い</p>
+
+    <div class="hero-byline">
+      <span>2026.11.11</span>
+      
+    </div>
+  </section>
+
+  <!-- SERIES TOC(全章一覧・現在の章をハイライト) -->
+  
+
+  <!-- ARTICLE BODY -->
+  <article>
+    <p>2026年11月9日付の Google のリリースノートに、短い一行が載りました。Matter と Aliro に対応した戸建て住宅の鍵を、Google Home から Google Wallet に足せる、という内容です。Android のスマートフォンが、家の玄関の鍵として使えるようになる道が、Google の側でも開いたことになります。</p>
+<p>ただ、Google が書いているのはこの一行だけで、説明の頁はまだ見つかりません。この記事では、Google が自分で書いている事、報道されただけの事、まだ分かっていない事を分けて整理します。錠を作る側の試験と認証の道筋と、先を行く Apple の形も並べます。そのうえで、扉と鍵の管理の側から、扉のコントローラが鍵を持つか、という問いで読みます。Matter と Aliro そのものの説明は、<a href="/guide/matter/">Matterとは何か</a> と <a href="/guide/aliro/">Aliroとは何か</a> にあります。この記事の内容は、2026年11月11日に確かめた物です。</p>
+<h2>何が発表されたか</h2>
+<p>Google は、Android の端末に届く Google のシステムの更新の中身を、Google System Release Notes という頁に版ごとに載せています。2026年11月9日付の Google Play services v26.44 の項に、Google Wallet の行が二つあります。一つは Traveler QR という別の機能で、もう一つが今回の行です。</p>
+<p>今回の行の要点は次のとおりです。</p>
+<ul>
+<li>足せるのは、&quot;Matter Aliro-compatible&quot; な、&quot;single-family residential keys&quot;、つまり Matter と Aliro に対応した戸建て住宅の鍵です</li>
+<li>足す道は &quot;with Google Home&quot;、つまり Google Home を通してです</li>
+<li>行の頭の対象の印は <code>[Phone]</code> だけです。対象はスマートフォンです</li>
+</ul>
+<p>一方で、この行には次の事が書かれていません。</p>
+<ul>
+<li>提供する国と地域</li>
+<li>対応する錠の機種</li>
+<li>スマートウォッチで使えるか</li>
+<li>かざして開けるのか、近づくだけで開けるのか</li>
+</ul>
+<p>2026年10月と11月のほかの版のリリースノートには、Aliro、Matter、鍵に触れた行はありません。Google のブログや、Google Home と Google Wallet のヘルプにも、この機能を説明する頁は見つかりませんでした。</p>
+<p>なお、この行を伝えた 9to5Google の月ごとのまとめは、記事全体への断りとして、変更の一覧に載った機能が広く使えるとは限らないと書いています。</p>
+<h2>言葉をほどく</h2>
+<h3>「Matter と Aliro に対応」</h3>
+<p>二つの規格は、役が違います。</p>
+<ul>
+<li><strong>Matter</strong> は、家の機器を、メーカーを問わず家の管理アプリ(Google Home、Apple Home など)につなぐ規格です。錠は、Matter の Door Lock(電子錠)として登録され、施錠、解錠、状態の報告を受け持ちます(<a href="/guide/matter/">Matterとは何か</a>)</li>
+<li><strong>Aliro</strong> は、スマートフォンやスマートウォッチを、錠の読取機に鍵として示す規格です。認証は読取機の中で終わり、網につながっていなくても開けられます(<a href="/guide/aliro/">Aliroとは何か</a>)</li>
+</ul>
+<p>二つは、Matter の Door Lock クラスタでつながっています。Matter 1.4 のデータモデルから、Door Lock クラスタに、Aliro の読取機を設定する命令と、Aliro の発行者の鍵を登録する種類が入りました。家の管理アプリは、Matter の管理者として、この命令で錠の中の読取機を設定できます。詳しくは <a href="/guide/aliro/">Aliroとは何か</a> の「Matterでのリーダーの設定」にあります。</p>
+<p>「Matter と Aliro に対応した錠」は、Matter の電子錠として家の管理アプリにつながり、同時に Aliro の読取機を持つ錠、と読めます(このサイトの読み。リリースノートは定義を書いていません)。</p>
+<h3>「戸建て住宅の鍵」</h3>
+<p>原文は &quot;single-family residential&quot; です。英語では、一世帯が住む独立した住宅を指す言葉で、集合住宅(マンション、アパート)と対になります。Google Wallet には、もともと「住まいの鍵(Residential keys)」という種類の鍵があり、こちらは管理会社が出す鍵です(後の「これまでの住まいの鍵との違い」で比べます)。</p>
+<p>Apple も、Wallet の鍵の協力先に向けた頁で、戸建て(single-family homes)の鍵と集合住宅(multi-family homes)の鍵を分けて挙げています(後の「Apple の場合」)。Google の言葉づかいは、この分け方と同じです。</p>
+<h3>「Google Home から」</h3>
+<p>Google Home は、Google の家の管理アプリで、Matter の管理者になります。リリースノートは、鍵を Google Home を通して足すとだけ書き、どの画面で、どの順で足すかは書いていません。</p>
+<p>Samsung の場合は、SmartThings で錠を Matter の機器として登録する途中で、財布に鍵を足す流れだと、Samsung 自身が発表しています(<a href="/guide/aliro/">Aliroとは何か</a> の「財布(Wallet)との関係」)。Google がこれと同じ形かどうかは、Google の公開の資料には書かれていません。</p>
+<p>非公式の解析として、Nerds Chalk(Kapill M Malani、2026年11月10日更新)が、Google Home アプリ 4.37.27.0 の中身を調べた記事があります。Wallet のホームキーの設定の文として、錠にスマートフォンを近づける、Wallet を開く必要はない、近づいた時に開けるには「Unlock on approach」を有効にする、という趣旨の文字列があると書いています。記事自身が、こうした解析で見つかる物は作りかけで、変わる事も出ない事もあると断っています。Google の発表ではありません。</p>
+<h3>「対象はスマートフォン」</h3>
+<p>リリースノートの印は <code>[Phone]</code> だけです。2025年3月に Google Wallet が Aliro に対応した時は、スマートフォンと Wear OS の両方が対象だったと 9to5Google が伝えていますが、今回の行には Wear OS の印はありません。スマートウォッチで使えないとまでは書かれておらず、書かれていない、というのが今の状態です。</p>
+<h2>ここまでの流れ</h2>
+<p>[cols=&quot;1,3,3&quot;]</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>日付</th>
+<th>会社が正式に発表した事</th>
+<th>報道と非公式の解析</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2023年11月9日</td>
+<td>CSA が Aliro の取り組みを発表。支える会社の一つに Google の名がある(CSA の発表)</td>
+<td></td>
+</tr>
+<tr>
+<td>2025年3月</td>
+<td>Google Play services 25.11 のリリースノートに、Google Wallet が NFC の読取機向けに Aliro の手順に対応した、という行があった</td>
+<td>9to5Google の Abner Li 氏が、2025年3月24日にこの行を引いて伝えた。対象は Android のスマートフォンと Wear OS。認証を受けた錠がまだ無く、実際に使えるまで時間がかかりそうだと書いている</td>
+</tr>
+<tr>
+<td>2026年2月26日</td>
+<td>CSA が Aliro 1.0 を公開(CSA の発表)</td>
+<td></td>
+</tr>
+<tr>
+<td>2026年3月2日</td>
+<td>Samsung が Samsung Wallet のデジタルホームキーを発表(Samsung の発表)</td>
+<td></td>
+</tr>
+<tr>
+<td>2026年3月24日</td>
+<td></td>
+<td>9to5Google の Andrew Romero 氏が、Nuki の NFC のキーパッドの記事で、Google は Aliro の錠への対応をまだ広げきっておらず、Samsung が先行したと書いた。Nuki は、錠は Apple Home と Samsung SmartThings で動き、Aliro はまだとても早い段階だと答えている。Google の発言は載っていない</td>
+</tr>
+<tr>
+<td>2026年10月13日</td>
+<td>Google Home Developers の Matter のリリースノートが、Google Wallet のデジタルホームキーに対応する Aliro の錠の、試験と認証の要件を載せた</td>
+<td></td>
+</tr>
+<tr>
+<td>2026年10月13日</td>
+<td>Apple が、Matter と Aliro に対応する錠を含む家の機器の一式を発表。錠を売るのは米国とカナダ(Apple の発表)</td>
+<td></td>
+</tr>
+<tr>
+<td>2026年11月9日</td>
+<td>Google Play services v26.44 のリリースノートに、今回の行が載った</td>
+<td>9to5Google の Abner Li 氏が、同じ日の月ごとのまとめに、この行をそのまま載せた。説明、国、対応する錠は足していない</td>
+</tr>
+<tr>
+<td>2026年11月10日</td>
+<td></td>
+<td>Nerds Chalk が、Google Home アプリの中身の解析(非公式)を更新した</td>
+</tr>
+</tbody>
+</table>
+<h2>これまでの「住まいの鍵」との違い</h2>
+<p>Google Wallet のヘルプには、「Residential keys(住まいの鍵)」の頁があります。ここで説明されているのは、管理会社(property manager)が出して管理する鍵です。この頁は、Aliro、Matter、Google Home、UWB に触れていません。更新の日付は出ていません。</p>
+<p>今回の戸建ての鍵と並べると、次のようになります。今回の鍵の側は、Google が書いている所だけを埋めています。</p>
+<p>[cols=&quot;1,3,3&quot;]</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>項目</th>
+<th>管理会社が出す住まいの鍵(Wallet のヘルプ)</th>
+<th>今回の戸建ての鍵(リリースノート)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>誰が出すか</td>
+<td>管理会社。有効にするのも止めるのも管理会社で、Google は関わらないと書いている</td>
+<td>書かれていません</td>
+</tr>
+<tr>
+<td>どこから足すか</td>
+<td>管理会社のサイト、アプリ、メールの「Add to Google Wallet」から</td>
+<td>Google Home から</td>
+</tr>
+<tr>
+<td>誰が止められるか</td>
+<td>管理会社だけ。Wallet から鍵を消しても、鍵は無効にならない</td>
+<td>書かれていません</td>
+</tr>
+<tr>
+<td>共有</td>
+<td>Wallet での共有はできない</td>
+<td>書かれていません</td>
+</tr>
+<tr>
+<td>物理の鍵</td>
+<td>デジタルキーは物理の鍵の代わりではない。物理の鍵を予備として持つよう書いている</td>
+<td>書かれていません</td>
+</tr>
+<tr>
+<td>使い方</td>
+<td>NFC を有効にし、読取機にスマートフォンの背をかざす。鍵ごとに、端末のロックの解除を求めない設定にできる</td>
+<td>書かれていません</td>
+</tr>
+<tr>
+<td>端末を初期化したとき</td>
+<td>初期化や遠隔の消去で鍵は消え、足し直す</td>
+<td>書かれていません</td>
+</tr>
+<tr>
+<td>規格</td>
+<td>書かれていません(Aliro、Matter に触れていない)</td>
+<td>Matter と Aliro に対応</td>
+</tr>
+</tbody>
+</table>
+<p>ヘルプの頁は、スマートフォンから鍵を消しても、スマートウォッチの鍵は消えないとも書いています。管理会社が出す鍵は、ウォッチにも入る形です。</p>
+<p>リリースノートが「戸建て」と断っているのは、この区別と読めます。集合住宅の鍵は、これまでどおり管理会社が出して管理し、戸建ての持ち主は、自分で Google Home から錠をつなぎ、自分で鍵を足す、という分け方です。これは、このサイトの読みです。Google は「戸建て」に限る理由を書いていません。</p>
+<p>もう一つの違いは、鍵を足す道です。管理会社の鍵は、管理会社のサイト、アプリ、メールから足します。今回の鍵は、Google Home から Google Wallet に足すと書かれていて、どちらも Google 自身のアプリです。これまでの住まいの鍵のように、間に管理会社を挟まない形と読めます(このサイトの読み)。ただし、鍵の発行者の秘密鍵を誰が持つかは、Google のどの頁にも書かれていません。</p>
+<h2>層で見る</h2>
+<p>このサイトでは、玄関まわりの技術を層に分けて見ています(<a href="/guide/layers/">玄関まわりの技術を層に分けて見る</a>)。今回の件を層に置くと、次のようになります。</p>
+<p>[cols=&quot;1,3,3&quot;]</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>層</th>
+<th>公開の資料で言える事</th>
+<th>言えない事</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ドアホン</td>
+<td>今回の件には出てこない</td>
+<td>-</td>
+</tr>
+<tr>
+<td>電子錠</td>
+<td>Matter の Door Lock として登録され、Aliro の読取機を持つ錠が対象。読取機の設定と発行者の鍵の登録の命令は、Matter の Door Lock クラスタにある(規格のデータモデル)</td>
+<td>対応する機種、NFC だけか UWB もか</td>
+</tr>
+<tr>
+<td>家の機器の管理(Google Home)</td>
+<td>鍵を足す道が Google Home を通る(リリースノート)。Google Home は Matter の管理者になる</td>
+<td>Google Home が読取機の設定を錠に送るのか、ほかの何かが送るのか</td>
+</tr>
+<tr>
+<td>財布(Google Wallet)</td>
+<td>鍵が入る先。2025年3月から、NFC の読取機向けに Aliro の手順に対応している(9to5Google が引いたリリースノート)</td>
+<td>ウォッチに入るか、共有できるか</td>
+</tr>
+<tr>
+<td>鍵の発行</td>
+<td>発行者を立てず、スマートフォンの公開鍵を錠に直に入れる道もある(Door Lock の資格情報の種類の「端末の鍵」)</td>
+<td>誰が発行者(Aliro の Credential Issuer)になり、発行者の秘密鍵をどこに持つか。誰が止められるか</td>
+</tr>
+<tr>
+<td>扉のコントローラ</td>
+<td>Aliro の認証は読取機の中で終わり、網につながっていなくても開けられる(Aliro の規格)</td>
+<td>開けた記録がどこに残るか</td>
+</tr>
+<tr>
+<td>業務システムとの連携</td>
+<td>今回の件は戸建ての家が対象で、業務システムとの連携は出てこない</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p>一番大事な「鍵の発行」の層が、空いたままです。Aliro の仕組みでは、発行者が資格の文書に自分の秘密鍵で署名し、読取機は発行者の公開鍵を信じて開けます(<a href="/guide/aliro/">Aliroとは何か</a> の「役割と鍵」)。この秘密鍵を誰が持つかで、誰がその家の鍵を出し、止められるかが決まります。今回の件で、Google はそこを書いていません。</p>
+<h2>錠を作る側の道筋</h2>
+<p>錠を作る会社に向けては、Google が先に手引きを出しています。</p>
+<p>Google Home Developers の Matter のリリースノートは、2026年10月13日の項で、Google Wallet のデジタルホームキーに対応する Aliro の錠の試験と認証の要件を、三つの頁(Supported device types、Test a Matter integration、Prepare to submit for certification)に足したと書いています。要点は次のとおりです。</p>
+<ul>
+<li>Aliro の認証を得るには、Google Home Developer Console で「CSA Interop」の試験を選ぶ</li>
+<li>製品の番号(PID)を結び、ふつうの Test と Field Trial の段を経ずに、直接認証に出す</li>
+<li>ほかの試験を選んでいた場合は、CSA Interop を選んだ新しい版を作って出し直す</li>
+</ul>
+<p>Supported device types の頁も、CSA Interop が Aliro の認証への唯一の道だと書いています。この頁は、Aliro の機能のビット、NFC、BLE、UWB、国、戸建てか集合住宅かには触れていません。</p>
+<p>認証そのものの仕組みは、Google Home Developers の Certification の頁に書かれています。</p>
+<ul>
+<li>Works with Google Home のバッジは、Google の認証を通った機器に Google が出す</li>
+<li>認証を受けるには、Alliance(CSA)の認証と、Google の Matter の認証の両方が要る</li>
+<li>Matter のつなぎで「CSA Interop test」を選んだ時は、認証に出すのは Alliance の試験の結果だけでよい</li>
+<li>2026年から、認証に Alliance の Interop Test Lab の結果を使う形へ移る予定</li>
+</ul>
+<p>この頁は、Aliro と Google Wallet の鍵には触れていません。Aliro の錠は CSA Interop だけ、という決めは、Supported device types の頁と Matter のリリースノートの側にあります。合わせて読むと、Aliro の錠の試験は Google が自分で行うのではなく、規格団体(CSA)の相互接続の試験の結果を使い、認証(バッジ)を出すのは Google、という形です。</p>
+<p>Supported device types の頁には、錠についての Google の決めがもう一つあります。Matter の仕様は錠に暗証番号(PIN)を求めませんが、Google の仕組みの中では、PIN を必須にしない Matter の錠は、全部の画面で遠隔の解錠が無効になり、声での解錠も無効になります。</p>
+<p>扉の側から見ると、これは、網の向こうから開ける操作に、錠の側でもう一つの確かめを求める決めと読めます(このサイトの読み)。家の管理アプリのアカウントだけでは、遠くから開けられない形です。遠隔の解錠の判断を、家の管理アプリだけに任せない、という考え方は、このサイトの「判断は扉の側が持つ」という見方とも合います。一方で、Aliro の鍵でその場で開けることと、遠隔の解錠は別の道です。この決めが Aliro の鍵に何か影響するかは、書かれていません。</p>
+<p>Supported device types の頁は、錠の出来事(LockOperationError など)と、操作の出どころについても触れ、すべての Matter の錠が、すべての出どころの操作で出来事を出すとは限らないと書いています。誰がどの経路で開けたかの記録が、錠によって揃わないことがある、ということです。</p>
+<h3>CSA の Interop Test Lab</h3>
+<p>Certification の頁にある「Interop Test Lab」は、CSA が持つ相互接続の試験の施設です。</p>
+<p><strong>CSA の発表(2025年1月6日)。</strong> CSA は次のように書いています。</p>
+<ul>
+<li>施設は米国オレゴン州ポートランドにあり、会員の特典として、作るのに一年かけた</li>
+<li>試す機器は、照明、錠、スマートプラグ、センサーなど</li>
+<li>つなぐ相手は、Amazon、Apple、Google、Samsung SmartThings、LG の家の仕組みで、増やす予定</li>
+<li>試す中身は、箱から出しての登録、複数の管理者からの操作、機器の発見、繰り返し使う負荷、電源を入れ直した後の復帰</li>
+<li>製造者には問題の詳しい報告を返し、相手の会社との話し合いの仲立ちもする</li>
+<li>Apple は、この結果を Works With Apple Home に受け入れ始めた。Google と Samsung は「今年中に」同じにする予定(発表は2025年1月)</li>
+</ul>
+<p>Amazon は、つなぐ相手には入っていますが、結果を受け入れるとは書かれていません。この発表は Matter の話で、Aliro には触れていません。費用と、会員でない会社が使えるかも書かれていません。Matter Alpha(Christian Cawley、2025年1月6日)が、この発表を伝えています。</p>
+<p><strong>Google の頁。</strong> Google Home Developers の Interop Test Lab の頁と、認証に出す手順の頁は、次のように書いています。</p>
+<ul>
+<li>対象は Matter のつなぎだけで、クラウド同士のつなぎは今までどおり</li>
+<li>移り方は三つの段。今は、認証に出す時に施設の結果を付けられる。次は二つの道で、全部の機器の種類で施設の結果を受け、Google の Test Suite も使えるが、施設へ移る事を強く勧める。最後は全部を移し、Test Suite を止め、施設の結果が Works with Google Home のバッジを得るただ一つの道になる。Test Suite は開発のためだけに残る</li>
+<li>暦の日付は書かれていません(Certification の頁は「2026年から移っていく」と書いています)</li>
+<li>移る理由は、広がる機器に応じるためと、手続きを簡単にするため。製造者は自分で試さなくてよくなる</li>
+<li>施設の結果で出す時は、結果と、製品の番号の持ち主である事の証し(CSA の Matter の認証書)を出す</li>
+<li>Google が自分で見る物は残る。会社の情報、方針、製品の画像、登録の試し、ソフトの版が CSA の認証の時と同じか</li>
+<li>CSA Interop の道は全部の機器の種類で選べ、Aliro の錠はこの道だけ</li>
+</ul>
+<p>施設が Aliro の錠の何を試すかは、CSA の発表にも Google の頁にも書かれていません。Aliro の試験所のアリオンの案内は、CSA が認めた試験所で Aliro 1.0 の試験に通ればよいと書き、この施設には触れていません。</p>
+<p>規格の認証(CSA が認めた試験所での試験)と、各社の家の仕組みで使える印(この施設の結果をもとに各社が出すバッジ)は、別の段と読めます。これは、このサイトの読みです。</p>
+<h2>Apple の場合</h2>
+<p>Apple は、戸建ての家の鍵を先に Wallet に入れています。Apple のホームキーは iOS 15(2021年)で NFC の鍵として、iOS 18(2024年)で UWB の近づいて開ける鍵として入りました(<a href="/guide/aliro/">Aliroとは何か</a> の「概要」に書いてある事で、この記事では確かめ直していません)。</p>
+<p><strong>Wallet の鍵の頁(協力先に向けた案内)。</strong> Apple は次のように書いています。</p>
+<ul>
+<li>鍵の種類として、戸建て(single-family homes)の home key(家に入る、人に渡す)と、集合住宅(multi-family homes)の resident key(部屋と共用部)を分けて挙げている。ほかに、ホテル、社員証、学生証、車</li>
+<li>鍵は利用者の iPhone か Apple Watch の中に置き、Apple のサーバーには置かない</li>
+<li>Express Mode では、Face ID などを使わずに、かざして開けられる</li>
+<li>Power Reserve では、充電が要る状態になっても、対応する機器で最大5時間使える</li>
+<li>協力先になるには、事業と技術の審査が要る</li>
+</ul>
+<p>この頁は、Aliro、NFC、UWB、対応する地域に触れていません。</p>
+<p><strong>Works with Apple Home のバッジの頁。</strong> Matter の機器がバッジを得る手順を、次のように書いています。CSA の Matter の認証を受ける。CSA の Matter の相互接続の試験を受ける。製造者と製品の番号で Apple に申し込む。Apple が試験の結果の写しを求め、問題が無ければバッジの絵を渡す。錠は対象の種類に入っています。HomeKit の技術を使う機器は、MFi の契約が要ります。この頁は、ホームキー、NFC、UWB、Aliro に触れていません。Apple の開発者向けの家の頁は、Matter には iOS 16.1 から対応し、Matter の機器を売るには CSA の認証が要ると書いています。</p>
+<p><strong>Apple Home Collection(2026年10月13日の発表)。</strong> 錠は LG 製で、Matter に対応し、Aliro に対応すると書いています。開け閉めは、網が無くても手元だけで動くとしています。開け方は、近づくと開く(UWB)、かざして開く、暗証番号、隠した予備の鍵穴です。客への鍵は Home アプリから渡せます。Home アプリのデータは端から端まで暗号化され、LG も Schneider Electric も Apple も読めない、と書いています。売るのは米国とカナダで、12月から、349.95ドルからです。</p>
+<p>Apple の文では確かめられなかった事もあります。</p>
+<ul>
+<li>Apple のホームキーと Aliro の関係を、Apple が説明した文</li>
+<li>iPhone のホームキーが、ほかの会社の Aliro の錠でそのまま使えるか</li>
+<li>発行者の秘密鍵の置き場</li>
+<li>錠を Home アプリに足すと鍵が自動で Wallet に入る、という説明は、錠の会社や第三者の案内にはありますが、Apple のサポートのホームキーの頁は本文を読めず、Apple の文では確かめていません</li>
+</ul>
+<p>Google と並べると、次のようになります。</p>
+<p>[cols=&quot;1,3,3&quot;]</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>項目</th>
+<th>Google</th>
+<th>Apple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>戸建ての鍵の始まり</td>
+<td>2026年11月9日のリリースノート</td>
+<td>iOS 15(2021年)。UWB は iOS 18(2024年)(解説 02 による)</td>
+</tr>
+<tr>
+<td>足す所</td>
+<td>Google Home から Google Wallet へ(リリースノート)</td>
+<td>Apple の文では確かめていません</td>
+</tr>
+<tr>
+<td>集合住宅の鍵</td>
+<td>管理会社が出す住まいの鍵(Wallet のヘルプ)</td>
+<td>resident key。部屋と共用部(Wallet の鍵の頁)</td>
+</tr>
+<tr>
+<td>試験</td>
+<td>Aliro の錠は CSA Interop の道だけ。Matter の機器は CSA の Interop Test Lab の結果へ移る</td>
+<td>Matter の機器は、CSA の Matter の認証と相互接続の試験。CSA は、Apple が Interop Test Lab の結果を受け入れ始めたと書いている</td>
+</tr>
+<tr>
+<td>バッジを出す者</td>
+<td>Google(Works with Google Home)</td>
+<td>Apple(Works with Apple Home)</td>
+</tr>
+<tr>
+<td>鍵の置き場</td>
+<td>書かれていません</td>
+<td>利用者の iPhone か Apple Watch。Apple のサーバーには置かない</td>
+</tr>
+<tr>
+<td>スマートウォッチ</td>
+<td>今回の行は <code>[Phone]</code> だけ。管理会社の鍵はウォッチにも入る</td>
+<td>Apple Watch に入る</td>
+</tr>
+<tr>
+<td>電池切れの時</td>
+<td>書かれていません</td>
+<td>Power Reserve。対応する機器で最大5時間</td>
+</tr>
+<tr>
+<td>家の仕組みの根の鍵</td>
+<td>置き場を書いた頁は見つかりませんでした。入門は、家の仕組みを出す会社が担う事が多いと書いている</td>
+<td>持ち主の端末で作り、秘密鍵は持ち主の iCloud キーチェーン(Apple Platform Security、2024年5月7日の頁)</td>
+</tr>
+<tr>
+<td>自社の名の錠</td>
+<td>見つかりませんでした</td>
+<td>Apple Home Collection の錠(LG 製)。米国とカナダ</td>
+</tr>
+</tbody>
+</table>
+<h2>分かっていない事</h2>
+<p>2026年11月11日の時点で、次の事は Google と Apple の公開の資料にも、報道にも見つかりませんでした。</p>
+<ul>
+<li>この機能を説明する Google のブログ、Google Home のヘルプ、Google Wallet のヘルプの頁</li>
+<li>提供する国と地域(日本を含むか)</li>
+<li>対応する錠の機種の一覧</li>
+<li>かざす(NFC)だけで開くのか、近づくだけ(UWB)でも開くのか。非公式の解析は、近づいて開ける設定の文を見つけていますが、Google は書いていません</li>
+<li>家族や同居の人への鍵の渡し方</li>
+<li>スマートウォッチで使えるか</li>
+<li>鍵の発行者(Aliro の Credential Issuer)の秘密鍵を、誰が、どこに持つか(Google も Apple も書いていません)。錠の読取機の設定を、誰が入れるか</li>
+<li>読取機の設定の命令で錠に入れる読取機の秘密鍵の写しを、入れる側が持つか</li>
+<li>鍵を止める(失効させる)手順と、開けた記録がどこに残るか</li>
+<li>「戸建て」に限る理由</li>
+<li>CSA の Interop Test Lab が、Aliro の錠の何を試すか。施設の費用と、会員でない会社が使えるか</li>
+<li>Google が Test Suite を止め、施設の結果だけにする日付</li>
+<li>Apple のホームキーと Aliro の関係、iPhone のホームキーがほかの会社の Aliro の錠でそのまま使えるか</li>
+<li>Google の家の仕組みで、根の認証局の秘密鍵を誰がどこに持つか</li>
+<li>ある Fabric の管理者が、ほかの Fabric の管理者が錠に入れた鍵を消せるか、ほかの Fabric を外せるか</li>
+<li>Google が、発行者を立てず端末の鍵を直に入れる道を使っているか</li>
+<li>Apple のセキュリティの手引き(2024年5月の頁)の根の鍵の置き場が、今の版で変わっているか</li>
+</ul>
+<h2>扉と鍵の管理から見ると</h2>
+<p>ここからは、このサイトの見方です。このサイトから見た問いは一つで、扉のコントローラが鍵を持つかどうかです。</p>
+<h3>扉のコントローラが鍵を持つか</h3>
+<p>扉にかかわる鍵を三つに分けて、このサイトの扉と、Matter と Aliro の錠を並べます。</p>
+<p>[cols=&quot;2,3,4,4&quot;]</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>鍵</th>
+<th>役</th>
+<th>このサイトの扉</th>
+<th>Matter と Aliro の錠</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>信じる発行者の公開鍵</td>
+<td>扉が、出された鍵を自分で確かめるための物</td>
+<td>扉が自分で持つ。変えられるのは、据付のときに扉へ入れた管理者の公開鍵で署名した変更の要求だけで、前と新しい一覧を記録に残す(R-AC-12、扉コントローラ仕様書 5.2a)</td>
+<td>錠が持つ。入れるのは、その錠を登録した Fabric の「管理」(Administer)の権限を持つ者(資格情報の登録の命令。<a href="/guide/aliro/">Aliroとは何か</a> の「Matterでのリーダーの設定」)。発行者の公開鍵のほか、端末の公開鍵を直に入れることもできる</td>
+</tr>
+<tr>
+<td>扉(読取機)の身元の秘密鍵</td>
+<td>扉が自分を名乗り、記録に署名するための物</td>
+<td>記録と伝票に署名する扉の鍵を扉が持つ。仕様書は、取り出せない所(セキュアエレメント)に置く形を書き、今の参照実装はソフトの鍵で、セキュアエレメントへの差し替えを残している(仕様書 5.2b)</td>
+<td>読取機の設定の命令(SetAliroReaderConfig)の欄に、読取機の署名の秘密鍵(32バイト)がある。錠の外で作って錠に入れる形。錠から読み出す属性は無い。入れる側が写しを持つかは、公開の資料に書かれていない</td>
+</tr>
+<tr>
+<td>発行者の秘密鍵</td>
+<td>鍵を出し、止める元</td>
+<td>扉に置かず、管理者の、外に口を開けない機械の、取り出せない所に置く(R-AC-11、R-AC-20)</td>
+<td>Google も Apple も、置き場を書いていない。発行者を立てず、端末の公開鍵を錠に直に入れる道もある</td>
+</tr>
+</tbody>
+</table>
+<p>この表から、問いは三つにまとまります。</p>
+<ol>
+<li>扉は、確かめるための鍵を自分で持ち、自分で判断するか</li>
+<li>その鍵を入れ替えられるのは誰か</li>
+<li>扉の身元の鍵は、扉の中で生まれるか</li>
+</ol>
+<p>一つ目は、Aliro でも同じです。Aliro の認証は読取機の中で終わり、Apple も Home Collection の錠について、開け閉めは網が無くても手元だけで動くと書いています。確かめるのは扉の側です。</p>
+<p>二つ目と三つ目を確かめるために、Matter の文書を読みました(2026年11月11日)。</p>
+<p><strong>Fabric と根の証明書。</strong> Google の Matter の入門は、同じ根の証明書(Root of Trust)を信じる機器のまとまりを Fabric と呼んでいます。登録する側(Commissioner。スマートフォン、ハブなど)が、根の証明書を機器に入れ、認証局に機器の証明書(NOC)を求めます。根の証明書を渡す元(Administrative Domain Manager)は、家の仕組みを出す会社が、信頼の元の認証局として担う事が多い、と書いています。一つの機器は複数の Fabric に入れ(錠の会社の Fabric と、家の仕組みの Fabric の例を挙げています)、それぞれが別の資格を持ちますが、機器のデータモデルは Fabric をまたいで共通です。根の認証局の秘密鍵を誰がどこに持つかは、この頁には書かれていません。</p>
+<p><strong>権限。</strong> Matter の SDK(connectedhomeip)の権限の手引きは、権限を View、Operate、Manage、Administer の段に分けています。最初の Administer は、登録する側が登録の道の上で得て、AddNOC の命令が、その Fabric の Administer の表を機器に入れます。権限の表(ACL)は Fabric ごとの物です。ある Fabric の管理者が、ほかの Fabric の表を読めるか、変えられるか、ほかの Fabric を外せるかは、この手引きには書かれていません。</p>
+<p><strong>Door Lock クラスタ(データモデル 1.4)。</strong> 読取機の設定の命令(SetAliroReaderConfig、ClearAliroReaderConfig)は、Administer の権限と Timed Invoke が要ります。欄は SigningKey(32バイト)、VerificationKey(65バイト)、GroupIdentifier(16バイト)、GroupResolvingKey(16バイト。ALBU の錠の時)です。読取機の公開鍵などの Aliro の属性は Administer でだけ読め、入れられる発行者の鍵と端末の鍵の数は View で読めます。SigningKey を読み出す属性はありません。資格情報の種類には、AliroCredentialIssuerKey(発行者の鍵)、AliroEvictableEndpointKey と AliroNonEvictableEndpointKey(端末の鍵)の三つがあり、登録と消去(SetCredential、ClearCredential)も Administer と Timed Invoke が要ります。</p>
+<p><strong>根の鍵の置き場。</strong> Apple のセキュリティの手引き(Apple Platform Security の「HomeKit communication security」。頁の日付は2024年5月7日)は、Apple の家では、根の認証局を最初の利用者(持ち主)の端末で作り、その秘密鍵を持ち主の iCloud キーチェーンに置く、と書いています。家のほかの Apple の機器は証明書の要求を作り、持ち主の端末が、認証局の秘密鍵で Matter の身元の証明書を作ります。機器を初期化すると、登録の時に新しい鍵の対と証明書になります。この頁の日付は2024年5月で、今の版で変わっているかは確かめていません。Google については、根の認証局の秘密鍵の置き場を書いた頁は見つかりませんでした(入門は、会社が担う事が多い、登録する側は認証局に届く、とだけ書いています)。</p>
+<p>ここから読み取れる事は、次のとおりです。いずれも、このサイトの読みです。</p>
+<ul>
+<li>錠の Aliro の設定と、錠が信じる鍵を入れ替えられるのは、その錠を登録した Fabric の管理者です</li>
+<li>一つの錠を複数の家の仕組み(錠の会社のアプリ、Google Home、Apple Home)に登録すると、その数だけ管理者が居ます。データモデルは共通なので、どの管理者も Aliro の設定の命令を呼べる形です。ほかの管理者が入れた鍵を消せるかは、読んだ文書では確かめられませんでした</li>
+<li>資格情報の種類に「端末の鍵」があるので、発行者を立てずに、スマートフォンそのものの公開鍵を錠に入れる道があります。戸建てのように鍵の数が少ない所では、この道でも足りる形で、「戸建てに限る」事とも形は合います。ただし、Google がこの道を使っているかは書かれていません</li>
+<li>このサイトの扉との違いは、二つ目の問いにあります。このサイトの扉は、据付の時に入れた一つの管理者の鍵の署名だけを受けます。Matter の錠は、登録した先の数だけ管理者が居て、その元の置き場は会社ごとに違います</li>
+</ul>
+<p>三つの問いへの、今の答えをまとめます。</p>
+<p>[cols=&quot;2,3,4&quot;]</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>問い</th>
+<th>このサイトの扉</th>
+<th>Matter と Aliro の錠</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>確かめる鍵を自分で持ち、自分で判断するか</td>
+<td>持つ。発行者の公開鍵</td>
+<td>持つ。発行者の公開鍵か、端末の公開鍵。認証は読取機の中で終わる</td>
+</tr>
+<tr>
+<td>その鍵を入れ替えられるのは誰か</td>
+<td>据付の時に入れた管理者の鍵の署名だけ</td>
+<td>錠を登録した Fabric の管理者。複数に登録すると、その全部が管理者。管理の元は、Apple は持ち主の iCloud キーチェーン(2024年5月の手引き)、Google は書かれていない</td>
+</tr>
+<tr>
+<td>扉の身元の鍵は扉の中で生まれるか</td>
+<td>仕様書は取り出せない所に置く形を書いている。今の参照実装はソフトの鍵</td>
+<td>外で作って入れる(SetAliroReaderConfig の SigningKey)。読み出す属性は無い</td>
+</tr>
+</tbody>
+</table>
+<p>下の四つの小節は、この問いから見た今回の件です。</p>
+<h3>戸建ての持ち主が、自分で鍵を足せる道</h3>
+<p>これまで Google Wallet の住まいの鍵は、管理会社が出す物でした。今回の行は、戸建ての持ち主が、自分の家の錠を Google Home につなぎ、自分の財布に鍵を足せる道ができた、と読めます。Samsung は、2026年3月に、SmartThings で錠を登録する途中で財布に鍵を足す形を発表しています。</p>
+<p>鍵を持つ人と、鍵を出す人が同じ家族の中に収まるのは、鍵の管理としては素直な形です。<a href="/guide/keys-belong-to-managers/">デジタルキーは管理者が自分で持つ</a> で書いたように、鍵はそれぞれの管理者が持つのが基本で、戸建てでは持ち主がその管理者です。</p>
+<h3>集合住宅と事業所は、管理する側が出す形のまま</h3>
+<p>集合住宅と事業所の鍵は、今回の行の対象ではありません。これまでどおり、管理する側(管理会社、事業所の管理者)が出し、止める形です。Wallet のヘルプも、止められるのは管理会社だけだと書いています。</p>
+<p>事業所では、鍵を出す人と使う人が別で、人の出入りに合わせて毎日出し、止めます。財布の鍵は、その出し方の一つの経路にすぎず、台帳と手順は管理者の側に要ります。</p>
+<h3>発行者の秘密鍵を誰が持つか</h3>
+<p>今回、Google が書いていない一番大きな事は、発行者の秘密鍵の置き場所です。先を行く Apple も、鍵を利用者の端末に置くとは書いていますが、発行者の秘密鍵の置き場は書いていません。このサイトの要求仕様は、ここに二つの要求を置いています(<code>docs/要求仕様/00_core.md</code>)。</p>
+<ul>
+<li><strong>R-AC-18</strong>: スマートフォンの財布(Apple、Google)に入れる鍵は、発行者の一つとして扱い、発行と失効を管理者の台帳から行い、台帳に記録する。財布の会社のサービスが止まっても、ほかの経路(カード、暗証番号、機械の鍵)で開けられる</li>
+<li><strong>R-AC-20</strong>: 財布への載せ方を担う業者は、発行者の秘密鍵を持たない。資格情報は管理者が自分の機械か、鍵を取り出せない所で署名し、業者はそれを運ぶだけとする。読取機が信じる発行者の鍵は、管理者の鍵の操作でだけ入れ替える</li>
+</ul>
+<p>戸建ての家で、発行者の秘密鍵を Google が持つのか、錠の会社が持つのか、持ち主の端末の中にあるのかは、今の公開の資料からは分かりません。どれであっても、家の持ち主が確かめたい事は同じです。</p>
+<ul>
+<li>鍵を止めたい時に、自分で止められるか</li>
+<li>財布の側や Google のサービスが止まった時に、ほかの経路(暗証番号、物理の鍵など)で開けられるか</li>
+<li>誰がいつ開けたかの記録が、どこに残るか</li>
+</ul>
+<p>Wallet のヘルプが、管理会社の鍵について「物理の鍵の代わりではない」と書いているのは、ほかの経路を残すという点で、R-AC-18 と同じ方向です。</p>
+<h3>日本の読者にとって</h3>
+<p>リリースノートには、提供する国と地域が書かれていません。日本向けの Aliro に対応した錠の発表も、2026年11月11日の時点で見つかっていません(<a href="/guide/aliro/">Aliroとは何か</a> の「認証と製品の状況」)。日本で使えるかどうかは、今の公開の資料からは言えません。</p>
+<h2>自分で確かめる</h2>
+<p>この記事の内容は、次の手順で、誰でも自分で確かめられます。</p>
+<ol>
+<li><strong>リリースノートを見る。</strong> Google System Release Notes の頁(出典の一つ目)を開き、2026年11月の Google Play services v26.44 の項の、Google Wallet の行を読みます。行の頭の <code>[Phone]</code> などの印が、対象の端末です。新しい版が出たら、同じ頁に足されます</li>
+<li><strong>開発者向けの頁を見る。</strong> Google Home Developers の Matter のリリースノートの 2026年10月13日の項と、Supported device types の頁の Door Lock の欄を読みます。錠の認証の道(CSA Interop)と、PIN の決めが書かれています</li>
+<li><strong>試験と認証の頁を見る。</strong> Google Home Developers の Certification、Interop Test Lab、認証に出す手順の頁で、施設の結果へ移る三つの段と、Google が自分で見る物を読みます。CSA の 2025年1月6日の発表で、施設が試す中身と、結果を受け入れる会社を確かめます</li>
+<li><strong>Matter の文書を見る。</strong> Google の Matter の入門の Fabric の頁、Matter の SDK の権限の手引き、connectedhomeip の <code>data_model/1.4/clusters/DoorLock.xml</code> で、根の証明書、権限の段、Aliro の命令と資格情報の種類と、それぞれに要る権限を読みます</li>
+<li><strong>Apple の頁と比べる。</strong> Apple の Wallet の鍵の頁(learn.wallet.apple/keys)で戸建てと集合住宅の分け方と鍵の置き場を、Works with Apple Home の頁でバッジの手順を、Apple Platform Security の「HomeKit communication security」で根の鍵の置き場と頁の日付を読みます</li>
+<li><strong>Wallet のヘルプを見る。</strong> Google Wallet のヘルプの「Residential keys」を読み、管理会社が出す鍵の扱いを確かめます。今回の戸建ての鍵の説明が足されていないかも、ここで見られます</li>
+<li><strong>自分の端末の Google Play services を更新する。</strong> Google Play のヘルプ「Keep your device &amp; apps working with Google Play services」は、Android の設定アプリから Google Play services の項を開き、「更新」を押す手順を書いています。版の番号の見方は、この頁には書かれていません</li>
+<li><strong>錠の側を確かめる。</strong> 錠を選ぶ時は、CSA の認証製品の一覧で、Aliro の認証を受けているかを確かめます。錠の会社の頁が財布の名を挙げていても、どの財布で今使えるかまで書いているとは限りません(たとえば ULTRALOQ の Aliro の頁は、画像の説明に Apple Home Key、Google Wallet、Samsung Wallet の名を並べていますが、使える日と地域は書いていません)</li>
+</ol>
+<h2>出典</h2>
+<p>すべて 2026年11月11日に確かめました。</p>
+<p><strong>会社と団体が発表した物</strong></p>
+<ul>
+<li><a href="https://support.google.com/product-documentation/answer/14343500">Google: Google System Release Notes。Google Play services v26.44(2026年11月9日)の Google Wallet の項</a></li>
+<li><a href="https://developers.home.google.com/matter/release-notes">Google Home Developers: Matter のリリースノート。2026年10月13日の項(Aliro の錠の試験と認証の要件)</a></li>
+<li><a href="https://developers.home.google.com/matter/supported-devices">Google Home Developers: Supported device types。Door Lock の欄(PIN の決め、CSA Interop、錠の出来事)</a></li>
+<li><a href="https://developers.home.google.com/matter/certification">Google Home Developers: Certification(Works with Google Home のバッジ、CSA と Google の認証、CSA Interop test、Interop Test Lab への移行)</a></li>
+<li><a href="https://developers.home.google.com/matter/interop-test-lab">Google Home Developers: Interop Test Lab(施設の結果へ移る三つの段、移る理由)</a></li>
+<li><a href="https://developers.home.google.com/matter/certification/submit">Google Home Developers: 認証に出す手順(施設の結果で出す時に出す物、Google が自分で見る物、CSA Interop の道)</a></li>
+<li><a href="https://developers.home.google.com/matter/primer/fabric">Google Home Developers: Matter の入門の Fabric(根の証明書、登録する側、Administrative Domain Manager、複数の Fabric)</a></li>
+<li><a href="https://project-chip.github.io/connectedhomeip-doc/guides/access-control-guide.html">Matter の SDK(connectedhomeip): 権限の手引き(View、Operate、Manage、Administer、AddNOC、Fabric ごとの ACL)</a></li>
+<li><a href="https://github.com/project-chip/connectedhomeip">connectedhomeip: data_model/1.4/clusters/DoorLock.xml(Aliro の命令と属性の権限、資格情報の種類)</a></li>
+<li><a href="https://support.google.com/wallet/answer/16759973">Google Wallet ヘルプ: Residential keys(管理会社が出す住まいの鍵。更新の日付の表示なし)</a></li>
+<li><a href="https://support.google.com/googleplay/answer/9037938">Google Play ヘルプ: Keep your device &amp; apps working with Google Play services(Google Play services の更新の手順)</a></li>
+<li><a href="https://csa-iot.org/newsroom/the-connectivity-standards-alliance-announces-aliro-a-new-effort-to-make-mobile-devices-wearables-central-to-a-digital-access-future/">CSA: Aliro の取り組みの発表(2023年11月9日)</a></li>
+<li><a href="https://csa-iot.org/newsroom/introducing-aliro-1-0-a-unified-standard-to-transform-the-access-control-ecosystem/">CSA: Introducing Aliro 1.0(2026年2月26日)</a></li>
+<li><a href="https://news.samsung.com/us/samsung-wallet-launches-digital-home-key-smart-door-locks">Samsung: Samsung Wallet Digital Home Key(2026年3月2日)</a></li>
+<li><a href="https://csa-iot.org/newsroom/driving-innovation-with-the-alliance-interop-lab-and-two-new-certification-programs/">CSA: Interop Lab と二つの認証の制度の発表(2025年1月6日。書き手の名は無し)</a></li>
+<li><a href="https://www.allion.com/consulting/aliro/">アリオン: Aliro の試験の案内</a></li>
+<li><a href="https://www.apple.com/newsroom/2026/10/introducing-apple-home-collection-a-new-lineup-of-smart-home-accessories/">Apple: Apple Home Collection(2026年10月13日)</a></li>
+<li><a href="https://learn.wallet.apple/keys">Apple: Wallet の鍵(協力先に向けた案内。鍵の種類、鍵の置き場、Express Mode、Power Reserve)</a></li>
+<li><a href="https://developer.apple.com/apple-home/works-with-apple-home/">Apple: Works with Apple Home(バッジの手順)</a></li>
+<li><a href="https://developer.apple.com/apple-home/">Apple Developer: Apple Home(Matter への対応と CSA の認証)</a></li>
+<li><a href="https://support.apple.com/guide/security/communication-security-sec3a881ccb1/web">Apple Platform Security: HomeKit communication security(頁の日付は2024年5月7日。根の認証局と iCloud キーチェーン)</a></li>
+<li><a href="https://ultraloq.com/pages/works-with-aliro">ULTRALOQ: Works with Aliro(対応する機種の頁)</a></li>
+</ul>
+<p><strong>報道と非公式の解析</strong></p>
+<ul>
+<li><a href="https://www.matteralpha.com/news/good-news-for-matter-apple-google-and-samsung-support-alliance-lab-testing">Matter Alpha、Christian Cawley(2025年1月6日)。CSA の Interop Lab の発表の報道</a></li>
+<li><a href="https://9to5google.com/2025/03/24/google-wallet-aliro/">9to5Google、Abner Li「Google Wallet on Android and Wear OS supporting Aliro smart lock standard」(2025年3月24日)</a></li>
+<li><a href="https://9to5google.com/2026/03/24/this-nfc-keypad-adds-tap-to-unlock-to-nukis-matter-smart-lock/">9to5Google、Andrew Romero(2026年3月24日)。Nuki の NFC のキーパッドの記事</a></li>
+<li><a href="https://9to5google.com/2026/11/09/november-2026-google-system-updates/">9to5Google、Abner Li「What's new in Android's November 2026 Google System Updates」(2026年11月9日)</a></li>
+<li><a href="https://nerdschalk.com/google-home-wallet-home-key-setup-apk-teardown">Nerds Chalk、Kapill M Malani(2026年11月10日更新)。Google Home アプリ 4.37.27.0 の解析。非公式</a></li>
+</ul>
+
+  </article>
+
+  <!-- CHAPTER NAV(前後の記事) -->
+  <nav class="chapter-nav">
+  <a href="/guide/check-your-systems-with-ai/" rel="prev">&larr; 前: AI で自社のシステムを確かめる</a>
+  <a href="/guide/">目次 &rarr;</a>
+</nav>
+
+  <!-- FOOTER(サイト内メニュー+奥付) -->
+  <footer class="site-footer">
+    <nav class="footer-nav" aria-label="サイト内リンク">
+      <div class="footer-col">
+        <h4>解説</h4>
+        <ul>
+          <li><a href="/guide/matter/">Matterとは何か</a></li>
+          <li><a href="/guide/aliro/">Aliroとは何か</a></li>
+          <li><a href="/guide/what-a-smart-door-needs/">スマートドアに求められる条件</a></li>
+          <li><a href="/guide/layers/">玄関まわりの技術の層</a></li>
+          <li><a href="/guide/open-specification/">仕様と参照実装の公開</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>サイト</h4>
+        <ul>
+          <li><a href="/guide/">解説</a></li>
+          <li><a href="/3d/">立体図</a></li>
+          <li><a href="/check/">始め方</a></li>
+          <li><a href="/manual/">マニュアル</a></li>
+          <li><a href="/news/">ニュース</a></li>
+          <li><a href="/blog/">ブログ</a></li>
+          <li><a href="/consult/">相談と教室</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="colophon">
+      <div class="colophon-mark">§</div>
+      解説 21<br>
+      Tokushima · 2026.11.11<br>
+      <a href="/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">デジタルドア</a> · <a href="/#about" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">このサイトについて</a> · <a href="/contact/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">お問い合わせ</a> · <a href="/privacy/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">プライバシーポリシー</a> · <a href="/license/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">ライセンス</a> · <a href="/feed.xml" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">RSS</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">CC BY 4.0</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // 広い画面ではサイドバー目次を常時展開する(狭い画面では折りたたみに戻す)
+  (function () {
+    var toc = document.querySelector(".series-toc details");
+    if (!toc) return;
+    var mq = window.matchMedia("(min-width: 1200px)");
+    function sync() { toc.open = mq.matches; }
+    sync();
+    if (mq.addEventListener) mq.addEventListener("change", sync);
+    else mq.addListener(sync);
+  })();
+
+  // Mermaid loads only on pages that contain a .mermaid block.
+  // Self-hosted (no third-party CDN dependency); SRI verified.
+  if (document.querySelector(".mermaid")) {
+    const s = document.createElement("script");
+    s.src = "/js/vendor/mermaid-11.14.0.min.js";
+    s.integrity = "sha384-1CMXl090wj8Dd6YfnzSQUOgWbE6suWCaenYG7pox5AX7apTpY3PmJMeS2oPql4Gk";
+    s.crossOrigin = "anonymous";
+    s.onload = () => {
+      const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      mermaid.initialize({ startOnLoad: false, theme: prefersDark ? "dark" : "default" });
+      mermaid.run();
+    };
+    document.head.appendChild(s);
+  }
+</script>
+
+
+</body>
+</html>

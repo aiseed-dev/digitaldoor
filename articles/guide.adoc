@@ -176,7 +176,7 @@ Aliroは、Matterと同じConnectivity Standards Alliance(CSA)が策定する規
 
 それまで、スマートフォンを鍵にする仕組みは企業ごとに分かれていました。たとえばAppleのHome Keyは、iOS 15(2021年)でNFCによる鍵をWalletに追加し、iOS 18(2024年)でUWBによる近接解錠に対応しましたが、Home Key対応の錠でしか使えませんでした。Aliroは、この部分を共通化する規格です。
 
-(2026年11月11日に、役割と鍵の仕組み、Matterでの設定、認証と財布の状況、実装の例を足し、確かめられなかった暗号の細部の記述を改めました。)
+(2026年11月11日に、役割と鍵の仕組み、Matterでの設定、認証と財布の状況、実装の例を足し、確かめられなかった暗号の細部の記述を改めました。同じ日に、Google Walletの戸建て住宅の鍵の件を足しました。)
 
 == 規定している範囲
 
@@ -245,7 +245,7 @@ AppleのMatterの開発用の枠組みと、Google Homeの開発用のAPIにも�
 
 == 財布(Wallet)との関係
 
-* Googleは、2025年3月のGoogle Playサービスの更新で、Google WalletがNFCの読取機向けにAliroに対応したと報じられています(9to5Google)。
+* Googleは、2025年3月のGoogle Playサービスの更新で、Google WalletがNFCの読取機向けにAliroに対応したと報じられています(9to5Google)。2026年11月9日付のGoogle Playサービス v26.44のリリースノートには、MatterとAliroに対応した戸建て住宅の鍵を、Google HomeからGoogle Walletに足せるという行が載りました。対象はスマートフォンで、国と地域、対応する錠は書かれていません(link:/guide/google-wallet-home-key/[Google Wallet に戸建ての家の鍵が入る])。
 * Samsungは2026年3月2日に、Samsung Walletのデジタルホームキーを発表しました。SmartThingsで錠をMatterの機器として登録する途中で、財布に鍵を足す流れです。最初はNFCで、UWBは2026年4月からとされています(Samsungの発表)。
 * Appleは2026年10月13日に、LGのスマートデッドボルト錠を含む家庭用の機器の一式を発表しました。Matterに対応し、Aliroに対応し、UWBで近づいて開けられるとしています。錠を売るのは米国とカナダで、日本は含まれていません(Appleの発表)。Appleのホームキーと Aliro の関係を、Apple自身が説明した文は見つかりませんでした。
 
@@ -2623,4 +2623,515 @@ AI の費用は、会社の契約の席の料金と、使った分です。Claud
 * https://www.itmedia.co.jp/business/articles/2611/09/news084.html[ITmedia ビジネスオンライン(2026年11月9日)。ソフトバンクの決算説明会での宮川社長の発言]
 * https://www.npa.go.jp/hakusyo/r07/honbun/html/bb3313000.html[警察庁: 令和7年 警察白書 第3章(2026年11月9日に閲覧)。ランサムウェアの感染経路]
 * https://claude.com/pricing[Anthropic: 料金の頁(2026年11月10日に閲覧)。Team プランの席の料金]
+endif::[]
+
+// ===== article: 21-google-wallet-home-key =====
+---
+slug: google-wallet-home-key
+number: 21
+date: 2026.11.11
+label: 解説 21
+category.ja: 規格
+category.en: Standards
+title.ja: Google Wallet に戸建ての家の鍵が入る
+title.en: Google Wallet can now hold the key to a detached house
+subtitle.ja: リリースノートの一行を読む。書かれている事、書かれていない事、扉のコントローラが鍵を持つかという問い
+subtitle.en: Reading one line of a release note: what it says, what it leaves out, and what it means for doors
+description.ja: 2026年11月9日付の Google Play services v26.44 のリリースノートに、Matter と Aliro に対応した戸建て住宅の鍵を、Google Home から Google Wallet に足せるという一行が載りました。言葉の意味、ここまでの流れ、管理会社が出す住まいの鍵との違い、層ごとの位置、錠を作る側の認証の道筋(CSA の Interop Test Lab)、Apple との比べ、まだ分かっていない事を、会社の発表と報道を分けて整理し、扉のコントローラが鍵を持つかという問いから読みます。
+description.en: A November 9, 2026 Google Play services release note says Matter Aliro-compatible single-family residential keys can now be added to Google Wallet with Google Home. This article separates what Google has published from what has only been reported, and lists what remains unknown.
+---
+ifdef::lang-ja[]
+= Google Wallet に戸建ての家の鍵が入る
+
+2026年11月9日付の Google のリリースノートに、短い一行が載りました。Matter と Aliro に対応した戸建て住宅の鍵を、Google Home から Google Wallet に足せる、という内容です。Android のスマートフォンが、家の玄関の鍵として使えるようになる道が、Google の側でも開いたことになります。
+
+ただ、Google が書いているのはこの一行だけで、説明の頁はまだ見つかりません。この記事では、Google が自分で書いている事、報道されただけの事、まだ分かっていない事を分けて整理します。錠を作る側の試験と認証の道筋と、先を行く Apple の形も並べます。そのうえで、扉と鍵の管理の側から、扉のコントローラが鍵を持つか、という問いで読みます。Matter と Aliro そのものの説明は、link:/guide/matter/[Matterとは何か] と link:/guide/aliro/[Aliroとは何か] にあります。この記事の内容は、2026年11月11日に確かめた物です。
+
+== 何が発表されたか
+
+Google は、Android の端末に届く Google のシステムの更新の中身を、Google System Release Notes という頁に版ごとに載せています。2026年11月9日付の Google Play services v26.44 の項に、Google Wallet の行が二つあります。一つは Traveler QR という別の機能で、もう一つが今回の行です。
+
+今回の行の要点は次のとおりです。
+
+* 足せるのは、"Matter Aliro-compatible" な、"single-family residential keys"、つまり Matter と Aliro に対応した戸建て住宅の鍵です
+* 足す道は "with Google Home"、つまり Google Home を通してです
+* 行の頭の対象の印は `[Phone]` だけです。対象はスマートフォンです
+
+一方で、この行には次の事が書かれていません。
+
+* 提供する国と地域
+* 対応する錠の機種
+* スマートウォッチで使えるか
+* かざして開けるのか、近づくだけで開けるのか
+
+2026年10月と11月のほかの版のリリースノートには、Aliro、Matter、鍵に触れた行はありません。Google のブログや、Google Home と Google Wallet のヘルプにも、この機能を説明する頁は見つかりませんでした。
+
+なお、この行を伝えた 9to5Google の月ごとのまとめは、記事全体への断りとして、変更の一覧に載った機能が広く使えるとは限らないと書いています。
+
+== 言葉をほどく
+
+=== 「Matter と Aliro に対応」
+
+二つの規格は、役が違います。
+
+* *Matter* は、家の機器を、メーカーを問わず家の管理アプリ(Google Home、Apple Home など)につなぐ規格です。錠は、Matter の Door Lock(電子錠)として登録され、施錠、解錠、状態の報告を受け持ちます(link:/guide/matter/[Matterとは何か])
+* *Aliro* は、スマートフォンやスマートウォッチを、錠の読取機に鍵として示す規格です。認証は読取機の中で終わり、網につながっていなくても開けられます(link:/guide/aliro/[Aliroとは何か])
+
+二つは、Matter の Door Lock クラスタでつながっています。Matter 1.4 のデータモデルから、Door Lock クラスタに、Aliro の読取機を設定する命令と、Aliro の発行者の鍵を登録する種類が入りました。家の管理アプリは、Matter の管理者として、この命令で錠の中の読取機を設定できます。詳しくは link:/guide/aliro/[Aliroとは何か] の「Matterでのリーダーの設定」にあります。
+
+「Matter と Aliro に対応した錠」は、Matter の電子錠として家の管理アプリにつながり、同時に Aliro の読取機を持つ錠、と読めます(このサイトの読み。リリースノートは定義を書いていません)。
+
+=== 「戸建て住宅の鍵」
+
+原文は "single-family residential" です。英語では、一世帯が住む独立した住宅を指す言葉で、集合住宅(マンション、アパート)と対になります。Google Wallet には、もともと「住まいの鍵(Residential keys)」という種類の鍵があり、こちらは管理会社が出す鍵です(後の「これまでの住まいの鍵との違い」で比べます)。
+
+Apple も、Wallet の鍵の協力先に向けた頁で、戸建て(single-family homes)の鍵と集合住宅(multi-family homes)の鍵を分けて挙げています(後の「Apple の場合」)。Google の言葉づかいは、この分け方と同じです。
+
+=== 「Google Home から」
+
+Google Home は、Google の家の管理アプリで、Matter の管理者になります。リリースノートは、鍵を Google Home を通して足すとだけ書き、どの画面で、どの順で足すかは書いていません。
+
+Samsung の場合は、SmartThings で錠を Matter の機器として登録する途中で、財布に鍵を足す流れだと、Samsung 自身が発表しています(link:/guide/aliro/[Aliroとは何か] の「財布(Wallet)との関係」)。Google がこれと同じ形かどうかは、Google の公開の資料には書かれていません。
+
+非公式の解析として、Nerds Chalk(Kapill M Malani、2026年11月10日更新)が、Google Home アプリ 4.37.27.0 の中身を調べた記事があります。Wallet のホームキーの設定の文として、錠にスマートフォンを近づける、Wallet を開く必要はない、近づいた時に開けるには「Unlock on approach」を有効にする、という趣旨の文字列があると書いています。記事自身が、こうした解析で見つかる物は作りかけで、変わる事も出ない事もあると断っています。Google の発表ではありません。
+
+=== 「対象はスマートフォン」
+
+リリースノートの印は `[Phone]` だけです。2025年3月に Google Wallet が Aliro に対応した時は、スマートフォンと Wear OS の両方が対象だったと 9to5Google が伝えていますが、今回の行には Wear OS の印はありません。スマートウォッチで使えないとまでは書かれておらず、書かれていない、というのが今の状態です。
+
+== ここまでの流れ
+
+[cols="1,3,3"]
+|===
+| 日付 | 会社が正式に発表した事 | 報道と非公式の解析
+
+| 2023年11月9日
+| CSA が Aliro の取り組みを発表。支える会社の一つに Google の名がある(CSA の発表)
+|
+
+| 2025年3月
+| Google Play services 25.11 のリリースノートに、Google Wallet が NFC の読取機向けに Aliro の手順に対応した、という行があった
+| 9to5Google の Abner Li 氏が、2025年3月24日にこの行を引いて伝えた。対象は Android のスマートフォンと Wear OS。認証を受けた錠がまだ無く、実際に使えるまで時間がかかりそうだと書いている
+
+| 2026年2月26日
+| CSA が Aliro 1.0 を公開(CSA の発表)
+|
+
+| 2026年3月2日
+| Samsung が Samsung Wallet のデジタルホームキーを発表(Samsung の発表)
+|
+
+| 2026年3月24日
+|
+| 9to5Google の Andrew Romero 氏が、Nuki の NFC のキーパッドの記事で、Google は Aliro の錠への対応をまだ広げきっておらず、Samsung が先行したと書いた。Nuki は、錠は Apple Home と Samsung SmartThings で動き、Aliro はまだとても早い段階だと答えている。Google の発言は載っていない
+
+| 2026年10月13日
+| Google Home Developers の Matter のリリースノートが、Google Wallet のデジタルホームキーに対応する Aliro の錠の、試験と認証の要件を載せた
+|
+
+| 2026年10月13日
+| Apple が、Matter と Aliro に対応する錠を含む家の機器の一式を発表。錠を売るのは米国とカナダ(Apple の発表)
+|
+
+| 2026年11月9日
+| Google Play services v26.44 のリリースノートに、今回の行が載った
+| 9to5Google の Abner Li 氏が、同じ日の月ごとのまとめに、この行をそのまま載せた。説明、国、対応する錠は足していない
+
+| 2026年11月10日
+|
+| Nerds Chalk が、Google Home アプリの中身の解析(非公式)を更新した
+|===
+
+== これまでの「住まいの鍵」との違い
+
+Google Wallet のヘルプには、「Residential keys(住まいの鍵)」の頁があります。ここで説明されているのは、管理会社(property manager)が出して管理する鍵です。この頁は、Aliro、Matter、Google Home、UWB に触れていません。更新の日付は出ていません。
+
+今回の戸建ての鍵と並べると、次のようになります。今回の鍵の側は、Google が書いている所だけを埋めています。
+
+[cols="1,3,3"]
+|===
+| 項目 | 管理会社が出す住まいの鍵(Wallet のヘルプ) | 今回の戸建ての鍵(リリースノート)
+
+| 誰が出すか
+| 管理会社。有効にするのも止めるのも管理会社で、Google は関わらないと書いている
+| 書かれていません
+
+| どこから足すか
+| 管理会社のサイト、アプリ、メールの「Add to Google Wallet」から
+| Google Home から
+
+| 誰が止められるか
+| 管理会社だけ。Wallet から鍵を消しても、鍵は無効にならない
+| 書かれていません
+
+| 共有
+| Wallet での共有はできない
+| 書かれていません
+
+| 物理の鍵
+| デジタルキーは物理の鍵の代わりではない。物理の鍵を予備として持つよう書いている
+| 書かれていません
+
+| 使い方
+| NFC を有効にし、読取機にスマートフォンの背をかざす。鍵ごとに、端末のロックの解除を求めない設定にできる
+| 書かれていません
+
+| 端末を初期化したとき
+| 初期化や遠隔の消去で鍵は消え、足し直す
+| 書かれていません
+
+| 規格
+| 書かれていません(Aliro、Matter に触れていない)
+| Matter と Aliro に対応
+|===
+
+ヘルプの頁は、スマートフォンから鍵を消しても、スマートウォッチの鍵は消えないとも書いています。管理会社が出す鍵は、ウォッチにも入る形です。
+
+リリースノートが「戸建て」と断っているのは、この区別と読めます。集合住宅の鍵は、これまでどおり管理会社が出して管理し、戸建ての持ち主は、自分で Google Home から錠をつなぎ、自分で鍵を足す、という分け方です。これは、このサイトの読みです。Google は「戸建て」に限る理由を書いていません。
+
+もう一つの違いは、鍵を足す道です。管理会社の鍵は、管理会社のサイト、アプリ、メールから足します。今回の鍵は、Google Home から Google Wallet に足すと書かれていて、どちらも Google 自身のアプリです。これまでの住まいの鍵のように、間に管理会社を挟まない形と読めます(このサイトの読み)。ただし、鍵の発行者の秘密鍵を誰が持つかは、Google のどの頁にも書かれていません。
+
+== 層で見る
+
+このサイトでは、玄関まわりの技術を層に分けて見ています(link:/guide/layers/[玄関まわりの技術を層に分けて見る])。今回の件を層に置くと、次のようになります。
+
+[cols="1,3,3"]
+|===
+| 層 | 公開の資料で言える事 | 言えない事
+
+| ドアホン
+| 今回の件には出てこない
+| -
+
+| 電子錠
+| Matter の Door Lock として登録され、Aliro の読取機を持つ錠が対象。読取機の設定と発行者の鍵の登録の命令は、Matter の Door Lock クラスタにある(規格のデータモデル)
+| 対応する機種、NFC だけか UWB もか
+
+| 家の機器の管理(Google Home)
+| 鍵を足す道が Google Home を通る(リリースノート)。Google Home は Matter の管理者になる
+| Google Home が読取機の設定を錠に送るのか、ほかの何かが送るのか
+
+| 財布(Google Wallet)
+| 鍵が入る先。2025年3月から、NFC の読取機向けに Aliro の手順に対応している(9to5Google が引いたリリースノート)
+| ウォッチに入るか、共有できるか
+
+| 鍵の発行
+| 発行者を立てず、スマートフォンの公開鍵を錠に直に入れる道もある(Door Lock の資格情報の種類の「端末の鍵」)
+| 誰が発行者(Aliro の Credential Issuer)になり、発行者の秘密鍵をどこに持つか。誰が止められるか
+
+| 扉のコントローラ
+| Aliro の認証は読取機の中で終わり、網につながっていなくても開けられる(Aliro の規格)
+| 開けた記録がどこに残るか
+
+| 業務システムとの連携
+| 今回の件は戸建ての家が対象で、業務システムとの連携は出てこない
+| -
+|===
+
+一番大事な「鍵の発行」の層が、空いたままです。Aliro の仕組みでは、発行者が資格の文書に自分の秘密鍵で署名し、読取機は発行者の公開鍵を信じて開けます(link:/guide/aliro/[Aliroとは何か] の「役割と鍵」)。この秘密鍵を誰が持つかで、誰がその家の鍵を出し、止められるかが決まります。今回の件で、Google はそこを書いていません。
+
+== 錠を作る側の道筋
+
+錠を作る会社に向けては、Google が先に手引きを出しています。
+
+Google Home Developers の Matter のリリースノートは、2026年10月13日の項で、Google Wallet のデジタルホームキーに対応する Aliro の錠の試験と認証の要件を、三つの頁(Supported device types、Test a Matter integration、Prepare to submit for certification)に足したと書いています。要点は次のとおりです。
+
+* Aliro の認証を得るには、Google Home Developer Console で「CSA Interop」の試験を選ぶ
+* 製品の番号(PID)を結び、ふつうの Test と Field Trial の段を経ずに、直接認証に出す
+* ほかの試験を選んでいた場合は、CSA Interop を選んだ新しい版を作って出し直す
+
+Supported device types の頁も、CSA Interop が Aliro の認証への唯一の道だと書いています。この頁は、Aliro の機能のビット、NFC、BLE、UWB、国、戸建てか集合住宅かには触れていません。
+
+認証そのものの仕組みは、Google Home Developers の Certification の頁に書かれています。
+
+* Works with Google Home のバッジは、Google の認証を通った機器に Google が出す
+* 認証を受けるには、Alliance(CSA)の認証と、Google の Matter の認証の両方が要る
+* Matter のつなぎで「CSA Interop test」を選んだ時は、認証に出すのは Alliance の試験の結果だけでよい
+* 2026年から、認証に Alliance の Interop Test Lab の結果を使う形へ移る予定
+
+この頁は、Aliro と Google Wallet の鍵には触れていません。Aliro の錠は CSA Interop だけ、という決めは、Supported device types の頁と Matter のリリースノートの側にあります。合わせて読むと、Aliro の錠の試験は Google が自分で行うのではなく、規格団体(CSA)の相互接続の試験の結果を使い、認証(バッジ)を出すのは Google、という形です。
+
+Supported device types の頁には、錠についての Google の決めがもう一つあります。Matter の仕様は錠に暗証番号(PIN)を求めませんが、Google の仕組みの中では、PIN を必須にしない Matter の錠は、全部の画面で遠隔の解錠が無効になり、声での解錠も無効になります。
+
+扉の側から見ると、これは、網の向こうから開ける操作に、錠の側でもう一つの確かめを求める決めと読めます(このサイトの読み)。家の管理アプリのアカウントだけでは、遠くから開けられない形です。遠隔の解錠の判断を、家の管理アプリだけに任せない、という考え方は、このサイトの「判断は扉の側が持つ」という見方とも合います。一方で、Aliro の鍵でその場で開けることと、遠隔の解錠は別の道です。この決めが Aliro の鍵に何か影響するかは、書かれていません。
+
+Supported device types の頁は、錠の出来事(LockOperationError など)と、操作の出どころについても触れ、すべての Matter の錠が、すべての出どころの操作で出来事を出すとは限らないと書いています。誰がどの経路で開けたかの記録が、錠によって揃わないことがある、ということです。
+
+=== CSA の Interop Test Lab
+
+Certification の頁にある「Interop Test Lab」は、CSA が持つ相互接続の試験の施設です。
+
+*CSA の発表(2025年1月6日)。* CSA は次のように書いています。
+
+* 施設は米国オレゴン州ポートランドにあり、会員の特典として、作るのに一年かけた
+* 試す機器は、照明、錠、スマートプラグ、センサーなど
+* つなぐ相手は、Amazon、Apple、Google、Samsung SmartThings、LG の家の仕組みで、増やす予定
+* 試す中身は、箱から出しての登録、複数の管理者からの操作、機器の発見、繰り返し使う負荷、電源を入れ直した後の復帰
+* 製造者には問題の詳しい報告を返し、相手の会社との話し合いの仲立ちもする
+* Apple は、この結果を Works With Apple Home に受け入れ始めた。Google と Samsung は「今年中に」同じにする予定(発表は2025年1月)
+
+Amazon は、つなぐ相手には入っていますが、結果を受け入れるとは書かれていません。この発表は Matter の話で、Aliro には触れていません。費用と、会員でない会社が使えるかも書かれていません。Matter Alpha(Christian Cawley、2025年1月6日)が、この発表を伝えています。
+
+*Google の頁。* Google Home Developers の Interop Test Lab の頁と、認証に出す手順の頁は、次のように書いています。
+
+* 対象は Matter のつなぎだけで、クラウド同士のつなぎは今までどおり
+* 移り方は三つの段。今は、認証に出す時に施設の結果を付けられる。次は二つの道で、全部の機器の種類で施設の結果を受け、Google の Test Suite も使えるが、施設へ移る事を強く勧める。最後は全部を移し、Test Suite を止め、施設の結果が Works with Google Home のバッジを得るただ一つの道になる。Test Suite は開発のためだけに残る
+* 暦の日付は書かれていません(Certification の頁は「2026年から移っていく」と書いています)
+* 移る理由は、広がる機器に応じるためと、手続きを簡単にするため。製造者は自分で試さなくてよくなる
+* 施設の結果で出す時は、結果と、製品の番号の持ち主である事の証し(CSA の Matter の認証書)を出す
+* Google が自分で見る物は残る。会社の情報、方針、製品の画像、登録の試し、ソフトの版が CSA の認証の時と同じか
+* CSA Interop の道は全部の機器の種類で選べ、Aliro の錠はこの道だけ
+
+施設が Aliro の錠の何を試すかは、CSA の発表にも Google の頁にも書かれていません。Aliro の試験所のアリオンの案内は、CSA が認めた試験所で Aliro 1.0 の試験に通ればよいと書き、この施設には触れていません。
+
+規格の認証(CSA が認めた試験所での試験)と、各社の家の仕組みで使える印(この施設の結果をもとに各社が出すバッジ)は、別の段と読めます。これは、このサイトの読みです。
+
+== Apple の場合
+
+Apple は、戸建ての家の鍵を先に Wallet に入れています。Apple のホームキーは iOS 15(2021年)で NFC の鍵として、iOS 18(2024年)で UWB の近づいて開ける鍵として入りました(link:/guide/aliro/[Aliroとは何か] の「概要」に書いてある事で、この記事では確かめ直していません)。
+
+*Wallet の鍵の頁(協力先に向けた案内)。* Apple は次のように書いています。
+
+* 鍵の種類として、戸建て(single-family homes)の home key(家に入る、人に渡す)と、集合住宅(multi-family homes)の resident key(部屋と共用部)を分けて挙げている。ほかに、ホテル、社員証、学生証、車
+* 鍵は利用者の iPhone か Apple Watch の中に置き、Apple のサーバーには置かない
+* Express Mode では、Face ID などを使わずに、かざして開けられる
+* Power Reserve では、充電が要る状態になっても、対応する機器で最大5時間使える
+* 協力先になるには、事業と技術の審査が要る
+
+この頁は、Aliro、NFC、UWB、対応する地域に触れていません。
+
+*Works with Apple Home のバッジの頁。* Matter の機器がバッジを得る手順を、次のように書いています。CSA の Matter の認証を受ける。CSA の Matter の相互接続の試験を受ける。製造者と製品の番号で Apple に申し込む。Apple が試験の結果の写しを求め、問題が無ければバッジの絵を渡す。錠は対象の種類に入っています。HomeKit の技術を使う機器は、MFi の契約が要ります。この頁は、ホームキー、NFC、UWB、Aliro に触れていません。Apple の開発者向けの家の頁は、Matter には iOS 16.1 から対応し、Matter の機器を売るには CSA の認証が要ると書いています。
+
+*Apple Home Collection(2026年10月13日の発表)。* 錠は LG 製で、Matter に対応し、Aliro に対応すると書いています。開け閉めは、網が無くても手元だけで動くとしています。開け方は、近づくと開く(UWB)、かざして開く、暗証番号、隠した予備の鍵穴です。客への鍵は Home アプリから渡せます。Home アプリのデータは端から端まで暗号化され、LG も Schneider Electric も Apple も読めない、と書いています。売るのは米国とカナダで、12月から、349.95ドルからです。
+
+Apple の文では確かめられなかった事もあります。
+
+* Apple のホームキーと Aliro の関係を、Apple が説明した文
+* iPhone のホームキーが、ほかの会社の Aliro の錠でそのまま使えるか
+* 発行者の秘密鍵の置き場
+* 錠を Home アプリに足すと鍵が自動で Wallet に入る、という説明は、錠の会社や第三者の案内にはありますが、Apple のサポートのホームキーの頁は本文を読めず、Apple の文では確かめていません
+
+Google と並べると、次のようになります。
+
+[cols="1,3,3"]
+|===
+| 項目 | Google | Apple
+
+| 戸建ての鍵の始まり
+| 2026年11月9日のリリースノート
+| iOS 15(2021年)。UWB は iOS 18(2024年)(解説 02 による)
+
+| 足す所
+| Google Home から Google Wallet へ(リリースノート)
+| Apple の文では確かめていません
+
+| 集合住宅の鍵
+| 管理会社が出す住まいの鍵(Wallet のヘルプ)
+| resident key。部屋と共用部(Wallet の鍵の頁)
+
+| 試験
+| Aliro の錠は CSA Interop の道だけ。Matter の機器は CSA の Interop Test Lab の結果へ移る
+| Matter の機器は、CSA の Matter の認証と相互接続の試験。CSA は、Apple が Interop Test Lab の結果を受け入れ始めたと書いている
+
+| バッジを出す者
+| Google(Works with Google Home)
+| Apple(Works with Apple Home)
+
+| 鍵の置き場
+| 書かれていません
+| 利用者の iPhone か Apple Watch。Apple のサーバーには置かない
+
+| スマートウォッチ
+| 今回の行は `[Phone]` だけ。管理会社の鍵はウォッチにも入る
+| Apple Watch に入る
+
+| 電池切れの時
+| 書かれていません
+| Power Reserve。対応する機器で最大5時間
+
+| 家の仕組みの根の鍵
+| 置き場を書いた頁は見つかりませんでした。入門は、家の仕組みを出す会社が担う事が多いと書いている
+| 持ち主の端末で作り、秘密鍵は持ち主の iCloud キーチェーン(Apple Platform Security、2024年5月7日の頁)
+
+| 自社の名の錠
+| 見つかりませんでした
+| Apple Home Collection の錠(LG 製)。米国とカナダ
+|===
+
+== 分かっていない事
+
+2026年11月11日の時点で、次の事は Google と Apple の公開の資料にも、報道にも見つかりませんでした。
+
+* この機能を説明する Google のブログ、Google Home のヘルプ、Google Wallet のヘルプの頁
+* 提供する国と地域(日本を含むか)
+* 対応する錠の機種の一覧
+* かざす(NFC)だけで開くのか、近づくだけ(UWB)でも開くのか。非公式の解析は、近づいて開ける設定の文を見つけていますが、Google は書いていません
+* 家族や同居の人への鍵の渡し方
+* スマートウォッチで使えるか
+* 鍵の発行者(Aliro の Credential Issuer)の秘密鍵を、誰が、どこに持つか(Google も Apple も書いていません)。錠の読取機の設定を、誰が入れるか
+* 読取機の設定の命令で錠に入れる読取機の秘密鍵の写しを、入れる側が持つか
+* 鍵を止める(失効させる)手順と、開けた記録がどこに残るか
+* 「戸建て」に限る理由
+* CSA の Interop Test Lab が、Aliro の錠の何を試すか。施設の費用と、会員でない会社が使えるか
+* Google が Test Suite を止め、施設の結果だけにする日付
+* Apple のホームキーと Aliro の関係、iPhone のホームキーがほかの会社の Aliro の錠でそのまま使えるか
+* Google の家の仕組みで、根の認証局の秘密鍵を誰がどこに持つか
+* ある Fabric の管理者が、ほかの Fabric の管理者が錠に入れた鍵を消せるか、ほかの Fabric を外せるか
+* Google が、発行者を立てず端末の鍵を直に入れる道を使っているか
+* Apple のセキュリティの手引き(2024年5月の頁)の根の鍵の置き場が、今の版で変わっているか
+
+== 扉と鍵の管理から見ると
+
+ここからは、このサイトの見方です。このサイトから見た問いは一つで、扉のコントローラが鍵を持つかどうかです。
+
+=== 扉のコントローラが鍵を持つか
+
+扉にかかわる鍵を三つに分けて、このサイトの扉と、Matter と Aliro の錠を並べます。
+
+[cols="2,3,4,4"]
+|===
+| 鍵 | 役 | このサイトの扉 | Matter と Aliro の錠
+
+| 信じる発行者の公開鍵
+| 扉が、出された鍵を自分で確かめるための物
+| 扉が自分で持つ。変えられるのは、据付のときに扉へ入れた管理者の公開鍵で署名した変更の要求だけで、前と新しい一覧を記録に残す(R-AC-12、扉コントローラ仕様書 5.2a)
+| 錠が持つ。入れるのは、その錠を登録した Fabric の「管理」(Administer)の権限を持つ者(資格情報の登録の命令。link:/guide/aliro/[Aliroとは何か] の「Matterでのリーダーの設定」)。発行者の公開鍵のほか、端末の公開鍵を直に入れることもできる
+
+| 扉(読取機)の身元の秘密鍵
+| 扉が自分を名乗り、記録に署名するための物
+| 記録と伝票に署名する扉の鍵を扉が持つ。仕様書は、取り出せない所(セキュアエレメント)に置く形を書き、今の参照実装はソフトの鍵で、セキュアエレメントへの差し替えを残している(仕様書 5.2b)
+| 読取機の設定の命令(SetAliroReaderConfig)の欄に、読取機の署名の秘密鍵(32バイト)がある。錠の外で作って錠に入れる形。錠から読み出す属性は無い。入れる側が写しを持つかは、公開の資料に書かれていない
+
+| 発行者の秘密鍵
+| 鍵を出し、止める元
+| 扉に置かず、管理者の、外に口を開けない機械の、取り出せない所に置く(R-AC-11、R-AC-20)
+| Google も Apple も、置き場を書いていない。発行者を立てず、端末の公開鍵を錠に直に入れる道もある
+|===
+
+この表から、問いは三つにまとまります。
+
+. 扉は、確かめるための鍵を自分で持ち、自分で判断するか
+. その鍵を入れ替えられるのは誰か
+. 扉の身元の鍵は、扉の中で生まれるか
+
+一つ目は、Aliro でも同じです。Aliro の認証は読取機の中で終わり、Apple も Home Collection の錠について、開け閉めは網が無くても手元だけで動くと書いています。確かめるのは扉の側です。
+
+二つ目と三つ目を確かめるために、Matter の文書を読みました(2026年11月11日)。
+
+*Fabric と根の証明書。* Google の Matter の入門は、同じ根の証明書(Root of Trust)を信じる機器のまとまりを Fabric と呼んでいます。登録する側(Commissioner。スマートフォン、ハブなど)が、根の証明書を機器に入れ、認証局に機器の証明書(NOC)を求めます。根の証明書を渡す元(Administrative Domain Manager)は、家の仕組みを出す会社が、信頼の元の認証局として担う事が多い、と書いています。一つの機器は複数の Fabric に入れ(錠の会社の Fabric と、家の仕組みの Fabric の例を挙げています)、それぞれが別の資格を持ちますが、機器のデータモデルは Fabric をまたいで共通です。根の認証局の秘密鍵を誰がどこに持つかは、この頁には書かれていません。
+
+*権限。* Matter の SDK(connectedhomeip)の権限の手引きは、権限を View、Operate、Manage、Administer の段に分けています。最初の Administer は、登録する側が登録の道の上で得て、AddNOC の命令が、その Fabric の Administer の表を機器に入れます。権限の表(ACL)は Fabric ごとの物です。ある Fabric の管理者が、ほかの Fabric の表を読めるか、変えられるか、ほかの Fabric を外せるかは、この手引きには書かれていません。
+
+*Door Lock クラスタ(データモデル 1.4)。* 読取機の設定の命令(SetAliroReaderConfig、ClearAliroReaderConfig)は、Administer の権限と Timed Invoke が要ります。欄は SigningKey(32バイト)、VerificationKey(65バイト)、GroupIdentifier(16バイト)、GroupResolvingKey(16バイト。ALBU の錠の時)です。読取機の公開鍵などの Aliro の属性は Administer でだけ読め、入れられる発行者の鍵と端末の鍵の数は View で読めます。SigningKey を読み出す属性はありません。資格情報の種類には、AliroCredentialIssuerKey(発行者の鍵)、AliroEvictableEndpointKey と AliroNonEvictableEndpointKey(端末の鍵)の三つがあり、登録と消去(SetCredential、ClearCredential)も Administer と Timed Invoke が要ります。
+
+*根の鍵の置き場。* Apple のセキュリティの手引き(Apple Platform Security の「HomeKit communication security」。頁の日付は2024年5月7日)は、Apple の家では、根の認証局を最初の利用者(持ち主)の端末で作り、その秘密鍵を持ち主の iCloud キーチェーンに置く、と書いています。家のほかの Apple の機器は証明書の要求を作り、持ち主の端末が、認証局の秘密鍵で Matter の身元の証明書を作ります。機器を初期化すると、登録の時に新しい鍵の対と証明書になります。この頁の日付は2024年5月で、今の版で変わっているかは確かめていません。Google については、根の認証局の秘密鍵の置き場を書いた頁は見つかりませんでした(入門は、会社が担う事が多い、登録する側は認証局に届く、とだけ書いています)。
+
+ここから読み取れる事は、次のとおりです。いずれも、このサイトの読みです。
+
+* 錠の Aliro の設定と、錠が信じる鍵を入れ替えられるのは、その錠を登録した Fabric の管理者です
+* 一つの錠を複数の家の仕組み(錠の会社のアプリ、Google Home、Apple Home)に登録すると、その数だけ管理者が居ます。データモデルは共通なので、どの管理者も Aliro の設定の命令を呼べる形です。ほかの管理者が入れた鍵を消せるかは、読んだ文書では確かめられませんでした
+* 資格情報の種類に「端末の鍵」があるので、発行者を立てずに、スマートフォンそのものの公開鍵を錠に入れる道があります。戸建てのように鍵の数が少ない所では、この道でも足りる形で、「戸建てに限る」事とも形は合います。ただし、Google がこの道を使っているかは書かれていません
+* このサイトの扉との違いは、二つ目の問いにあります。このサイトの扉は、据付の時に入れた一つの管理者の鍵の署名だけを受けます。Matter の錠は、登録した先の数だけ管理者が居て、その元の置き場は会社ごとに違います
+
+三つの問いへの、今の答えをまとめます。
+
+[cols="2,3,4"]
+|===
+| 問い | このサイトの扉 | Matter と Aliro の錠
+
+| 確かめる鍵を自分で持ち、自分で判断するか
+| 持つ。発行者の公開鍵
+| 持つ。発行者の公開鍵か、端末の公開鍵。認証は読取機の中で終わる
+
+| その鍵を入れ替えられるのは誰か
+| 据付の時に入れた管理者の鍵の署名だけ
+| 錠を登録した Fabric の管理者。複数に登録すると、その全部が管理者。管理の元は、Apple は持ち主の iCloud キーチェーン(2024年5月の手引き)、Google は書かれていない
+
+| 扉の身元の鍵は扉の中で生まれるか
+| 仕様書は取り出せない所に置く形を書いている。今の参照実装はソフトの鍵
+| 外で作って入れる(SetAliroReaderConfig の SigningKey)。読み出す属性は無い
+|===
+
+下の四つの小節は、この問いから見た今回の件です。
+
+=== 戸建ての持ち主が、自分で鍵を足せる道
+
+これまで Google Wallet の住まいの鍵は、管理会社が出す物でした。今回の行は、戸建ての持ち主が、自分の家の錠を Google Home につなぎ、自分の財布に鍵を足せる道ができた、と読めます。Samsung は、2026年3月に、SmartThings で錠を登録する途中で財布に鍵を足す形を発表しています。
+
+鍵を持つ人と、鍵を出す人が同じ家族の中に収まるのは、鍵の管理としては素直な形です。link:/guide/keys-belong-to-managers/[デジタルキーは管理者が自分で持つ] で書いたように、鍵はそれぞれの管理者が持つのが基本で、戸建てでは持ち主がその管理者です。
+
+=== 集合住宅と事業所は、管理する側が出す形のまま
+
+集合住宅と事業所の鍵は、今回の行の対象ではありません。これまでどおり、管理する側(管理会社、事業所の管理者)が出し、止める形です。Wallet のヘルプも、止められるのは管理会社だけだと書いています。
+
+事業所では、鍵を出す人と使う人が別で、人の出入りに合わせて毎日出し、止めます。財布の鍵は、その出し方の一つの経路にすぎず、台帳と手順は管理者の側に要ります。
+
+=== 発行者の秘密鍵を誰が持つか
+
+今回、Google が書いていない一番大きな事は、発行者の秘密鍵の置き場所です。先を行く Apple も、鍵を利用者の端末に置くとは書いていますが、発行者の秘密鍵の置き場は書いていません。このサイトの要求仕様は、ここに二つの要求を置いています(`docs/要求仕様/00_core.md`)。
+
+* *R-AC-18*: スマートフォンの財布(Apple、Google)に入れる鍵は、発行者の一つとして扱い、発行と失効を管理者の台帳から行い、台帳に記録する。財布の会社のサービスが止まっても、ほかの経路(カード、暗証番号、機械の鍵)で開けられる
+* *R-AC-20*: 財布への載せ方を担う業者は、発行者の秘密鍵を持たない。資格情報は管理者が自分の機械か、鍵を取り出せない所で署名し、業者はそれを運ぶだけとする。読取機が信じる発行者の鍵は、管理者の鍵の操作でだけ入れ替える
+
+戸建ての家で、発行者の秘密鍵を Google が持つのか、錠の会社が持つのか、持ち主の端末の中にあるのかは、今の公開の資料からは分かりません。どれであっても、家の持ち主が確かめたい事は同じです。
+
+* 鍵を止めたい時に、自分で止められるか
+* 財布の側や Google のサービスが止まった時に、ほかの経路(暗証番号、物理の鍵など)で開けられるか
+* 誰がいつ開けたかの記録が、どこに残るか
+
+Wallet のヘルプが、管理会社の鍵について「物理の鍵の代わりではない」と書いているのは、ほかの経路を残すという点で、R-AC-18 と同じ方向です。
+
+=== 日本の読者にとって
+
+リリースノートには、提供する国と地域が書かれていません。日本向けの Aliro に対応した錠の発表も、2026年11月11日の時点で見つかっていません(link:/guide/aliro/[Aliroとは何か] の「認証と製品の状況」)。日本で使えるかどうかは、今の公開の資料からは言えません。
+
+== 自分で確かめる
+
+この記事の内容は、次の手順で、誰でも自分で確かめられます。
+
+. *リリースノートを見る。* Google System Release Notes の頁(出典の一つ目)を開き、2026年11月の Google Play services v26.44 の項の、Google Wallet の行を読みます。行の頭の `[Phone]` などの印が、対象の端末です。新しい版が出たら、同じ頁に足されます
+. *開発者向けの頁を見る。* Google Home Developers の Matter のリリースノートの 2026年10月13日の項と、Supported device types の頁の Door Lock の欄を読みます。錠の認証の道(CSA Interop)と、PIN の決めが書かれています
+. *試験と認証の頁を見る。* Google Home Developers の Certification、Interop Test Lab、認証に出す手順の頁で、施設の結果へ移る三つの段と、Google が自分で見る物を読みます。CSA の 2025年1月6日の発表で、施設が試す中身と、結果を受け入れる会社を確かめます
+. *Matter の文書を見る。* Google の Matter の入門の Fabric の頁、Matter の SDK の権限の手引き、connectedhomeip の `data_model/1.4/clusters/DoorLock.xml` で、根の証明書、権限の段、Aliro の命令と資格情報の種類と、それぞれに要る権限を読みます
+. *Apple の頁と比べる。* Apple の Wallet の鍵の頁(learn.wallet.apple/keys)で戸建てと集合住宅の分け方と鍵の置き場を、Works with Apple Home の頁でバッジの手順を、Apple Platform Security の「HomeKit communication security」で根の鍵の置き場と頁の日付を読みます
+. *Wallet のヘルプを見る。* Google Wallet のヘルプの「Residential keys」を読み、管理会社が出す鍵の扱いを確かめます。今回の戸建ての鍵の説明が足されていないかも、ここで見られます
+. *自分の端末の Google Play services を更新する。* Google Play のヘルプ「Keep your device & apps working with Google Play services」は、Android の設定アプリから Google Play services の項を開き、「更新」を押す手順を書いています。版の番号の見方は、この頁には書かれていません
+. *錠の側を確かめる。* 錠を選ぶ時は、CSA の認証製品の一覧で、Aliro の認証を受けているかを確かめます。錠の会社の頁が財布の名を挙げていても、どの財布で今使えるかまで書いているとは限りません(たとえば ULTRALOQ の Aliro の頁は、画像の説明に Apple Home Key、Google Wallet、Samsung Wallet の名を並べていますが、使える日と地域は書いていません)
+
+== 出典
+
+すべて 2026年11月11日に確かめました。
+
+*会社と団体が発表した物*
+
+* https://support.google.com/product-documentation/answer/14343500[Google: Google System Release Notes。Google Play services v26.44(2026年11月9日)の Google Wallet の項]
+* https://developers.home.google.com/matter/release-notes[Google Home Developers: Matter のリリースノート。2026年10月13日の項(Aliro の錠の試験と認証の要件)]
+* https://developers.home.google.com/matter/supported-devices[Google Home Developers: Supported device types。Door Lock の欄(PIN の決め、CSA Interop、錠の出来事)]
+* https://developers.home.google.com/matter/certification[Google Home Developers: Certification(Works with Google Home のバッジ、CSA と Google の認証、CSA Interop test、Interop Test Lab への移行)]
+* https://developers.home.google.com/matter/interop-test-lab[Google Home Developers: Interop Test Lab(施設の結果へ移る三つの段、移る理由)]
+* https://developers.home.google.com/matter/certification/submit[Google Home Developers: 認証に出す手順(施設の結果で出す時に出す物、Google が自分で見る物、CSA Interop の道)]
+* https://developers.home.google.com/matter/primer/fabric[Google Home Developers: Matter の入門の Fabric(根の証明書、登録する側、Administrative Domain Manager、複数の Fabric)]
+* https://project-chip.github.io/connectedhomeip-doc/guides/access-control-guide.html[Matter の SDK(connectedhomeip): 権限の手引き(View、Operate、Manage、Administer、AddNOC、Fabric ごとの ACL)]
+* https://github.com/project-chip/connectedhomeip[connectedhomeip: data_model/1.4/clusters/DoorLock.xml(Aliro の命令と属性の権限、資格情報の種類)]
+* https://support.google.com/wallet/answer/16759973[Google Wallet ヘルプ: Residential keys(管理会社が出す住まいの鍵。更新の日付の表示なし)]
+* https://support.google.com/googleplay/answer/9037938[Google Play ヘルプ: Keep your device & apps working with Google Play services(Google Play services の更新の手順)]
+* https://csa-iot.org/newsroom/the-connectivity-standards-alliance-announces-aliro-a-new-effort-to-make-mobile-devices-wearables-central-to-a-digital-access-future/[CSA: Aliro の取り組みの発表(2023年11月9日)]
+* https://csa-iot.org/newsroom/introducing-aliro-1-0-a-unified-standard-to-transform-the-access-control-ecosystem/[CSA: Introducing Aliro 1.0(2026年2月26日)]
+* https://news.samsung.com/us/samsung-wallet-launches-digital-home-key-smart-door-locks[Samsung: Samsung Wallet Digital Home Key(2026年3月2日)]
+* https://csa-iot.org/newsroom/driving-innovation-with-the-alliance-interop-lab-and-two-new-certification-programs/[CSA: Interop Lab と二つの認証の制度の発表(2025年1月6日。書き手の名は無し)]
+* https://www.allion.com/consulting/aliro/[アリオン: Aliro の試験の案内]
+* https://www.apple.com/newsroom/2026/10/introducing-apple-home-collection-a-new-lineup-of-smart-home-accessories/[Apple: Apple Home Collection(2026年10月13日)]
+* https://learn.wallet.apple/keys[Apple: Wallet の鍵(協力先に向けた案内。鍵の種類、鍵の置き場、Express Mode、Power Reserve)]
+* https://developer.apple.com/apple-home/works-with-apple-home/[Apple: Works with Apple Home(バッジの手順)]
+* https://developer.apple.com/apple-home/[Apple Developer: Apple Home(Matter への対応と CSA の認証)]
+* https://support.apple.com/guide/security/communication-security-sec3a881ccb1/web[Apple Platform Security: HomeKit communication security(頁の日付は2024年5月7日。根の認証局と iCloud キーチェーン)]
+* https://ultraloq.com/pages/works-with-aliro[ULTRALOQ: Works with Aliro(対応する機種の頁)]
+
+*報道と非公式の解析*
+
+* https://www.matteralpha.com/news/good-news-for-matter-apple-google-and-samsung-support-alliance-lab-testing[Matter Alpha、Christian Cawley(2025年1月6日)。CSA の Interop Lab の発表の報道]
+* https://9to5google.com/2025/03/24/google-wallet-aliro/[9to5Google、Abner Li「Google Wallet on Android and Wear OS supporting Aliro smart lock standard」(2025年3月24日)]
+* https://9to5google.com/2026/03/24/this-nfc-keypad-adds-tap-to-unlock-to-nukis-matter-smart-lock/[9to5Google、Andrew Romero(2026年3月24日)。Nuki の NFC のキーパッドの記事]
+* https://9to5google.com/2026/11/09/november-2026-google-system-updates/[9to5Google、Abner Li「What's new in Android's November 2026 Google System Updates」(2026年11月9日)]
+* https://nerdschalk.com/google-home-wallet-home-key-setup-apk-teardown[Nerds Chalk、Kapill M Malani(2026年11月10日更新)。Google Home アプリ 4.37.27.0 の解析。非公式]
 endif::[]

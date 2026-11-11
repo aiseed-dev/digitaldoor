@@ -4,7 +4,15 @@
 <link>https://door.aiseed.dev/</link>
 <description>扉と鍵の話を、層に分けて書く</description>
 <language>ja</language>
-<lastBuildDate>Wed, 11 Nov 2026 19:36:35 +0900</lastBuildDate>
+<lastBuildDate>Wed, 11 Nov 2026 19:38:06 +0900</lastBuildDate>
+<item>
+<title>Google Wallet に戸建ての家の鍵が入る</title>
+<link>https://door.aiseed.dev/guide/google-wallet-home-key/</link>
+<guid>https://door.aiseed.dev/guide/google-wallet-home-key/</guid>
+<category>解説</category>
+<pubDate>Wed, 11 Nov 2026 00:00:00 +0900</pubDate>
+<description>2026年11月9日付の Google Play services v26.44 のリリースノートに、Matter と Aliro に対応した戸建て住宅の鍵を、Google Home から Google Wallet に足せるという一行が載りました。言葉の意味、ここまでの流れ、管理会社が出す住まいの鍵との違い、層ごとの位置、錠を作る側の認証の道筋(CSA の Interop Test Lab)、Apple との比べ、まだ分かっていない事を、会社の発表と報道を分けて整理し、扉のコントローラが鍵を持つかという問いから読みます。</description>
+</item>
 <item>
 <title>今日、デジタルドアを始めました</title>
 <link>https://door.aiseed.dev/blog/start/</link>

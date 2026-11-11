@@ -126,6 +126,11 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://door.aiseed.dev/guide/google-wallet-home-key/</loc>
+    <lastmod>2026-11-11</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://door.aiseed.dev/check/</loc>
     <lastmod>2026-11-11</lastmod>
     <priority>0.6</priority>

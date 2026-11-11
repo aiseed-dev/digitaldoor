@@ -31,7 +31,8 @@ door.aiseed.dev {
 	# キャッシュの長さは例。運用で決める
 	@assets path /css/* /js/* /images/* /favicon.ico
 	header @assets Cache-Control "public, max-age=86400"
-	header !Cache-Control "no-cache"
+	# ? は「まだ無い時だけ付ける」。Caddy に ! の書き方は無く、! だと「!Cache-Control」という名のヘッダになる
+	header ?Cache-Control "no-cache"
 
 	file_server
 

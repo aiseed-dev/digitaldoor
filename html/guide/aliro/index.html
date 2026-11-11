@@ -833,7 +833,7 @@ article img {
 <h2>概要</h2>
 <p>Aliroは、Matterと同じConnectivity Standards Alliance(CSA)が策定する規格で、バージョン1.0は2026年2月26日に公開されました。策定には、Apple、Google、Samsungといったスマートフォン側の企業と、ASSA ABLOY、Allegion、HIDといった錠・リーダー側の企業が参加しており、参加企業は220社を超えます。</p>
 <p>それまで、スマートフォンを鍵にする仕組みは企業ごとに分かれていました。たとえばAppleのHome Keyは、iOS 15(2021年)でNFCによる鍵をWalletに追加し、iOS 18(2024年)でUWBによる近接解錠に対応しましたが、Home Key対応の錠でしか使えませんでした。Aliroは、この部分を共通化する規格です。</p>
-<p>(2026年11月11日に、役割と鍵の仕組み、Matterでの設定、認証と財布の状況、実装の例を足し、確かめられなかった暗号の細部の記述を改めました。)</p>
+<p>(2026年11月11日に、役割と鍵の仕組み、Matterでの設定、認証と財布の状況、実装の例を足し、確かめられなかった暗号の細部の記述を改めました。同じ日に、Google Walletの戸建て住宅の鍵の件を足しました。)</p>
 <h2>規定している範囲</h2>
 <ul>
 <li>スマートフォンとリーダーの間の相互認証。非対称鍵の暗号を使います(CSAの発表)。Aliro 1.0の仕様の第6章は、資格情報の文書の署名にP-256の楕円曲線の鍵を使うと定めています。</li>
@@ -904,7 +904,7 @@ article img {
 </ul>
 <h2>財布(Wallet)との関係</h2>
 <ul>
-<li>Googleは、2025年3月のGoogle Playサービスの更新で、Google WalletがNFCの読取機向けにAliroに対応したと報じられています(9to5Google)。</li>
+<li>Googleは、2025年3月のGoogle Playサービスの更新で、Google WalletがNFCの読取機向けにAliroに対応したと報じられています(9to5Google)。2026年11月9日付のGoogle Playサービス v26.44のリリースノートには、MatterとAliroに対応した戸建て住宅の鍵を、Google HomeからGoogle Walletに足せるという行が載りました。対象はスマートフォンで、国と地域、対応する錠は書かれていません(<a href="/guide/google-wallet-home-key/">Google Wallet に戸建ての家の鍵が入る</a>)。</li>
 <li>Samsungは2026年3月2日に、Samsung Walletのデジタルホームキーを発表しました。SmartThingsで錠をMatterの機器として登録する途中で、財布に鍵を足す流れです。最初はNFCで、UWBは2026年4月からとされています(Samsungの発表)。</li>
 <li>Appleは2026年10月13日に、LGのスマートデッドボルト錠を含む家庭用の機器の一式を発表しました。Matterに対応し、Aliroに対応し、UWBで近づいて開けられるとしています。錠を売るのは米国とカナダで、日本は含まれていません(Appleの発表)。Appleのホームキーと Aliro の関係を、Apple自身が説明した文は見つかりませんでした。</li>
 </ul>
