@@ -36,6 +36,7 @@ ENGINE_FILES = [
     "init_site.py",          # 作ったサイトから、さらに新しいサイトを作れる
     "build/__init__.py",
     "build/config.py",
+    "build/site_nav.py",     # config.py が読む(上の並びと奥付)
     "build/frontmatter.py",
     "build/series.py",
     "build/markdown.py",

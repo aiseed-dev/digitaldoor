@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'">
+
+
+<title>AI で自社のシステムを確かめる — 解説 | デジタルドア</title>
+<meta name="description" content="コードを読んで穴を探すことは、申し込まなくても今日から始められます。2026年10月からは、AI が止めることのある守りの仕事(穴が本当に使えるかの確かめなど)も、申し込めば進めやすくなりました。大きな会社では、数万件の穴が見つかっています。先に確かめるのは、受託業者が個別に書いた部分です。AI に渡す物と渡さない物、業者への知らせ方、費用、攻撃の試験までの道のりを、順に説明します。">
+<link rel="canonical" href="https://door.aiseed.dev/guide/check-your-systems-with-ai/">
+<link rel="alternate" hreflang="ja" href="https://door.aiseed.dev/guide/check-your-systems-with-ai/">
+
+<link rel="alternate" hreflang="x-default" href="https://door.aiseed.dev/guide/check-your-systems-with-ai/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="デジタルドア">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="AI で自社のシステムを確かめる">
+<meta property="og:description" content="コードを読んで穴を探すことは、申し込まなくても今日から始められます。2026年10月からは、AI が止めることのある守りの仕事(穴が本当に使えるかの確かめなど)も、申し込めば進めやすくなりました。大きな会社では、数万件の穴が見つかっています。先に確かめるのは、受託業者が個別に書いた部分です。AI に渡す物と渡さない物、業者への知らせ方、費用、攻撃の試験までの道のりを、順に説明します。">
+<meta property="og:url" content="https://door.aiseed.dev/guide/check-your-systems-with-ai/">
+<meta property="og:image" content="https://door.aiseed.dev/images/og-default.jpg">
+<meta property="article:section" content="解説">
+<meta property="article:published_time" content="2026.11.10">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AI で自社のシステムを確かめる">
+<meta name="twitter:description" content="コードを読んで穴を探すことは、申し込まなくても今日から始められます。2026年10月からは、AI が止めることのある守りの仕事(穴が本当に使えるかの確かめなど)も、申し込めば進めやすくなりました。大きな会社では、数万件の穴が見つかっています。先に確かめるのは、受託業者が個別に書いた部分です。AI に渡す物と渡さない物、業者への知らせ方、費用、攻撃の試験までの道のりを、順に説明します。">
+<meta name="twitter:image" content="https://door.aiseed.dev/images/og-default.jpg">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="alternate" type="application/rss+xml" title="デジタルドア" href="/feed.xml">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+
+<!-- フォントは Web 配信せず、すべて端末のローカルフォントで賄う。
+     和文: UDデジタル教科書体 → BIZ UDP明朝(いずれも Windows 標準搭載の
+     モリサワ UD 書体) → ヒラギノ明朝・游明朝などのシステム明朝。
+     等幅: 端末のシステム等幅フォント。 -->
+
+<style>
+/* ============================================================
+   LOCAL FONT: UDデジタル教科書体(モリサワ)
+   Windows・教育向け端末に無償搭載。端末にあれば local() で拾い、
+   なければ BIZ UDP明朝(同じく Windows 標準搭載)→ システム明朝へ
+   フォールバックする。R と B は別ファミリー名なので、太字(700)を
+   B 書体に明示的にマッピングして疑似ボールドを避ける。
+   ============================================================ */
+@font-face {
+  font-family: "UD Digital Kyokasho";
+  font-weight: 400;
+  src: local("UD デジタル 教科書体 NK-R"), local("UD Digital Kyokasho NK-R"),
+       local("UD デジタル 教科書体 NP-R"), local("UD Digital Kyokasho NP-R"),
+       local("UD デジタル 教科書体 N-R"), local("UD Digital Kyokasho N-R");
+}
+@font-face {
+  font-family: "UD Digital Kyokasho";
+  font-weight: 700;
+  src: local("UD デジタル 教科書体 NK-B"), local("UD Digital Kyokasho NK-B"),
+       local("UD デジタル 教科書体 NP-B"), local("UD Digital Kyokasho NP-B"),
+       local("UD デジタル 教科書体 N-B"), local("UD Digital Kyokasho N-B");
+}
+
+/* ============================================================
+   COLOR & DESIGN TOKENS
+   aiseed.dev 全体のスタイルに合わせる場合は、ここの変数を
+   既存サイトのCSS変数に差し替える。
+   ============================================================ */
+:root {
+  --ink: #1a1a1a;
+  --paper: #f4f1ea;
+  --paper-deep: #ebe6d8;
+  --accent: #c8442a;
+  --rule: #d4cdb8;
+  --whisper: #6b665a;
+  --highlight: #f7e9c8;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+/* 本文: 端末にあれば UDデジタル教科書体を最優先、次に BIZ UDP明朝
+   (Windows 標準搭載)、どちらもなければヒラギノ明朝等のシステム明朝 */
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "UD Digital Kyokasho",
+               "BIZ UDPMincho", "BIZ UDP明朝",
+               "Hiragino Mincho ProN", "ヒラギノ明朝 ProN",
+               "Yu Mincho", "游明朝", "YuMincho",
+               "Noto Serif CJK JP", "Noto Serif JP", serif;
+  font-size: 17px;
+  line-height: 1.9;
+  letter-spacing: 0.02em;
+  font-feature-settings: "palt";
+  overflow-x: hidden;
+}
+
+/* グレインテクスチャ(紙の質感) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image: radial-gradient(rgba(0,0,0,0.04) 1px, transparent 1px);
+  background-size: 3px 3px;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+}
+
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 32px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ============================================================
+   MASTHEAD(シリーズ名・章番号)
+   ============================================================ */
+.masthead {
+  border-bottom: 3px double var(--ink);
+  padding: 24px 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--whisper);
+}
+.masthead-left  { font-weight: 700; color: var(--ink); }
+.masthead-left a { color: inherit; text-decoration: none; }
+.masthead-left a:hover { color: var(--accent); }
+.masthead-home { color: var(--whisper); }
+.masthead-sep { margin: 0 10px; color: var(--whisper); font-weight: 400; }
+.masthead-right { font-style: italic; }
+
+/* ============================================================
+   HERO(タイトル領域)
+   ============================================================ */
+.hero {
+  padding: 80px 0 60px;
+}
+.hero-meta {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  color: var(--accent);
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.hero-meta::before {
+  content: "";
+  width: 40px;
+  height: 1px;
+  background: var(--accent);
+}
+.hero-title {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 800;
+  font-size: clamp(32px, 5.5vw, 56px);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin-bottom: 24px;
+}
+.hero-title .accent {
+  color: var(--accent);
+}
+.hero-subtitle {
+  font-size: 18px;
+  line-height: 1.85;
+  color: var(--whisper);
+  max-width: 580px;
+  border-left: 2px solid var(--accent);
+  padding-left: 20px;
+  margin-top: 32px;
+}
+.hero-byline {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--whisper);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ============================================================
+   ARTICLE BODY
+   ============================================================ */
+article p {
+  margin-bottom: 24px;
+}
+
+article h2 {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1.4;
+  margin: 72px 0 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--ink);
+  position: relative;
+}
+article h2::before {
+  content: "§";
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  color: var(--accent);
+  margin-right: 16px;
+  font-size: 22px;
+}
+
+article h3 {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 600;
+  font-size: 19px;
+  margin: 40px 0 16px;
+  color: var(--ink);
+}
+article h3::before {
+  content: "—";
+  color: var(--accent);
+  margin-right: 12px;
+  font-weight: 400;
+}
+
+article strong {
+  font-weight: 700;
+  background: linear-gradient(to top, var(--highlight) 35%, transparent 35%);
+  padding: 0 2px;
+}
+
+article em {
+  font-style: normal;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+article a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: color 0.2s;
+}
+article a:hover {
+  color: var(--accent);
+}
+
+/* ============================================================
+   BLOCKQUOTE
+   ============================================================ */
+blockquote {
+  margin: 40px 0;
+  padding: 32px 40px;
+  background: var(--paper-deep);
+  border-left: 4px solid var(--accent);
+  position: relative;
+  font-size: 18px;
+  line-height: 1.85;
+  font-style: normal;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "「";
+  position: absolute;
+  top: 4px;
+  left: 8px;
+  font-size: 48px;
+  color: var(--accent);
+  opacity: 0.3;
+  font-family: "Hiragino Mincho ProN", serif;
+}
+blockquote p {
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 32px 0;
+  font-size: 15px;
+  line-height: 1.7;
+}
+article thead th {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 700;
+  text-align: left;
+  padding: 14px 16px;
+  border-bottom: 2px solid var(--ink);
+  color: var(--ink);
+}
+article tbody td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+article tbody tr:last-child td {
+  border-bottom: none;
+}
+@media (max-width: 720px) {
+  article table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ============================================================
+   ORDERED LIST(番号付きリスト)
+   ============================================================ */
+article ol {
+  margin: 32px 0;
+  counter-reset: item;
+  padding: 0;
+}
+article ol li {
+  list-style: none;
+  position: relative;
+  padding: 16px 0 16px 56px;
+  border-bottom: 1px dashed var(--rule);
+  counter-increment: item;
+}
+article ol li::before {
+  content: counter(item, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 16px;
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 14px;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+/* 通常のul(章末の関連リンクなど) */
+article ul {
+  margin: 24px 0;
+  padding-left: 1.5em;
+}
+article ul li {
+  margin-bottom: 8px;
+}
+
+/* ============================================================
+   CODE BLOCK(疑似ターミナル風)
+   ============================================================ */
+article pre {
+  margin: 40px 0;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 24px 28px;
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 13px;
+  line-height: 1.8;
+  position: relative;
+  overflow-x: auto;
+}
+article pre::before {
+  content: "● ● ●";
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  font-size: 8px;
+  color: var(--whisper);
+  letter-spacing: 4px;
+}
+article pre code {
+  display: block;
+  padding-top: 16px;
+  white-space: pre;
+}
+
+/* インラインコード */
+article code {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 0.9em;
+  background: var(--paper-deep);
+  padding: 2px 6px;
+  border-radius: 2px;
+  color: var(--ink);
+}
+article pre code {
+  background: transparent;
+  padding: 16px 0 0 0;
+  color: var(--paper);
+}
+
+/* ============================================================
+   HORIZONTAL RULE(本文中の区切り)
+   ============================================================ */
+article hr {
+  border: none;
+  text-align: center;
+  margin: 64px 0;
+  height: 1em;
+}
+article hr::before {
+  content: "◆ ◆ ◆";
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 14px;
+  color: var(--accent);
+  letter-spacing: 0.5em;
+}
+
+/* ============================================================
+   RELATED LINKS(章末の関連記事)
+   ============================================================ */
+.related-links {
+  margin-top: 64px;
+  padding: 32px 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.related-links h3 {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  color: var(--whisper);
+  margin: 0 0 20px;
+  font-weight: 600;
+}
+.related-links h3::before {
+  content: none;
+}
+.related-links ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.related-links li {
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--rule);
+  margin-bottom: 0;
+}
+.related-links li:last-child {
+  border-bottom: none;
+}
+.related-links a {
+  text-decoration: none;
+  color: var(--ink);
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+}
+.related-links .related-tag {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.related-links a:hover .related-title {
+  color: var(--accent);
+}
+
+/* ============================================================
+   FOOTER(サイト内メニュー+奥付)
+   ============================================================ */
+.site-footer {
+  margin-top: 96px;
+  border-top: 3px double var(--ink);
+  padding-top: 48px;
+}
+.footer-nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 32px 48px;
+}
+.footer-col h4 {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--whisper);
+  font-weight: 700;
+  margin: 0 0 14px;
+}
+.footer-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.footer-col li {
+  padding: 6px 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.footer-col a {
+  color: var(--ink);
+  text-decoration: none;
+}
+.footer-col a:hover { color: var(--accent); }
+
+.colophon {
+  margin-top: 48px;
+  padding: 32px 0 40px;
+  border-top: 1px solid var(--rule);
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--whisper);
+  text-align: center;
+  line-height: 2;
+}
+.colophon-mark {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "Hiragino Mincho ProN", serif;
+  font-size: 32px;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+/* ============================================================
+   SERIES TOC(全章一覧・折りたたみ式)
+   ============================================================ */
+.series-toc {
+  margin: 24px 0 40px;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 8px 0;
+}
+.series-toc details {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+}
+.series-toc summary {
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--whisper);
+  font-weight: 700;
+  padding: 8px 0;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.series-toc summary::-webkit-details-marker { display: none; }
+.series-toc summary::before {
+  content: "▸";
+  color: var(--accent);
+  font-size: 10px;
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+.series-toc details[open] summary::before { transform: rotate(90deg); }
+.series-toc ol {
+  list-style: none;
+  margin: 12px 0 8px;
+  padding: 0;
+  counter-reset: none;
+}
+.series-toc li {
+  list-style: none;
+  padding: 9px 0;
+  border-bottom: 1px dashed var(--rule);
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: 14px;
+  line-height: 1.55;
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+}
+.series-toc li::before { content: none; }
+.series-toc li:last-child { border-bottom: none; }
+.series-toc li a {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+  text-decoration: none;
+  color: var(--ink);
+  flex: 1;
+}
+.series-toc li a:hover .toc-title { color: var(--accent); }
+.series-toc .toc-num {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 5em;
+}
+.series-toc li.current {
+  background: var(--paper-deep);
+  margin: 0 -12px;
+  padding: 9px 12px;
+}
+.series-toc li.current .toc-title {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ============================================================
+   IMAGES
+   ============================================================ */
+article img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 32px auto;
+}
+
+/* ============================================================
+   CUSTOM BLOCKS(:::chain / :::highlight / :::quote / :::compare)
+   ============================================================ */
+.chain-diagram {
+  background: var(--paper-deep);
+  border-left: 4px solid var(--accent);
+  padding: 24px 28px;
+  margin: 32px 0;
+  font-size: 15px;
+  line-height: 2.2;
+}
+.chain-diagram .arrow {
+  color: var(--accent);
+  font-weight: 700;
+  margin: 0 0.3em;
+}
+.highlight-box {
+  background: var(--paper-deep);
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--accent);
+  padding: 24px 28px;
+  margin: 32px 0;
+}
+.highlight-box p { margin-bottom: 12px; }
+.highlight-box p:last-child { margin-bottom: 0; }
+.quote-block {
+  margin: 40px 0;
+  padding: 32px 40px;
+  background: var(--paper-deep);
+  border-left: 4px solid var(--accent);
+}
+.quote-block .quote-text {
+  font-size: 18px;
+  line-height: 1.85;
+  margin: 0;
+}
+
+/* ============================================================
+   CHAPTER NAV(前後の記事へのリンク)
+   ============================================================ */
+.chapter-nav {
+  margin-top: 64px;
+  padding: 24px 0;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  font-size: 14px;
+}
+.chapter-nav a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+  text-underline-offset: 4px;
+}
+.chapter-nav a:hover { color: var(--accent); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 640px) {
+  .container { padding: 0 20px; }
+  .hero { padding: 48px 0 40px; }
+  blockquote { padding: 24px 20px 24px 28px; }
+  article pre { padding: 20px 16px; font-size: 12px; }
+  article ol li { padding-left: 48px; }
+  .series-toc .toc-num { min-width: 4em; font-size: 10px; }
+  .series-toc li { font-size: 13px; gap: 12px; }
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-meta, .hero-title, .hero-subtitle, .hero-byline {
+  animation: rise 0.8s ease-out backwards;
+}
+.hero-meta     { animation-delay: 0.1s; }
+.hero-title    { animation-delay: 0.25s; }
+.hero-subtitle { animation-delay: 0.45s; }
+.hero-byline   { animation-delay: 0.65s; }
+.mermaid {
+  text-align: center;
+  margin: 2.5rem 0;
+  background: var(--paper-warm, #f5f1ea);
+  padding: 1.5rem 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+.mermaid svg { max-width: 100%; height: auto; }
+
+/* ============================================================
+   WIDE LAYOUT(広い画面では目次を左サイドバーに常時展開)
+   ============================================================ */
+@media (min-width: 1200px) {
+  body.has-toc .container {
+    max-width: 1320px;
+    display: grid;
+    grid-template-columns: 280px minmax(0, 880px);
+    column-gap: 64px;
+    justify-content: center;
+  }
+  body.has-toc .masthead,
+  body.has-toc .hero {
+    grid-column: 1 / -1;
+  }
+  /* グリッドアイテム自体は行いっぱいに伸ばし、内側の details を sticky に
+     する(sticky なグリッドアイテムはグリッドエリアではなくコンテナ全体で
+     制約されるブラウザ挙動があり、フッターに重なってしまうため)。 */
+  body.has-toc .series-toc {
+    grid-column: 1;
+    grid-row: 3 / span 2;
+    margin: 0;
+    padding: 0;
+    border-top: none;
+    border-bottom: none;
+  }
+  body.has-toc .series-toc details {
+    position: sticky;
+    top: 32px;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+    padding: 0 12px 12px 0;
+  }
+  /* サイドバーでは折りたたみを無効化し、見出しとして表示 */
+  body.has-toc .series-toc summary {
+    pointer-events: none;
+    cursor: default;
+  }
+  body.has-toc .series-toc summary::before { content: none; }
+  body.has-toc .series-toc li { font-size: 13.5px; }
+  body.has-toc article    { grid-column: 2; grid-row: 3; }
+  body.has-toc .chapter-nav { grid-column: 2; grid-row: 4; }
+  body.has-toc .site-footer { grid-column: 1 / -1; grid-row: 5; }
+}
+
+/* ============================================================
+   DARK MODE(OS の配色設定に追従して自動で暗色に切り替え)
+   ============================================================ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --ink: #e8e3d6;
+    --paper: #16140f;
+    --paper-deep: #211d16;
+    --accent: #e8765a;
+    --rule: #393428;
+    --whisper: #a39b88;
+    --highlight: rgba(220, 168, 78, 0.30);
+  }
+  /* 紙の質感(グレイン)を暗色背景向けに反転 */
+  body::before {
+    background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+    mix-blend-mode: screen;
+    opacity: 0.4;
+  }
+  /* コードブロックは両モードとも暗いターミナル調を維持 */
+  article pre {
+    background: #0d0c0a;
+    color: #e8e3d6;
+  }
+  article pre code {
+    color: #e8e3d6;
+  }
+  /* Mermaid 図の枠を暗色に */
+  .mermaid {
+    background: #211d16;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; opacity: 1 !important; }
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- MASTHEAD(ホーム › シリーズ目次) -->
+  <header class="masthead">
+    <div class="masthead-left"><a href="/" class="masthead-home">デジタルドア</a><span class="masthead-sep">›</span><a href="/guide/">解説</a></div>
+    <div class="masthead-right">No. 20 / 解説</div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-meta">解説 № 20 · 2026</div>
+
+    <h1 class="hero-title">AI で自社のシステムを確かめる</h1>
+
+    <p class="hero-subtitle">確かめられるようになった。受託で作った部分から、自社の人が確かめる</p>
+
+    <div class="hero-byline">
+      <span>2026.11.10</span>
+      
+    </div>
+  </section>
+
+  <!-- SERIES TOC(全章一覧・現在の章をハイライト) -->
+  
+
+  <!-- ARTICLE BODY -->
+  <article>
+    <p>自社のコードを AI に読ませて穴を探すことは、申し込まなくても今日から始められます。2026年10月からは、見つけた穴が本当に使えるかを確かめる仕事のように、AI が止めることのある守りの仕事も、申し込めば進めやすくなりました。それまでは「そこまでは調べようがなかった」で済みました。これからは、確かめられるのに確かめていない、という状態になります。</p>
+<p>この記事では、何が変わったか、どこから確かめるか、業者とどう進めるかを順に説明します。</p>
+<h2>何が変わったか</h2>
+<p>Anthropic のサポートの頁は、日々の安全な開発には、この制度は要らないと書いています。コードを見直す、知られた問題を直す、警告を仕分ける、といった仕事は、ふつうに使える AI でできます。制度が要るのは、穴が本当に使えるかを確かめる(exploit の確かめ)仕事のように、守りの仕事を AI が止める時です。</p>
+<p>Anthropic は、こうした仕事を、確かめた相手に開く制度(Cyber Verification Program)を持っています。2026年10月6日の更新で、制度は三つの枠になりました。枠は次の通りです(2026年11月10日と11日に Anthropic のサポートの頁で確かめた内容)。</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>枠</th>
+<th>できること</th>
+<th>申し込める人</th>
+<th>返事の目安</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Defense Access</td>
+<td>セキュリティの運用、事故の対応、マルウェアの解析、検知の仕組みづくり、穴の仕分けと確かめ</td>
+<td>組織と個人</td>
+<td>2 日</td>
+</tr>
+<tr>
+<td>Red Team Access</td>
+<td>許可を得た侵入の試験、攻める側の道具の開発</td>
+<td>組織だけ</td>
+<td>2 週間(申し込みが多く、延びています)</td>
+</tr>
+<tr>
+<td>Specialized Access</td>
+<td>重要なインフラへの侵入の試験</td>
+<td>組織だけ</td>
+<td>決まっていません</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>どの枠でも、一番上のモデル(Claude Mythos)が使えます。</li>
+<li>Defense Access は、個人の契約(Pro 以上)でも、会社の契約(Team、Enterprise、API)でも申し込めます。</li>
+<li>Defense Access の決まりは、多要素認証を入れることと、API の鍵を 7 日以内ごとに替えることです。2026年12月15日からは、フィッシングに強い多要素認証が要り、長く使い回す API の鍵は認められなくなります。</li>
+</ul>
+<ul>
+<li>制度に入ると、データの保持が必須になります。悪用を見張るためです。保持しない扱い(ZDR)は、例外を認められた組織に限られます。</li>
+<li>使い道は、自社のコード、製品、基盤の確かめが基本です。客のための仕事には、別の申し込みが要ります。</li>
+</ul>
+<p>自社のコードを読ませて穴を探すだけなら、申し込みの返事を待たずに始められます。見つけた穴を確かめる所まで進むなら Defense Access で足り、返事の目安は 2 日です。</p>
+<h2>大きな会社で起きたこと</h2>
+<p>ソフトバンクの宮川社長は、2026年11月9日の決算説明会で、自社のシステムを AI で調べた結果を話しました(ITmedia ビジネスオンラインの報道)。</p>
+<ul>
+<li>約 700 のシステムを調べ、1 万 500 件の穴が見つかった。</li>
+<li>3 か月かけて直した後、新しい AI でもう一度調べたら、3 万 5000 件が見つかった。</li>
+<li>社長は「正直言って、もう疲れ切っている状態」と述べた。</li>
+</ul>
+<p>ここから読み取れることは二つです。</p>
+<ul>
+<li><strong>穴は、調べれば出てきます。</strong> 専門の人をそろえた大きな通信会社でも、この数です。</li>
+<li><strong>一度では終わりません。</strong> AI が新しくなるたびに、前の AI が見つけられなかった穴が見つかります。確かめるのは、年に一度の点検ではなく、続ける仕事になります。</li>
+</ul>
+<h2>どこから確かめるか</h2>
+<p>先に確かめるのは、<strong>自社や受託業者が個別に書いた部分</strong> です。基幹システム(ERP)への追加の開発、営業や顧客の管理の仕組み(SFA、CRM)の独自の拡張、システムの間をつなぐプログラムがこれに当たります。理由は三つあります。</p>
+<ol>
+<li><strong>直す人が決まっていません。</strong> 製品の本体は、製品の会社が穴を調べて直します。導入のときに個別に書いた部分は、納めた後は誰も調べていないのがふつうです。</li>
+<li><strong>大事なデータに直に触ります。</strong> 個別の部分は、基幹のデータを読み書きするために書かれます。</li>
+<li><strong>外とつなぐ口になります。</strong> 営業所、取引先、スマートフォンとつなぐ所は、たいてい個別に書いた部分です。</li>
+</ol>
+<p>「Java や C# で書いてあるから安全」は成り立ちません。メモリの扱いの誤りは減りますが、権限を確かめずに通してしまう、入力を調べずに使う、鍵やパスワードをコードに書き込む、といった誤りは、どの言語でも起きます。AI は、こうした誤りをコードから読み取ります。</p>
+<p>その次は、外から届く口です。警察庁の白書によると、2024年のランサムウェアの被害で、入られた経路の 55% が VPN の機器、31% がリモートデスクトップでした。</p>
+<h2>AI に読ませる物と、読ませない物</h2>
+<ul>
+<li><strong>読ませるのは、コードと、プログラムで先に処理したデータです。</strong> 顧客の名簿や取引の中身を、そのまま AI に読ませません。件数、形、項目の名のように、確かめるのに要る物だけをプログラムで取り出してから渡します。</li>
+<li><strong>作業は、自社の人がします。</strong> ただし、AI に読ませた物は AI の会社(Anthropic)に送られます。制度に入ると、その中身は決まりに沿って保持されます。だから、渡す物を選びます。鍵とパスワードは値を伏せた写しにし、名簿や取引は件数と項目の名だけにします。</li>
+<li><strong>見つけた穴と手順は、業者にも、直すのに要る分だけ渡します。</strong></li>
+<li><strong>攻撃の試験は、本番ではなく、試験用の環境でします。</strong> これは Red Team Access の枠の仕事です。</li>
+</ul>
+<h2>業者との関係</h2>
+<ul>
+<li><strong>ソースコードを納めてもらいます。</strong> 手元にコードが無い物は、確かめられません。契約でコードが納められているかを、先に見ます。</li>
+<li><strong>先に知らせます。</strong> たとえば次の一文です。</li>
+</ul>
+<div class="quoteblock">
+<blockquote>
+<p>当社は、当社のシステムと納入されたコードを、AI で確認します。実施にあたって問題点があれば回答してください。</p>
+</blockquote>
+</div>
+<ul>
+<li><strong>開発中の物ほど、早く始めます。</strong> 納品のときに初めて確かめて、使えないと分かるのが一番困ります。開発の途中で確かめる分、範囲を絞る、期日を見直す、といった協議は、早いほど小さく済みます。</li>
+<li><strong>見つかった穴を誰の負担で直すかは、契約の話です。</strong> 見つかってから揉めるより、確かめると決めた時に協議を始めます。</li>
+</ul>
+<h2>費用</h2>
+<p>AI の費用は、会社の契約の席の料金と、使った分です。Claude の Team プランのプレミアムの席は、一人あたり月 100 ドル(年払い)か 125 ドル(月払い)です(2026年11月10日に Anthropic の料金の頁で確かめた値)。担当者が二人か三人の会社なら、月に数万円から始められます。</p>
+<p>費用の大半は、AI ではなく、人の時間です。何を先に確かめるかを決め、結果を読み、直し、もう一度確かめる人が、自社に要ります(<a href="/guide/ai-and-in-house/">AI の時代に、委託をやめて自社で育てる</a>)。</p>
+<h2>デジタルドアとの関係</h2>
+<p>鍵を出し、止め、記録する仕組みは、攻撃に耐えるかを試してから使う物です。試すには Red Team Access の枠が要り、その条件は次の通りです。</p>
+<ul>
+<li>会社のドメインのアカウント</li>
+<li>会社が管理する端末</li>
+<li>外向きの通信の制限</li>
+<li>フィッシングに強い多要素認証</li>
+<li>担当者の身元の確認</li>
+</ul>
+<p>これは、鍵の管理を自社で持つ会社が整える物と同じです(<a href="/guide/keys-belong-to-managers/">デジタルキーは管理者が自分で持つ</a>、<a href="/guide/doors-and-cyber-defense/">デジタルドアはサイバー攻撃対策そのもの</a>)。Defense Access で自社のコードを確かめながら、網と認証を整えていけば、それが Red Team Access の申し込みの準備にも、デジタルドアを入れる下地にもなります。</p>
+<h2>何から始めるか</h2>
+<ol>
+<li>Defense Access を申し込む。コードを読む確かめは、返事を待たずに始められます。</li>
+<li>個別に書いた部分の一覧を作り、コードが手元にあるかを確かめる。</li>
+<li>業者に知らせる。</li>
+<li>一つ選んで確かめ、直し、もう一度確かめる。何を確かめ、何が見つかり、どう直したかを記録に残す。</li>
+<li>網と認証を整え、攻撃の試験の枠へ進む。</li>
+</ol>
+<p>申し込みの前に決める事から、最初の一つを確かめるまでの手順は、<a href="/check/">確かめの始め方</a>に書いています。進め方を AI に読ませる手引きを、<a href="https://github.com/aiseed-dev/digitaldoor/blob/main/skills/system-check/SKILL.md">skills/system-check</a> に置いています。自社でどう始めるかの相談と、Claude の使い方を学ぶ教室は、<a href="/consult/">相談と教室</a>を見てください。</p>
+<h2>出典</h2>
+<ul>
+<li><a href="https://support.claude.com/en/articles/14604842-cyber-verification-program">Anthropic: Cyber Verification Program(サポートの頁。2026年11月10日と11日に閲覧)。申し込みが要らない仕事、三つの枠、申し込める人、決まり、データの保持、使い道、返事の目安</a></li>
+<li><a href="https://www.anthropic.com/news/cyber-verification-program">Anthropic: Cyber Verification Program の発表</a></li>
+<li><a href="https://www.itmedia.co.jp/business/articles/2611/09/news084.html">ITmedia ビジネスオンライン(2026年11月9日)。ソフトバンクの決算説明会での宮川社長の発言</a></li>
+<li><a href="https://www.npa.go.jp/hakusyo/r07/honbun/html/bb3313000.html">警察庁: 令和7年 警察白書 第3章(2026年11月9日に閲覧)。ランサムウェアの感染経路</a></li>
+<li><a href="https://claude.com/pricing">Anthropic: 料金の頁(2026年11月10日に閲覧)。Team プランの席の料金</a></li>
+</ul>
+
+  </article>
+
+  <!-- CHAPTER NAV(前後の記事) -->
+  <nav class="chapter-nav">
+  <a href="/guide/why-digital-doors-lag/" rel="prev">&larr; 前: デジタルドアが遅れている理由</a>
+  <a href="/guide/">目次 &rarr;</a>
+</nav>
+
+  <!-- FOOTER(サイト内メニュー+奥付) -->
+  <footer class="site-footer">
+    <nav class="footer-nav" aria-label="サイト内リンク">
+      <div class="footer-col">
+        <h4>解説</h4>
+        <ul>
+          <li><a href="/guide/matter/">Matterとは何か</a></li>
+          <li><a href="/guide/aliro/">Aliroとは何か</a></li>
+          <li><a href="/guide/what-a-smart-door-needs/">スマートドアに求められる条件</a></li>
+          <li><a href="/guide/layers/">玄関まわりの技術の層</a></li>
+          <li><a href="/guide/open-specification/">仕様と参照実装の公開</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>サイト</h4>
+        <ul>
+          <li><a href="/guide/">解説</a></li>
+          <li><a href="/check/">始め方</a></li>
+          <li><a href="/manual/">マニュアル</a></li>
+          <li><a href="/news/">ニュース</a></li>
+          <li><a href="/blog/">ブログ</a></li>
+          <li><a href="/consult/">相談と教室</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="colophon">
+      <div class="colophon-mark">§</div>
+      解説 20<br>
+      Tokushima · 2026.11.10<br>
+      <a href="/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">デジタルドア</a> · <a href="/#about" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">このサイトについて</a> · <a href="/license/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">ライセンス</a> · <a href="/feed.xml" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">RSS</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">CC BY 4.0</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // 広い画面ではサイドバー目次を常時展開する(狭い画面では折りたたみに戻す)
+  (function () {
+    var toc = document.querySelector(".series-toc details");
+    if (!toc) return;
+    var mq = window.matchMedia("(min-width: 1200px)");
+    function sync() { toc.open = mq.matches; }
+    sync();
+    if (mq.addEventListener) mq.addEventListener("change", sync);
+    else mq.addListener(sync);
+  })();
+
+  // Mermaid loads only on pages that contain a .mermaid block.
+  // Self-hosted (no third-party CDN dependency); SRI verified.
+  if (document.querySelector(".mermaid")) {
+    const s = document.createElement("script");
+    s.src = "/js/vendor/mermaid-11.14.0.min.js";
+    s.integrity = "sha384-1CMXl090wj8Dd6YfnzSQUOgWbE6suWCaenYG7pox5AX7apTpY3PmJMeS2oPql4Gk";
+    s.crossOrigin = "anonymous";
+    s.onload = () => {
+      const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      mermaid.initialize({ startOnLoad: false, theme: prefersDark ? "dark" : "default" });
+      mermaid.run();
+    };
+    document.head.appendChild(s);
+  }
+</script>
+
+
+</body>
+</html>

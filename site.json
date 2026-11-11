@@ -17,8 +17,8 @@
         "file": "guide.adoc",
         "label": "解説",
         "url_base": "/guide",
-        "subtitle": "通信規格と機器の基礎知識",
-        "description": "Matter、Aliro、ドアホン、電子錠、扉のコントローラ、鍵の発行についての解説記事。"
+        "subtitle": "扉と鍵の仕組み、鍵の管理、サイバー攻撃への備えを、順に説明します。",
+        "description": "扉と鍵の仕組み、鍵の管理、サイバー攻撃への備えを、順に説明します。"
       },
       {
         "file": "blog.adoc",

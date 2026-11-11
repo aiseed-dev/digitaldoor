@@ -4,7 +4,15 @@
 <link>https://door.aiseed.dev/</link>
 <description>扉と鍵の話を、層に分けて書く</description>
 <language>ja</language>
-<lastBuildDate>Wed, 11 Nov 2026 10:59:22 +0900</lastBuildDate>
+<lastBuildDate>Wed, 11 Nov 2026 13:32:53 +0900</lastBuildDate>
+<item>
+<title>AI で自社のシステムを確かめる</title>
+<link>https://door.aiseed.dev/guide/check-your-systems-with-ai/</link>
+<guid>https://door.aiseed.dev/guide/check-your-systems-with-ai/</guid>
+<category>解説</category>
+<pubDate>Tue, 10 Nov 2026 00:00:00 +0900</pubDate>
+<description>コードを読んで穴を探すことは、申し込まなくても今日から始められます。2026年10月からは、AI が止めることのある守りの仕事(穴が本当に使えるかの確かめなど)も、申し込めば進めやすくなりました。大きな会社では、数万件の穴が見つかっています。先に確かめるのは、受託業者が個別に書いた部分です。AI に渡す物と渡さない物、業者への知らせ方、費用、攻撃の試験までの道のりを、順に説明します。</description>
+</item>
 <item>
 <title>サイバー攻撃に耐える扉</title>
 <link>https://door.aiseed.dev/guide/resist-attacks/</link>

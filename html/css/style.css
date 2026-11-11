@@ -67,8 +67,8 @@ pre code { background: none; padding: 0; }
 .site-header nav { display: flex; gap: 1.2rem; flex-wrap: wrap; justify-content: flex-end; }
 .site-header nav a {
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.2em;
+  font-size: 12px;
+  letter-spacing: 0.14em;
   color: var(--whisper);
   white-space: nowrap;
 }
@@ -114,8 +114,8 @@ a.activity-link:hover h3 { color: var(--accent); }
   padding: 1.5rem 24px 3rem;
   border-top: 1px solid var(--rule);
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.15em;
+  font-size: 12px;
+  letter-spacing: 0.14em;
   color: var(--whisper);
   text-align: center;
 }
@@ -125,6 +125,11 @@ a.activity-link:hover h3 { color: var(--accent); }
 /* 記事本文の部品(雛形の互換。使うときのため) */
 .article-body blockquote { margin: 1.5rem 0; padding: 0.5rem 1.2rem; border-left: 2px solid var(--accent); color: var(--whisper); }
 .article-body table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+/* 表を横に送れる枠。狭い画面で表が頁全体を横にはみ出させないように(/manual/、/check/) */
+.table-wrap { overflow-x: auto; margin: 1rem 0 1.4rem; }
+/* 長い語(code の道、URL)を折り返し、狭い画面で頁全体が横にはみ出さないようにする。pre の中は折り返さず横送り */
+main p, main li, main td, main th, main blockquote, main code, main a { overflow-wrap: anywhere; }
+main pre, main pre code { overflow-wrap: normal; }
 .article-body th, .article-body td { border-bottom: 1px solid var(--rule); padding: 0.5rem 0.6rem; text-align: left; vertical-align: top; }
 .article-body th { font-weight: 700; color: var(--whisper); font-size: 0.85rem; }
 

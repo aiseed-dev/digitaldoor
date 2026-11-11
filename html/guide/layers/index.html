@@ -128,8 +128,8 @@ body::before {
   justify-content: space-between;
   align-items: baseline;
   font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
-  font-size: 11px;
-  letter-spacing: 0.2em;
+  font-size: 12px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--whisper);
 }
@@ -486,8 +486,8 @@ article hr::before {
 }
 .footer-col h4 {
   font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
-  font-size: 11px;
-  letter-spacing: 0.2em;
+  font-size: 12px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--whisper);
   font-weight: 700;
@@ -842,101 +842,57 @@ article img {
 <tbody>
 <tr>
 <td>扉の製造</td>
-</tr>
-<tr>
 <td>扉メーカー。電子錠を埋め込む開口部、扉内部の配線経路、その性能等級を持つ</td>
-</tr>
-<tr>
 <td>防火認定と等級が参入障壁。数量は新築着工数ではなく、既存の建物の戸数に比例する</td>
 </tr>
 <tr>
 <td>電子錠</td>
-</tr>
-<tr>
 <td>競争を経て少数の優良メーカーが残る。電動部は標準的な錠として購入する部品になる。認定や物理的な要件がある特殊な錠は残る</td>
-</tr>
-<tr>
 <td>汎用品は価格が下がり続ける。特殊品は認定によって少数が高い利幅で残る</td>
 </tr>
 <tr>
 <td>扉のコントローラ</td>
-</tr>
-<tr>
 <td>扉側の専用コントローラ。火災・停電・避難時の判断、監査記録、二人同時認証と強要検知、配線の自己診断、複数の入力の組み合わせを扉の中で処理する。インターネットに接続しなくても動作する。仕様は公開し、実装は各社が工夫する</td>
-</tr>
-<tr>
 <td>これまで設備工事会社(SIer)が独自の制御盤で担っていた部分。公開仕様に置き換わると、独自仕様による価格は消え、工夫の差が扉の中に残る</td>
 </tr>
 <tr>
 <td>ドアホン(リーダー)</td>
-</tr>
-<tr>
 <td>Apple、Google、Amazon。顔、NFC、UWB、音声を1台で読み取る。消防連動や過酷な環境が要件の特殊なリーダーは残る</td>
-</tr>
-<tr>
 <td>汎用品は本体を1回販売し、囲い込みは月額の映像サービスで行う。特殊品は認定と物理要件で残る</td>
 </tr>
 <tr>
 <td>スマートフォン</td>
-</tr>
-<tr>
 <td>Apple、Google。Walletの鍵と本人確認の手段</td>
-</tr>
-<tr>
 <td>鍵自体には課金しない。囲い込みは端末で行う</td>
 </tr>
 <tr>
 <td>周辺機器</td>
-</tr>
-<tr>
 <td>スピーカー、火災報知器、センサー、室内カメラ。各社</td>
-</tr>
-<tr>
 <td>購入する部品。足りない機能は1台追加する</td>
 </tr>
 <tr>
 <td>通信規格</td>
-</tr>
-<tr>
 <td>公開規格。Aliro、OSDP、ONVIF、そして扉のAPI(公開仕様)。Matterは周辺機器を接続する口の一つ</td>
-</tr>
-<tr>
 <td>無料。誰も所有しない</td>
 </tr>
 <tr>
 <td>鍵の発行</td>
-</tr>
-<tr>
 <td>発行者。誰に鍵を出し、いつ失効させ、本人であることを確認して記録する</td>
-</tr>
-<tr>
 <td><strong>責任が残る。</strong> 管理者が自分で持つ。発行者の鍵を業者に預けない</td>
 </tr>
 <tr>
 <td>業務システムとの連携</td>
-</tr>
-<tr>
 <td>機器で起きた出来事を、予約、名簿、鍵の台帳、スケジュールに結びつける</td>
-</tr>
-<tr>
 <td><strong>責任が残る。</strong> 事業者ごとに責任者と様式が異なるため、汎用のSaaSにはならない。管理者が自分の道具として持つ</td>
 </tr>
 <tr>
 <td>業務システム</td>
-</tr>
-<tr>
 <td>予約、名簿、会計、報告</td>
-</tr>
-<tr>
 <td>無料に向かう。作らずに既存の物を配る</td>
 </tr>
 <tr>
 <td>管理者とAI</td>
-</tr>
-<tr>
 <td>事業者本人。判定はAIが行い、判断に迷う件だけ本人が確認する</td>
-</tr>
-<tr>
 <td>外部の人員は原則ゼロ</td>
 </tr>
 </tbody>
@@ -979,12 +935,12 @@ article img {
       <div class="footer-col">
         <h4>サイト</h4>
         <ul>
-          <li><a href="/">ホーム</a></li>
-          <li><a href="/guide/">解説の一覧</a></li>
+          <li><a href="/guide/">解説</a></li>
+          <li><a href="/check/">始め方</a></li>
+          <li><a href="/manual/">マニュアル</a></li>
+          <li><a href="/news/">ニュース</a></li>
           <li><a href="/blog/">ブログ</a></li>
-          <li><a href="/#about">このサイトについて</a></li>
-          <li><a href="/license/">ライセンス</a></li>
-          <li><a href="/feed.xml">RSS</a></li>
+          <li><a href="/consult/">相談と教室</a></li>
         </ul>
       </div>
     </nav>
@@ -992,7 +948,7 @@ article img {
       <div class="colophon-mark">§</div>
       解説 04<br>
       Tokushima · 2026.09.17<br>
-      <a href="/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">デジタルドア</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">CC BY 4.0</a>
+      <a href="/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">デジタルドア</a> · <a href="/#about" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">このサイトについて</a> · <a href="/license/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">ライセンス</a> · <a href="/feed.xml" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">RSS</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">CC BY 4.0</a>
     </div>
   </footer>
 

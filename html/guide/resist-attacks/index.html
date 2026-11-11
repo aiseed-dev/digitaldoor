@@ -128,8 +128,8 @@ body::before {
   justify-content: space-between;
   align-items: baseline;
   font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
-  font-size: 11px;
-  letter-spacing: 0.2em;
+  font-size: 12px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--whisper);
 }
@@ -486,8 +486,8 @@ article hr::before {
 }
 .footer-col h4 {
   font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
-  font-size: 11px;
-  letter-spacing: 0.2em;
+  font-size: 12px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--whisper);
   font-weight: 700;
@@ -853,56 +853,32 @@ article img {
 <tbody>
 <tr>
 <td>網が無くても扉が判断する</td>
-</tr>
-<tr>
 <td>網が切れても、乗っ取られても、扉は自分で判断して記録を続ける</td>
-</tr>
-<tr>
 <td>ローカルで動くこと、R-NW-05</td>
 </tr>
 <tr>
 <td>安全側を分ける</td>
-</tr>
-<tr>
 <td>安全側のマイコンは無線を持たず、通信の側が暴走しても誤って解錠しない。通信は 2 系統に分ける</td>
-</tr>
-<tr>
 <td>R-EL-01〜03、R-EL-20〜24</td>
 </tr>
 <tr>
 <td>消せない記録</td>
-</tr>
-<tr>
 <td>連番と hash の連鎖で残し、鍵を出せないセキュアエレメントで署名する。署名つきの伝票として外へ出す</td>
-</tr>
-<tr>
 <td>R-LG-03〜06、R-CT-11〜17</td>
 </tr>
 <tr>
 <td>認証を一社に集めない</td>
-</tr>
-<tr>
 <td>発行者の署名つきの資格情報を、扉が自分で確かめる</td>
-</tr>
-<tr>
 <td>扉コントローラ仕様書 5.2a、R-AC-09〜13</td>
 </tr>
 <tr>
 <td>網の分け方</td>
-</tr>
-<tr>
 <td>扉の系統をほかの網から分け、ルーターの更新の期間を確かめる</td>
-</tr>
-<tr>
 <td>R-NW-01〜05</td>
 </tr>
 <tr>
 <td>自分で持つ人と物</td>
-</tr>
-<tr>
 <td>脆弱性の窓口、更新の期間、鍵の置き場、更新を出し続ける体制、切り離して戻す人と手順</td>
-</tr>
-<tr>
 <td>R-RS-01〜10、R-IP-01〜12</td>
 </tr>
 </tbody>
@@ -945,29 +921,17 @@ article img {
 <tbody>
 <tr>
 <td>製造者</td>
-</tr>
-<tr>
 <td>署名つきの更新と起動の検査、版の下限、メモリの安全への計画、部品表と再現可能なビルド、JIT を使わない作り</td>
-</tr>
-<tr>
 <td>R-EL-25〜28、R-RS-13〜15</td>
 </tr>
 <tr>
 <td>製造者と運営者</td>
-</tr>
-<tr>
 <td>実行してよい物の一覧と毎日の照らし合わせ、知らせを外に出す仕組み</td>
-</tr>
-<tr>
 <td>R-RS-11、12</td>
 </tr>
 <tr>
 <td>施工と保守の人</td>
-</tr>
-<tr>
 <td>据付と点検のときに、一覧と照らし、版と下限を確かめる。入られたら切り離して戻す</td>
-</tr>
-<tr>
 <td>R-RS-07〜10、R-IP-01〜12</td>
 </tr>
 </tbody>
@@ -1065,12 +1029,12 @@ article img {
       <div class="footer-col">
         <h4>サイト</h4>
         <ul>
-          <li><a href="/">ホーム</a></li>
-          <li><a href="/guide/">解説の一覧</a></li>
+          <li><a href="/guide/">解説</a></li>
+          <li><a href="/check/">始め方</a></li>
+          <li><a href="/manual/">マニュアル</a></li>
+          <li><a href="/news/">ニュース</a></li>
           <li><a href="/blog/">ブログ</a></li>
-          <li><a href="/#about">このサイトについて</a></li>
-          <li><a href="/license/">ライセンス</a></li>
-          <li><a href="/feed.xml">RSS</a></li>
+          <li><a href="/consult/">相談と教室</a></li>
         </ul>
       </div>
     </nav>
@@ -1078,7 +1042,7 @@ article img {
       <div class="colophon-mark">§</div>
       解説 16<br>
       Tokushima · 2026.10.20<br>
-      <a href="/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">デジタルドア</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">CC BY 4.0</a>
+      <a href="/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">デジタルドア</a> · <a href="/#about" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">このサイトについて</a> · <a href="/license/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">ライセンス</a> · <a href="/feed.xml" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">RSS</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">CC BY 4.0</a>
     </div>
   </footer>
 

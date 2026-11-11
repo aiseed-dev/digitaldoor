@@ -20,6 +20,9 @@ from pathlib import Path
 
 SITE = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SITE))
+sys.path.insert(0, str(SITE / "tools"))
+
+from build.site_nav import footer_html, nav_html  # noqa: E402  上の並びと奥付の正
 
 TEXT = {
     "title": "デジタルドア ユーザーマニュアル",
@@ -154,6 +157,11 @@ def section_drivers() -> str:
         from digitalkey_sesame import cli as sesame_cli
         from digitalkey_sesame import locks as L
         out += ["### digitalkey-sesame", "", doc(digitalkey_sesame), "", "```", doc(L), "```", ""]
+        try:
+            from digitalkey_sesame import app as sesame_app
+            out += ["#### Sesame のアプリ", "", "```", doc(sesame_app), "```", ""]
+        except ImportError:
+            out += ["#### Sesame のアプリ", "", "画面には Flet が要ります(`pip install \"digitalkey-sesame[app]\"`)。", ""]
         out += ["#### digitalkey sesame(命令行)", "", "```", doc(sesame_cli), "```", "",
                 "#### digitalkey sesame import", "", "```", help_of(sesame_cli.main, ("import", "--help")), "```", ""]
     except ImportError:
@@ -164,6 +172,11 @@ def section_drivers() -> str:
 def md_to_html(md: str) -> str:
     from markdown_it import MarkdownIt
     return MarkdownIt("commonmark", {"html": False}).enable("table").render(md)
+
+
+def wrap_tables(html: str) -> str:
+    """表を横に送れる枠(style.css の .table-wrap)で包む。狭い画面で頁全体が横にはみ出さないように。"""
+    return re.sub(r"<table>(.*?)</table>", r'<div class="table-wrap"><table>\1</table></div>', html, flags=re.S)
 
 
 def main() -> int:
@@ -187,12 +200,12 @@ def main() -> int:
 <body>
     <header class="site-header">
         <a href="/" class="brand">デジタルドア</a>
-        <nav><a href="/guide/">解説</a><a href="/blog/">ブログ</a><a href="/news/">ニュース</a><a href="/manual/">マニュアル</a></nav>
+        {nav_html()}
     </header>
     <main class="index article-body">
-{md_to_html(md)}
+{wrap_tables(md_to_html(md))}
     </main>
-    <footer class="site-footer"><p>デジタルドア — aiseed · <a href="/license/">ライセンス</a> · <a href="/feed.xml">RSS</a></p></footer>
+    {footer_html()}
 </body>
 </html>
 '''

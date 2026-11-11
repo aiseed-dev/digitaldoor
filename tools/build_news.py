@@ -13,6 +13,10 @@ from html import escape
 from pathlib import Path
 
 SITE = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(SITE / "tools"))
+
+from build.site_nav import footer_html, nav_html  # noqa: E402  上の並びと奥付の正
+
 JST = timezone(timedelta(hours=9))
 START, END = "<!-- LATEST_NEWS_START -->", "<!-- LATEST_NEWS_END -->"
 
@@ -68,7 +72,7 @@ def main() -> int:
 <body>
     <header class="site-header">
         <a href="/" class="brand">デジタルドア</a>
-        <nav><a href="/guide/">解説</a><a href="/blog/">ブログ</a><a href="/news/">ニュース</a><a href="/manual/">マニュアル</a><a href="/#about">このサイトについて</a></nav>
+        {nav_html()}
     </header>
     <main class="index">
         <h1>ニュース</h1>
@@ -76,7 +80,7 @@ def main() -> int:
         <section class="article-list">{body}
         </section>
     </main>
-    <footer class="site-footer"><p>デジタルドア — aiseed · <a href="/license/">ライセンス</a> · <a href="/feed.xml">RSS</a></p></footer>
+    {footer_html()}
 </body>
 </html>
 '''

@@ -15,13 +15,7 @@
 <body>
     <header class="site-header">
         <a href="{{ home_link or '/' }}" class="brand">{{ site_name or 'Sample Site' }}</a>
-        <nav>
-            <a href="/guide/">解説</a>
-            <a href="{{ blog_base or '/blog' }}/">ブログ</a>
-            <a href="/news/">ニュース</a>
-            <a href="/manual/">マニュアル</a>
-            <a href="/#about">このサイトについて</a>
-        </nav>
+        {{ site_nav_html }}
     </header>
 
     <main class="index">
@@ -33,8 +27,6 @@
         </section>
     </main>
 
-    <footer class="site-footer">
-        <p>{{ copyright_text or site_name or 'Sample Site' }}</p>
-    </footer>
+    {{ site_footer_html }}
 </body>
 </html>

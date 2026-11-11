@@ -5,7 +5,7 @@
   共有も改変も、商用を含めて自由です。出所として https://door.aiseed.dev を示し、変更した場合はその旨を書いてください。
   全文: https://creativecommons.org/licenses/by/4.0/legalcode
 
-コード(digitalkey/、tests/、flet_ble/、tools/、html/css、html/js、pyproject.toml、site.json): GNU Affero General Public License v3.0 or later (AGPL-3.0-or-later)
+コード(digitalkey/、kagi/、tests/、flet_ble/、tools/、html/css、html/js(html/js/three.min.js を除く)、pyproject.toml、site.json): GNU Affero General Public License v3.0 or later (AGPL-3.0-or-later)
   Copyright (c) 2026 aiseed
   全文: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -13,5 +13,9 @@
   Copyright (c) 2026 aiseed
   全文: controller/LICENSE
   製品に組み込んで、閉じたまま配ることもできます。
+
+使っている物: three.js(html/js/three.min.js。立体図の頁 /3d/ で使う): MIT License
+  Copyright 2010-2021 Three.js Authors
+  中身は変えずに置いています。ライセンスの注記はファイルの先頭にあります。
 
 無保証。

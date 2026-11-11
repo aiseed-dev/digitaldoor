@@ -120,4 +120,24 @@
     <lastmod>2026-10-20</lastmod>
     <priority>0.6</priority>
   </url>
+  <url>
+    <loc>https://door.aiseed.dev/guide/check-your-systems-with-ai/</loc>
+    <lastmod>2026-11-10</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://door.aiseed.dev/check/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://door.aiseed.dev/consult/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://door.aiseed.dev/3d/</loc>
+    <lastmod>2026-09-17</lastmod>
+    <priority>0.5</priority>
+  </url>
 </urlset>

@@ -19,7 +19,7 @@
     <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
     <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
     <link rel="alternate" type="application/rss+xml" title="デジタルドア" href="/feed.xml">
-    <link rel="stylesheet" href="/css/style.css?v=3f72e750">
+    <link rel="stylesheet" href="/css/style.css?v=193e0497">
     <style>
         .hero h1 { line-height: 1.35; }
         .hero .lead { color: var(--ink); margin-top: 0.8rem; }
@@ -28,6 +28,7 @@
         .entry h3 { margin: 0 0 0.4rem; font-size: 1.05rem; }
         .entry p { margin: 0 0 0.6rem; color: var(--whisper); font-size: 0.92rem; line-height: 1.75; }
         .entry ul { margin: 0; padding-left: 1.1em; font-size: 0.92rem; line-height: 1.9; }
+        .to-3d { margin: 0.6rem 0 1.2rem; font-weight: 700; }
         .published { list-style: none; padding: 0; margin: 1rem 0 0; }
         .published li { padding: 0.75rem 0; border-bottom: 1px solid var(--rule); }
         .published li:first-child { border-top: 1px solid var(--rule); }
@@ -103,13 +104,7 @@
 <body>
     <header class="site-header">
         <a href="/" class="brand">デジタルドア</a>
-        <nav>
-            <a href="/guide/">解説</a>
-            <a href="/blog/">ブログ</a>
-            <a href="/news/">ニュース</a>
-            <a href="/manual/">マニュアル</a>
-            <a href="#about">このサイトについて</a>
-        </nav>
+        <nav><a href="/guide/">解説</a><a href="/check/">始め方</a><a href="/manual/">マニュアル</a><a href="/news/">ニュース</a><a href="/blog/">ブログ</a><a href="/consult/">相談と教室</a></nav>
     </header>
 
     <main>
@@ -177,6 +172,7 @@
                     <li><span class="k">H</span><b>スマートフォン、カード</b> <small>本人が持つ鍵の入れ物。中の鍵の管理が本題(課題 1、2)</small></li>
                 </ul>
             </figure>
+            <p class="to-3d"><a href="/3d/">立体で見る — 扉が自分で確かめて、開けて、記録する様子</a></p>
             <div class="flow" aria-label="スマートドアの仕組み">
                 <div class="flow-row">
                     <div class="flow-box key"><b><span class="mark">1</span><span class="mark">2</span>鍵の発行</b>誰に、どの扉を、いつまで。<br><small>管理者、発行者の鍵、台帳。人事の届けから入社と退職を受ける</small></div>
@@ -289,9 +285,12 @@
                     <h3>情報システム部門の方</h3>
                     <p>鍵の管理は、アカウントやルートの管理と同じ仕事です。</p>
                     <ul>
+                        <li><a href="/guide/check-your-systems-with-ai/">AI で自社のシステムを確かめる</a></li>
+                        <li><a href="/check/">確かめの始め方</a></li>
                         <li><a href="/guide/keys-belong-to-managers/">デジタルキーは管理者が自分で持つ</a></li>
                         <li><a href="/guide/doors-and-cyber-defense/">デジタルドアはサイバー攻撃対策そのもの</a></li>
                         <li><a href="https://github.com/aiseed-dev/digitaldoor/blob/main/docs/権限の申請の雛形.md">権限の申請の雛形(下書き)</a></li>
+                        <li><a href="/consult/">相談と教室</a></li>
                     </ul>
                 </div>
                 <div class="entry">
@@ -325,6 +324,16 @@
         <section>
             <h2>まず読む解説</h2>
             <div class="article-list">
+                <a href="/guide/check-your-systems-with-ai/" class="activity-link"><div class="activity-item">
+                    <div class="activity-number">20</div>
+                    <h3>AI で自社のシステムを確かめる</h3>
+                    <p>コードを読む確かめは、今日から始められます。受託で作った部分から、自社の人が確かめます。</p>
+                </div></a>
+                <a href="/check/" class="activity-link"><div class="activity-item">
+                    <div class="activity-number">始め方</div>
+                    <h3>確かめの始め方</h3>
+                    <p>申し込む前に決める事、運用の決まり、AI に渡す物と渡さない物、業者への知らせ、最初の一つの確かめ方。</p>
+                </div></a>
                 <a href="/guide/keys-belong-to-managers/" class="activity-link"><div class="activity-item">
                     <div class="activity-number">17</div>
                     <h3>デジタルキーは管理者が自分で持つ</h3>
@@ -392,14 +401,13 @@
 
         <section id="about">
             <h2>このサイトについて</h2>
-            <p>aiseed が運営しています。aiseed は収益を目的としない団体です。料金、会費、認証の制度はありません。</p>
+            <p>aiseed が運営しています。aiseed は収益を目的としない団体です。このサイトの仕様、道具、解説、手引きは無料で、会費と認証の制度はありません。</p>
+            <p>相談と教室は、aiseed とは別に、運営している者が個人として受ける仕事で、時間に応じた料金をいただきます。くわしくは「<a href="/consult/">相談と教室</a>」を見てください。</p>
             <p>仕様と道具は、各社が参考にして自社で開発し、自社で運用するための物です。問題や困りごとに気づいたら、<a href="https://github.com/aiseed-dev/digitaldoor/issues">Issues</a> で知らせてください。要求の番号に整えて、仕様に反映します。</p>
             <p>文章は CC BY 4.0、コードは AGPL-3.0-or-later、扉のコントローラは Apache-2.0 です。</p>
         </section>
     </main>
 
-    <footer class="site-footer">
-        <p>デジタルドア — aiseed · <a href="/license/">ライセンス</a> · <a href="/feed.xml">RSS</a></p>
-    </footer>
+    <footer class="site-footer"><p>デジタルドア — aiseed · <a href="/#about">このサイトについて</a> · <a href="/license/">ライセンス</a> · <a href="/feed.xml">RSS</a></p></footer>
 </body>
 </html>

@@ -15,6 +15,8 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
 
+from . import site_nav
+
 
 _BUNDLED_TEMPLATES_DIR = Path(__file__).parent.parent / "templates"
 
@@ -55,6 +57,19 @@ env = Environment(
     autoescape=False,
     keep_trailing_newline=True,
 )
+
+
+def _add_site_nav_globals(environment):
+    """上の並びと奥付(build/site_nav.py が正)を、全部の雛形から使えるようにする。"""
+    environment.globals.update(
+        site_nav=site_nav.NAV,
+        site_nav_html=site_nav.nav_html(),
+        site_footer_links=site_nav.FOOTER_LINKS,
+        site_footer_html=site_nav.footer_html(),
+    )
+
+
+_add_site_nav_globals(env)
 
 
 def _load_site_config(root: Path) -> dict:
@@ -117,6 +132,7 @@ def configure_site(site: Path) -> None:
         autoescape=False,
         keep_trailing_newline=True,
     )
+    _add_site_nav_globals(env)
 
     _site_config = _load_site_config(SITE_ROOT)
     site_url = _site_config.get("site_url")
@@ -150,6 +166,24 @@ def asset_version() -> str:
             h.update(p.read_bytes())
     _asset_version_cache = h.hexdigest()[:8] or "1"
     return _asset_version_cache
+
+
+# 頁ごとの CSS/JS(style.css と main.js の外)。`?v=` には、そのファイル一つの
+# 中身の sha256 の先頭 8 文字を付ける。中身を変えない three.min.js も同じ作りで、
+# 版が変わらない限り印も変わらない。
+PAGE_ASSETS = (
+    "css/door3d.css",
+    "js/door3d.js",
+    "js/three.min.js",
+)
+
+
+def file_asset_version(rel: str) -> str | None:
+    """html/<rel> の中身の sha256 の先頭 8 文字。ファイルが無ければ None。"""
+    p = SITE_ROOT / "html" / rel
+    if not p.exists():
+        return None
+    return hashlib.sha256(p.read_bytes()).hexdigest()[:8]
 
 
 def resolve_site(argv: list[str]) -> tuple[Path, list[str]]:

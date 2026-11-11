@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>相談と教室 | デジタルドア</title>
+    <meta name="description" content="自社のシステムを AI で確かめる相談、Claude の使い方を学ぶ教室、デジタルキーの発行と管理。徳島から。">
+    <link rel="canonical" href="https://door.aiseed.dev/consult/">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'">
+    <link rel="stylesheet" href="/css/style.css?v=193e0497">
+    <style>
+        .consult h2 { margin-top: 2.6rem; }
+        .consult .lead { font-size: 1.08rem; line-height: 1.9; }
+        .consult table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.4rem; font-size: 0.95rem; }
+        .consult th, .consult td { text-align: left; vertical-align: top; padding: 0.6rem 0.7rem; border-bottom: 1px solid var(--rule); line-height: 1.7; }
+        .consult th { white-space: nowrap; font-weight: 600; }
+        .consult ol li, .consult ul li { line-height: 1.85; margin-bottom: 0.3rem; }
+        .consult .note { color: var(--whisper); font-size: 0.93rem; }
+        @media (max-width: 560px) {
+            .consult th { white-space: normal; }
+            .consult th, .consult td { padding: 0.5rem 0.4rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <a href="/" class="brand">デジタルドア</a>
+        <nav><a href="/guide/">解説</a><a href="/check/">始め方</a><a href="/manual/">マニュアル</a><a href="/news/">ニュース</a><a href="/blog/">ブログ</a><a href="/consult/">相談と教室</a></nav>
+    </header>
+    <main class="consult">
+        <h1>相談と教室</h1>
+        <p class="lead">自社のシステムと鍵を、自社の人が AI と一緒に確かめて守れるようにする。そのための相談と教室を、徳島から始めます。</p>
+
+        <table>
+            <tr><th>システムを確かめる相談</th><td>自社のシステムと、業者から納められたコードを、AI で確かめる。何から始めるかを一緒に決め、分からない所を教えます。</td></tr>
+            <tr><th>AI 教室</th><td>自分の仕事を持ってきて、Claude と一緒に進める教室です。会社の方も、介護や福祉の現場の方も。</td></tr>
+            <tr><th>デジタルキー</th><td>民泊や空き家の鍵を、スマートフォンで出して、止めて、記録する。準備を進めています。</td></tr>
+        </table>
+
+        <h2>システムを確かめる相談</h2>
+        <p>自社のコードを AI に読ませて穴を探すことは、申し込まなくても今日から始められます。2026年10月からは、見つけた穴が本当に使えるかを確かめる仕事のように、AI が止めることのある守りの仕事も、申し込めば進めやすくなりました。確かめるのは、その会社の方です。こちらは、始め方と急所をお伝えします。</p>
+        <ol>
+            <li><strong>申し込み。</strong> Anthropic の Cyber Verification Program に、会社として申し込みます。穴の仕分けと確かめを含む枠(Defense Access)は、返事の目安が 2 日です。コードを読む確かめは、返事を待たずに始められます。</li>
+            <li><strong>どこから確かめるかを決める。</strong> 先に見るのは、業者が個別に書いた部分と、外から届く口です。</li>
+            <li><strong>AI に読ませる物を用意する。</strong> コードと、プログラムで先に処理したデータだけを読ませます。名簿や取引の中身は、そのまま読ませません。</li>
+            <li><strong>業者に知らせる。</strong> 確かめを始めることを先に伝え、範囲と期日を協議します。</li>
+            <li><strong>確かめ、直し、もう一度確かめる。</strong> 見つけた物を記録に残し、続けていきます。</li>
+        </ol>
+        <p>作業は、その会社の人がします。AI に読ませた物は AI の会社(Anthropic)に送られ、制度に入ると決まりに沿って保持されます。だから、渡す物を選びます。見つけた穴と手順は、業者にも、直すのに要る分だけ渡します。</p>
+        <p>申し込みから最初の一つを確かめるまでの手順は <a href="/check/">確かめの始め方</a>に、考え方は <a href="/guide/check-your-systems-with-ai/">解説 20「AI で自社のシステムを確かめる」</a>に、AI に読ませる手引きは <a href="https://github.com/aiseed-dev/digitaldoor/blob/main/skills/system-check/SKILL.md">skills/system-check</a> に置いています。どれも、そのまま使えます。事故が起きた時と備えの手引き(<a href="https://github.com/aiseed-dev/digitaldoor/blob/main/skills/incident-response/SKILL.md">skills/incident-response</a>)と、見張りを作る手引き(<a href="https://github.com/aiseed-dev/digitaldoor/blob/main/skills/detection/SKILL.md">skills/detection</a>)も置いています。</p>
+
+        <h2>AI 教室</h2>
+        <p>前に立って話す講義ではありません。それぞれが自分の仕事を持ってきて、Claude と一緒に進めます。手が止まった所で、次に何を確かめるかを一緒に考えます。</p>
+        <ul>
+            <li><strong>持ってくる物の例。</strong> 手順書、申し送りや記録の様式、集計の表、古いプログラム、作りたい小さな道具。</li>
+            <li><strong>最初の回でする事。</strong> 持ってきた物から、人の名前と会社の秘密を外します。外し方を覚えると、あとは自分の職場で続けられます。</li>
+            <li><strong>場所。</strong> 徳島県内です。</li>
+        </ul>
+        <p class="note">会社のシステムの穴の話は、教室では扱いません。ほかの会社の方が居る所に出す物ではないからです。そちらは、上の相談で、その会社の中でします。</p>
+
+        <h2>デジタルキー</h2>
+        <p>民泊や空き家では、鍵を渡す、返してもらう、なくした時に替える、に手間がかかります。スマートフォンの鍵なら、泊まる間だけ開けられる鍵を出し、終わったら止め、誰がいつ開けたかを記録に残せます。</p>
+        <p>鍵の大元は、建物を管理する方が自分で持ちます。その仕組みの仕様と道具を、このサイトで公開しています(<a href="/guide/keys-belong-to-managers/">デジタルキーは管理者が自分で持つ</a>、<a href="/manual/">受け入れの道具のマニュアル</a>)。</p>
+
+        <h2>条件と窓口</h2>
+        <p>このサイトの仕様、道具、解説、手引きは、これまで通り無料で、自由に使えます。</p>
+        <p>相談と教室は、aiseed とは別に、運営している者が個人として受ける仕事です。時間に応じた料金をいただきます。条件と窓口は、準備ができ次第ここに書きます。</p>
+        <p class="note">仕様や解説への質問は、<a href="https://github.com/aiseed-dev/digitaldoor/issues">Issues</a> で受けています。Issues は誰でも読めるので、会社の中の事は書かないでください。</p>
+    </main>
+    <footer class="site-footer"><p>デジタルドア — aiseed · <a href="/#about">このサイトについて</a> · <a href="/license/">ライセンス</a> · <a href="/feed.xml">RSS</a></p></footer>
+</body>
+</html>

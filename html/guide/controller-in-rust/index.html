@@ -128,8 +128,8 @@ body::before {
   justify-content: space-between;
   align-items: baseline;
   font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
-  font-size: 11px;
-  letter-spacing: 0.2em;
+  font-size: 12px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--whisper);
 }
@@ -486,8 +486,8 @@ article hr::before {
 }
 .footer-col h4 {
   font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
-  font-size: 11px;
-  letter-spacing: 0.2em;
+  font-size: 12px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--whisper);
   font-weight: 700;
@@ -864,29 +864,17 @@ article img {
 <tbody>
 <tr>
 <td>マイコン一つ</td>
-</tr>
-<tr>
 <td>部品が少なく、電力が小さい。OS の更新が要らない</td>
-</tr>
-<tr>
 <td>網、TLS、HTTP、記録の置き場が小さな機械には重い</td>
 </tr>
 <tr>
 <td>Linux の基板と、安全側のマイコン</td>
-</tr>
-<tr>
 <td>網、HTTP、Matter の橋、記録の置き場を Linux が持つ。接点と安全側の挙動はマイコンが持つので、Linux が止まっても内側から開けられる</td>
-</tr>
-<tr>
 <td>OS の更新と見張りが要る。二つの間の口を決める</td>
 </tr>
 <tr>
 <td>マイコン二つ(判断と安全側)</td>
-</tr>
-<tr>
 <td>判断も安全側も小さく保てる。安全側を単純にして認証を取りやすくする</td>
-</tr>
-<tr>
 <td>網の口をどちらに置くかを決める</td>
 </tr>
 </tbody>
@@ -905,38 +893,22 @@ article img {
 <tbody>
 <tr>
 <td>判断の核</td>
-</tr>
-<tr>
 <td>判断の表(火災、停電、非常手段、二人同時、強要、自動施錠)と設定。入力の事象から、出力と記録を決めるだけ</td>
-</tr>
-<tr>
 <td>どれでも(<code>no_std</code>)</td>
 </tr>
 <tr>
 <td>監査の記録</td>
-</tr>
-<tr>
 <td>記録の形、hash の連鎖、署名の口(Signer)、伝票の形</td>
-</tr>
-<tr>
 <td>どれでも(<code>no_std</code>)</td>
 </tr>
 <tr>
 <td>資格情報</td>
-</tr>
-<tr>
 <td>署名つきの資格情報を確かめる(形、発行者、署名、範囲、期限、使用済み)</td>
-</tr>
-<tr>
 <td>どれでも(<code>no_std</code>)</td>
 </tr>
 <tr>
 <td>入出力</td>
-</tr>
-<tr>
 <td>接点、HTTP の口、Matter の橋、記録の置き場、時計</td>
-</tr>
-<tr>
 <td>機械ごとに作る</td>
 </tr>
 </tbody>
@@ -1005,12 +977,12 @@ article img {
       <div class="footer-col">
         <h4>サイト</h4>
         <ul>
-          <li><a href="/">ホーム</a></li>
-          <li><a href="/guide/">解説の一覧</a></li>
+          <li><a href="/guide/">解説</a></li>
+          <li><a href="/check/">始め方</a></li>
+          <li><a href="/manual/">マニュアル</a></li>
+          <li><a href="/news/">ニュース</a></li>
           <li><a href="/blog/">ブログ</a></li>
-          <li><a href="/#about">このサイトについて</a></li>
-          <li><a href="/license/">ライセンス</a></li>
-          <li><a href="/feed.xml">RSS</a></li>
+          <li><a href="/consult/">相談と教室</a></li>
         </ul>
       </div>
     </nav>
@@ -1018,7 +990,7 @@ article img {
       <div class="colophon-mark">§</div>
       解説 15<br>
       Tokushima · 2026.10.19<br>
-      <a href="/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">デジタルドア</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">CC BY 4.0</a>
+      <a href="/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">デジタルドア</a> · <a href="/#about" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">このサイトについて</a> · <a href="/license/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">ライセンス</a> · <a href="/feed.xml" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">RSS</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">CC BY 4.0</a>
     </div>
   </footer>
 

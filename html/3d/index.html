@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>デジタルドアの立体図 | デジタルドア</title>
+    <meta name="description" content="集合住宅の玄関ドアを立体で見せる頁です。図面から立体へ変わる様子、扉が鍵の署名と期限を自分で確かめて開け、記録する様子を、ドアホン、電子錠、扉のコントローラ、鍵の発行、業務システムとの連携の五つの層に分けて示します。">
+    <link rel="canonical" href="https://door.aiseed.dev/3d/">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'">
+    <meta name="color-scheme" content="light dark">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="stylesheet" href="/css/door3d.css?v=9d693b0d">
+</head>
+<body>
+<div class="app">
+  <section class="stage" id="stage">
+    <div class="bp" id="bp"></div>
+    <canvas id="c" aria-label="集合住宅の玄関ドアの立体図。ドラッグで回せます。"></canvas>
+    <div class="labels" id="labels"></div>
+    <div class="alarm" id="alarm" hidden></div>
+    <div class="over top">
+      <header class="title">
+        <a class="home" href="/">← デジタルドアのホームへ</a>
+        <h1>デジタルドア</h1>
+        <p>扉が自分で確かめて、開けて、記録します。</p>
+      </header>
+      <div class="hud" id="hud" hidden>
+        <b id="hudh">扉の判断</b>
+        <ul>
+          <li data-k="issuer">発行者</li>
+          <li data-k="sig">署名</li>
+          <li data-k="scope">この扉の鍵か</li>
+          <li data-k="rev">失効の一覧</li>
+          <li data-k="time">期限</li>
+        </ul>
+        <div class="net" id="net">網 つながっています</div>
+      </div>
+    </div>
+    <div class="over bottom">
+      <div class="tblock" id="tblock">
+        <div>図名</div><div>玄関ドア 姿図(廊下側)</div>
+        <div>縮尺</div><div>S = 1:20</div>
+        <div>単位</div><div>mm(寸法は例)</div>
+      </div>
+      <div class="status" id="status" aria-live="polite" hidden></div>
+      <div class="hint" id="hint">ドラッグで回す ・ ホイールで寄る</div>
+    </div>
+    <div class="nogl" id="nogl" hidden>この端末では立体を描けませんでした。WebGL の使えるブラウザで開いてください。</div>
+  </section>
+
+  <aside class="panel">
+    <section>
+      <h2>図面から立体へ</h2>
+      <label class="morph" for="morph"><span>図面</span><input id="morph" type="range" min="0" max="1000" value="1000" aria-label="図面から立体へ"><span>立体</span></label>
+      <p>姿図の線が、そのまま厚みを持ちます。つまみを戻すと図面に戻ります。</p>
+    </section>
+
+    <section>
+      <h2>鍵をかざす</h2>
+      <div class="rows">
+        <button class="row" id="s-home"><i class="k ok"></i><strong>住人が帰る</strong><span class="d">スマートフォンをかざすと、扉が署名と期限を確かめて開けます。</span></button>
+        <button class="row" id="s-offline"><i class="k a"></i><strong>網が切れている時</strong><span class="d">ルーターが止まっていても、扉だけで確かめて開けます。</span></button>
+        <button class="row" id="s-revoked"><i class="k ng"></i><strong>止めた鍵</strong><span class="d">退去した人、なくした端末の鍵は、扉が拒みます。</span></button>
+        <button class="row" id="s-fire"><i class="k warn"></i><strong>火災の信号</strong><span class="d">報知器の信号で、避難のために錠を解放します。</span></button>
+      </div>
+    </section>
+
+    <section>
+      <h2>見る</h2>
+      <div class="pair">
+        <button class="btn" id="b-xray" aria-pressed="false">中を透かす</button>
+        <button class="btn" id="b-walk">中に入る</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>五つの層</h2>
+      <div class="rows" id="layers">
+        <button class="row" data-layer="reader"><i class="k a"></i><strong>ドアホン</strong><span class="d">来た人を映し、鍵を読み取ります。</span></button>
+        <button class="row" data-layer="lock"><i class="k a"></i><strong>電子錠</strong><span class="d">かんぬきを動かします。錠の銘柄は差し替えられます。</span></button>
+        <button class="row" data-layer="ctrl"><i class="k a"></i><strong>扉のコントローラ</strong><span class="d">開けるかどうかを決め、記録します。網が切れても、ここで決まります。</span></button>
+        <button class="row" data-layer="issue"><i class="k a"></i><strong>鍵の発行</strong><span class="d">建物や住戸の持ち主が、自分の鍵で出します。業者に預けません。</span></button>
+        <button class="row" data-layer="biz"><i class="k a"></i><strong>業務システムとの連携</strong><span class="d">予約や名簿とつなぎます。扉の記録は、署名つきで届きます。</span></button>
+      </div>
+    </section>
+
+    <section>
+      <h2>色とデザイン</h2>
+      <div class="sw" id="colors"></div>
+      <div class="chips" id="designs">
+        <button data-design="flat" aria-pressed="true">フラット</button>
+        <button data-design="yoko" aria-pressed="false">横目地</button>
+        <button data-design="tate" aria-pressed="false">縦スリット</button>
+      </div>
+      <p>カタログの一品ごとに、色と意匠を切り替えて見せられます。</p>
+    </section>
+
+    <section>
+      <h2>扉の記録</h2>
+      <ol class="log" id="log"></ol>
+      <p>一件ごとに前の記録とつながり、扉が署名します。ここに出るのは、この画面の中の例です。</p>
+    </section>
+
+    <section class="made">
+      <p>この画面は、図面も写真も使わず、文章の指示から AI(Claude)が書きました。寸法と色は例です。</p>
+      <p>製品の図面と写真があれば、その寸法と色で、一品ずつこの画面にできます。</p>
+    </section>
+  </aside>
+</div>
+
+<script src="/js/three.min.js?v=9274bbce"></script>
+<script src="/js/door3d.js?v=d56b0229"></script>
+</body>
+</html>

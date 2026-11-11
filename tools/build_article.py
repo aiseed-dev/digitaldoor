@@ -2034,6 +2034,13 @@ STATIC_PAGES_FOR_ASSETS = [
     "index.html",
     "404.html",
     "license/index.html",
+    # 手書きの頁と、別の道具(build_check / build_manual / build_news)が作る頁。
+    # 道具を走らせない時にも、style.css を変えたら版が揃うようにここで押す
+    "consult/index.html",
+    "check/index.html",
+    "3d/index.html",
+    "manual/index.html",
+    "news/index.html",
     "en/index.html",
     "about/index.html",
     "en/about/index.html",
@@ -2049,6 +2056,11 @@ _CSS_REF_RE = re.compile(r'(href="[^"]*style\.css)(?:\?v=[^"]*)?(")')
 _JS_REF_RE = re.compile(r'(src="[^"]*main\.js)(?:\?v=[^"]*)?(")')
 
 
+def _page_asset_ref_re(rel: str) -> re.Pattern:
+    """`href="/css/door3d.css"` や `src="/js/three.min.js?v=…"` の参照(頁ごとの CSS/JS)。"""
+    return re.compile(r'((?:src|href)="/' + re.escape(rel) + r')(?:\?v=[^"]*)?(")')
+
+
 def update_static_page_asset_versions():
     """Stamp the current asset version onto style.css / main.js references
     in hand-edited top-level pages. Without this, browsers keep serving the
@@ -2057,6 +2069,9 @@ def update_static_page_asset_versions():
     replacement_css = rf'\1?v={version}\2'
     replacement_js = rf'\1?v={version}\2'
     html_root = config.SITE_ROOT / "html"
+    # 頁ごとの CSS/JS(config.PAGE_ASSETS)は、ファイル一つずつの印を付ける
+    page_versions = {rel: v for rel in config.PAGE_ASSETS
+                     if (v := config.file_asset_version(rel))}
     updated = 0
     for rel in STATIC_PAGES_FOR_ASSETS:
         f = html_root / rel
@@ -2065,6 +2080,8 @@ def update_static_page_asset_versions():
         text = f.read_text(encoding="utf-8")
         new_text = _CSS_REF_RE.sub(replacement_css, text)
         new_text = _JS_REF_RE.sub(replacement_js, new_text)
+        for asset_rel, asset_v in page_versions.items():
+            new_text = _page_asset_ref_re(asset_rel).sub(rf'\1?v={asset_v}\2', new_text)
         if new_text != text:
             f.write_text(new_text, encoding="utf-8")
             updated += 1
@@ -2355,6 +2372,10 @@ def build_sitemap():
 
     urls.append((f"{site_url}/about/", latest, "0.6"))
     urls.append((f"{site_url}/en/about/", latest, "0.5"))
+    urls.append((f"{site_url}/check/", latest, "0.6"))
+    urls.append((f"{site_url}/consult/", latest, "0.6"))
+    # 手で置いた頁: デジタルドアの立体図(html/3d/index.html、three.js は html/js/ に置く)
+    urls.append((f"{site_url}/3d/", latest, "0.5"))
     urls.append((f"{site_url}/light-farming/", latest, "0.8"))
     urls.append((f"{site_url}/en/light-farming/", latest, "0.7"))
     urls.append((f"{site_url}/privacy/", latest, "0.3"))

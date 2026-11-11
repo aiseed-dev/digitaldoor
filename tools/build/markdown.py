@@ -3,6 +3,7 @@
 import html
 import re
 import sys
+import unicodedata
 from pathlib import Path
 
 from markdown_it import MarkdownIt
@@ -172,6 +173,177 @@ def process_chain_blocks(html_text):
     return _CHAIN_DIV_RE.sub(_replace, html_text)
 
 
+# ---------------------------------------------------------------------------
+# AsciiDoc の表を、部品(pyasciidoc)に渡す前に「一行=一行」の形へ整える。
+#
+# AsciiDoc の決まりでは、表の最初の(空でない)行のセルの数 N が列の数に
+# なり、以後のセルは行をまたいで順に詰められ、N 個ごとに一行になる。
+# 部品は `|` で始まる一行を表の一行として扱うので、セルを一行に一つずつ
+# 書いた表は崩れる。ここで N 個ごとに `| a | b | c` の一行へまとめ直す。
+# 区切りの見分け方(`|===`、```/~~~ の囲み、`----`、`////`)と、セルの
+# 分け方(`\|` はセルの中のパイプ)は部品の _table_rule /
+# _find_closing_line / _split_table_row と同じにしてある。
+# ---------------------------------------------------------------------------
+
+_ADOC_TABLE_DELIM_RE = re.compile(r"^\|===[ \t]*$")
+_ADOC_FENCE_OPEN_RE = re.compile(r"^(`{3,}|~{3,})")
+_ADOC_LISTING_DELIM_RE = re.compile(r"^-{4,}[ \t]*$")
+_ADOC_BLOCK_COMMENT_RE = re.compile(r"^/{4,}[ \t]*$")
+_ADOC_CELL_SPLIT_RE = re.compile(r"(?<!\\)\|")
+
+
+def _split_adoc_row(line):
+    """部品の _split_table_row と同じ分け方。ただし `\\|` は戻さず、
+    書いたままの字で返す(組み直した行を部品がもう一度分けるため)。"""
+    cells = _ADOC_CELL_SPLIT_RE.split(line)
+    if cells and cells[0].strip() == "":
+        cells = cells[1:]
+    return [c.strip() for c in cells]
+
+
+def _fence_closes(text, marker):
+    stripped = text.strip()
+    return bool(stripped) and set(stripped) <= {marker[0]} and len(stripped) >= len(marker)
+
+
+def _find_table_close(lines, start):
+    """部品の _find_closing_line と同じく、囲み(```/~~~)と ////
+    の中の `|===` を飛ばして、表の閉じの行の番号を返す(無ければ len)。"""
+    fence = ""
+    in_comment = False
+    i = start
+    while i < len(lines):
+        text = lines[i].lstrip()
+        if fence:
+            if _fence_closes(text, fence):
+                fence = ""
+        elif in_comment:
+            if _ADOC_BLOCK_COMMENT_RE.match(text):
+                in_comment = False
+        elif (m := _ADOC_FENCE_OPEN_RE.match(text)):
+            fence = m.group(1)
+        elif _ADOC_BLOCK_COMMENT_RE.match(text):
+            in_comment = True
+        elif _ADOC_TABLE_DELIM_RE.match(text):
+            return i
+        i += 1
+    return len(lines)
+
+
+def _is_wide(ch):
+    return unicodedata.east_asian_width(ch) in ("W", "F")
+
+
+def _join_continuation(text, cont):
+    """続きの行を一行につなぐ。部品は改行を softbreak として扱い、両側が
+    全角の字なら消し(cjk_friendly)、そうでなければ空白一つに見せる。
+    同じ見え方になるよう、両側が全角なら何も挟まず、ほかは空白でつなぐ。
+    続きの行の中の `|` は、部品がセルの区切りと読まないよう `\\|` にする。"""
+    out = text
+    for c in cont:
+        c = _ADOC_CELL_SPLIT_RE.sub(r"\\|", c)
+        sep = "" if out and c and _is_wide(out[-1]) and _is_wide(c[0]) else " "
+        out = f"{out}{sep}{c}" if out else c
+    return out
+
+
+def _reflow_table(inner, warn):
+    """表の中身の行(区切りの行を除く)を、N 列ごとの一行に組み直す。
+
+    すでに全部の行が N 個のセルなら、そのまま返す(今までの表は変わらない)。
+    `|` で始まらない行は直前のセルの続き。続きのセルが組み直した行の
+    最後に来るときは、続きの行をそのまま後ろに置く(部品の扱いと同じ)。
+    行の途中に来るときは、一行に収めるため _join_continuation でつなぐ。"""
+    row_cells = []   # 行ごとのセル(書いた順)。続きの行は各セルの第2要素へ
+    for line in inner:
+        text = line.lstrip()
+        if not text.strip():
+            continue
+        if text.startswith("|"):
+            row_cells.append([[c, []] for c in _split_adoc_row(text)])
+        elif row_cells:
+            row_cells[-1][-1][1].append(text.strip())
+        # 最初の行より前の、`|` で始まらない行は部品と同じく捨てる
+    if not row_cells:
+        return inner
+    n = len(row_cells[0])
+    if all(len(r) == n for r in row_cells):
+        return inner
+
+    cells = [c for r in row_cells for c in r]
+    rem = len(cells) % n
+    if rem:
+        warn(len(cells), n)
+        cells += [["", []] for _ in range(n - rem)]
+
+    out = []
+    for k in range(0, len(cells), n):
+        row = cells[k:k + n]
+        texts = []
+        for j, (text, cont) in enumerate(row):
+            if cont and j < n - 1:
+                text = _join_continuation(text, cont)
+            texts.append(text)
+        out.append("| " + " | ".join(texts))
+        out.extend(row[-1][1])
+    return out
+
+
+def normalize_adoc_tables(text, label=""):
+    """`|===` の表を、部品が読める「一行=表の一行」の形に整えて返す。
+
+    `label` は警告に出す名前(記事の ID など)。セルの数が列の数で
+    割り切れない表は最後の行を空のセルで埋め、標準エラーに一行書く。"""
+    lines = text.split("\n")
+    out = []
+    fence = ""
+    in_listing = False
+    in_comment = False
+    table_no = 0
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        s = line.lstrip()
+        indent = len(line) - len(s)
+        if fence:
+            if _fence_closes(s, fence):
+                fence = ""
+        elif in_listing:
+            if _ADOC_LISTING_DELIM_RE.match(s):
+                in_listing = False
+        elif in_comment:
+            if _ADOC_BLOCK_COMMENT_RE.match(s):
+                in_comment = False
+        elif indent < 4 and (m := _ADOC_FENCE_OPEN_RE.match(s)):
+            fence = m.group(1)
+        elif _ADOC_LISTING_DELIM_RE.match(s):
+            in_listing = True
+        elif _ADOC_BLOCK_COMMENT_RE.match(s):
+            in_comment = True
+        elif indent < 4 and _ADOC_TABLE_DELIM_RE.match(s):
+            table_no += 1
+            close = _find_table_close(lines, i + 1)
+            no = table_no
+
+            def warn(count, n, no=no):
+                where = f"{label} の" if label else ""
+                print(
+                    f"警告: {where}{no} 番目の表は、セルの数 {count} が列の数 {n} で"
+                    "割り切れません。最後の行を空のセルで埋めました",
+                    file=sys.stderr,
+                )
+
+            out.append(line)
+            out.extend(_reflow_table(lines[i + 1:close], warn))
+            if close < len(lines):
+                out.append(lines[close])
+            i = close + 1
+            continue
+        out.append(line)
+        i += 1
+    return "\n".join(out)
+
+
 def _add_table_class(html_text):
     """pyasciidoc の素の <table> に旧 :::compare と同じクラスを付ける。
     旧 Markdown パイプラインで表になるのは事実上 :::compare だけなので、
@@ -221,7 +393,9 @@ def render_body(body, source_path):
     """
     source_path = Path(source_path)
     if source_path.suffix == ".adoc":
-        html_out = _adoc_md().render(_strip_leading_adoc_title(body))
+        body = normalize_adoc_tables(
+            _strip_leading_adoc_title(body), label=f"{source_path.parent.name}/{source_path.name}")
+        html_out = _adoc_md().render(body)
         html_out = process_chain_blocks(html_out)
         html_out = _add_table_class(html_out)
     else:

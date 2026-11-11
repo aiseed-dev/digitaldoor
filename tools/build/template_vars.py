@@ -758,7 +758,13 @@ def custom_index_vars(lang, chapter_list_html, *, title, subtitle="",
         "structural_analysis_label": title,
         "page_subtitle": subtitle,
         "meta_description": description or subtitle or title,
+        # 雛形 index.html の <meta name="description"> が読む名前
+        "description": description or subtitle or title,
         "other_lang_link": (ja_url if lang == "en" else en_url) if has_translation else "",
         "series_title": title,
+        # fable_index_vars から引き継ぐ /fable/ を、このシリーズの URL に直す
+        "canonical_url": f"{config.SITE_URL}{'/en' if lang == 'en' else ''}/{base}/",
+        "hreflang_ja": f"{config.SITE_URL}/{base}/",
+        "hreflang_en": f"{config.SITE_URL}/en/{base}/" if has_translation else "",
     })
     return v

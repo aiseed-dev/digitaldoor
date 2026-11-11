@@ -85,8 +85,8 @@ body::before {
   justify-content: space-between;
   align-items: baseline;
   font-family: "SF Mono", Menlo, Consolas, monospace;
-  font-size: 11px;
-  letter-spacing: 0.2em;
+  font-size: 12px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--whisper);
 }
@@ -417,8 +417,8 @@ article hr::before {
 }
 .footer-col h4 {
   font-family: "SF Mono", Menlo, Consolas, monospace;
-  font-size: 11px;
-  letter-spacing: 0.2em;
+  font-size: 12px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--whisper);
   font-weight: 700;
@@ -768,12 +768,9 @@ article img {
       <div class="footer-col">
         <h4>サイト</h4>
         <ul>
-          <li><a href="/">ホーム</a></li>
-          <li><a href="/guide/">解説の一覧</a></li>
-          <li><a href="/blog/">ブログ</a></li>
-          <li><a href="/#about">このサイトについて</a></li>
-          <li><a href="/license/">ライセンス</a></li>
-          <li><a href="/feed.xml">RSS</a></li>
+          {%- for label, href in site_nav %}
+          <li><a href="{{ href }}">{{ label }}</a></li>
+          {%- endfor %}
         </ul>
       </div>
     </nav>
@@ -781,7 +778,7 @@ article img {
       <div class="colophon-mark">§</div>
       {{ colophon_label }}<br>
       Tokushima · {{ date }}<br>
-      <a href="/en/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">Digital Door</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">CC BY 4.0</a>
+      <a href="/en/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">Digital Door</a> {%- for label, href in site_footer_links %} · <a href="{{ href }}" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">{{ label }}</a>{%- endfor %} · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">CC BY 4.0</a>
     </div>
   </footer>
 

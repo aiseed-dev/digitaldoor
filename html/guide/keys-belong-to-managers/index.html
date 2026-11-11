@@ -128,8 +128,8 @@ body::before {
   justify-content: space-between;
   align-items: baseline;
   font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
-  font-size: 11px;
-  letter-spacing: 0.2em;
+  font-size: 12px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--whisper);
 }
@@ -486,8 +486,8 @@ article hr::before {
 }
 .footer-col h4 {
   font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
-  font-size: 11px;
-  letter-spacing: 0.2em;
+  font-size: 12px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--whisper);
   font-weight: 700;
@@ -843,47 +843,27 @@ article img {
 <tbody>
 <tr>
 <td>泊まる、入居する</td>
-</tr>
-<tr>
 <td>本人を確かめ、期間と範囲を決めて発行する</td>
-</tr>
-<tr>
 <td>管理者</td>
 </tr>
 <tr>
 <td>掃除や点検の人が来る</td>
-</tr>
-<tr>
 <td>その日の時間帯だけの鍵を出す。終われば効かなくなる</td>
-</tr>
-<tr>
 <td>管理者</td>
 </tr>
 <tr>
 <td>端末をなくした</td>
-</tr>
-<tr>
 <td>その人の鍵を全部の経路で止め、新しい端末に出し直す</td>
-</tr>
-<tr>
 <td>管理者と本人</td>
 </tr>
 <tr>
 <td>退去した、辞めた</td>
-</tr>
-<tr>
 <td>全部の経路の鍵を失効し、貸した機械の鍵を回収する</td>
-</tr>
-<tr>
 <td>管理者</td>
 </tr>
 <tr>
 <td>管理者が替わる、持ち主が替わる</td>
-</tr>
-<tr>
 <td>発行者の鍵と、扉が信頼する発行者の一覧を作り直す</td>
-</tr>
-<tr>
 <td>前と新しい管理者</td>
 </tr>
 </tbody>
@@ -909,29 +889,17 @@ article img {
 <tbody>
 <tr>
 <td>民泊、貸家</td>
-</tr>
-<tr>
 <td>経営者</td>
-</tr>
-<tr>
 <td>道具を渡す。鍵は持たない</td>
 </tr>
 <tr>
 <td>分譲マンション</td>
-</tr>
-<tr>
 <td>住戸の錠は区分所有者(賃貸では貸主)。共用部は管理組合(R-AP-38)</td>
-</tr>
-<tr>
 <td>管理会社と業者の鍵では住戸を開けられない(R-AP-39)</td>
 </tr>
 <tr>
 <td>企業、事業所</td>
-</tr>
-<tr>
 <td>情報システム部門(R-EB-33)。設備の担当は扉と錠の物理を持つ</td>
-</tr>
-<tr>
 <td>出入りの業者には、その日の鍵を情報システム部門が出す(R-AC-06、10)</td>
 </tr>
 </tbody>
@@ -959,20 +927,12 @@ article img {
 <tbody>
 <tr>
 <td>Entra ID(職場のアカウント)</td>
-</tr>
-<tr>
 <td>違う。会社の管理者が作る会社の持ち物で、本人は作れず、辞めれば消える</td>
-</tr>
-<tr>
 <td>ある</td>
 </tr>
 <tr>
 <td>Microsoft アカウント(個人)</td>
-</tr>
-<tr>
 <td>その人の物</td>
-</tr>
-<tr>
 <td>無い。権限を分けられず、記録を管理者が見られず、皆で一つのパスワードを使うことになりやすい</td>
 </tr>
 </tbody>
@@ -1018,29 +978,17 @@ article img {
 <tbody>
 <tr>
 <td>決める</td>
-</tr>
-<tr>
 <td>管理者</td>
-</tr>
-<tr>
 <td>発行者の鍵と台帳。誰に、どの扉を、いつまで</td>
 </tr>
 <tr>
 <td>運ぶ</td>
-</tr>
-<tr>
 <td>財布への載せ方を担う業者、財布の会社</td>
-</tr>
-<tr>
 <td>管理者が署名した資格情報を、財布まで届ける仕組みだけ</td>
 </tr>
 <tr>
 <td>判定する</td>
-</tr>
-<tr>
 <td>扉</td>
-</tr>
-<tr>
 <td>管理者の署名を確かめる。業者の鍵は信じない</td>
 </tr>
 </tbody>
@@ -1188,12 +1136,12 @@ article img {
       <div class="footer-col">
         <h4>サイト</h4>
         <ul>
-          <li><a href="/">ホーム</a></li>
-          <li><a href="/guide/">解説の一覧</a></li>
+          <li><a href="/guide/">解説</a></li>
+          <li><a href="/check/">始め方</a></li>
+          <li><a href="/manual/">マニュアル</a></li>
+          <li><a href="/news/">ニュース</a></li>
           <li><a href="/blog/">ブログ</a></li>
-          <li><a href="/#about">このサイトについて</a></li>
-          <li><a href="/license/">ライセンス</a></li>
-          <li><a href="/feed.xml">RSS</a></li>
+          <li><a href="/consult/">相談と教室</a></li>
         </ul>
       </div>
     </nav>
@@ -1201,7 +1149,7 @@ article img {
       <div class="colophon-mark">§</div>
       解説 17<br>
       Tokushima · 2026.10.20<br>
-      <a href="/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">デジタルドア</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">CC BY 4.0</a>
+      <a href="/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">デジタルドア</a> · <a href="/#about" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">このサイトについて</a> · <a href="/license/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">ライセンス</a> · <a href="/feed.xml" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">RSS</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">CC BY 4.0</a>
     </div>
   </footer>
 
