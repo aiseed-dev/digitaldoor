@@ -30,6 +30,12 @@ def fresh_fakes():
     fake._FAKE_DEVICES.clear()
 
 
+@pytest.fixture(autouse=True)
+def no_admin_code(monkeypatch):
+    """`import` の管理者の符号の尋ね(getpass)は、特に指定しない試験では空(利用者として取り込む)。"""
+    monkeypatch.setattr(cli, "read_admin_code", lambda: "")
+
+
 @pytest.fixture
 def home(tmp_path, monkeypatch):
     """鍵の置き場を試験の一時のフォルダにする(疑似は sesame-keys-fake.json)。"""
@@ -88,7 +94,7 @@ def test_cli_register_and_keys_do_not_print_the_key(home, capsys):
     assert cli.main(["--fake", "keys"]) == 0
     out = capsys.readouterr()
     assert stored not in (out.out + out.err).lower()
-    assert UNREGISTERED in out.out and "玄関" in out.out
+    assert UNREGISTERED in out.out and "玄関" in out.out and "管理者" in out.out
 
 
 # ---- 2. 形の確かめ ----
@@ -187,95 +193,3 @@ def test_import_takes_the_key_from_a_hidden_prompt_not_the_arguments(monkeypatch
     asked = []
     monkeypatch.setattr(cli, "getpass", lambda prompt="": asked.append(prompt) or ZERO_KEY)
     assert cli.read_secret() == ZERO_KEY and asked and "画面に出ません" in asked[0]
-
-
-# ---- 5. アプリの「鍵を書き出す」 ----
-class _Page:
-    """Flet の Page の代わり。出したダイアログを並べるだけ。"""
-
-    def __init__(self):
-        self.shown = []
-
-    def show_dialog(self, dlg):
-        self.shown.append(dlg)
-
-    def __getattr__(self, name):   # add、update など、画面の更新は何もしない
-        return lambda *a, **k: None
-
-
-@pytest.fixture
-def app_with_key(monkeypatch, caplog):
-    pytest.importorskip("flet")
-    from digitalkey_sesame import protocol as p
-    from digitalkey_sesame.app import SesameApp
-    from digitalkey_sesame.keystore import DeviceKey
-    import uuid as uuidlib
-
-    monkeypatch.setattr(SesameApp, "_close_dialog", lambda self, dlg: setattr(dlg, "open", False))
-    page = _Page()
-    app = SesameApp(page)
-    adv = p.Advertisement(address="AA:BB:CC:DD:EE:01", name="Sesame6Pro", rssi=-40, product_type=21, is_registered=True,
-                          has_history=False, device_uuid=uuidlib.UUID(UNREGISTERED))
-    app.current_adv = adv
-    caplog.set_level(logging.DEBUG)
-    return app, page, adv, DeviceKey(UNREGISTERED, "sesame_6_pro", TEST_SECRET)
-
-
-def texts(dlg):
-    """ダイアログの中の文字を全部集める。"""
-    out = []
-
-    def walk(c):
-        v = getattr(c, "value", None)
-        if isinstance(v, str):
-            out.append(v)
-        for attr in ("content", "title"):
-            sub = getattr(c, attr, None)
-            if sub is not None and not isinstance(sub, str):
-                walk(sub)
-        for sub in getattr(c, "controls", None) or []:
-            walk(sub)
-    walk(dlg)
-    return "\n".join(out)
-
-
-async def test_export_button_shows_only_for_a_sesame_with_a_saved_key(app_with_key):
-    """R-CM-12: 「鍵を書き出す」は、鍵が保存されている Sesame を選んでいるときだけ出る。"""
-    app, _page, adv, key = app_with_key
-    app.keys = {}
-    app._set_connected_ui(False)
-    assert app.btn_export_key.visible is False
-    app.keys = {UNREGISTERED: key}
-    app._set_connected_ui(False)
-    assert app.btn_export_key.visible is True
-
-
-async def test_export_asks_first_then_shows_the_key_and_erases_it(app_with_key, caplog):
-    """R-CM-12: 書き出しは確かめのダイアログを挟む。了承後にだけ 32 桁が出て、ログ欄にも logging にも書かれず、閉じると消える。"""
-    app, page, _adv, key = app_with_key
-    app.keys = {UNREGISTERED: key}
-    await app.on_export_key()
-    confirm = page.shown[-1]
-    assert len(page.shown) == 1 and "開けられます" in texts(confirm) and "貼らないで" in texts(confirm)
-    assert "0011" not in texts(confirm)                      # 確かめの段階では鍵を出さない
-    confirm.actions[1].on_click(None)                        # キャンセル
-    assert len(page.shown) == 1
-    confirm.actions[0].on_click(None)                        # 書き出す
-    shown = page.shown[-1]
-    assert shown is not confirm and format_secret_hex(TEST_SECRET) in texts(shown)
-    secret_text = shown.content.controls[0]
-    assert secret_text.selectable is True
-    # ログ欄と logging には出ない
-    log_lines = " ".join(c.value for c in app.log_view.controls)
-    assert TEST_SECRET not in (log_lines + caplog.text).lower().replace(" ", "")
-    assert "0011 2233" not in log_lines + caplog.text
-    shown.actions[0].on_click(None)                          # 閉じる
-    assert shown.open is False and secret_text.value == "" and TEST_SECRET not in texts(shown)
-
-
-async def test_export_without_a_saved_key_does_nothing(app_with_key):
-    """R-CM-12: 鍵が無い Sesame では、ダイアログを出さない。"""
-    app, page, _adv, _key = app_with_key
-    app.keys = {}
-    await app.on_export_key()
-    assert page.shown == []

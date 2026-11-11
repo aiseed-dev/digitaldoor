@@ -207,3 +207,130 @@ class FakeSesameLock:
 
     async def lock(self) -> None:
         await self._run("lock")
+
+
+# ---------------------------------------------------------------------------
+# 疑似の保存領域・端末の認証・カメラ(試験と、実機なしの画面の確かめ用。本物の鍵にも端末にも触れない)
+# ---------------------------------------------------------------------------
+class FakeKV:
+    """メモリの中の保存領域。SharedPreferences と SecureStorage の代わり。失敗は旗で起こす(試験用)。
+
+    fail_get / fail_set / fail_remove: その操作が例外を出す(端末の保管庫がエラーを返す場合)。
+    drop_writes: set は成功を返すが、何も保存しない(書いたはずが読めない場合)。
+    fail_get_after_set: set のあとの最初の get が例外になる(書いた直後に落ちる場合)。
+    log: (操作, key) の並び。値は入れない。
+    """
+
+    def __init__(self, data: Optional[dict] = None) -> None:
+        self.data: dict = dict(data or {})
+        self.fail_get = self.fail_set = self.fail_remove = False
+        self.drop_writes = False
+        self.fail_get_after_set = False
+        self._just_set = False
+        self.log: list[tuple[str, str]] = []
+
+    async def get(self, key: str):
+        self.log.append(("get", key))
+        if self.fail_get or (self.fail_get_after_set and self._just_set):
+            self._just_set = False
+            raise RuntimeError("PlatformException(疑似の保管庫のエラー)")
+        return self.data.get(key)
+
+    async def set(self, key: str, value) -> bool:
+        self.log.append(("set", key))
+        if self.fail_set:
+            raise RuntimeError("PlatformException(疑似の保管庫のエラー)")
+        if not self.drop_writes:
+            self.data[key] = value
+        self._just_set = True
+        return True
+
+    async def remove(self, key: str) -> bool:
+        self.log.append(("remove", key))
+        if self.fail_remove:
+            raise RuntimeError("PlatformException(疑似の保管庫のエラー)")
+        return self.data.pop(key, None) is not None
+
+
+class FakeGate:
+    """端末の認証の代わり。allow=False で認証が通らない場合、available=False で使えない端末の場合。"""
+
+    def __init__(self, available: bool = True, allow: bool = True) -> None:
+        self._available, self.allow = available, allow
+        self.prepared = 0
+        self.verified = 0
+
+    def available(self) -> bool:
+        return self._available
+
+    async def prepare(self) -> None:
+        if not self._available:
+            raise RuntimeError("端末の認証を使えません")
+        self.prepared += 1
+
+    async def verify(self) -> bool:
+        self.verified += 1
+        return self.allow
+
+
+class FakeQrReader:
+    """画像のバイト列を、そのまま UTF-8 の文字として返す QR の読み取りの代わり(試験では「画像」に QR の文字を入れる)。"""
+
+    def available(self) -> bool:
+        return True
+
+    async def read(self, image: bytes) -> Optional[str]:
+        try:
+            return bytes(image).decode("utf-8")
+        except Exception:
+            return None
+
+
+def fake_camera_path():
+    """疑似のカメラの置き場。疑似の画面(--fake)で、渡す側が出した QR の文字をここに置き、受け取る側がここから読む。
+    鍵の置き場を変えた 2 つの画面で試すときは、環境変数 SESAME_FAKE_CAMERA で同じ場所を指す。"""
+    import os
+    from pathlib import Path
+    from .keystore import default_path
+    env = os.environ.get("SESAME_FAKE_CAMERA")
+    return Path(env) if env else default_path().with_name("sesame-fake-camera.txt")
+
+
+class FakeCameraScanner:
+    """カメラで QR を読む口(qrcamera.QrScanner)の疑似。`text` を渡すとそれを読んだことにする。
+    `channel`(ファイル)を渡すと、そこに文字が置かれるのを待って読む(疑似の画面で、渡す側と受け取る側を別々に動かすため)。
+    `ok=False` は、カメラを始められない場合(許可されない等)。"""
+
+    def __init__(self, text: Optional[str] = None, channel=None, ok: bool = True) -> None:
+        self.text, self.channel, self.ok = text, channel, ok
+        self.started = self.stopped = False
+        self._task: Optional[asyncio.Task] = None
+
+    def build(self):
+        import flet as ft
+        return ft.Container(content=ft.Text("疑似のカメラ(QR が置かれるのを待っています)", size=12), height=80, padding=8)
+
+    async def start(self, on_text) -> bool:
+        if not self.ok:
+            return False
+        self.started = True
+
+        async def run():
+            last = None
+            while not self.stopped:
+                text = self.text
+                if text is None and self.channel is not None and self.channel.exists():
+                    text = self.channel.read_text(encoding="utf-8").strip() or None
+                if text and text != last:
+                    last = text
+                    if await on_text(text):
+                        return
+                await asyncio.sleep(0.3)
+
+        self._task = asyncio.create_task(run())
+        return True
+
+    async def stop(self) -> None:
+        self.stopped = True
+        if self._task and not self._task.done():
+            self._task.cancel()
