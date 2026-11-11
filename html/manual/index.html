@@ -7,12 +7,12 @@
     <meta name="description" content="デジタルドアのソフトウェア(事業所サーバー、スマートフォンアプリ、コマンド)のユーザーマニュアル。コードから自動生成しています。">
     <link rel="canonical" href="https://door.aiseed.dev/manual/">
     <link rel="icon" href="/favicon.ico" sizes="any">
-    <link rel="stylesheet" href="/css/style.css?v=3f72e750">
+    <link rel="stylesheet" href="/css/style.css?v=193e0497">
 </head>
 <body>
     <header class="site-header">
         <a href="/" class="brand">デジタルドア</a>
-        <nav><a href="/guide/">解説</a><a href="/blog/">ブログ</a><a href="/news/">ニュース</a><a href="/manual/">マニュアル</a></nav>
+        <nav><a href="/guide/">解説</a><a href="/check/">始め方</a><a href="/manual/">マニュアル</a><a href="/news/">ニュース</a><a href="/blog/">ブログ</a><a href="/consult/">相談と教室</a></nav>
     </header>
     <main class="index article-body">
 <h1>デジタルドア ユーザーマニュアル</h1>
@@ -58,15 +58,15 @@ max_hours = 24
 [[token]]
 name = &quot;管理者&quot;
 role = &quot;管理者&quot;
-token_sha256 = &quot;1459f369edf3fad9a865d9501b7d888fe33b780accd9a823055f8da16f4023cf&quot;
+token_sha256 = &quot;6c996959b3fa9ae77dab6e4342c3ef3b9b61e3b791e008c8b5a129e257e1bb54&quot;
 
 [[token]]
 name = &quot;受付&quot;
 role = &quot;受付&quot;
-token_sha256 = &quot;7006390ad3b446339da5c0dfb7e33742234271675b42cd9b0e19c9c6045e4ee4&quot;
+token_sha256 = &quot;9f613bd805db7348e01cd864a5c7e1ee17186a68834bfb11ecbcc12dccf5560b&quot;
 </code></pre>
 <h3>役割</h3>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>役割</th>
@@ -91,10 +91,10 @@ token_sha256 = &quot;7006390ad3b446339da5c0dfb7e33742234271675b42cd9b0e19c9c6045
 <td>扉の状態と監査記録の閲覧、記録の検査、施錠。</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3>HTTP API</h3>
 <p>アプリと業務システムはこの API を使います。認証は <code>Authorization: Bearer &lt;トークン&gt;</code> です。</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>メソッド</th>
@@ -204,7 +204,7 @@ token_sha256 = &quot;7006390ad3b446339da5c0dfb7e33742234271675b42cd9b0e19c9c6045
 <td>管理者・保守(記録の連鎖の検査)</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2>スマートフォンアプリ</h2>
 <p>スマートフォンアプリ(Flet)— 管理者と利用者が事業所サーバーを使うための画面。</p>
 <p>利用者: 自分の鍵を見る、扉を開ける。
@@ -230,6 +230,7 @@ token_sha256 = &quot;7006390ad3b446339da5c0dfb7e33742234271675b42cd9b0e19c9c6045
   digitalkey mobile [--web]        管理者と利用者のスマートフォンアプリ(Flet)
   digitalkey aliro &lt;命令&gt; ...      Aliro の読取機を Matter で設定する値を作る(実装の例。reader-config | issuer-key | matter-fields)
   digitalkey update &lt;命令&gt; ...     更新の配布(署名つきの包み、段階配布の表、当てる、自動で戻す、サポート期限)
+  digitalkey kanri &lt;命令&gt; ...      鍵の管理(名簿、役、扉と群、権限の申請・承認・発行、経路の実体、一人の全経路の失効。--help で一覧)
 </code></pre>
 <h3>digitalkey site</h3>
 <pre><code>usage: digitalkey site [-h] {init,token,serve} ...
@@ -278,12 +279,13 @@ options:
                               [--autolock AUTOLOCK]
                               [--power-policy {release,hold}]
                               [--admin-key HEX] [--trust FILE]
-                              {serve,verify,pubkey,export,check-box,keygen,issue,trust-change} ...
+                              [--revocation-max-age 秒]
+                              {serve,verify,pubkey,export,check-box,keygen,issue,trust-change,revocation} ...
 
 扉側のコントローラ(中核)
 
 positional arguments:
-  {serve,verify,pubkey,export,check-box,keygen,issue,trust-change}
+  {serve,verify,pubkey,export,check-box,keygen,issue,trust-change,revocation}
     serve               模擬の接点で core を開く(開発の口の故障注入も開く)
     verify              監査の連鎖を検査
     pubkey              署名の公開鍵を 16 進で表示する。据付のときに受け手の台帳へ写す
@@ -293,6 +295,7 @@ positional arguments:
                         600)に書き、公開鍵と発行者の識別を JSON で出す
     issue               発行者の鍵で署名した資格情報(5.2a)を JSON で出す
     trust-change        管理者の鍵で署名した、信頼の一覧の変更の要求を JSON で出す
+    revocation          発行者の鍵で署名した失効の一覧(5.2c)を JSON で出す
 
 options:
   -h, --help            show this help message and exit
@@ -306,11 +309,15 @@ options:
   --admin-key HEX       管理者の公開鍵(16 進)。据付のときに入れる。この鍵で署名した要求だけが信頼の一覧を変えられる
   --trust FILE          信頼する発行者の一覧(JSON。{発行者の識別: {&quot;public_key&quot;: 16 進, &quot;doors&quot;:
                         [扉の名前, ...]}})。管理者の変更が記録にあるときは、記録の一覧を使う
+  --revocation-max-age 秒
+                        失効の知らせの古さの上限。発行者の失効の一覧の issued_at
+                        からこの秒数を過ぎると、期限の長さがこの秒数より長い資格情報を拒む。0 はこの規則を使わない(既定)
 
 記録の署名は Ed25519 で、鍵は置き場の audit.ed25519 です(前からの置き場で audit.key がある物は HMAC
 のまま)。伝票は一件ずつ &lt;扉&gt;-&lt;連番&gt;.json として箱へ出し、受け手は pubkey で写した公開鍵だけで check-box
 で検べます。発行者と管理者の側では keygen で鍵を作り(秘密鍵のファイルは権限 600)、issue で資格情報を、trust-change
-で信頼の一覧の変更の要求を、JSON で出します。この三つは置き場(--dir)を使わず、網も要りません。
+で信頼の一覧の変更の要求を、JSON で出します。revocation は発行者の鍵で署名した失効の一覧を JSON
+で出します。この四つは置き場(--dir)を使わず、網も要りません。
 </code></pre>
 <h3>digitalkey sesame</h3>
 <pre><code>usage: digitalkey sesame [-h] [-v] [--fake] [--seconds SECONDS] [--tag TAG]
@@ -327,13 +334,17 @@ Command-line client (no GUI) for CANDY HOUSE Sesame 5/6/6 Pro over BLE via bleak
 Keys are stored in ~/.config/digitalkey/sesame-keys.json (or $SESAME_KEYSTORE).
 
 鍵(16 バイト、32 桁の 16 進)は、この Sesame を開けられる唯一の物です。ログにも標準出力にも出しません。
-別の端末(スマートフォンのアプリ)の鍵を写すときは、アプリの「鍵を書き出す」で 32 桁を出し、
+別の端末(スマートフォンのアプリ)の鍵を写すときは、アプリの管理者の画面の「渡す」で「32 桁を見せる」を選んで 32 桁を出し、
 この機械で `import` します(鍵は引数で受けず、伏せた入力で受けます)。
+
+鍵には役があります。この機械で `register` した鍵は管理者、`import` した鍵は、管理者の符号を添えたときだけ管理者で、
+符号が無ければ利用者です(符号は、スマートフォンの管理者が「管理者として渡す」ときに画面に出す 8 桁です)。
+役はアプリの画面の歯止めで、鍵の守りではありません。この命令行は、役にかかわらず鍵があれば Sesame を動かせます。
 
 positional arguments:
   {scan,keys,register,import,status,lock,unlock,toggle,version}
-    keys                保存した鍵の一覧(鍵そのものは出さない)
-    import              別の端末で登録した Sesame の鍵を取り込む(鍵は伏せた入力で受ける)
+    keys                保存した鍵の一覧(役付き。鍵そのものは出さない)
+    import              別の端末で登録した Sesame の鍵を取り込む(鍵と管理者の符号は伏せた入力で受ける)
 
 options:
   -h, --help            show this help message and exit
@@ -360,6 +371,11 @@ options:
 <li>署名つき資格情報: present で、信頼する発行者の署名と範囲と期限を扉が確かめ、通れば上の判断(火災、二人同時、自動施錠)に渡す。
 一回限りの使用済みの一覧は、起動のときに記録(資格情報/使用)から作り直す(仕様書 5.2a)</li>
 <li>信頼の一覧: change_trust で、据付のときに入れた管理者の鍵で署名した変更の要求だけを受ける。受けた変更は記録から読み戻す</li>
+<li>失効の一覧: accept_revocation で、信頼する発行者の署名と世代を確かめて受け、発行者ごとに前の一覧を丸ごと置き換える。
+present に一緒に運んだ一覧(revocation)は、資格情報より先に受ける。同じ世代は「同じ」で記録しない。
+起動のときは記録(設定/失効の一覧 受理)から状態を作り直す。信頼の一覧から外した発行者の状態も残す(仕様書 5.2c)</li>
+<li>失効の知らせの古さ: revocation_max_age_s が 0 より大きいとき、一覧の issued_at からその秒数を過ぎた発行者の、
+期限の長さがその秒数より長い資格情報を拒む。0 はこの規則を使わない(仕様書 5.2c、R-AC-14)</li>
 </ul>
 <h3>鍵と資格情報を作る命令</h3>
 <p>発行者と管理者の側で使う三つの命令です。置き場を使わず、網も要りません。</p>
@@ -438,7 +454,8 @@ options:
                              [--port PORT] [--two-person TWO_PERSON]
                              [--autolock AUTOLOCK]
                              [--power-policy {release,hold}] [--admin-key HEX]
-                             [--trust FILE] [--box BOX]
+                             [--trust FILE] [--revocation-max-age 秒]
+                             [--box BOX]
 
 錠のドライバで動く扉 — `digitalkey door-serve`。
 
@@ -451,7 +468,7 @@ options:
   digitalkey door-serve --lock dummy                    配線確認用の錠(何も動かさない)
 
 引数は `digitaldoor-controller serve` と揃えてある(--dir --name --host --port --two-person --autolock --power-policy
---admin-key --trust --box)。違いは、錠の指定(--lock か --fake)と、錠に一回の命令を待つ秒数(--timeout)だけである。
+--admin-key --trust --revocation-max-age --box)。違いは、錠の指定(--lock か --fake)と、錠に一回の命令を待つ秒数(--timeout)だけである。
 
 しくみ: `Controller` に `digitalkey.contacts.LockDriverContacts` を差す。tools/jitsuen.py と同じ組み立てを、
 実演の場面から切り離して常駐させたもの。錠の銘柄は接点の下に隠れ、扉の判断は変わらない(扉コントローラ仕様書 R-CT-03、R-CT-04)。
@@ -478,6 +495,11 @@ options:
   --admin-key HEX       管理者の公開鍵(16 進)。据付のときに入れる。この鍵で署名した要求だけが信頼の一覧を変えられる
   --trust FILE          信頼する発行者の一覧(JSON。{発行者の識別: {&quot;public_key&quot;: 16 進, &quot;doors&quot;:
                         [扉の名前, ...]}})。管理者の変更が記録にあるときは、記録の一覧を使う
+  --revocation-max-age 秒
+                        失効の知らせの古さの上限。発行者の失効の一覧の issued_at
+                        からこの秒数を過ぎると、期限の長さがこの秒数より長い資格情報を拒む。0
+                        はこの規則を使わない(既定)。鍵の管理の台帳には、同じ値を分で書く(digitalkey kanri
+                        door add --revocation-max-min)
   --box BOX             伝票を出す箱(フォルダ)。動いている間、増えた記録を続けて出す
 </code></pre>
 <h2>更新の配布(digitalkey update)</h2>
@@ -566,7 +588,7 @@ digitalkey.contacts.LockDriverContacts を差す。錠は --fake の疑似の Se
 <p>台帳に記録される伝票の種類です。項目名は様式ファイル(digitalkey/entrance/forms_data/*.adoc)がそのまま定義です。</p>
 <h3>予約(予約)</h3>
 <p>書ける役割: 経営者, AI社員</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>項目</th>
@@ -603,10 +625,10 @@ digitalkey.contacts.LockDriverContacts を差す。錠は --fake の疑似の Se
 <td>varchar(64), not null</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3>予約の取消(予約_取消)</h3>
 <p>書ける役割: 経営者, AI社員</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>項目</th>
@@ -623,10 +645,10 @@ digitalkey.contacts.LockDriverContacts を差す。錠は --fake の疑似の Se
 <td>varchar(200), not null</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3>会議室・場所貸し(利用_会議室)</h3>
 <p>書ける役割: 経営者, AI社員</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>項目</th>
@@ -667,10 +689,10 @@ digitalkey.contacts.LockDriverContacts を差す。錠は --fake の疑似の Se
 <td>integer, check (料金 &gt;= 0) — 場所の時間貸しの料金</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3>宿泊者名簿(住宅宿泊事業)(宿泊_民泊)</h3>
 <p>書ける役割: 経営者, AI社員</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>項目</th>
@@ -715,10 +737,10 @@ digitalkey.contacts.LockDriverContacts を差す。錠は --fake の疑似の Se
 <td>varchar(40) — 本人確認伝票の番号</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3>本人確認(本人確認)</h3>
 <p>書ける役割: 経営者, AI社員</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>項目</th>
@@ -775,10 +797,10 @@ digitalkey.contacts.LockDriverContacts を差す。錠は --fake の疑似の Se
 <td>varchar(200)</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3>ウーファー滞在(滞在_WWOOF)</h3>
 <p>書ける役割: 経営者, AI社員</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>項目</th>
@@ -831,10 +853,10 @@ digitalkey.contacts.LockDriverContacts を差す。錠は --fake の疑似の Se
 <td>text</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3>定期建物賃貸借(貸家)(賃貸_定期借家)</h3>
 <p>書ける役割: 経営者</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>項目</th>
@@ -887,10 +909,10 @@ digitalkey.contacts.LockDriverContacts を差す。錠は --fake の疑似の Se
 <td>varchar(10), in ('居住', '事業'), not null</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3>資格情報の発行(資格情報_発行)</h3>
 <p>書ける役割: 経営者, AI社員</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>項目</th>
@@ -927,10 +949,10 @@ digitalkey.contacts.LockDriverContacts を差す。錠は --fake の疑似の Se
 <td>boolean, not null</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3>鍵の失効(鍵_失効)</h3>
 <p>書ける役割: 経営者, AI社員</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>項目</th>
@@ -947,10 +969,10 @@ digitalkey.contacts.LockDriverContacts を差す。錠は --fake の疑似の Se
 <td>varchar(200), not null</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3>錠の操作(鍵_操作)</h3>
 <p>書ける役割: 経営者, AI社員, 錠</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>項目</th>
@@ -983,10 +1005,10 @@ digitalkey.contacts.LockDriverContacts を差す。錠は --fake の疑似の Se
 <td>varchar(100)</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3>鍵の発行(鍵_発行)</h3>
 <p>書ける役割: 経営者, AI社員</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>項目</th>
@@ -1023,10 +1045,10 @@ digitalkey.contacts.LockDriverContacts を差す。錠は --fake の疑似の Se
 <td>varchar(200) — 本人確認伝票などの番号</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3>駆けつけ(駆けつけ)</h3>
 <p>書ける役割: 経営者, AI社員</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>項目</th>
@@ -1055,10 +1077,10 @@ digitalkey.contacts.LockDriverContacts を差す。錠は --fake の疑似の Se
 <td>text</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h2>錠のドライバ</h2>
 <p>site.toml の <code>lock</code> に書ける種類と提供元です。種類は pip で入れたドライバのパッケージで増えます。</p>
-<table>
+<div class="table-wrap"><table>
 <thead>
 <tr>
 <th>種類</th>
@@ -1079,7 +1101,7 @@ digitalkey.contacts.LockDriverContacts を差す。錠は --fake の疑似の Se
 <td>digitalkey-sesame</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3>digitalkey-sesame</h3>
 <p>CANDY HOUSE Sesame OS3 (Sesame 5 / 6 / 6 Pro) BLE protocol in pure Python. 公式アプリとクラウドを使わず、BLE で直接 登録→ログイン→施錠/解錠。</p>
 <p>Reference: https://github.com/CANDY-HOUSE/SesameSDK_Android_with_DemoApp
@@ -1090,6 +1112,57 @@ sesame:&lt;機器UUID&gt;      BLE 直結。事前に `digitalkey sesame registe
 sesameweb:&lt;機器UUID&gt;   CANDY HOUSE の Web API(Hub 3 経由)。API key と機器の secret key は
                        $SESAME_KEYS が指す JSON({&quot;api_key&quot;: &quot;...&quot;, &quot;&lt;uuid&gt;&quot;: &quot;&lt;secret hex&gt;&quot;})か、
                        環境変数 SESAME_API_KEY / SESAME_SECRET_&lt;UUIDの16進を大文字で&gt; で渡す
+</code></pre>
+<h4>Sesame のアプリ</h4>
+<pre><code>Sesame の鍵 — CANDY HOUSE の Sesame(SesameOS3。Sesame 5 / 6 / 6 Pro)を、Bluetooth で直接動かす画面(Flet)。
+
+PC でもスマートフォンでも同じ画面です。複数の Sesame の鍵を持ち、選んで開け閉めし、鍵を家族などに対面で渡せます。
+
+  digitalkey sesame app            PC の画面(BLE のアダプタが要る)
+  digitalkey sesame app --web      画面をブラウザで開く(Bluetooth はこの PC のまま)
+  digitalkey sesame app --fake     疑似の Sesame で試す(実機も Bluetooth も使わない。鍵は sesame-keys-fake.json)
+  flet build apk / flet build ipa  スマートフォンのアプリに組む(drivers/digitalkey-sesame で)
+
+【これは画面の歯止めで、鍵の守りではありません】
+Sesame の錠が知っている鍵は 32 桁の一つだけで、錠の側では人を分けられません。以下の役の分け方は、このアプリの画面の
+中の約束です。32 桁を持つ人が別の道具(このリポジトリの命令行や公開の SDK)を使えば、歯止めは通ります。防げるのは、
+受け取った人がこのアプリで鍵をさらに写して広げることです。一人を本当に止めるには、Sesame をリセットして登録し直し、
+残る人に渡し直します。
+
+役 — 鍵ごとに「管理者」か「利用者」を持ちます。一台の端末で、ある Sesame は管理者、別の Sesame は利用者、ということがあります。
+  管理者   その端末で登録した鍵、または管理者として渡された鍵。今までの版で登録した鍵(役の欄が無い物)も管理者で引き継ぎます
+  利用者   利用者として渡された鍵。管理者の符号が無い鍵は利用者で入り、あとから管理者には上がりません
+
+利用者の画面(最初の画面。全員)
+  鍵のある Sesame     鍵のある Sesame を並べる(役つき)。押すと近くから探してつなぎ、ログインして、施錠と解錠、電池、角度を出す
+  解錠、施錠、トグル    「自分の呼び名」が Sesame の履歴に残る(名乗りなので、偽ることもできる)
+  鍵を削除            この端末の鍵だけを消す。ほかの機械に写しがあれば、そちらは使える
+  鍵を受け取る        渡す人の画面の QR を、このアプリのカメラで読む。読み取りが使えないときは、32 桁を打ち込む道がある(利用者として入る)
+
+管理者の画面(管理者の鍵がある端末だけ。最初の Sesame を登録するために、鍵が一つも無い端末でも開く。利用者の鍵しか無い端末では開かない)
+  探す、登録          近くの Sesame を並べる。未登録の Sesame とだけ登録でき、鍵を作ってこの端末に保存する(管理者になる)
+  渡す                管理者の鍵の Sesame を、利用者として、または管理者として渡す。相手の呼び名を入れ、QR を出す。
+                     PC に写すときは「32 桁を見せる」(管理者として写すときは管理者の符号も出る。`digitalkey sesame import` に入れる)
+  渡した相手の控え      誰に、いつ、どの役で、どの道で渡したか。この端末から渡した分だけ。追記だけで、消さない。リセット前の行は印が付く
+  リセットと渡し直し    止めたい人がいるときの順序の案内
+  端末の認証           管理者の画面を開くときに、端末の認証(生体認証か PIN)を求めるか。管理者が選ぶ(スマートフォンのアプリ)
+
+渡し方は対面で、アプリからアプリへ直接です。網(LINE、メール、クラウド)を通しません。渡す側の画面に QR を出し(60 秒で自動で閉じて
+消える)、受け取る側が自分のアプリのカメラで読みます。端末のふつうのカメラアプリや、画像を読み取るサービスは通しません。周りの人に
+撮られない所で行います。受け取る側は、その Sesame にログインできたときだけ保存します(R-CM-13)。QR の中身は、版、UUID、32 桁、役、
+管理者の符号(管理者のときだけ)で、人の名前は入れません(handoff.py)。
+
+鍵について: 鍵は登録のときに錠と端末の間で作る 16 バイト(32 桁の 16 進)で、Sesame が知っている鍵はこの一つだけです。写した物は
+全部同じ鍵で、持つ物は誰でもこの Sesame を開けられます。鍵はログ欄、logging、例外の文、標準出力に出しません(R-CM-12)。人が見られるのは、
+管理者が確かめた上で行う「渡す」の表示だけで、閉じると消えます。
+
+鍵の置き場: PC では ~/.config/digitalkey/sesame-keys.json(権限 600。`digitalkey sesame` の命令と共用)。スマートフォンでは端末の
+安全な保管庫(Android Keystore、iOS のキーチェーン。Flet の SecureStorage)です。今までの版は SharedPreferences に置いていたので、
+新しい版を初めて起動したときに保管庫へ移します(写す → 読み戻して一致を確かめる → 元を消す。途中で失敗したら元は消さず、今までの置き場のまま
+動く)。移す前に、念のため鍵を PC に写しておくことを勧めます。保管庫はエラーのときに中身を消す設定(reset_on_error)を無効にしています。
+鍵は端末のバックアップで別の端末へ移りません(Android はアプリのデータをバックアップから外し、iOS はこの端末だけの扱いにします)。
+
+組み方、入れ方、困ったときは skills/sesame-app/SKILL.md にあります。
 </code></pre>
 <h4>digitalkey sesame(命令行)</h4>
 <pre><code>Command-line client (no GUI) for CANDY HOUSE Sesame 5/6/6 Pro over BLE via bleak.
@@ -1103,16 +1176,22 @@ sesameweb:&lt;機器UUID&gt;   CANDY HOUSE の Web API(Hub 3 経由)。API key �
 Keys are stored in ~/.config/digitalkey/sesame-keys.json (or $SESAME_KEYSTORE).
 
 鍵(16 バイト、32 桁の 16 進)は、この Sesame を開けられる唯一の物です。ログにも標準出力にも出しません。
-別の端末(スマートフォンのアプリ)の鍵を写すときは、アプリの「鍵を書き出す」で 32 桁を出し、
+別の端末(スマートフォンのアプリ)の鍵を写すときは、アプリの管理者の画面の「渡す」で「32 桁を見せる」を選んで 32 桁を出し、
 この機械で `import` します(鍵は引数で受けず、伏せた入力で受けます)。
+
+鍵には役があります。この機械で `register` した鍵は管理者、`import` した鍵は、管理者の符号を添えたときだけ管理者で、
+符号が無ければ利用者です(符号は、スマートフォンの管理者が「管理者として渡す」ときに画面に出す 8 桁です)。
+役はアプリの画面の歯止めで、鍵の守りではありません。この命令行は、役にかかわらず鍵があれば Sesame を動かせます。
 </code></pre>
 <h4>digitalkey sesame import</h4>
 <pre><code>usage: digitalkey sesame import [-h] [--name NAME] target
 
 別の端末(スマートフォンのアプリ)で登録した Sesame の鍵を、この機械の鍵の置き場に取り込む。
 
-流れ: 伏せた入力で 32 桁を受ける → 形を確かめる(32 桁の 16 進でなければ断る) → Sesame を探して BLE でつなぐ →
-その鍵でログインできることを確かめる → できたときだけ、機種(広告の model_id)と一緒に保存する。
+流れ: 伏せた入力で 32 桁を受ける → 伏せた入力で管理者の符号を受ける(任意。空の Enter なら利用者) → 形を確かめる
+(32 桁の 16 進でなければ断る。符号は入力があれば 16 進 8 桁) → Sesame を探して BLE でつなぐ → 符号が鍵と合うか確かめる
+(合わなければ断る) → その鍵でログインできることを確かめる → できたときだけ、機種(広告の model_id)と役と一緒に保存する。
+符号が合ったときだけ管理者で、符号が無ければ利用者として入る。
 ログインできなければ何も保存しない。確かめは必ず行う(間違った鍵を置くと、使う場面で初めて動かないと分かるため。飛ばす選択肢は置かない)。
 保存した鍵は鍵の置き場の権限(600)で守られる。鍵を画面にもログにも出さない。
 
@@ -1123,10 +1202,10 @@ options:
   -h, --help   show this help message and exit
   --name NAME  鍵の置き場に残す名前(既定は機種名)
 
-鍵はコマンドの引数に書かせません(シェルの履歴に残るため)。実行すると 32 桁を尋ねます。区切りの空白とハイフンは読み飛ばすので、アプリの「鍵を書き出す」の表示をそのまま貼れます。
+鍵はコマンドの引数に書かせません(シェルの履歴に残るため)。実行すると 32 桁を尋ね、続けて管理者の符号を尋ねます。区切りの空白とハイフンは読み飛ばすので、アプリの「32 桁を見せる」の表示をそのまま貼れます。管理者の符号は、管理者として写すときだけ入れます(利用者なら空の Enter)。
 </code></pre>
 
     </main>
-    <footer class="site-footer"><p>デジタルドア — aiseed · <a href="/license/">ライセンス</a> · <a href="/feed.xml">RSS</a></p></footer>
+    <footer class="site-footer"><p>デジタルドア — aiseed · <a href="/#about">このサイトについて</a> · <a href="/license/">ライセンス</a> · <a href="/feed.xml">RSS</a></p></footer>
 </body>
 </html>
