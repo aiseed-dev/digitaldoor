@@ -581,7 +581,7 @@ def test_after_pass_autolock_follows():
 
 # ---- 試験の対 25 ----
 def test_pair25_condominium_association_and_owner():
-    """R-AP-38 R-AP-39: 集合玄関は管理組合の資格情報で開き、住戸の扉は管理組合の資格情報では開かず、区分所有者の資格情報で開く。"""
+    """R-AC-09 R-AC-12: 共用の扉は建物の持ち主の資格情報で開き、部屋の扉は建物の持ち主の資格情報では開かず、部屋の持ち主の資格情報で開く。"""
     association, owner = Ed25519Signer.generate(), Ed25519Signer.generate()
     entrance = new_ctl(trust_entry(association, ["entrance"]), name="entrance")
     unit = new_ctl(trust_entry(owner, ["unit-101"]), name="unit-101")
@@ -597,7 +597,7 @@ def test_pair25_condominium_association_and_owner():
 
 
 def test_pair25_management_company_and_vendor_cannot_open_unit():
-    """R-AP-39: 管理会社と業者の発行者の鍵では住戸の扉は開かない。区分所有者の鍵が漏れても共用部の扉には届かない。"""
+    """R-AC-09: 業者の発行者の鍵では部屋の扉は開かない。部屋の持ち主の鍵が漏れても共用の扉には届かない。"""
     association, owner, manager, vendor = (Ed25519Signer.generate() for _ in range(4))
     entrance = new_ctl(trust_entry(association, ["entrance"]), name="entrance")
     unit = new_ctl(trust_entry(owner, ["unit-101"]), name="unit-101")
@@ -607,7 +607,7 @@ def test_pair25_management_company_and_vendor_cannot_open_unit():
 
 
 def test_pair25_one_user_two_credentials_each_checked_by_its_issuer():
-    """R-AP-39: 一人が共用部の分(管理組合の署名)と住戸の分(区分所有者の署名)を持つとき、それぞれの扉でそれぞれの発行者の署名で確かめる。"""
+    """R-AC-09: 一人が共用の扉の分と部屋の扉の分を持つとき、それぞれの扉でそれぞれの発行者の署名で確かめる。"""
     association, owner = Ed25519Signer.generate(), Ed25519Signer.generate()
     entrance = new_ctl(trust_entry(association, ["entrance"]), name="entrance")
     unit = new_ctl(trust_entry(owner, ["unit-101"]), name="unit-101")

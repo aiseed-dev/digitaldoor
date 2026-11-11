@@ -9,8 +9,8 @@
 | [00_core.md](00_core.md) | 共通コア：用語、状態モデル、電子部(2 系統と安全 MCU)、通信・認証、監査ログ、権限モデル、更新と起動、責任分界(自分で持つべき人と物、実行する物の見張り)、ユニバーサルデザイン、安全のためのセンサー、別添 A 自前 BLE、別添 B | R-EL, R-CM, R-NW, R-LG, R-AC, R-RS |
 | [05_latch.md](05_latch.md) | ドア用電動ラッチ(自動車ラッチの派生、性能の数字、受入れ試験) | R-MC |
 | [10_entrance_house.md](10_entrance_house.md) | 規格対応ドア：個別住宅の玄関を基準にした扉セット | R-ST, R-WR, R-SF |
-| [11_entrance_apartment.md](11_entrance_apartment.md) | 玄関：集合住宅(集合玄関・共用部・住戸玄関、4 点セット) | R-AP |
 | [12_entrance_business.md](12_entrance_business.md) | 玄関：事業所 | R-EB |
+| [13_lodging_rental_room.md](13_lodging_rental_room.md) | 宿泊と貸室(客室、時間や日で貸す部屋) | R-LR |
 | [20_interior_business.md](20_interior_business.md) | 室内扉：業務用 | R-IN |
 | [21_interior_home.md](21_interior_home.md) | 室内扉：家庭用(骨子) | R-IH |
 | [30_fire_compartment.md](30_fire_compartment.md) | 防火区画の扉(骨子) | R-FD |

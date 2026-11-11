@@ -23,8 +23,8 @@
 | 文書 | 用途 | 番号 |
 |---|---|---|
 | `10_entrance_house.md` | 個別住宅の玄関を基準にした扉セット | R-ST, R-WR, R-SF |
-| `11_entrance_apartment.md` | 集合住宅(住戸玄関、集合玄関、共用部) | |
 | `12_entrance_business.md` | 事業所の玄関 | |
+| `13_lodging_rental_room.md` | 宿泊と貸室(客室、時間や日で貸す部屋) | |
 | `20_interior_business.md` | 業務用の室内扉 | |
 | `21_interior_home.md` | 家庭用の室内扉(骨子) | R-IH |
 | `30_fire_compartment.md` | 防火区画の扉(骨子) | R-FD |
