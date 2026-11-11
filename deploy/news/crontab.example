@@ -1,0 +1,17 @@
+# deb2 の dev の crontab の例(crontab -e で足す)。間隔と時刻は例。決めるのは運営者。
+# cron の時刻は deb2 の時刻帯で読まれる(timedatectl で確かめる)。ログの置き場も例。
+#
+# ログの置き場を先に作る(例):
+#   mkdir -p ~/log/digitaldoor
+#
+# 公開: 公開の写し ~/dev/digitaldoor を origin の main に進め、点検して /srv/door/www を付け替える。
+#       写しの .venv は miniforge で作った python(publish.py は標準ライブラリだけで動く)。
+*/10 * * * * cd ~/dev/digitaldoor && .venv/bin/python tools/publish.py --repo ~/dev/digitaldoor --root /srv/door >> ~/log/digitaldoor/publish.log 2>&1
+#
+# ニュース: ニュースの写し ~/dev/digitaldoor-news で、news の枝を origin/main から作り直し、
+#           集めて整え、news/items.json だけを commit する。push はしない。
+#           写しの .venv は miniforge で作った python と anthropic。API キーは ~/.config/digitaldoor/news.env。
+0 6 * * * cd ~/dev/digitaldoor-news && .venv/bin/python deploy/news/news_daily.py --max 40 >> ~/log/digitaldoor/news.log 2>&1
+#
+# ログは追記で増えるので、残す長さは運営者が決める(logrotate 等)。
+# 失敗は終了コード 0 以外で終わり、ログに「エラー:」の行が残る。見張りに使うときは、この行を見る。

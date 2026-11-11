@@ -1,14 +1,22 @@
 #!/usr/bin/env python3
 """関連ニュースを広めに集めて、AI に一行で整えさせ、news/items.json に足す。載せる物は人が tools/pick_news.py で選ぶ。
 
-    python3 tools/collect_news.py            # 取り口を全部読み、新しい物を足す
-    python3 tools/collect_news.py --no-ai    # AI を使わず、題をそのまま足す(後で --retry で整える)
-    python3 tools/collect_news.py --retry    # 整っていない物だけ AI に回す
-    python3 tools/collect_news.py --max 40   # 一回で AI に回す上限
-    python3 tools/collect_news.py --days 30  # この日数より古い物は拾わない(既定 30)
+    .venv/bin/python tools/collect_news.py            # 取り口を全部読み、新しい物を足す
+    .venv/bin/python tools/collect_news.py --no-ai    # AI を使わず、題をそのまま足す(後で --retry で整える)
+    .venv/bin/python tools/collect_news.py --retry    # 整っていない物だけ AI に回す
+    .venv/bin/python tools/collect_news.py --max 40   # 一回で AI に回す上限
+    .venv/bin/python tools/collect_news.py --days 30  # この日数より古い物は拾わない(既定 30)
 
 取り口は news/sources.json、絞り込みの語は news/keywords.json、結果は news/items.json。
 AI は Claude(ANTHROPIC_API_KEY か `ant auth login` の資格情報)。無ければ題のまま置く。
+
+AI で整えに回した物のうち、整えた件数、失敗した件数と理由の要約を、最後に出す。
+集めた物は、整えに失敗しても news/items.json に書く(題のまま。後で --retry で整えられる)。
+
+終了コード:
+  0  ふつう。資格情報が無くて題のまま置いたときも 0
+  1  資格情報があるのに、整えに回した物が一件も整わなかった(API キーの誤り、網の不通、
+     SDK と引数の食い違いなど)。毎朝の仕事が成功に見えたまま raw が積もるのを防ぐ
 """
 from __future__ import annotations
 
@@ -19,6 +27,8 @@ import os
 import sys
 import time
 import urllib.request
+from collections import Counter
+from dataclasses import dataclass, field
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
@@ -165,11 +175,28 @@ SCHEMA = {
 }
 
 
-def refine(batch: list[dict]) -> dict[str, dict]:
-    """一束を AI に渡し、id → 整えた物 を返す。"""
+def make_client():
+    """Claude の client を作る。資格情報は SDK が環境変数や `ant auth login` の置き場から探す。"""
     import anthropic
 
-    client = anthropic.Anthropic()
+    return anthropic.Anthropic()
+
+
+def has_credentials(client) -> bool:
+    """client が資格情報を見つけたか。
+
+    anthropic の SDK(1.x)の Anthropic() は、API キー(api_key)、トークン(auth_token)、
+    資格情報の提供元(credentials。`ant auth login` の置き場など)を、作るときに解決して持つ。
+    どれも無ければ、要求を送るときに失敗する。
+    """
+    return bool(getattr(client, "api_key", None) or getattr(client, "auth_token", None)
+                or getattr(client, "credentials", None))
+
+
+def refine(batch: list[dict], client=None) -> dict[str, dict]:
+    """一束を AI に渡し、id → 整えた物 を返す。"""
+    if client is None:
+        client = make_client()
     payload = [{"id": i["id"], "source": i["source"], "publisher": i["publisher"], "lang": i["lang"],
                 "published": i["published"], "title": i["title_raw"], "summary": i["summary_raw"]} for i in batch]
     response = client.beta.messages.create(
@@ -187,25 +214,99 @@ def refine(batch: list[dict]) -> dict[str, dict]:
     return {o["id"]: o for o in json.loads(text)["items"]}
 
 
-def refine_all(items: list[dict], limit: int, batch_size: int = 15) -> int:
+@dataclass
+class RefineResult:
+    """refine_all の結果。件数はニュースの件数(束の数ではない)。"""
+    asked: int = 0            # 整えに回した件数
+    done: int = 0             # 整えた件数(status が ai になった物)
+    failed: int = 0           # 整えに失敗した件数
+    skipped: int = 0          # 前の失敗で止めたため、回さなかった件数
+    no_credentials: bool = False
+    reasons: Counter = field(default_factory=Counter)  # 理由 → 件数
+
+    def fail(self, reason: str, n: int) -> None:
+        self.failed += n
+        self.reasons[reason] += n
+
+    @property
+    def all_failed(self) -> bool:
+        """資格情報があるのに、回した物が一件も整わなかったか。"""
+        return not self.no_credentials and self.asked > 0 and self.done == 0
+
+    def summary(self) -> list[str]:
+        if self.asked == 0:
+            return ["AI で整える物はありません"]
+        if self.no_credentials:
+            return [f"AI の資格情報がありません。{self.asked} 件を題のまま残します(後で --retry で整えられます)"]
+        lines = [f"AI で整えた物 {self.done} 件(回した物 {self.asked} 件、失敗 {self.failed} 件"
+                 + (f"、前の失敗で止めて回さなかった物 {self.skipped} 件" if self.skipped else "") + ")"]
+        for reason, n in self.reasons.most_common():
+            lines.append(f"  失敗の理由: {reason}({n} 件)")
+        return lines
+
+
+def _reason(e: Exception) -> str:
+    msg = " ".join(str(e).split())
+    if len(msg) > 160:
+        msg = msg[:160] + "…"
+    return f"{type(e).__name__}: {msg}" if msg else type(e).__name__
+
+
+def _is_api_error(e: Exception) -> bool:
+    """API や網の失敗か(SDK が既に再試行した後の物。続けても通らないので止める)。"""
+    try:
+        import anthropic
+    except ImportError:
+        return False
+    return isinstance(e, anthropic.APIError)
+
+
+def refine_all(items: list[dict], limit: int, batch_size: int = 15, client=None, pause: float = 1.0) -> RefineResult:
+    """status が raw の物を、上から limit 件まで、batch_size 件ずつ AI で整える。
+
+    資格情報が無ければ何もしない(no_credentials)。API や網の失敗(anthropic.APIError)は、
+    SDK が再試行した後の物なので、そこで止め、残りは回さない。断り(refusal)や返事の形の
+    誤りは、その束だけを失敗として数え、次の束に進む。
+    """
     todo = [i for i in items if i.get("status") == "raw"][:limit]
-    done = 0
+    res = RefineResult(asked=len(todo))
+    if not todo:
+        return res
+    if client is None:
+        try:
+            client = make_client()
+        except Exception as e:  # anthropic が入っていない、資格情報の置き場が壊れている等
+            if isinstance(e, ImportError) and not (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")):
+                res.no_credentials = True
+                return res
+            res.fail(_reason(e), len(todo))
+            return res
+    if not has_credentials(client):
+        res.no_credentials = True
+        return res
     for k in range(0, len(todo), batch_size):
         batch = todo[k:k + batch_size]
         try:
-            out = refine(batch)
+            out = refine(batch, client)
         except Exception as e:
-            print(f"  AI で整えられなかった({type(e).__name__}: {e})。題のまま残す", file=sys.stderr)
-            break
+            res.fail(_reason(e), len(batch))
+            if _is_api_error(e):
+                res.skipped = len(todo) - k - len(batch)
+                break
+            continue
         for i in batch:
             o = out.get(i["id"])
-            if not o:
+            try:
+                fields = {"relevant": o["relevant"], "title": o["title"], "summary": o["summary"],
+                          "category": o["category"], "kind": o["kind"]}
+            except (KeyError, TypeError):
+                res.fail("AI の返事にその件が無い、または項目が欠けている", 1)
                 continue
-            i.update({"relevant": o["relevant"], "title": o["title"], "summary": o["summary"],
-                      "category": o["category"], "kind": o["kind"], "status": "ai"})
-            done += 1
-        time.sleep(1)
-    return done
+            i.update(fields, status="ai")
+            res.done += 1
+        if pause and k + batch_size < len(todo):
+            time.sleep(pause)
+    return res
 
 
 # ---------------------------------------------------------------- 主
@@ -225,12 +326,17 @@ def main(argv=None) -> int:
         new = collect(cfg["sources"], include, known, args.days)
         items.extend(new)
         print(f"新しい物 {len(new)} 件")
-    if not args.no_ai:
-        n = refine_all(items, args.max)
-        print(f"AI で整えた物 {n} 件")
+    res = None if args.no_ai else refine_all(items, args.max)
     items.sort(key=lambda i: (i.get("published") or i.get("collected")), reverse=True)
     ITEMS.write_text(json.dumps(items, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     print(f"合計 {len(items)} 件 → {ITEMS}")
+    if res is not None:
+        for line in res.summary():
+            print(line)
+        if res.all_failed:
+            print(f"エラー: 資格情報があるのに、AI で一件も整えられませんでした(回した物 {res.asked} 件)。"
+                  "集めた物は題のまま書きました", file=sys.stderr)
+            return 1
     return 0
 
 

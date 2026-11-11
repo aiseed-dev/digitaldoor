@@ -1,12 +1,13 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 """サイトの公開の道具。deb2 の写し(clone)から html/ を取り出し、点検し、版として置き、切り替える。
 
-Python の標準ライブラリと git だけで動く(deb2 の apt の python3 でよい。venv は要らない)。
+Python の標準ライブラリと git だけで動く(入れる物は無い)。deb2 では、写しに miniforge(conda-forge)で作った
+.venv の python で動かす(deb2 の Python のアプリは、miniforge の環境をアプリごとの .venv に持つ)。
 
-    python3 tools/publish.py --repo ~/dev/digitaldoor --root /srv/door             # 取りに行き、点検し、切り替える
-    python3 tools/publish.py --repo ~/dev/digitaldoor --root /srv/door --dry-run   # 何をするかだけ見る
-    python3 tools/publish.py --root /srv/door --status                             # 今の版と、置いた時刻
-    python3 tools/publish.py --root /srv/door --rollback                           # 一つ前の版に戻す
+    .venv/bin/python tools/publish.py --repo ~/dev/digitaldoor --root /srv/door             # 取りに行き、点検し、切り替える
+    .venv/bin/python tools/publish.py --repo ~/dev/digitaldoor --root /srv/door --dry-run   # 何をするかだけ見る
+    .venv/bin/python tools/publish.py --root /srv/door --status                             # 今の版と、置いた時刻
+    .venv/bin/python tools/publish.py --root /srv/door --rollback                           # 一つ前の版に戻す
 
 置き場(--root)の中身:
 
