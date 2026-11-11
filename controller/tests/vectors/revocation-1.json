@@ -1,0 +1,461 @@
+{
+ "format": "digitaldoor-test-vectors/1",
+ "requirements": [
+  "R-AC-22",
+  "R-AC-14"
+ ],
+ "door": "door-1",
+ "keys": {
+  "A": {
+   "public_key": "6f4ec45e5b31da665538d6b6d0b1d62c4ba69d224e8da6e87f7fa1831b76f9c5",
+   "issuer": "8d00723936915980"
+  },
+  "X": {
+   "public_key": "b0c253e5c0adb81db739e508e36777d03b90994ae45e05e0ee4831f6aa5f0b74",
+   "issuer": "0fdd592f2f909479"
+  }
+ },
+ "trust": {
+  "8d00723936915980": {
+   "public_key": "6f4ec45e5b31da665538d6b6d0b1d62c4ba69d224e8da6e87f7fa1831b76f9c5",
+   "doors": [
+    "door-1"
+   ]
+  }
+ },
+ "config": {
+  "revocation_max_age_s": 3600
+ },
+ "start": {
+  "now": 1794700800,
+  "synced": true
+ },
+ "steps": [
+  {
+   "op": "present",
+   "credential": {
+    "body": "{\"format\": \"digitaldoor-credential/1\", \"issuer\": \"8d00723936915980\", \"id\": \"c-0040\", \"subject\": \"resident-040\", \"doors\": [\"door-1\"], \"not_before\": 1794614400, \"not_after\": 1797292800, \"once\": false}",
+    "sig": "116abf11eedf03760d31a563080f88058a2a269df6902fcd0c174526908f95f9461984beb1d55b8c55f376c7da3c839c373fb6255ee1bf970d086482426f0e04"
+   },
+   "expect": "拒否",
+   "reason": "失効の知らせが古い",
+   "revocations": {},
+   "note": "一覧を一度も受けていない。長い資格情報は拒む(R-AC-14)"
+  },
+  {
+   "op": "revocation",
+   "list": {
+    "body": "{\"format\": \"digitaldoor-revocation/1\", \"issuer\": \"8d00723936915980\", \"generation\": 7, \"issued_at\": 1794700800, \"revoked\": [\"c-0012\", \"c-0031\"]}",
+    "sig": "702bf0e6ec073c3da0ee873faf01c7cc5144dc4e8a3a9c7a19496ea739c6772044b5eca3d67916181a512a02c33317e1c90584fd6af74c72d8f6654ae01a2a03"
+   },
+   "expect": "受理",
+   "audit_added": 1,
+   "revocations": {
+    "8d00723936915980": {
+     "generation": 7,
+     "issued_at": 1794700800,
+     "revoked": [
+      "c-0012",
+      "c-0031"
+     ]
+    }
+   }
+  },
+  {
+   "op": "revocation",
+   "list": {
+    "body": "{\"format\": \"digitaldoor-revocation/1\", \"issuer\": \"8d00723936915980\", \"generation\": 7, \"issued_at\": 1794700800, \"revoked\": [\"c-0012\", \"c-0031\"]}",
+    "sig": "702bf0e6ec073c3da0ee873faf01c7cc5144dc4e8a3a9c7a19496ea739c6772044b5eca3d67916181a512a02c33317e1c90584fd6af74c72d8f6654ae01a2a03"
+   },
+   "expect": "同じ",
+   "audit_added": 0,
+   "revocations": {
+    "8d00723936915980": {
+     "generation": 7,
+     "issued_at": 1794700800,
+     "revoked": [
+      "c-0012",
+      "c-0031"
+     ]
+    }
+   },
+   "note": "同じは記録しない"
+  },
+  {
+   "op": "present",
+   "credential": {
+    "body": "{\"format\": \"digitaldoor-credential/1\", \"issuer\": \"8d00723936915980\", \"id\": \"c-0012\", \"subject\": \"resident-012\", \"doors\": [\"door-1\"], \"not_before\": 1794614400, \"not_after\": 1797292800, \"once\": false}",
+    "sig": "01fd0b329346f62f71ae29425a887217ef70c152b1fbdba51b50ba26b90e2bb7893df3d5671abf4921525afa1b78608b9f3ee8b0f523b5e0aa121a0e8a93a702"
+   },
+   "expect": "拒否",
+   "reason": "失効済み"
+  },
+  {
+   "op": "present",
+   "credential": {
+    "body": "{\"format\": \"digitaldoor-credential/1\", \"issuer\": \"8d00723936915980\", \"id\": \"c-0040\", \"subject\": \"resident-040\", \"doors\": [\"door-1\"], \"not_before\": 1794614400, \"not_after\": 1797292800, \"once\": false}",
+    "sig": "116abf11eedf03760d31a563080f88058a2a269df6902fcd0c174526908f95f9461984beb1d55b8c55f376c7da3c839c373fb6255ee1bf970d086482426f0e04"
+   },
+   "expect": "解錠",
+   "note": "一覧に無い資格情報"
+  },
+  {
+   "op": "revocation",
+   "list": {
+    "body": "{\"format\": \"digitaldoor-revocation/1\", \"issuer\": \"8d00723936915980\", \"generation\": 6, \"issued_at\": 1794697200, \"revoked\": [\"c-0012\"]}",
+    "sig": "a1852c819fb9bd4e27d6388efab35c7ed481a1f4977351634568a98121b4dee398a88350dc00d57b1bc1412954eed5c5c7643f16fc9f8f6ee8e91bddb79a5709"
+   },
+   "expect": "拒否",
+   "reason": "古い世代",
+   "audit_added": 1,
+   "revocations": {
+    "8d00723936915980": {
+     "generation": 7,
+     "issued_at": 1794700800,
+     "revoked": [
+      "c-0012",
+      "c-0031"
+     ]
+    }
+   }
+  },
+  {
+   "op": "revocation",
+   "list": {
+    "body": "{\"format\": \"digitaldoor-revocation/1\", \"issuer\": \"8d00723936915980\", \"generation\": 9, \"issued_at\": 1794700800, \"revoked\": []}",
+    "sig": "24828465c7b45363d8de216b6c556757c8a4b7c5185bca31689a3509bda2dcb1209553f9bc593e3be1a878f893ab3844ee630c1eb084748e09e183fd192a1a08"
+   },
+   "expect": "拒否",
+   "reason": "署名が合わない",
+   "audit_added": 1,
+   "revocations": {
+    "8d00723936915980": {
+     "generation": 7,
+     "issued_at": 1794700800,
+     "revoked": [
+      "c-0012",
+      "c-0031"
+     ]
+    }
+   },
+   "note": "別の鍵で署名した一覧"
+  },
+  {
+   "op": "revocation",
+   "list": {
+    "body": "{\"format\": \"digitaldoor-revocation/1\", \"issuer\": \"8d00723936915980\", \"generation\": 9, \"issued_at\": 1794700800, \"revoked\": [\"c-0012\", \"c-0031\"]}",
+    "sig": "702bf0e6ec073c3da0ee873faf01c7cc5144dc4e8a3a9c7a19496ea739c6772044b5eca3d67916181a512a02c33317e1c90584fd6af74c72d8f6654ae01a2a03"
+   },
+   "expect": "拒否",
+   "reason": "署名が合わない",
+   "audit_added": 1,
+   "revocations": {
+    "8d00723936915980": {
+     "generation": 7,
+     "issued_at": 1794700800,
+     "revoked": [
+      "c-0012",
+      "c-0031"
+     ]
+    }
+   },
+   "note": "body を書き換えた一覧"
+  },
+  {
+   "op": "revocation",
+   "list": {
+    "body": "{\"format\": \"digitaldoor-revocation/1\", \"issuer\": \"0fdd592f2f909479\", \"generation\": 1, \"issued_at\": 1794700800, \"revoked\": [\"c-0040\"]}",
+    "sig": "a5a0a8d8c58a11a96f41804bbd992c64a2922349d4566dd0ae6a2a9c8e89994d5b6400a7a0dfd60a62e0e71ef8a700dcc0430779db37864d8b24afa307587b0c"
+   },
+   "expect": "拒否",
+   "reason": "知らない発行者",
+   "audit_added": 1,
+   "revocations": {
+    "8d00723936915980": {
+     "generation": 7,
+     "issued_at": 1794700800,
+     "revoked": [
+      "c-0012",
+      "c-0031"
+     ]
+    }
+   }
+  },
+  {
+   "op": "revocation",
+   "list": {
+    "body": "{\"format\": \"digitaldoor-revocation/1\", \"issuer\": \"8d00723936915980\", \"generation\": 0, \"issued_at\": 1794700800, \"revoked\": []}",
+    "sig": "d63e888812b33401145bf10db6887df0099908aac1487f597191f4c9512479c7e0918266efeb6e17a48adcd9a034658180778fb891b3295ecb3f30f984b23f06"
+   },
+   "expect": "拒否",
+   "reason": "形式が違う",
+   "audit_added": 1,
+   "revocations": {
+    "8d00723936915980": {
+     "generation": 7,
+     "issued_at": 1794700800,
+     "revoked": [
+      "c-0012",
+      "c-0031"
+     ]
+    }
+   },
+   "note": "世代が 0"
+  },
+  {
+   "op": "revocation",
+   "list": {
+    "body": "{\"format\": \"digitaldoor-revocation/1\", \"issuer\": \"8d00723936915980\", \"generation\": 10, \"issued_at\": 1794700800, \"revoked\": \"c-0040\"}",
+    "sig": "424d48d540506b1632be4737a7ba5a9df8d5cff19e9867089a2c735f48371466b3ae3cd98bfdc94f90735ca8af56e193180a8a7114c92c0f1b137f4fc6961809"
+   },
+   "expect": "拒否",
+   "reason": "形式が違う",
+   "audit_added": 1,
+   "revocations": {
+    "8d00723936915980": {
+     "generation": 7,
+     "issued_at": 1794700800,
+     "revoked": [
+      "c-0012",
+      "c-0031"
+     ]
+    }
+   },
+   "note": "revoked が文字列の列でない"
+  },
+  {
+   "op": "revocation",
+   "list": {
+    "body": "{\"format\": \"digitaldoor-revocation/1\", \"issuer\": \"8d00723936915980\", \"generation\": true, \"issued_at\": 1794700800, \"revoked\": []}",
+    "sig": "c171ca6702c595b16ee1824a6b71e8a9fa99f9ca07a152202ecbf8a014f83b69e57e855181c7b8c2e5a5c61be813e9671c3519dcb07d41979f8a6932ec72540c"
+   },
+   "expect": "拒否",
+   "reason": "形式が違う",
+   "audit_added": 1,
+   "revocations": {
+    "8d00723936915980": {
+     "generation": 7,
+     "issued_at": 1794700800,
+     "revoked": [
+      "c-0012",
+      "c-0031"
+     ]
+    }
+   },
+   "note": "真偽は整数として受けない"
+  },
+  {
+   "op": "time",
+   "now": 1794705800,
+   "synced": true,
+   "note": "issued_at から 5000 秒。設定の 3600 秒を過ぎた"
+  },
+  {
+   "op": "present",
+   "credential": {
+    "body": "{\"format\": \"digitaldoor-credential/1\", \"issuer\": \"8d00723936915980\", \"id\": \"c-0040\", \"subject\": \"resident-040\", \"doors\": [\"door-1\"], \"not_before\": 1794614400, \"not_after\": 1797292800, \"once\": false}",
+    "sig": "116abf11eedf03760d31a563080f88058a2a269df6902fcd0c174526908f95f9461984beb1d55b8c55f376c7da3c839c373fb6255ee1bf970d086482426f0e04"
+   },
+   "expect": "拒否",
+   "reason": "失効の知らせが古い"
+  },
+  {
+   "op": "present",
+   "credential": {
+    "body": "{\"format\": \"digitaldoor-credential/1\", \"issuer\": \"8d00723936915980\", \"id\": \"c-short\", \"subject\": \"visitor-001\", \"doors\": [\"door-1\"], \"not_before\": 1794704800, \"not_after\": 1794708400, \"once\": false}",
+    "sig": "4996d979d1294bf85e7c7d7de6daa3ef2f9c2fdcffa834dab7855a9e3f6101b2d73d77229cf86ec7e6324521ee2171fe19f49c024799f4a3e27cadebf71a5b0e"
+   },
+   "expect": "解錠",
+   "note": "長さが 3600 秒(設定以下)の資格情報は通す"
+  },
+  {
+   "op": "revocation",
+   "list": {
+    "body": "{\"format\": \"digitaldoor-revocation/1\", \"issuer\": \"8d00723936915980\", \"generation\": 7, \"issued_at\": 1794700800, \"revoked\": [\"c-0012\", \"c-0031\"]}",
+    "sig": "702bf0e6ec073c3da0ee873faf01c7cc5144dc4e8a3a9c7a19496ea739c6772044b5eca3d67916181a512a02c33317e1c90584fd6af74c72d8f6654ae01a2a03"
+   },
+   "expect": "同じ",
+   "audit_added": 0,
+   "revocations": {
+    "8d00723936915980": {
+     "generation": 7,
+     "issued_at": 1794700800,
+     "revoked": [
+      "c-0012",
+      "c-0031"
+     ]
+    }
+   },
+   "note": "前に受けた一覧の送り直しでは知らせは新しくならない"
+  },
+  {
+   "op": "present",
+   "credential": {
+    "body": "{\"format\": \"digitaldoor-credential/1\", \"issuer\": \"8d00723936915980\", \"id\": \"c-0040\", \"subject\": \"resident-040\", \"doors\": [\"door-1\"], \"not_before\": 1794614400, \"not_after\": 1797292800, \"once\": false}",
+    "sig": "116abf11eedf03760d31a563080f88058a2a269df6902fcd0c174526908f95f9461984beb1d55b8c55f376c7da3c839c373fb6255ee1bf970d086482426f0e04"
+   },
+   "expect": "拒否",
+   "reason": "失効の知らせが古い"
+  },
+  {
+   "op": "present",
+   "credential": {
+    "body": "{\"format\": \"digitaldoor-credential/1\", \"issuer\": \"8d00723936915980\", \"id\": \"c-0040\", \"subject\": \"resident-040\", \"doors\": [\"door-1\"], \"not_before\": 1794614400, \"not_after\": 1797292800, \"once\": false}",
+    "sig": "116abf11eedf03760d31a563080f88058a2a269df6902fcd0c174526908f95f9461984beb1d55b8c55f376c7da3c839c373fb6255ee1bf970d086482426f0e04"
+   },
+   "revocation": {
+    "body": "{\"format\": \"digitaldoor-revocation/1\", \"issuer\": \"8d00723936915980\", \"generation\": 8, \"issued_at\": 1794705600, \"revoked\": [\"c-0012\", \"c-0031\"]}",
+    "sig": "e9a8448211cc768ec8ccc175b9520a7177ee05a86d3952071cbcc73ffb31f430e7cd8eb95745ced42384b422f595dcd8878131fd214d7cfc775ca272bc72d604"
+   },
+   "revocation_expect": "受理",
+   "expect": "解錠",
+   "revocations": {
+    "8d00723936915980": {
+     "generation": 8,
+     "issued_at": 1794705600,
+     "revoked": [
+      "c-0012",
+      "c-0031"
+     ]
+    }
+   },
+   "note": "端末が新しい世代の一覧を運ぶ"
+  },
+  {
+   "op": "present",
+   "credential": {
+    "body": "{\"format\": \"digitaldoor-credential/1\", \"issuer\": \"8d00723936915980\", \"id\": \"c-0031\", \"subject\": \"resident-031\", \"doors\": [\"door-1\"], \"not_before\": 1794614400, \"not_after\": 1797292800, \"once\": false}",
+    "sig": "d227e381c7e13387c24bdc01aef1b9c211811bf7896ccf787ad37006fc9573aed9653a557cd54d42e75a7e2ecdc4e3b2c043360a9b694585cd47af380ef74408"
+   },
+   "revocation": {
+    "body": "{\"format\": \"digitaldoor-revocation/1\", \"issuer\": \"8d00723936915980\", \"generation\": 8, \"issued_at\": 1794705600, \"revoked\": [\"c-0012\", \"c-0031\"]}",
+    "sig": "e9a8448211cc768ec8ccc175b9520a7177ee05a86d3952071cbcc73ffb31f430e7cd8eb95745ced42384b422f595dcd8878131fd214d7cfc775ca272bc72d604"
+   },
+   "revocation_expect": "同じ",
+   "expect": "拒否",
+   "reason": "失効済み",
+   "revocations": {
+    "8d00723936915980": {
+     "generation": 8,
+     "issued_at": 1794705600,
+     "revoked": [
+      "c-0012",
+      "c-0031"
+     ]
+    }
+   }
+  },
+  {
+   "op": "restart",
+   "revocations": {
+    "8d00723936915980": {
+     "generation": 8,
+     "issued_at": 1794705600,
+     "revoked": [
+      "c-0012",
+      "c-0031"
+     ]
+    }
+   },
+   "note": "記録から状態を作り直す"
+  },
+  {
+   "op": "time",
+   "now": 1794705900,
+   "synced": true
+  },
+  {
+   "op": "present",
+   "credential": {
+    "body": "{\"format\": \"digitaldoor-credential/1\", \"issuer\": \"8d00723936915980\", \"id\": \"c-0031\", \"subject\": \"resident-031\", \"doors\": [\"door-1\"], \"not_before\": 1794614400, \"not_after\": 1797292800, \"once\": false}",
+    "sig": "d227e381c7e13387c24bdc01aef1b9c211811bf7896ccf787ad37006fc9573aed9653a557cd54d42e75a7e2ecdc4e3b2c043360a9b694585cd47af380ef74408"
+   },
+   "expect": "拒否",
+   "reason": "失効済み"
+  },
+  {
+   "op": "revocation",
+   "list": {
+    "body": "{\"format\": \"digitaldoor-revocation/1\", \"issuer\": \"8d00723936915980\", \"generation\": 7, \"issued_at\": 1794700800, \"revoked\": [\"c-0012\", \"c-0031\"]}",
+    "sig": "702bf0e6ec073c3da0ee873faf01c7cc5144dc4e8a3a9c7a19496ea739c6772044b5eca3d67916181a512a02c33317e1c90584fd6af74c72d8f6654ae01a2a03"
+   },
+   "expect": "拒否",
+   "reason": "古い世代",
+   "audit_added": 1,
+   "revocations": {
+    "8d00723936915980": {
+     "generation": 8,
+     "issued_at": 1794705600,
+     "revoked": [
+      "c-0012",
+      "c-0031"
+     ]
+    }
+   },
+   "note": "再起動の後も世代は戻らない"
+  },
+  {
+   "op": "time",
+   "now": 1794706000,
+   "synced": false
+  },
+  {
+   "op": "present",
+   "credential": {
+    "body": "{\"format\": \"digitaldoor-credential/1\", \"issuer\": \"8d00723936915980\", \"id\": \"c-0012\", \"subject\": \"resident-012\", \"doors\": [\"door-1\"], \"not_before\": 1794614400, \"not_after\": 1797292800, \"once\": false}",
+    "sig": "01fd0b329346f62f71ae29425a887217ef70c152b1fbdba51b50ba26b90e2bb7893df3d5671abf4921525afa1b78608b9f3ee8b0f523b5e0aa121a0e8a93a702"
+   },
+   "expect": "拒否",
+   "reason": "失効済み",
+   "note": "失効は時計の同期より先に見る"
+  },
+  {
+   "op": "present",
+   "credential": {
+    "body": "{\"format\": \"digitaldoor-credential/1\", \"issuer\": \"8d00723936915980\", \"id\": \"c-0040\", \"subject\": \"resident-040\", \"doors\": [\"door-1\"], \"not_before\": 1794614400, \"not_after\": 1797292800, \"once\": false}",
+    "sig": "116abf11eedf03760d31a563080f88058a2a269df6902fcd0c174526908f95f9461984beb1d55b8c55f376c7da3c839c373fb6255ee1bf970d086482426f0e04"
+   },
+   "expect": "拒否",
+   "reason": "時刻が未同期"
+  },
+  {
+   "op": "time",
+   "now": 1794709800,
+   "synced": true,
+   "note": "世代 8 の issued_at から 4200 秒"
+  },
+  {
+   "op": "present",
+   "credential": {
+    "body": "{\"format\": \"digitaldoor-credential/1\", \"issuer\": \"8d00723936915980\", \"id\": \"c-0040\", \"subject\": \"resident-040\", \"doors\": [\"door-1\"], \"not_before\": 1794614400, \"not_after\": 1797292800, \"once\": false}",
+    "sig": "116abf11eedf03760d31a563080f88058a2a269df6902fcd0c174526908f95f9461984beb1d55b8c55f376c7da3c839c373fb6255ee1bf970d086482426f0e04"
+   },
+   "expect": "拒否",
+   "reason": "失効の知らせが古い"
+  },
+  {
+   "op": "configure",
+   "set": {
+    "revocation_max_age_s": 0
+   },
+   "note": "0 はこの規則を使わない"
+  },
+  {
+   "op": "present",
+   "credential": {
+    "body": "{\"format\": \"digitaldoor-credential/1\", \"issuer\": \"8d00723936915980\", \"id\": \"c-0040\", \"subject\": \"resident-040\", \"doors\": [\"door-1\"], \"not_before\": 1794614400, \"not_after\": 1797292800, \"once\": false}",
+    "sig": "116abf11eedf03760d31a563080f88058a2a269df6902fcd0c174526908f95f9461984beb1d55b8c55f376c7da3c839c373fb6255ee1bf970d086482426f0e04"
+   },
+   "expect": "解錠"
+  },
+  {
+   "op": "present",
+   "credential": {
+    "body": "{\"format\": \"digitaldoor-credential/1\", \"issuer\": \"8d00723936915980\", \"id\": \"c-0012\", \"subject\": \"resident-012\", \"doors\": [\"door-1\"], \"not_before\": 1794614400, \"not_after\": 1797292800, \"once\": false}",
+    "sig": "01fd0b329346f62f71ae29425a887217ef70c152b1fbdba51b50ba26b90e2bb7893df3d5671abf4921525afa1b78608b9f3ee8b0f523b5e0aa121a0e8a93a702"
+   },
+   "expect": "拒否",
+   "reason": "失効済み"
+  }
+ ]
+}

@@ -14,6 +14,11 @@
 - 署名つき資格情報: present で、信頼する発行者の署名と範囲と期限を扉が確かめ、通れば上の判断(火災、二人同時、自動施錠)に渡す。
   一回限りの使用済みの一覧は、起動のときに記録(資格情報/使用)から作り直す(仕様書 5.2a)
 - 信頼の一覧: change_trust で、据付のときに入れた管理者の鍵で署名した変更の要求だけを受ける。受けた変更は記録から読み戻す
+- 失効の一覧: accept_revocation で、信頼する発行者の署名と世代を確かめて受け、発行者ごとに前の一覧を丸ごと置き換える。
+  present に一緒に運んだ一覧(revocation)は、資格情報より先に受ける。同じ世代は「同じ」で記録しない。
+  起動のときは記録(設定/失効の一覧 受理)から状態を作り直す。信頼の一覧から外した発行者の状態も残す(仕様書 5.2c)
+- 失効の知らせの古さ: revocation_max_age_s が 0 より大きいとき、一覧の issued_at からその秒数を過ぎた発行者の、
+  期限の長さがその秒数より長い資格情報を拒む。0 はこの規則を使わない(仕様書 5.2c、R-AC-14)
 """
 from __future__ import annotations
 
@@ -25,6 +30,7 @@ from .contacts import Contacts
 from .slips import key_id
 
 TRUST_EVENT = "信頼する発行者"
+REVOCATION_EVENT = "失効の一覧"
 
 
 @dataclass
@@ -35,6 +41,7 @@ class Config:
     power_policy: str = "release"  # release(停電で解放) / hold(停電で保持)
     fire_policy: str = "release"
     time_jump_s: float = 300.0     # 同期済みの時計がこれを超えて動いたら「時刻のずれ」
+    revocation_max_age_s: float = 0.0  # 失効の知らせの古さの上限(秒)。0 はこの規則を使わない(仕様書 5.2c)
 
     def check(self) -> None:
         """許されない値なら ValueError。"""
@@ -47,7 +54,7 @@ class Config:
             raise ValueError("power_policy と fire_policy は release か hold です")
         if self.two_person < 1:
             raise ValueError("two_person は 1 以上です")
-        if min(self.two_person_window_s, self.autolock_s, self.time_jump_s) < 0:
+        if min(self.two_person_window_s, self.autolock_s, self.time_jump_s, self.revocation_max_age_s) < 0:
             raise ValueError("秒数は 0 以上です")
 
 
@@ -68,6 +75,8 @@ class Controller:
     trust: dict | None = field(default=None, kw_only=True)   # {issuer: {"public_key": 16進, "doors": [...]}}
     _used: set[str] = field(default_factory=set, init=False, repr=False)       # 使用済みの一回限りの資格情報の識別
     _trust_ids: set[str] = field(default_factory=set, init=False, repr=False)  # 受けた変更の要求の識別
+    # 失効の一覧の状態(仕様書 5.2c)。{issuer: {"generation", "issued_at", "revoked"}}。記録から作り直す
+    revocations: dict = field(default_factory=dict, init=False)
 
     def __post_init__(self) -> None:
         if self.admin_key is not None:
@@ -77,9 +86,10 @@ class Controller:
         self._rebuild_from_record()
 
     def _rebuild_from_record(self) -> None:
-        """起動のとき、記録から使用済みの一覧と、受けた変更を作り直す(追記だけの記録が正)。
+        """起動のとき、記録から使用済みの一覧と、受けた変更と、失効の一覧の状態を作り直す(追記だけの記録が正)。
 
         受けた変更があれば、信頼の一覧は最後に受けた変更の後の一覧にする(消した発行者が再起動で戻らないように)。
+        失効の一覧は信頼の一覧とは別に、発行者ごとに最後に受理した状態にする。作り直しは記録を増やさない。
         """
         for e in self.audit.entries:
             if e.kind == "資格情報" and e.event == "使用" and e.detail.startswith("id="):
@@ -92,6 +102,10 @@ class Controller:
                 if all(isinstance(v, dict) and isinstance(v.get("public_key"), str)
                        and isinstance(v.get("doors"), list) for v in got[1].values()):
                     self.trust = got[1]
+            elif e.kind == "設定" and e.event == REVOCATION_EVENT and e.result == "受理":
+                held = credentials.parse_revocation_detail(e.detail)
+                if held is not None:
+                    self.revocations[held["issuer"]] = credentials.revocation_state(held)
 
     # ---- 時刻 ----
     def set_time(self, now: float, synced: bool = True) -> None:
@@ -185,14 +199,18 @@ class Controller:
         return "解錠"
 
     # ---- 署名つき資格情報(仕様書 5.2a) ----
-    def present(self, credential, route: str = "遠隔") -> str:
+    def present(self, credential, route: str = "遠隔", *, revocation=None) -> str:
         """発行者の署名つき資格情報を、扉が自分で確かめて受ける。網も発行者のサーバーも要らない。
 
         確かめて外れたら、理由を結果にして認証の拒否を記録する。通れば on_auth の判断(火災、二人同時、自動施錠)を通る。
         一回限りの資格情報は、通ったら「使用」を記録に足す。強要の印は持たせない(読取機の判定結果で受ける)。
+        revocation は端末が一緒に運んだ失効の一覧。先に受け、結果が受理、同じ、拒否のどれでも続けて資格情報を確かめる。
         """
+        if revocation is not None:
+            self.accept_revocation(revocation)
         v = credentials.verify_credential(credential, door=self.name, trust=self.trust, now=self.now,
-                                          synced=self.synced, used_ids=self._used)
+                                          synced=self.synced, used_ids=self._used, revocations=self.revocations,
+                                          max_age=self.config.revocation_max_age_s)
         if not v.ok:
             return self.on_auth(v.subject, route, valid=False, reason=v.reason, detail=v.detail)
         result = self.on_auth(v.subject, route, detail=v.detail)
@@ -213,6 +231,22 @@ class Controller:
         self._trust_ids.add(body["id"])
         self._log("設定", TRUST_EVENT, result="受理", subject=key_id(self.admin_key),
                   detail=credentials.change_detail(body, before, after))
+        return "受理"
+
+    def accept_revocation(self, lst) -> str:
+        """発行者の署名つきの失効の一覧を受ける。受理、同じ、拒否を返す。時計の同期は要らない(順番は世代で決める)。
+
+        受理したら、その発行者の前の一覧を丸ごと置き換え、詳細に状態を読み戻せる形で記録する。同じは記録しない。
+        """
+        reason, body = credentials.verify_revocation(lst, trust=self.trust, current=self.revocations)
+        if reason == credentials.SAME:
+            return credentials.SAME
+        if reason:
+            self._log("設定", REVOCATION_EVENT, result="拒否", detail=reason)
+            return "拒否"
+        self.revocations[body["issuer"]] = credentials.revocation_state(body)
+        self._log("設定", REVOCATION_EVENT, result="受理", subject=body["issuer"],
+                  detail=credentials.revocation_detail(body))
         return "受理"
 
     def on_door(self, open_: bool) -> None:

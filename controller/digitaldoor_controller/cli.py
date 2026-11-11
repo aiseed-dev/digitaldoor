@@ -51,8 +51,19 @@ def _names(text: str) -> list[str]:
     return [x.strip() for x in text.split(",") if x.strip()]
 
 
+def parse_generation(text: str) -> int:
+    """失効の一覧の世代(1 以上の整数)を読む。読めなければ ValueError。"""
+    try:
+        n = int(text)
+    except ValueError:
+        raise ValueError(f"世代を読めません: {text}(1 以上の整数で書いてください)") from None
+    if n < 1:
+        raise ValueError(f"世代は 1 以上です: {text}")
+    return n
+
+
 def _key_command(args) -> int:
-    """keygen、issue、trust-change。置き場(--dir)は使わず、記録も作らない。出力は JSON を一つ。"""
+    """keygen、issue、trust-change、revocation。置き場(--dir)は使わず、記録も作らない。出力は JSON を一つ。"""
     try:
         if args.cmd == "keygen":
             signer = write_key_file(args.out)
@@ -64,6 +75,11 @@ def _key_command(args) -> int:
             out = credentials.issue(read_key_file(args.key), cred_id=args.id, subject=args.subject, doors=doors,
                                     not_before=parse_time(args.from_), not_after=parse_time(args.until),
                                     once=args.once)
+        elif args.cmd == "revocation":
+            generation = parse_generation(args.generation)
+            issued_at = parse_time(args.at) if args.at is not None else int(time.time())
+            out = credentials.revocation_list(read_key_file(args.key), generation=generation, issued_at=issued_at,
+                                              revoked=_names(args.ids) if args.ids else [])
         else:
             try:
                 issuer_public = bytes.fromhex(args.issuer_key)
@@ -91,7 +107,8 @@ def main(argv=None) -> int:
         epilog="記録の署名は Ed25519 で、鍵は置き場の audit.ed25519 です(前からの置き場で audit.key がある物は HMAC のまま)。"
                "伝票は一件ずつ <扉>-<連番>.json として箱へ出し、受け手は pubkey で写した公開鍵だけで check-box で検べます。"
                "発行者と管理者の側では keygen で鍵を作り(秘密鍵のファイルは権限 600)、issue で資格情報を、trust-change で信頼の一覧の変更の要求を、"
-               "JSON で出します。この三つは置き場(--dir)を使わず、網も要りません。")
+               "JSON で出します。revocation は発行者の鍵で署名した失効の一覧を JSON で出します。"
+               "この四つは置き場(--dir)を使わず、網も要りません。")
     ap.add_argument("--dir", default=os.environ.get("DIGITALKEY_DOOR_DIR", "vault"), help="記録と鍵の置き場")
     ap.add_argument("--name", default="door", help="扉の名前。伝票のファイル名と door の欄に入る")
     ap.add_argument("--host", default="127.0.0.1")
@@ -104,6 +121,9 @@ def main(argv=None) -> int:
     ap.add_argument("--trust", metavar="FILE",
                     help="信頼する発行者の一覧(JSON。{発行者の識別: {\"public_key\": 16 進, \"doors\": [扉の名前, ...]}})。"
                          "管理者の変更が記録にあるときは、記録の一覧を使う")
+    ap.add_argument("--revocation-max-age", type=float, default=0.0, metavar="秒",
+                    help="失効の知らせの古さの上限。発行者の失効の一覧の issued_at からこの秒数を過ぎると、"
+                         "期限の長さがこの秒数より長い資格情報を拒む。0 はこの規則を使わない(既定)")
     sub = ap.add_subparsers(dest="cmd", required=True)
     s = sub.add_parser("serve", help="模擬の接点で core を開く(開発の口の故障注入も開く)")
     s.add_argument("--box", help="伝票を出す箱(フォルダ)。動いている間、増えた記録を続けて出す")
@@ -139,8 +159,19 @@ def main(argv=None) -> int:
     t.add_argument("--issuer-key", required=True, metavar="HEX", help="対象の発行者の公開鍵(16 進)")
     t.add_argument("--doors", metavar="NAME[,NAME...]", help="その発行者に許す扉の名前(add のとき要る。コンマで区切る)")
     t.add_argument("--id", help="要求の識別。扉は同じ識別を二度受けない。省くと乱数で作る")
+    r = sub.add_parser("revocation", help="発行者の鍵で署名した失効の一覧(5.2c)を JSON で出す",
+                       description="失効の一覧 {\"body\": ..., \"sig\": ...} を標準出力に出す。扉の POST /revocation に "
+                                   "{\"list\": 一覧} として送るか、端末が POST /credential の revocation に入れて運ぶ。"
+                                   "一覧は失効させた資格情報の全部で、差分ではない。扉は前の世代より大きい世代だけを受理する。"
+                                   "失効が無くても、世代を上げて --at を新しくした一覧を、扉の --revocation-max-age より短い間隔で出す。")
+    r.add_argument("--key", required=True, metavar="FILE", help="発行者の秘密鍵のファイル(keygen の --out)")
+    r.add_argument("--generation", required=True, metavar="N", help="世代の番号。1 以上の整数。出すたびに上げる")
+    r.add_argument("--ids", metavar="ID[,ID...]", help="失効した資格情報の識別(コンマで区切る)。省くと空の一覧")
+    r.add_argument("--at", metavar="TIME", help="作った時刻(issued_at)。issue の --from と同じ書き方。省くと今の時刻")
     args = ap.parse_args(argv)
-    if args.cmd in ("keygen", "issue", "trust-change"):
+    if not args.revocation_max_age >= 0:
+        ap.error("--revocation-max-age は 0 以上の秒数です")
+    if args.cmd in ("keygen", "issue", "trust-change", "revocation"):
         return _key_command(args)
     d = Path(args.dir)
     if args.cmd == "check-box":
@@ -169,7 +200,8 @@ def main(argv=None) -> int:
     trust = json.loads(Path(args.trust).read_text(encoding="utf-8")) if args.trust else None
     admin_key = bytes.fromhex(args.admin_key) if args.admin_key else None
     ctl = Controller(SimContacts(), audit, Config(two_person=args.two_person, autolock_s=args.autolock,
-                                                   power_policy=args.power_policy),
+                                                   power_policy=args.power_policy,
+                                                   revocation_max_age_s=args.revocation_max_age),
                      name=args.name, admin_key=admin_key, trust=trust)
     ctl.set_time(time.time(), True)
     print(f"digitaldoor-controller http://{args.host}:{args.port}  記録: {d}")

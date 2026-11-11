@@ -5,8 +5,9 @@
 """
 from __future__ import annotations
 
-API_VERSION = "1.2.0"   # 1.0.0: 状態、命令、出来事、記録、資格情報、信頼の一覧 / 1.1.0: 定義、配信、故障注入
+API_VERSION = "1.3.0"   # 1.0.0: 状態、命令、出来事、記録、資格情報、信頼の一覧 / 1.1.0: 定義、配信、故障注入
                         # 1.2.0: 故障注入に、錠への通信が途中で切れる、配信が途中で切れる
+                        # 1.3.0: 失効の一覧(/revocation と、/credential の欄 revocation)
 
 _OBJ = {"type": "object"}
 _ENTRY = {
@@ -25,6 +26,9 @@ _STATE = {
                    "audit_seq": {"type": "integer"}},
 }
 _RESULT = {"type": "object", "properties": {"result": {"type": "string"}}}
+_SIGNED = {"type": "object", "description": "署名つきの包み {body: 署名したバイト列そのものの JSON の文字列, sig: Ed25519 の署名の 16 進}",
+           "properties": {"body": {"type": "string"}, "sig": {"type": "string"}}}
+_REVOCATION_RESULT = {"type": "string", "enum": ["受理", "同じ", "拒否"]}
 _FAULT = {
     "type": "object",
     "properties": {"lock": {"type": "string", "enum": ["正常", "応答しない", "途中で切断"]},
@@ -72,14 +76,27 @@ def document() -> dict:
                            "responses": _ok(_STATE)}},
         "/credential": {"post": {"summary": "発行者の署名つき資格情報(仕様書 5.2a)",
                                  "requestBody": _body({"type": "object", "properties": {
-                                     "credential": _OBJ, "route": {"type": "string"}}}),
-                                 "responses": _ok({"allOf": [_RESULT, _STATE]})}},
+                                     "credential": _OBJ, "route": {"type": "string"},
+                                     "revocation": {**_SIGNED, "description": "一緒に運ぶ失効の一覧(任意。仕様書 5.2c)。"
+                                                                              "資格情報より先に受ける"}}}),
+                                 "responses": _ok({"allOf": [_RESULT, _STATE, {"type": "object", "properties": {
+                                     "revocation": {**_REVOCATION_RESULT,
+                                                    "description": "一緒に運んだ一覧の結果。入れなかったときは欄が無い"}}}]})}},
         "/trust": {
             "get": {"summary": "信頼の一覧(公開鍵と範囲。秘密は無い)", "responses": _ok(_OBJ)},
             "post": {"summary": "管理者の署名つきの信頼の一覧の変更",
                      "requestBody": _body({"type": "object", "properties": {"request": _OBJ}}),
                      "responses": _ok({"type": "object", "properties": {
                          "result": {"type": "string", "enum": ["受理", "拒否"]}}})},
+        },
+        "/revocation": {
+            "get": {"summary": "発行者ごとの失効の状態(秘密は無い)",
+                    "responses": _ok({"type": "object", "additionalProperties": {"type": "object", "properties": {
+                        "generation": {"type": "integer"}, "issued_at": {"type": "integer"},
+                        "revoked": {"type": "array", "items": {"type": "string"}}}}})},
+            "post": {"summary": "発行者の署名つきの失効の一覧(仕様書 5.2c)。list の無い要求は形式が違うの拒否として記録する",
+                     "requestBody": _body({"type": "object", "properties": {"list": _SIGNED}}),
+                     "responses": _ok({"type": "object", "properties": {"result": _REVOCATION_RESULT}})},
         },
         "/audit": {"get": {"summary": "監査の記録の差分(連番が since より後)",
                            "parameters": [{"name": "since", "in": "query", "schema": {"type": "integer"}}],

@@ -5,9 +5,12 @@ POST /lock  /unlock    上位からの施錠・解錠(JSON: {"by": "..."} )。�
 POST /auth             読取機からの認証結果 {"subject","route","valid","duress"}
 POST /event            {"fire": true} | {"mains": false} | {"door_open": true} | {"manual": "機械キー"} | {"tamper": "..."}
 POST /time             {"now": 1700000000}
-POST /credential       発行者の署名つき資格情報 {"credential": {"body","sig"}, "route": "遠隔"} → {"result", ...状態}
+POST /credential       発行者の署名つき資格情報 {"credential": {"body","sig"}, "route": "遠隔", "revocation": {"body","sig"}}
+                       → {"result", ...状態}。revocation(任意)は一緒に運んだ失効の一覧で、入れたときは応答に "revocation": 一覧の結果
 POST /trust            管理者の署名つきの信頼の一覧の変更 {"request": {"body","sig"}} → {"result": "受理" | "拒否"}
 GET  /trust            信頼の一覧(公開鍵と範囲。秘密は無い)
+POST /revocation       発行者の署名つきの失効の一覧 {"list": {"body","sig"}} → {"result": "受理" | "同じ" | "拒否"}
+GET  /revocation       発行者ごとの失効の状態 {issuer: {"generation", "issued_at", "revoked"}}(秘密は無い)
 GET  /audit?since=N    監査の差分
 GET  /verify           連鎖の検査
 GET  /openapi.json     この口の全部の定義(OpenAPI 3.1)。応答のすべてに API-Version の見出しが付く
@@ -15,6 +18,7 @@ GET  /events?since=N   出来事の配信(WebSocket)。監査の記録を連番�
 GET  /fault  POST /fault  故障注入(開発のときだけ。同じ機械の相手だけ)
                        {"lock": "応答しない"|"途中で切断"|"正常", "clock_offset_s": 秒, "events": "切断"}
 
+/credential、/trust、/revocation は署名で守る口で、相手の住所は問わない(扉コントローラ仕様書 5.2a、5.2c)。
 開発の口(定義、配信、故障注入)は扉コントローラ仕様書 5.5 による。
 """
 from __future__ import annotations
@@ -147,6 +151,8 @@ def make_handler(ctl: Controller, lock: threading.Lock, *, dev: bool = False, cl
                     return self._json(200, {"ok": ok, "count": n, "why": why})
                 if u.path == "/trust":
                     return self._json(200, ctl.trust)
+                if u.path == "/revocation":
+                    return self._json(200, ctl.revocations)
             self._json(404, {"error": "no such path"})
 
         def do_POST(self):
@@ -172,8 +178,16 @@ def make_handler(ctl: Controller, lock: threading.Lock, *, dev: bool = False, cl
                                     reason=b.get("reason", ""), duress=bool(b.get("duress", False)))
                     return self._json(200, {"result": r, **ctl.state()})
                 if u.path == "/credential":
+                    # 一緒に運んだ一覧は present と同じく先に受ける。結果を応答に入れるため、ここで受けてから渡す
+                    carried = b.get("revocation")
+                    rev = ctl.accept_revocation(carried) if carried is not None else None
                     r = ctl.present(b.get("credential"), b.get("route") or "遠隔")
-                    return self._json(200, {"result": r, **ctl.state()})
+                    out = {"result": r, **ctl.state()}
+                    if rev is not None:
+                        out["revocation"] = rev
+                    return self._json(200, out)
+                if u.path == "/revocation":
+                    return self._json(200, {"result": ctl.accept_revocation(b.get("list"))})
                 if u.path == "/trust":
                     return self._json(200, {"result": ctl.change_trust(b.get("request"))})
                 if u.path == "/event":
