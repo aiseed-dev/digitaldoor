@@ -1226,13 +1226,20 @@ article img {
 <p><strong>Fabric と根の証明書。</strong> Google の Matter の入門は、同じ根の証明書(Root of Trust)を信じる機器のまとまりを Fabric と呼んでいます。登録する側(Commissioner。スマートフォン、ハブなど)が、根の証明書を機器に入れ、認証局に機器の証明書(NOC)を求めます。根の証明書を渡す元(Administrative Domain Manager)は、家の仕組みを出す会社が、信頼の元の認証局として担う事が多い、と書いています。一つの機器は複数の Fabric に入れ(錠の会社の Fabric と、家の仕組みの Fabric の例を挙げています)、それぞれが別の資格を持ちますが、機器のデータモデルは Fabric をまたいで共通です。根の認証局の秘密鍵を誰がどこに持つかは、この頁には書かれていません。</p>
 <p><strong>権限。</strong> Matter の SDK(connectedhomeip)の権限の手引きは、権限を View、Operate、Manage、Administer の段に分けています。最初の Administer は、登録する側が登録の道の上で得て、AddNOC の命令が、その Fabric の Administer の表を機器に入れます。権限の表(ACL)は Fabric ごとの物です。ある Fabric の管理者が、ほかの Fabric の表を読めるか、変えられるか、ほかの Fabric を外せるかは、この手引きには書かれていません。</p>
 <p><strong>Door Lock クラスタ(データモデル 1.4)。</strong> 読取機の設定の命令(SetAliroReaderConfig、ClearAliroReaderConfig)は、Administer の権限と Timed Invoke が要ります。欄は SigningKey(32バイト)、VerificationKey(65バイト)、GroupIdentifier(16バイト)、GroupResolvingKey(16バイト。ALBU の錠の時)です。読取機の公開鍵などの Aliro の属性は Administer でだけ読め、入れられる発行者の鍵と端末の鍵の数は View で読めます。SigningKey を読み出す属性はありません。資格情報の種類には、AliroCredentialIssuerKey(発行者の鍵)、AliroEvictableEndpointKey と AliroNonEvictableEndpointKey(端末の鍵)の三つがあり、登録と消去(SetCredential、ClearCredential)も Administer と Timed Invoke が要ります。</p>
+<p><strong>QR コードと登録の窓。</strong> 錠に付く QR コード(<code>MT:</code> で始まる文字列)は 88 ビットで、その中の合言葉(登録の符号)は 27 ビットです。合言葉は、登録の最初の通信路を張るための物で、扉を開ける鍵ではなく、Aliro の鍵ともつながりはありません。機器は合言葉そのものではなく、合言葉から作った検証値を持ちます(SDK の工場のデータの手引きでは、検証値は必須、合言葉そのものは任意です)。二つ目の管理者を足すときは、今の管理者が登録の窓を開ける命令(OpenCommissioningWindow。Administer と Timed Invoke が要ります)を呼び、新しい合言葉の検証値を渡します。印刷の合言葉でもう一度窓を開ける命令(OpenBasicCommissioningWindow)は、任意の機能です。機器が持てる Fabric の数は、定義では 5 以上 254 以下です。</p>
 <p><strong>根の鍵の置き場。</strong> Apple のセキュリティの手引き(Apple Platform Security の「HomeKit communication security」。頁の日付は2024年5月7日)は、Apple の家では、根の認証局を最初の利用者(持ち主)の端末で作り、その秘密鍵を持ち主の iCloud キーチェーンに置く、と書いています。家のほかの Apple の機器は証明書の要求を作り、持ち主の端末が、認証局の秘密鍵で Matter の身元の証明書を作ります。機器を初期化すると、登録の時に新しい鍵の対と証明書になります。この頁の日付は2024年5月で、今の版で変わっているかは確かめていません。Google については、根の認証局の秘密鍵の置き場を書いた頁は見つかりませんでした(入門は、会社が担う事が多い、登録する側は認証局に届く、とだけ書いています)。</p>
 <p>ここから読み取れる事は、次のとおりです。いずれも、このサイトの読みです。</p>
 <ul>
 <li>錠の Aliro の設定と、錠が信じる鍵を入れ替えられるのは、その錠を登録した Fabric の管理者です</li>
-<li>一つの錠を複数の家の仕組み(錠の会社のアプリ、Google Home、Apple Home)に登録すると、その数だけ管理者が居ます。データモデルは共通なので、どの管理者も Aliro の設定の命令を呼べる形です。ほかの管理者が入れた鍵を消せるかは、読んだ文書では確かめられませんでした</li>
+<li>一つの錠を複数の家の仕組み(錠の会社のアプリ、Google Home、Apple Home)に登録すると、その数だけ管理者が居ます。データモデルは共通なので、どの管理者も Aliro の設定の命令を呼べる形です。SDK の実装(connectedhomeip の v1.4 の枝の <code>door-lock-server.cpp</code>)を読むと、Fabric をまたぐ扱いは次のとおりです。仕様書の本文(CSA が申し込みで配る物)は読めておらず、実装の読みです<ul>
+<li>資格情報を変えられるのは、それを作った Fabric だけです</li>
+<li>消す命令(ClearCredential、ClearUser)には Fabric の比べが無く、Administer の権限があれば、どの Fabric の管理者からも消せます</li>
+<li>読取機の設定は錠に一つです。既に入っていると SetAliroReaderConfig は断られ、入れ直すには先に ClearAliroReaderConfig を呼びます。どの Fabric の管理者も、消して入れ直せます</li>
+<li>Fabric を外しても、その Fabric が入れた利用者と資格情報は錠に残り、「作った Fabric」の欄が空になります</li>
+</ul>
+</li>
 <li>資格情報の種類に「端末の鍵」があるので、発行者を立てずに、スマートフォンそのものの公開鍵を錠に入れる道があります。戸建てのように鍵の数が少ない所では、この道でも足りる形で、「戸建てに限る」事とも形は合います。ただし、Google がこの道を使っているかは書かれていません</li>
-<li>このサイトの扉との違いは、二つ目の問いにあります。このサイトの扉は、据付の時に入れた一つの管理者の鍵の署名だけを受けます。Matter の錠は、登録した先の数だけ管理者が居て、その元の置き場は会社ごとに違います</li>
+<li>このサイトの扉との違いは、二つ目の問いにあります。このサイトの扉は、据付の時に入れた一つの管理者の鍵の署名だけを受けます。Matter の錠は、登録した先の数だけ管理者が居て、その元の置き場は会社ごとに違います。このサイトの扉も Matter の錠として登録を受け、Matter の管理者は施錠と解錠の命令を送れます。違いは、Matter の管理者になっても、扉が信じる鍵(信頼する発行者の一覧)は入れ替えられない所です。一覧は、据付のときに入れた管理者の鍵の署名だけで変わります</li>
 </ul>
 <p>三つの問いへの、今の答えをまとめます。</p>
 <p>[cols=&quot;2,3,4&quot;]</p>
@@ -1253,7 +1260,7 @@ article img {
 <tr>
 <td>その鍵を入れ替えられるのは誰か</td>
 <td>据付の時に入れた管理者の鍵の署名だけ</td>
-<td>錠を登録した Fabric の管理者。複数に登録すると、その全部が管理者。管理の元は、Apple は持ち主の iCloud キーチェーン(2024年5月の手引き)、Google は書かれていない</td>
+<td>錠を登録した Fabric の管理者。複数に登録すると、その全部が管理者。どの管理者も、読取機の設定を消して入れ直せ、ほかの管理者が入れた鍵を消せる(SDK の実装)。管理の元は、Apple は持ち主の iCloud キーチェーン(2024年5月の手引き)、Google は書かれていない</td>
 </tr>
 <tr>
 <td>扉の身元の鍵は扉の中で生まれるか</td>
@@ -1309,6 +1316,12 @@ article img {
 <li><a href="https://developers.home.google.com/matter/primer/fabric">Google Home Developers: Matter の入門の Fabric(根の証明書、登録する側、Administrative Domain Manager、複数の Fabric)</a></li>
 <li><a href="https://project-chip.github.io/connectedhomeip-doc/guides/access-control-guide.html">Matter の SDK(connectedhomeip): 権限の手引き(View、Operate、Manage、Administer、AddNOC、Fabric ごとの ACL)</a></li>
 <li><a href="https://github.com/project-chip/connectedhomeip">connectedhomeip: data_model/1.4/clusters/DoorLock.xml(Aliro の命令と属性の権限、資格情報の種類)</a></li>
+<li><a href="https://github.com/project-chip/connectedhomeip/blob/v1.4-branch/src/app/clusters/door-lock-server/door-lock-server.cpp">connectedhomeip: v1.4 の枝の door-lock-server.cpp(Door Lock クラスタの実装。Fabric をまたぐ扱い)</a></li>
+<li><a href="https://github.com/project-chip/connectedhomeip/blob/master/src/app/zap-templates/zcl/data-model/chip/door-lock-cluster.xml">connectedhomeip: door-lock-cluster.xml(Door Lock クラスタの定義。命令と権限)</a></li>
+<li><a href="https://github.com/project-chip/connectedhomeip/blob/master/src/app/zap-templates/zcl/data-model/chip/administrator-commissioning-cluster.xml">connectedhomeip: administrator-commissioning-cluster.xml(登録の窓を開ける命令)</a></li>
+<li><a href="https://github.com/project-chip/connectedhomeip/blob/v1.4-branch/src/app/zap-templates/zcl/data-model/chip/operational-credentials-cluster.xml">connectedhomeip: v1.4 の枝の operational-credentials-cluster.xml(機器が持てる Fabric の数)</a></li>
+<li><a href="https://github.com/project-chip/connectedhomeip/blob/master/src/setup_payload/SetupPayload.h">connectedhomeip: SetupPayload.h(QR コードの欄の長さ)</a></li>
+<li><a href="https://github.com/project-chip/connectedhomeip/blob/v1.4-branch/docs/guides/nrfconnect_factory_data_configuration.md">connectedhomeip: v1.4 の枝の工場のデータの手引き(工場で機器に入れる物)</a></li>
 <li><a href="https://support.google.com/wallet/answer/16759973">Google Wallet ヘルプ: Residential keys(管理会社が出す住まいの鍵。更新の日付の表示なし)</a></li>
 <li><a href="https://support.google.com/googleplay/answer/9037938">Google Play ヘルプ: Keep your device &amp; apps working with Google Play services(Google Play services の更新の手順)</a></li>
 <li><a href="https://csa-iot.org/newsroom/the-connectivity-standards-alliance-announces-aliro-a-new-effort-to-make-mobile-devices-wearables-central-to-a-digital-access-future/">CSA: Aliro の取り組みの発表(2023年11月9日)</a></li>
@@ -1337,7 +1350,7 @@ article img {
   <!-- CHAPTER NAV(前後の記事) -->
   <nav class="chapter-nav">
   <a href="/guide/check-your-systems-with-ai/" rel="prev">&larr; 前: AI で自社のシステムを確かめる</a>
-  <a href="/guide/">目次 &rarr;</a>
+  <a href="/guide/phone-keys-for-houses-and-offices/" rel="next">次: 戸建てと事務所で、電話の鍵をどう持つか &rarr;</a>
 </nav>
 
   <!-- FOOTER(サイト内メニュー+奥付) -->

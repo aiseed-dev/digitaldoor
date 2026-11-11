@@ -4,7 +4,23 @@
 <link>https://door.aiseed.dev/</link>
 <description>扉と鍵の話を、層に分けて書く</description>
 <language>ja</language>
-<lastBuildDate>Wed, 11 Nov 2026 19:38:06 +0900</lastBuildDate>
+<lastBuildDate>Thu, 12 Nov 2026 04:39:55 +0900</lastBuildDate>
+<item>
+<title>電話を会員証にする</title>
+<link>https://door.aiseed.dev/guide/membership-card-on-phone/</link>
+<guid>https://door.aiseed.dev/guide/membership-card-on-phone/</guid>
+<category>解説</category>
+<pubDate>Thu, 12 Nov 2026 00:00:00 +0900</pubDate>
+<description>会員証は入る権利の証で、扉の鍵と同じ形をしています。電話に載せる道には、財布のふつうのパス、かざす NFC のパス、入館の鍵の三つの段があります。どの段を選ぶかは、貸し借りと写しをどこまで防ぎたいかと、入った記録を誰が信用できる必要があるかで決まります。Apple と Google が会員証について書いている事を整理し、場面ごとに向く段、認証と権限を分ける形、記録が両方に通用するための条件を示します。</description>
+</item>
+<item>
+<title>宿と貸室で、電話の鍵をどう渡すか</title>
+<link>https://door.aiseed.dev/guide/keys-for-lodging-and-rental-rooms/</link>
+<guid>https://door.aiseed.dev/guide/keys-for-lodging-and-rental-rooms/</guid>
+<category>解説</category>
+<pubDate>Thu, 12 Nov 2026 00:00:00 +0900</pubDate>
+<description>宿と、時間や日で貸す部屋の鍵は、住宅や事務所の鍵と違います。使う人は一度きりで、期限は時刻で決まり、アプリは入れてもらえません。予約ごとに期限つきの鍵を出し、扉が自分の時計で期限を確かめる形、客に鍵を渡す四つの道、厚生労働省と国土交通省が書いている本人確認の決まり、鍵を出す側と使う側の両方が信用できる記録の条件、時間で貸す部屋の扱いを示します。</description>
+</item>
 <item>
 <title>Google Wallet に戸建ての家の鍵が入る</title>
 <link>https://door.aiseed.dev/guide/google-wallet-home-key/</link>
@@ -12,6 +28,14 @@
 <category>解説</category>
 <pubDate>Wed, 11 Nov 2026 00:00:00 +0900</pubDate>
 <description>2026年11月9日付の Google Play services v26.44 のリリースノートに、Matter と Aliro に対応した戸建て住宅の鍵を、Google Home から Google Wallet に足せるという一行が載りました。言葉の意味、ここまでの流れ、管理会社が出す住まいの鍵との違い、層ごとの位置、錠を作る側の認証の道筋(CSA の Interop Test Lab)、Apple との比べ、まだ分かっていない事を、会社の発表と報道を分けて整理し、扉のコントローラが鍵を持つかという問いから読みます。</description>
+</item>
+<item>
+<title>戸建てと事務所で、電話の鍵をどう持つか</title>
+<link>https://door.aiseed.dev/guide/phone-keys-for-houses-and-offices/</link>
+<guid>https://door.aiseed.dev/guide/phone-keys-for-houses-and-offices/</guid>
+<category>解説</category>
+<pubDate>Wed, 11 Nov 2026 00:00:00 +0900</pubDate>
+<description>電話で扉を開ける道は、家の仕組みのアプリ、財布、財布を通さないアプリ、カードの四つです。どれを選ぶかは、誰が鍵を出し、誰が止めるかで決まります。戸建ては家の仕組みのアプリで足り、扉の側で予備の管理者の鍵、登録先の扱い、更新の決め方を整えます。事務所では、情報システム部門がカードと自社のアプリで鍵を出し、財布の社員証は後から足す物として扱います。Apple Wallet Access Program、NFC &amp; SE Platform、Google Wallet の社員証について会社が書いている事を整理し、認証と権限を分ける形と、誰が何の記録をとるかを示します。</description>
 </item>
 <item>
 <title>今日、デジタルドアを始めました</title>

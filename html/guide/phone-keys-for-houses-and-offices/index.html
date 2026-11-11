@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'">
+
+
+<title>戸建てと事務所で、電話の鍵をどう持つか — 解説 | デジタルドア</title>
+<meta name="description" content="電話で扉を開ける道は、家の仕組みのアプリ、財布、財布を通さないアプリ、カードの四つです。どれを選ぶかは、誰が鍵を出し、誰が止めるかで決まります。戸建ては家の仕組みのアプリで足り、扉の側で予備の管理者の鍵、登録先の扱い、更新の決め方を整えます。事務所では、情報システム部門がカードと自社のアプリで鍵を出し、財布の社員証は後から足す物として扱います。Apple Wallet Access Program、NFC & SE Platform、Google Wallet の社員証について会社が書いている事を整理し、認証と権限を分ける形と、誰が何の記録をとるかを示します。">
+<link rel="canonical" href="https://door.aiseed.dev/guide/phone-keys-for-houses-and-offices/">
+<link rel="alternate" hreflang="ja" href="https://door.aiseed.dev/guide/phone-keys-for-houses-and-offices/">
+
+<link rel="alternate" hreflang="x-default" href="https://door.aiseed.dev/guide/phone-keys-for-houses-and-offices/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="デジタルドア">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="戸建てと事務所で、電話の鍵をどう持つか">
+<meta property="og:description" content="電話で扉を開ける道は、家の仕組みのアプリ、財布、財布を通さないアプリ、カードの四つです。どれを選ぶかは、誰が鍵を出し、誰が止めるかで決まります。戸建ては家の仕組みのアプリで足り、扉の側で予備の管理者の鍵、登録先の扱い、更新の決め方を整えます。事務所では、情報システム部門がカードと自社のアプリで鍵を出し、財布の社員証は後から足す物として扱います。Apple Wallet Access Program、NFC & SE Platform、Google Wallet の社員証について会社が書いている事を整理し、認証と権限を分ける形と、誰が何の記録をとるかを示します。">
+<meta property="og:url" content="https://door.aiseed.dev/guide/phone-keys-for-houses-and-offices/">
+<meta property="og:image" content="https://door.aiseed.dev/images/og-default.jpg">
+<meta property="article:section" content="解説">
+<meta property="article:published_time" content="2026.11.11">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="戸建てと事務所で、電話の鍵をどう持つか">
+<meta name="twitter:description" content="電話で扉を開ける道は、家の仕組みのアプリ、財布、財布を通さないアプリ、カードの四つです。どれを選ぶかは、誰が鍵を出し、誰が止めるかで決まります。戸建ては家の仕組みのアプリで足り、扉の側で予備の管理者の鍵、登録先の扱い、更新の決め方を整えます。事務所では、情報システム部門がカードと自社のアプリで鍵を出し、財布の社員証は後から足す物として扱います。Apple Wallet Access Program、NFC & SE Platform、Google Wallet の社員証について会社が書いている事を整理し、認証と権限を分ける形と、誰が何の記録をとるかを示します。">
+<meta name="twitter:image" content="https://door.aiseed.dev/images/og-default.jpg">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="alternate" type="application/rss+xml" title="デジタルドア" href="/feed.xml">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+
+<!-- フォントは Web 配信せず、すべて端末のローカルフォントで賄う。
+     和文: UDデジタル教科書体 → BIZ UDP明朝(いずれも Windows 標準搭載の
+     モリサワ UD 書体) → ヒラギノ明朝・游明朝などのシステム明朝。
+     等幅: 端末のシステム等幅フォント。 -->
+
+<style>
+/* ============================================================
+   LOCAL FONT: UDデジタル教科書体(モリサワ)
+   Windows・教育向け端末に無償搭載。端末にあれば local() で拾い、
+   なければ BIZ UDP明朝(同じく Windows 標準搭載)→ システム明朝へ
+   フォールバックする。R と B は別ファミリー名なので、太字(700)を
+   B 書体に明示的にマッピングして疑似ボールドを避ける。
+   ============================================================ */
+@font-face {
+  font-family: "UD Digital Kyokasho";
+  font-weight: 400;
+  src: local("UD デジタル 教科書体 NK-R"), local("UD Digital Kyokasho NK-R"),
+       local("UD デジタル 教科書体 NP-R"), local("UD Digital Kyokasho NP-R"),
+       local("UD デジタル 教科書体 N-R"), local("UD Digital Kyokasho N-R");
+}
+@font-face {
+  font-family: "UD Digital Kyokasho";
+  font-weight: 700;
+  src: local("UD デジタル 教科書体 NK-B"), local("UD Digital Kyokasho NK-B"),
+       local("UD デジタル 教科書体 NP-B"), local("UD Digital Kyokasho NP-B"),
+       local("UD デジタル 教科書体 N-B"), local("UD Digital Kyokasho N-B");
+}
+
+/* ============================================================
+   COLOR & DESIGN TOKENS
+   aiseed.dev 全体のスタイルに合わせる場合は、ここの変数を
+   既存サイトのCSS変数に差し替える。
+   ============================================================ */
+:root {
+  --ink: #1a1a1a;
+  --paper: #f4f1ea;
+  --paper-deep: #ebe6d8;
+  --accent: #c8442a;
+  --rule: #d4cdb8;
+  --whisper: #6b665a;
+  --highlight: #f7e9c8;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+/* 本文: 端末にあれば UDデジタル教科書体を最優先、次に BIZ UDP明朝
+   (Windows 標準搭載)、どちらもなければヒラギノ明朝等のシステム明朝 */
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "UD Digital Kyokasho",
+               "BIZ UDPMincho", "BIZ UDP明朝",
+               "Hiragino Mincho ProN", "ヒラギノ明朝 ProN",
+               "Yu Mincho", "游明朝", "YuMincho",
+               "Noto Serif CJK JP", "Noto Serif JP", serif;
+  font-size: 17px;
+  line-height: 1.9;
+  letter-spacing: 0.02em;
+  font-feature-settings: "palt";
+  overflow-x: hidden;
+}
+
+/* グレインテクスチャ(紙の質感) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image: radial-gradient(rgba(0,0,0,0.04) 1px, transparent 1px);
+  background-size: 3px 3px;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+}
+
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 32px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ============================================================
+   MASTHEAD(シリーズ名・章番号)
+   ============================================================ */
+.masthead {
+  border-bottom: 3px double var(--ink);
+  padding: 24px 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--whisper);
+}
+.masthead-left  { font-weight: 700; color: var(--ink); }
+.masthead-left a { color: inherit; text-decoration: none; }
+.masthead-left a:hover { color: var(--accent); }
+.masthead-home { color: var(--whisper); }
+.masthead-sep { margin: 0 10px; color: var(--whisper); font-weight: 400; }
+.masthead-right { font-style: italic; }
+
+/* ============================================================
+   HERO(タイトル領域)
+   ============================================================ */
+.hero {
+  padding: 80px 0 60px;
+}
+.hero-meta {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  color: var(--accent);
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.hero-meta::before {
+  content: "";
+  width: 40px;
+  height: 1px;
+  background: var(--accent);
+}
+.hero-title {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 800;
+  font-size: clamp(32px, 5.5vw, 56px);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin-bottom: 24px;
+}
+.hero-title .accent {
+  color: var(--accent);
+}
+.hero-subtitle {
+  font-size: 18px;
+  line-height: 1.85;
+  color: var(--whisper);
+  max-width: 580px;
+  border-left: 2px solid var(--accent);
+  padding-left: 20px;
+  margin-top: 32px;
+}
+.hero-byline {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--whisper);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ============================================================
+   ARTICLE BODY
+   ============================================================ */
+article p {
+  margin-bottom: 24px;
+}
+
+article h2 {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1.4;
+  margin: 72px 0 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--ink);
+  position: relative;
+}
+article h2::before {
+  content: "§";
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  color: var(--accent);
+  margin-right: 16px;
+  font-size: 22px;
+}
+
+article h3 {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 600;
+  font-size: 19px;
+  margin: 40px 0 16px;
+  color: var(--ink);
+}
+article h3::before {
+  content: "—";
+  color: var(--accent);
+  margin-right: 12px;
+  font-weight: 400;
+}
+
+article strong {
+  font-weight: 700;
+  background: linear-gradient(to top, var(--highlight) 35%, transparent 35%);
+  padding: 0 2px;
+}
+
+article em {
+  font-style: normal;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+article a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: color 0.2s;
+}
+article a:hover {
+  color: var(--accent);
+}
+
+/* ============================================================
+   BLOCKQUOTE
+   ============================================================ */
+blockquote {
+  margin: 40px 0;
+  padding: 32px 40px;
+  background: var(--paper-deep);
+  border-left: 4px solid var(--accent);
+  position: relative;
+  font-size: 18px;
+  line-height: 1.85;
+  font-style: normal;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "「";
+  position: absolute;
+  top: 4px;
+  left: 8px;
+  font-size: 48px;
+  color: var(--accent);
+  opacity: 0.3;
+  font-family: "Hiragino Mincho ProN", serif;
+}
+blockquote p {
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 32px 0;
+  font-size: 15px;
+  line-height: 1.7;
+}
+article thead th {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 700;
+  text-align: left;
+  padding: 14px 16px;
+  border-bottom: 2px solid var(--ink);
+  color: var(--ink);
+}
+article tbody td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+article tbody tr:last-child td {
+  border-bottom: none;
+}
+@media (max-width: 720px) {
+  article table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ============================================================
+   ORDERED LIST(番号付きリスト)
+   ============================================================ */
+article ol {
+  margin: 32px 0;
+  counter-reset: item;
+  padding: 0;
+}
+article ol li {
+  list-style: none;
+  position: relative;
+  padding: 16px 0 16px 56px;
+  border-bottom: 1px dashed var(--rule);
+  counter-increment: item;
+}
+article ol li::before {
+  content: counter(item, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 16px;
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 14px;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+/* 通常のul(章末の関連リンクなど) */
+article ul {
+  margin: 24px 0;
+  padding-left: 1.5em;
+}
+article ul li {
+  margin-bottom: 8px;
+}
+
+/* ============================================================
+   CODE BLOCK(疑似ターミナル風)
+   ============================================================ */
+article pre {
+  margin: 40px 0;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 24px 28px;
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 13px;
+  line-height: 1.8;
+  position: relative;
+  overflow-x: auto;
+}
+article pre::before {
+  content: "● ● ●";
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  font-size: 8px;
+  color: var(--whisper);
+  letter-spacing: 4px;
+}
+article pre code {
+  display: block;
+  padding-top: 16px;
+  white-space: pre;
+}
+
+/* インラインコード */
+article code {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 0.9em;
+  background: var(--paper-deep);
+  padding: 2px 6px;
+  border-radius: 2px;
+  color: var(--ink);
+}
+article pre code {
+  background: transparent;
+  padding: 16px 0 0 0;
+  color: var(--paper);
+}
+
+/* ============================================================
+   HORIZONTAL RULE(本文中の区切り)
+   ============================================================ */
+article hr {
+  border: none;
+  text-align: center;
+  margin: 64px 0;
+  height: 1em;
+}
+article hr::before {
+  content: "◆ ◆ ◆";
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 14px;
+  color: var(--accent);
+  letter-spacing: 0.5em;
+}
+
+/* ============================================================
+   RELATED LINKS(章末の関連記事)
+   ============================================================ */
+.related-links {
+  margin-top: 64px;
+  padding: 32px 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.related-links h3 {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  color: var(--whisper);
+  margin: 0 0 20px;
+  font-weight: 600;
+}
+.related-links h3::before {
+  content: none;
+}
+.related-links ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.related-links li {
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--rule);
+  margin-bottom: 0;
+}
+.related-links li:last-child {
+  border-bottom: none;
+}
+.related-links a {
+  text-decoration: none;
+  color: var(--ink);
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+}
+.related-links .related-tag {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.related-links a:hover .related-title {
+  color: var(--accent);
+}
+
+/* ============================================================
+   FOOTER(サイト内メニュー+奥付)
+   ============================================================ */
+.site-footer {
+  margin-top: 96px;
+  border-top: 3px double var(--ink);
+  padding-top: 48px;
+}
+.footer-nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 32px 48px;
+}
+.footer-col h4 {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--whisper);
+  font-weight: 700;
+  margin: 0 0 14px;
+}
+.footer-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.footer-col li {
+  padding: 6px 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.footer-col a {
+  color: var(--ink);
+  text-decoration: none;
+}
+.footer-col a:hover { color: var(--accent); }
+
+.colophon {
+  margin-top: 48px;
+  padding: 32px 0 40px;
+  border-top: 1px solid var(--rule);
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--whisper);
+  text-align: center;
+  line-height: 2;
+}
+.colophon-mark {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "Hiragino Mincho ProN", serif;
+  font-size: 32px;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+/* ============================================================
+   SERIES TOC(全章一覧・折りたたみ式)
+   ============================================================ */
+.series-toc {
+  margin: 24px 0 40px;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 8px 0;
+}
+.series-toc details {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+}
+.series-toc summary {
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--whisper);
+  font-weight: 700;
+  padding: 8px 0;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.series-toc summary::-webkit-details-marker { display: none; }
+.series-toc summary::before {
+  content: "▸";
+  color: var(--accent);
+  font-size: 10px;
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+.series-toc details[open] summary::before { transform: rotate(90deg); }
+.series-toc ol {
+  list-style: none;
+  margin: 12px 0 8px;
+  padding: 0;
+  counter-reset: none;
+}
+.series-toc li {
+  list-style: none;
+  padding: 9px 0;
+  border-bottom: 1px dashed var(--rule);
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: 14px;
+  line-height: 1.55;
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+}
+.series-toc li::before { content: none; }
+.series-toc li:last-child { border-bottom: none; }
+.series-toc li a {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+  text-decoration: none;
+  color: var(--ink);
+  flex: 1;
+}
+.series-toc li a:hover .toc-title { color: var(--accent); }
+.series-toc .toc-num {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 5em;
+}
+.series-toc li.current {
+  background: var(--paper-deep);
+  margin: 0 -12px;
+  padding: 9px 12px;
+}
+.series-toc li.current .toc-title {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ============================================================
+   IMAGES
+   ============================================================ */
+article img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 32px auto;
+}
+
+/* ============================================================
+   CUSTOM BLOCKS(:::chain / :::highlight / :::quote / :::compare)
+   ============================================================ */
+.chain-diagram {
+  background: var(--paper-deep);
+  border-left: 4px solid var(--accent);
+  padding: 24px 28px;
+  margin: 32px 0;
+  font-size: 15px;
+  line-height: 2.2;
+}
+.chain-diagram .arrow {
+  color: var(--accent);
+  font-weight: 700;
+  margin: 0 0.3em;
+}
+.highlight-box {
+  background: var(--paper-deep);
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--accent);
+  padding: 24px 28px;
+  margin: 32px 0;
+}
+.highlight-box p { margin-bottom: 12px; }
+.highlight-box p:last-child { margin-bottom: 0; }
+.quote-block {
+  margin: 40px 0;
+  padding: 32px 40px;
+  background: var(--paper-deep);
+  border-left: 4px solid var(--accent);
+}
+.quote-block .quote-text {
+  font-size: 18px;
+  line-height: 1.85;
+  margin: 0;
+}
+
+/* ============================================================
+   CHAPTER NAV(前後の記事へのリンク)
+   ============================================================ */
+.chapter-nav {
+  margin-top: 64px;
+  padding: 24px 0;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  font-size: 14px;
+}
+.chapter-nav a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+  text-underline-offset: 4px;
+}
+.chapter-nav a:hover { color: var(--accent); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 640px) {
+  .container { padding: 0 20px; }
+  .hero { padding: 48px 0 40px; }
+  blockquote { padding: 24px 20px 24px 28px; }
+  article pre { padding: 20px 16px; font-size: 12px; }
+  article ol li { padding-left: 48px; }
+  .series-toc .toc-num { min-width: 4em; font-size: 10px; }
+  .series-toc li { font-size: 13px; gap: 12px; }
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-meta, .hero-title, .hero-subtitle, .hero-byline {
+  animation: rise 0.8s ease-out backwards;
+}
+.hero-meta     { animation-delay: 0.1s; }
+.hero-title    { animation-delay: 0.25s; }
+.hero-subtitle { animation-delay: 0.45s; }
+.hero-byline   { animation-delay: 0.65s; }
+.mermaid {
+  text-align: center;
+  margin: 2.5rem 0;
+  background: var(--paper-warm, #f5f1ea);
+  padding: 1.5rem 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+.mermaid svg { max-width: 100%; height: auto; }
+
+/* ============================================================
+   WIDE LAYOUT(広い画面では目次を左サイドバーに常時展開)
+   ============================================================ */
+@media (min-width: 1200px) {
+  body.has-toc .container {
+    max-width: 1320px;
+    display: grid;
+    grid-template-columns: 280px minmax(0, 880px);
+    column-gap: 64px;
+    justify-content: center;
+  }
+  body.has-toc .masthead,
+  body.has-toc .hero {
+    grid-column: 1 / -1;
+  }
+  /* グリッドアイテム自体は行いっぱいに伸ばし、内側の details を sticky に
+     する(sticky なグリッドアイテムはグリッドエリアではなくコンテナ全体で
+     制約されるブラウザ挙動があり、フッターに重なってしまうため)。 */
+  body.has-toc .series-toc {
+    grid-column: 1;
+    grid-row: 3 / span 2;
+    margin: 0;
+    padding: 0;
+    border-top: none;
+    border-bottom: none;
+  }
+  body.has-toc .series-toc details {
+    position: sticky;
+    top: 32px;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+    padding: 0 12px 12px 0;
+  }
+  /* サイドバーでは折りたたみを無効化し、見出しとして表示 */
+  body.has-toc .series-toc summary {
+    pointer-events: none;
+    cursor: default;
+  }
+  body.has-toc .series-toc summary::before { content: none; }
+  body.has-toc .series-toc li { font-size: 13.5px; }
+  body.has-toc article    { grid-column: 2; grid-row: 3; }
+  body.has-toc .chapter-nav { grid-column: 2; grid-row: 4; }
+  body.has-toc .site-footer { grid-column: 1 / -1; grid-row: 5; }
+}
+
+/* ============================================================
+   DARK MODE(OS の配色設定に追従して自動で暗色に切り替え)
+   ============================================================ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --ink: #e8e3d6;
+    --paper: #16140f;
+    --paper-deep: #211d16;
+    --accent: #e8765a;
+    --rule: #393428;
+    --whisper: #a39b88;
+    --highlight: rgba(220, 168, 78, 0.30);
+  }
+  /* 紙の質感(グレイン)を暗色背景向けに反転 */
+  body::before {
+    background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+    mix-blend-mode: screen;
+    opacity: 0.4;
+  }
+  /* コードブロックは両モードとも暗いターミナル調を維持 */
+  article pre {
+    background: #0d0c0a;
+    color: #e8e3d6;
+  }
+  article pre code {
+    color: #e8e3d6;
+  }
+  /* Mermaid 図の枠を暗色に */
+  .mermaid {
+    background: #211d16;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; opacity: 1 !important; }
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- MASTHEAD(ホーム › シリーズ目次) -->
+  <header class="masthead">
+    <div class="masthead-left"><a href="/" class="masthead-home">デジタルドア</a><span class="masthead-sep">›</span><a href="/guide/">解説</a></div>
+    <div class="masthead-right">No. 22 / 解説</div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-meta">解説 № 22 · 2026</div>
+
+    <h1 class="hero-title">戸建てと事務所で、電話の鍵をどう持つか</h1>
+
+    <p class="hero-subtitle">ホームのアプリ、財布、自分で出す鍵。誰が鍵を出し、誰が止めるかから決める</p>
+
+    <div class="hero-byline">
+      <span>2026.11.11</span>
+      
+    </div>
+  </section>
+
+  <!-- SERIES TOC(全章一覧・現在の章をハイライト) -->
+  
+
+  <!-- ARTICLE BODY -->
+  <article>
+    <p>電話で扉を開ける道は、いくつもあります。家の仕組みのアプリに錠を登録する道、財布に鍵を入れる道、財布を通さないアプリで開ける道、そしてカードです。どれを選ぶかは、技術の良し悪しよりも先に、誰が鍵を出し、誰が止めるかで決まります。</p>
+<p>戸建ての家と事務所では、この答えが違います。戸建てでは、鍵を出すのも止めるのも住む人です。事務所では、会社が社員に鍵を出し、退職の日に止めます。この記事では、四つの道を並べ、戸建てと事務所のそれぞれで、どの道を使い、扉の側で何を決めておくかを書きます。会社が正式に書いている事と、このサイトの考えは分けて書きます。この記事の内容は、2026年11月11日に確かめた物です。</p>
+<h2>鍵を電話とカードに持たせる四つの道</h2>
+<p>[cols=&quot;2,3,3&quot;]</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>道</th>
+<th>鍵を出すのは誰か</th>
+<th>主な形</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>家の仕組みのアプリ(Apple のホーム、Google Home)</td>
+<td>住む人</td>
+<td>一つの家のための物。錠を登録した人が、家族や客に鍵を渡す</td>
+</tr>
+<tr>
+<td>財布(Apple Wallet、Google Wallet の社員証など)</td>
+<td>財布の制度に入った会社が、鍵を電話に入れる</td>
+<td>電話の財布に、入館の鍵が入る</td>
+</tr>
+<tr>
+<td>財布を通さないアプリ</td>
+<td>扉の管理者(会社の情報システム部門など)</td>
+<td>管理者が出すアプリで開ける。Android は NFC と BLE、iPhone は BLE</td>
+</tr>
+<tr>
+<td>カード</td>
+<td>扉の管理者</td>
+<td>発行者の署名を扉が確かめる形のカード(Aliro のカードなど)</td>
+</tr>
+</tbody>
+</table>
+<p>家の仕組みのアプリでも、財布に鍵が入る事があります。ただ、その鍵を出す元は家の仕組みで、鍵を出し、止めるのは住む人です。表の「財布」は、会社が制度に入って、社員などの電話に鍵を入れる形を指しています。</p>
+<h2>戸建ては、家の仕組みのアプリで足りる</h2>
+<p>戸建ての家では、鍵を出す人と使う人が、同じ家族の中に収まります。Matter と Aliro に対応した錠を家の仕組みに登録すれば、財布に鍵が入ります(<a href="/guide/google-wallet-home-key/">Google Wallet に戸建ての家の鍵が入る</a>)。戸建てでは、この道で足ります。</p>
+<p>そのうえで、扉の側で決めておく事が三つあります。どれも、このサイトの要求仕様に置いている事です。</p>
+<h3>予備の管理者の鍵</h3>
+<p>据付のときに、管理者の鍵とは別に、予備の管理者の鍵を作ります。予備の秘密の部分は封をして、持ち主が持ちます。</p>
+<p>管理者の鍵をなくしたときは、室内の側の物理の操作と、予備の鍵の両方を使って、管理者の鍵を入れ直します。予備もなくしたときは、鍵を持つモジュールを替えます。機械の鍵を全部なくしたときに、シリンダーを替えるのと同じです。製造者が合鍵を持つ必要はありません(R-AC-23)。</p>
+<h3>扉を登録した先</h3>
+<p>扉を Matter の錠として登録した先(Matter の Fabric)は、管理者の口の一つとして扱います。</p>
+<ul>
+<li>登録の窓は、管理者の鍵の操作か、室内の側の物理の操作でだけ開きます</li>
+<li>今の登録先の一覧を見られ、足した事と外した事が記録に残ります</li>
+<li>持ち主が替わるときは、登録先を全部外します</li>
+</ul>
+<p>Matter の SDK の実装(connectedhomeip の v1.4 の枝)では、登録先を外しても、その登録先が入れた鍵は錠に残ります。そこで、登録先を外すときは、その登録先が入れた鍵も一緒に消します(R-AC-24、R-CT-26)。</p>
+<h3>更新</h3>
+<p>扉のソフトの更新は、製造者が署名して配ります。入れる時期と方法は、持ち主が決めます。製造者は、配った版を公開の一覧に載せます。持ち主は、扉に入っている版を一覧と照らせます(R-EL-34、R-RS-19)。</p>
+<h2>戸建ての扉が、工場から家に届くまで</h2>
+<p>扉の中の鍵が、どの段で誰の手にあるかを並べます。このサイトの決めでは、扉を開ける鍵は、工場でも出荷でも入れません。</p>
+<p>[cols=&quot;1,1,3,3&quot;]</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>段</th>
+<th>誰が</th>
+<th>する事</th>
+<th>扉の中の鍵</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>工場</td>
+<td>製造者</td>
+<td>組み立てと試験。個体の台帳に、扉とモジュールの番号を書く</td>
+<td>更新を確かめる公開鍵と、機器の証明書だけ。扉を開ける鍵は入れない</td>
+</tr>
+<tr>
+<td>出荷</td>
+<td>製造者</td>
+<td>送る</td>
+<td>誰の鍵も無い</td>
+</tr>
+<tr>
+<td>据付</td>
+<td>施工の人</td>
+<td>配線、網の区画分け、時刻の設定。試験に使った鍵を消す。持ち主の管理者の公開鍵を入れ、予備の鍵を封をして渡す</td>
+<td>持ち主の管理者の公開鍵。秘密の部分は、施工の人が持ち帰らない</td>
+</tr>
+<tr>
+<td>引き渡し</td>
+<td>持ち主</td>
+<td>自分で、鍵を出す、止める、入れ直す</td>
+<td>持ち主が出した鍵</td>
+</tr>
+<tr>
+<td>使う間</td>
+<td>持ち主</td>
+<td>鍵の管理を続ける</td>
+<td>鍵は全部、持ち主の側。製造者が持つのは、更新の署名の鍵、個体の台帳、交換の部品(R-RS-20)</td>
+</tr>
+</tbody>
+</table>
+<p>使う間に起きる事と、その手当てです。</p>
+<p>[cols=&quot;2,4,3&quot;]</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>出来事</th>
+<th>手当て</th>
+<th>製造者の関わり</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>端末をなくした</td>
+<td>持ち主が、その端末の鍵を止める</td>
+<td>無し</td>
+</tr>
+<tr>
+<td>管理者の鍵をなくした</td>
+<td>室内の側の物理の操作と、予備の鍵で入れ直す</td>
+<td>無し</td>
+</tr>
+<tr>
+<td>予備もなくした</td>
+<td>鍵を持つモジュールを替える</td>
+<td>交換の部品を出す。個体の台帳を書き換える</td>
+</tr>
+<tr>
+<td>持ち主が替わる</td>
+<td>登録先と、その登録先が入れた鍵を全部消し、新しい持ち主が管理者の鍵を入れる</td>
+<td>無し</td>
+</tr>
+<tr>
+<td>機器が古くなった</td>
+<td>更新を入れるか、機器を替える</td>
+<td>署名した更新を配る。交換の部品を出す</td>
+</tr>
+</tbody>
+</table>
+<h2>事務所では、家の仕組みのアプリでは足りない</h2>
+<p>家の仕組みのアプリは、一つの家のための物です。会社が社員に鍵を出し、退職の日に止める、という使い方には合いません。</p>
+<p>このサイトの決めでは、事務所の鍵を出すのは、その会社の情報システム部門です。アカウントと同じく、本人と権限の管理の一つとして扱います(R-EB-33)。</p>
+<p>主な道は、カードと、財布を通さないアプリの二つです。まずこの二つで、全部の扉が開く状態を作ります(R-EB-38、R-CM-17)。財布の社員証は、そのうえで足す物です。</p>
+<p>事務所の扉は、家の仕組みのアプリからの鍵の登録と解錠を受けない設定にします(R-AC-24)。社員が自分の電話の家の仕組みに会社の扉を登録すると、会社の台帳の外に管理者が増えるからです。</p>
+<h2>財布の社員証を足す場合</h2>
+<p>ここでは、会社が正式に書いている事を整理します。</p>
+<h3>Apple Wallet Access Program</h3>
+<p>Apple には、財布に入館の鍵を入れるための制度として、Apple Wallet Access Program があります。手引きは、参加する会社の役割を三つに分けています。</p>
+<p>[cols=&quot;1,4&quot;]</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>役割</th>
+<th>手引きの説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Credential Manager</td>
+<td>Apple の仕組みと直接つながる、主となる会社。鍵を電話に入れ、止める</td>
+</tr>
+<tr>
+<td>Credential Provider</td>
+<td>電話に入れる資格情報を届ける。暗号の元を握る。読取機の製造者が担う例が書かれている</td>
+</tr>
+<tr>
+<td>Participating Provider</td>
+<td>建物を持つか、管理する者。Credential Manager を通じて Apple と契約する</td>
+</tr>
+</tbody>
+</table>
+<p>事務所の会社は、三つ目の Participating Provider の立場で入る形です。</p>
+<p>手引きは、Credential Manager に次の事を求めています。</p>
+<ul>
+<li>本番の稼働率 99.99%</li>
+<li>複数の地域に備え、30分以内に切り替える</li>
+<li>全体が止まる障害に、15分以内に応じる</li>
+<li>検査用、負荷の試験用、本番の三つの環境</li>
+</ul>
+<p>読取機は、Apple が試験して認証します。使える資格情報の技術は、MIFARE DESFire、Seos、Aliro です。費用と対象の国は、手引きに書かれていません。</p>
+<p>開けるかどうかの判断は、読取機か制御の機械が行い、Apple の仕組みと電話は関わらない、と手引きは書いています。</p>
+<h3>NFC &amp; SE Platform</h3>
+<p>Apple には別に、開発者が自分のアプリから iPhone の NFC を使える道として、NFC &amp; SE Platform があります。iOS 18.1 からの物です。対象には、社員証、家の鍵、ホテルの鍵などが挙がっていて、対象の国に日本が入っています。使うには、Apple との契約と費用、アプレットを認定の試験所で確かめる事が要ります。</p>
+<h3>Google Wallet の社員証</h3>
+<p>Google Wallet には、社員証(Corporate Badge)があります。Google Wallet の更新の記録(2024年6月4日)は、対応する入館の方式と Account Hub(例として NXP)を使う開発者が、社員証を組み込める、と書いています。</p>
+<h3>財布を通さないアプリ</h3>
+<p>ここは、Apple、Google、CSA の発表ではなく、会社の説明です。Aliro を扱う会社 Safetrust の資料(2026年6月18日)は、次のように書いています。</p>
+<ul>
+<li>iOS と Android では BLE で、Android では NFC で、Aliro の資格情報を出せる</li>
+<li>客が自分で発行者を持つ形も選べる</li>
+</ul>
+<h2>認証と権限を分ける</h2>
+<p>財布の社員証を足すときに、扉の側で考える仕事は二つです。</p>
+<ul>
+<li><strong>認証</strong>: 電話の中の鍵が本物で、写しではない事を確かめられるようにする</li>
+<li><strong>権限</strong>: その鍵を、どの扉に、いつ通すかを決める</li>
+</ul>
+<p>Aliro の仕様も、資格を与える者(Access Manager)と、資格の文書に署名する者(Credential Issuer)を、別の役割として定めています(<a href="/guide/aliro/">Aliroとは何か</a>)。</p>
+<p>ただし Aliro では、発行者が署名した文書が、そのまま通してよい印になります。役割を分けるだけでは、財布に鍵を載せる会社の署名一つで扉が開きます。</p>
+<p>そこで、このサイトの決めでは、次のようにします(R-AC-25)。</p>
+<ul>
+<li>財布に鍵を載せる会社の署名は、鍵が本物である事の確かめにだけ使う</li>
+<li>扉は、管理者が登録した鍵だけを通す</li>
+<li>登録は、読取機にかざして行える。カードの登録と同じ手順です</li>
+<li>財布に鍵を載せる会社の仕組みが止まっていても、登録と取り消しができる</li>
+<li>財布に鍵を載せる会社には、誰がどの扉を通れるかの台帳と、出入りの記録を渡さない</li>
+</ul>
+<p>これで良くなる事は二つです。財布に鍵を載せる会社が攻められても、扉は開きません。鍵を出す事と止める事が、会社(情報システム部門)の手に残ります。</p>
+<h3>誰が何の記録をとるか</h3>
+<p>[cols=&quot;2,4&quot;]</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>誰が</th>
+<th>何の記録</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>扉</td>
+<td>誰の鍵で、いつ開いたか。拒んだか</td>
+</tr>
+<tr>
+<td>扉の管理者</td>
+<td>誰の鍵を、どの扉に、いつ登録し、取り消したか</td>
+</tr>
+<tr>
+<td>財布に鍵を載せる会社</td>
+<td>どの電話に鍵を入れ、いつ止めたか</td>
+</tr>
+<tr>
+<td>製造者</td>
+<td>どの扉にどのモジュールを組み込み、どこへ出したか。配った版</td>
+</tr>
+</tbody>
+</table>
+<p>出入りの記録は、扉と扉の管理者の側にだけ残ります。財布に鍵を載せる会社が持つのは、鍵を入れた事と止めた事の記録です。</p>
+<h2>事務所の扉が、使えるようになるまで</h2>
+<p>[cols=&quot;1,4&quot;]</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>段</th>
+<th>する事</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>工事と試験</td>
+<td>配線、網の区画分け、試験</td>
+</tr>
+<tr>
+<td>試験の鍵を消す</td>
+<td>試験に使った鍵を消し、扉が「鍵の無い状態」を返す事を確かめる(R-CT-27)</td>
+</tr>
+<tr>
+<td>管理者の鍵を入れる</td>
+<td>情報システム部門が、自分で管理者の鍵を入れる。予備の鍵は会社が保管する(R-EB-39)</td>
+</tr>
+<tr>
+<td>鍵を出す</td>
+<td>社員に、カードとアプリの鍵を出す</td>
+</tr>
+<tr>
+<td>退職の日</td>
+<td>アカウントと、全部の経路の鍵を、同じ日に止める(R-EB-34)</td>
+</tr>
+</tbody>
+</table>
+<h2>分かっていない事</h2>
+<p>2026年11月11日の時点で、次の事は会社の公開の資料に見つかりませんでした。</p>
+<ul>
+<li>Apple Wallet Access Program の費用と、対象の国</li>
+<li>Aliro を使うときに、誰が資格の文書に署名するか</li>
+<li>財布を通さないアプリが、Aliro の認証を受けられるか</li>
+<li>iPhone の BLE で開けるときに、アプリを開く操作が要るか</li>
+</ul>
+<h2>出典</h2>
+<p>すべて 2026年11月11日に確かめました。</p>
+<p><strong>会社と団体が発表した物</strong></p>
+<ul>
+<li><a href="https://register-docs.apple.com/apple-pay/access/program-guide/index.html">Apple: Apple Wallet Access Program の手引き</a></li>
+<li><a href="https://register-docs.apple.com/apple-pay/access/program-guide/overview/participant-roles/">Apple: Apple Wallet Access Program の手引き。参加する会社の役割(Credential Manager、Credential Provider、Participating Provider)</a></li>
+<li><a href="https://register-docs.apple.com/apple-pay/access/program-guide/requirements/">Apple: Apple Wallet Access Program の手引き。要件(稼働率、地域の備え、障害への対応、環境、読取機の認証、資格情報の技術)</a></li>
+<li><a href="https://register-docs.apple.com/apple-pay/access/program-guide/use-cases/access-nfc-transactions/">Apple: Apple Wallet Access Program の手引き。かざして開ける流れと、開けるかの判断</a></li>
+<li><a href="https://developer.apple.com/support/nfc-se-platform/">Apple Developer: NFC &amp; SE Platform(iOS 18.1 から。対象の用途と国、契約、認定の試験所)</a></li>
+<li><a href="https://developers.google.com/wallet/docs/release-notes">Google Wallet: 更新の記録。2024年6月4日の項(社員証、Account Hub)</a></li>
+<li><a href="https://github.com/project-chip/connectedhomeip/blob/v1.4-branch/src/app/clusters/door-lock-server/door-lock-server.cpp">connectedhomeip: v1.4 の枝の door-lock-server.cpp(登録先を外しても、その登録先が入れた鍵が錠に残る事)</a></li>
+</ul>
+<p><strong>会社の資料</strong></p>
+<ul>
+<li><a href="https://www.safetrust.com/wp-content/uploads/2026/06/Aliro-Datasheet.pdf">Safetrust: Aliro の資料(2026年6月18日)。iOS と Android の BLE、Android の NFC、客が自分で発行者を持つ形。会社の説明</a></li>
+</ul>
+
+  </article>
+
+  <!-- CHAPTER NAV(前後の記事) -->
+  <nav class="chapter-nav">
+  <a href="/guide/google-wallet-home-key/" rel="prev">&larr; 前: Google Wallet に戸建ての家の鍵が入る</a>
+  <a href="/guide/membership-card-on-phone/" rel="next">次: 電話を会員証にする &rarr;</a>
+</nav>
+
+  <!-- FOOTER(サイト内メニュー+奥付) -->
+  <footer class="site-footer">
+    <nav class="footer-nav" aria-label="サイト内リンク">
+      <div class="footer-col">
+        <h4>解説</h4>
+        <ul>
+          <li><a href="/guide/matter/">Matterとは何か</a></li>
+          <li><a href="/guide/aliro/">Aliroとは何か</a></li>
+          <li><a href="/guide/what-a-smart-door-needs/">スマートドアに求められる条件</a></li>
+          <li><a href="/guide/layers/">玄関まわりの技術の層</a></li>
+          <li><a href="/guide/open-specification/">仕様と参照実装の公開</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>サイト</h4>
+        <ul>
+          <li><a href="/guide/">解説</a></li>
+          <li><a href="/3d/">立体図</a></li>
+          <li><a href="/check/">始め方</a></li>
+          <li><a href="/manual/">マニュアル</a></li>
+          <li><a href="/news/">ニュース</a></li>
+          <li><a href="/blog/">ブログ</a></li>
+          <li><a href="/consult/">相談と教室</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="colophon">
+      <div class="colophon-mark">§</div>
+      解説 22<br>
+      Tokushima · 2026.11.11<br>
+      <a href="/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">デジタルドア</a> · <a href="/#about" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">このサイトについて</a> · <a href="/contact/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">お問い合わせ</a> · <a href="/privacy/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">プライバシーポリシー</a> · <a href="/license/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">ライセンス</a> · <a href="/feed.xml" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">RSS</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">CC BY 4.0</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // 広い画面ではサイドバー目次を常時展開する(狭い画面では折りたたみに戻す)
+  (function () {
+    var toc = document.querySelector(".series-toc details");
+    if (!toc) return;
+    var mq = window.matchMedia("(min-width: 1200px)");
+    function sync() { toc.open = mq.matches; }
+    sync();
+    if (mq.addEventListener) mq.addEventListener("change", sync);
+    else mq.addListener(sync);
+  })();
+
+  // Mermaid loads only on pages that contain a .mermaid block.
+  // Self-hosted (no third-party CDN dependency); SRI verified.
+  if (document.querySelector(".mermaid")) {
+    const s = document.createElement("script");
+    s.src = "/js/vendor/mermaid-11.14.0.min.js";
+    s.integrity = "sha384-1CMXl090wj8Dd6YfnzSQUOgWbE6suWCaenYG7pox5AX7apTpY3PmJMeS2oPql4Gk";
+    s.crossOrigin = "anonymous";
+    s.onload = () => {
+      const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      mermaid.initialize({ startOnLoad: false, theme: prefersDark ? "dark" : "default" });
+      mermaid.run();
+    };
+    document.head.appendChild(s);
+  }
+</script>
+
+
+</body>
+</html>

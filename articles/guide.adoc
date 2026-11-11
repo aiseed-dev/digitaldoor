@@ -1178,7 +1178,6 @@ ifdef::lang-ja[]
 | R-AC-10 | 業者と連携先に、扉を開ける常の権限を持たせない。遠隔の解錠は一回ごとに、発行者の一時の資格情報を錠が自分で確かめる。業者のサービスが止まっても、登録済みの資格情報で開く | 一か所に集まる、止める手段が大きい
 | R-AC-11 | 発行者の秘密鍵は取り出せない場所に置き、他人と同じ機械を共有する環境に置かない | 相乗り型
 | R-AC-12 | 錠と読取機が信頼する発行者の変更は、管理者の認証済みの操作だけで行い、記録に残す | 顧客の側で防げない
-| R-AP-38、R-AP-39 | 住戸の錠の発行者は区分所有者とし、管理会社と管理組合の発行者の鍵では住戸の錠を開けられない | 一か所に集まる
 |===
 
 扉のコントローラの側では、発行者が署名した資格情報を、扉が網も発行者のサーバーも使わずに自分で確かめる形を、link:/guide/open-specification/[扉コントローラ仕様書] の 5.2a に書きました。仕様を確かめる疑似の扉(digitaldoor-controller)で、この形の試験が通っています。
@@ -1630,7 +1629,7 @@ FBI は2025年5月7日に、更新の止まったルーター(メーカーが売
 * *外からの口は、使うときだけ。* 遠隔の管理、VPN、DDNS、外からの管理画面、回線の事業者の遠隔の設定は、要るときだけ有効にし、見覚えのない設定が無いかを点検のたびに確かめます。
 * *持ち主を決める。* 誰がルーターの更新と確認と交換をするかを決めます。集合住宅では管理組合が決め、点検の項目に入れます。
 
-要求仕様には、共通コアに R-NW-01〜05(ルーターと網)、集合住宅に R-AP-40(ルーターの持ち主と点検)を書きました。
+要求仕様には、共通コアに R-NW-01〜05(ルーターと網)を書きました。
 
 == 出典
 
@@ -2083,8 +2082,8 @@ ifdef::lang-ja[]
 | 道具を渡す。鍵は持たない
 
 | 分譲マンション
-| 住戸の錠は区分所有者(賃貸では貸主)。共用部は管理組合(R-AP-38)
-| 管理会社と業者の鍵では住戸を開けられない(R-AP-39)
+| 住戸の錠は区分所有者(賃貸では貸主)。共用部は管理組合
+| 管理会社と業者の鍵では住戸を開けられない
 
 | 企業、事業所
 | 情報システム部門(R-EB-33)。設備の担当は扉と錠の物理を持つ
@@ -3024,14 +3023,20 @@ Google と並べると、次のようになります。
 
 *Door Lock クラスタ(データモデル 1.4)。* 読取機の設定の命令(SetAliroReaderConfig、ClearAliroReaderConfig)は、Administer の権限と Timed Invoke が要ります。欄は SigningKey(32バイト)、VerificationKey(65バイト)、GroupIdentifier(16バイト)、GroupResolvingKey(16バイト。ALBU の錠の時)です。読取機の公開鍵などの Aliro の属性は Administer でだけ読め、入れられる発行者の鍵と端末の鍵の数は View で読めます。SigningKey を読み出す属性はありません。資格情報の種類には、AliroCredentialIssuerKey(発行者の鍵)、AliroEvictableEndpointKey と AliroNonEvictableEndpointKey(端末の鍵)の三つがあり、登録と消去(SetCredential、ClearCredential)も Administer と Timed Invoke が要ります。
 
+*QR コードと登録の窓。* 錠に付く QR コード(`MT:` で始まる文字列)は 88 ビットで、その中の合言葉(登録の符号)は 27 ビットです。合言葉は、登録の最初の通信路を張るための物で、扉を開ける鍵ではなく、Aliro の鍵ともつながりはありません。機器は合言葉そのものではなく、合言葉から作った検証値を持ちます(SDK の工場のデータの手引きでは、検証値は必須、合言葉そのものは任意です)。二つ目の管理者を足すときは、今の管理者が登録の窓を開ける命令(OpenCommissioningWindow。Administer と Timed Invoke が要ります)を呼び、新しい合言葉の検証値を渡します。印刷の合言葉でもう一度窓を開ける命令(OpenBasicCommissioningWindow)は、任意の機能です。機器が持てる Fabric の数は、定義では 5 以上 254 以下です。
+
 *根の鍵の置き場。* Apple のセキュリティの手引き(Apple Platform Security の「HomeKit communication security」。頁の日付は2024年5月7日)は、Apple の家では、根の認証局を最初の利用者(持ち主)の端末で作り、その秘密鍵を持ち主の iCloud キーチェーンに置く、と書いています。家のほかの Apple の機器は証明書の要求を作り、持ち主の端末が、認証局の秘密鍵で Matter の身元の証明書を作ります。機器を初期化すると、登録の時に新しい鍵の対と証明書になります。この頁の日付は2024年5月で、今の版で変わっているかは確かめていません。Google については、根の認証局の秘密鍵の置き場を書いた頁は見つかりませんでした(入門は、会社が担う事が多い、登録する側は認証局に届く、とだけ書いています)。
 
 ここから読み取れる事は、次のとおりです。いずれも、このサイトの読みです。
 
 * 錠の Aliro の設定と、錠が信じる鍵を入れ替えられるのは、その錠を登録した Fabric の管理者です
-* 一つの錠を複数の家の仕組み(錠の会社のアプリ、Google Home、Apple Home)に登録すると、その数だけ管理者が居ます。データモデルは共通なので、どの管理者も Aliro の設定の命令を呼べる形です。ほかの管理者が入れた鍵を消せるかは、読んだ文書では確かめられませんでした
+* 一つの錠を複数の家の仕組み(錠の会社のアプリ、Google Home、Apple Home)に登録すると、その数だけ管理者が居ます。データモデルは共通なので、どの管理者も Aliro の設定の命令を呼べる形です。SDK の実装(connectedhomeip の v1.4 の枝の `door-lock-server.cpp`)を読むと、Fabric をまたぐ扱いは次のとおりです。仕様書の本文(CSA が申し込みで配る物)は読めておらず、実装の読みです
+** 資格情報を変えられるのは、それを作った Fabric だけです
+** 消す命令(ClearCredential、ClearUser)には Fabric の比べが無く、Administer の権限があれば、どの Fabric の管理者からも消せます
+** 読取機の設定は錠に一つです。既に入っていると SetAliroReaderConfig は断られ、入れ直すには先に ClearAliroReaderConfig を呼びます。どの Fabric の管理者も、消して入れ直せます
+** Fabric を外しても、その Fabric が入れた利用者と資格情報は錠に残り、「作った Fabric」の欄が空になります
 * 資格情報の種類に「端末の鍵」があるので、発行者を立てずに、スマートフォンそのものの公開鍵を錠に入れる道があります。戸建てのように鍵の数が少ない所では、この道でも足りる形で、「戸建てに限る」事とも形は合います。ただし、Google がこの道を使っているかは書かれていません
-* このサイトの扉との違いは、二つ目の問いにあります。このサイトの扉は、据付の時に入れた一つの管理者の鍵の署名だけを受けます。Matter の錠は、登録した先の数だけ管理者が居て、その元の置き場は会社ごとに違います
+* このサイトの扉との違いは、二つ目の問いにあります。このサイトの扉は、据付の時に入れた一つの管理者の鍵の署名だけを受けます。Matter の錠は、登録した先の数だけ管理者が居て、その元の置き場は会社ごとに違います。このサイトの扉も Matter の錠として登録を受け、Matter の管理者は施錠と解錠の命令を送れます。違いは、Matter の管理者になっても、扉が信じる鍵(信頼する発行者の一覧)は入れ替えられない所です。一覧は、据付のときに入れた管理者の鍵の署名だけで変わります
 
 三つの問いへの、今の答えをまとめます。
 
@@ -3045,7 +3050,7 @@ Google と並べると、次のようになります。
 
 | その鍵を入れ替えられるのは誰か
 | 据付の時に入れた管理者の鍵の署名だけ
-| 錠を登録した Fabric の管理者。複数に登録すると、その全部が管理者。管理の元は、Apple は持ち主の iCloud キーチェーン(2024年5月の手引き)、Google は書かれていない
+| 錠を登録した Fabric の管理者。複数に登録すると、その全部が管理者。どの管理者も、読取機の設定を消して入れ直せ、ほかの管理者が入れた鍵を消せる(SDK の実装)。管理の元は、Apple は持ち主の iCloud キーチェーン(2024年5月の手引き)、Google は書かれていない
 
 | 扉の身元の鍵は扉の中で生まれるか
 | 仕様書は取り出せない所に置く形を書いている。今の参照実装はソフトの鍵
@@ -3113,6 +3118,12 @@ Wallet のヘルプが、管理会社の鍵について「物理の鍵の代わ�
 * https://developers.home.google.com/matter/primer/fabric[Google Home Developers: Matter の入門の Fabric(根の証明書、登録する側、Administrative Domain Manager、複数の Fabric)]
 * https://project-chip.github.io/connectedhomeip-doc/guides/access-control-guide.html[Matter の SDK(connectedhomeip): 権限の手引き(View、Operate、Manage、Administer、AddNOC、Fabric ごとの ACL)]
 * https://github.com/project-chip/connectedhomeip[connectedhomeip: data_model/1.4/clusters/DoorLock.xml(Aliro の命令と属性の権限、資格情報の種類)]
+* https://github.com/project-chip/connectedhomeip/blob/v1.4-branch/src/app/clusters/door-lock-server/door-lock-server.cpp[connectedhomeip: v1.4 の枝の door-lock-server.cpp(Door Lock クラスタの実装。Fabric をまたぐ扱い)]
+* https://github.com/project-chip/connectedhomeip/blob/master/src/app/zap-templates/zcl/data-model/chip/door-lock-cluster.xml[connectedhomeip: door-lock-cluster.xml(Door Lock クラスタの定義。命令と権限)]
+* https://github.com/project-chip/connectedhomeip/blob/master/src/app/zap-templates/zcl/data-model/chip/administrator-commissioning-cluster.xml[connectedhomeip: administrator-commissioning-cluster.xml(登録の窓を開ける命令)]
+* https://github.com/project-chip/connectedhomeip/blob/v1.4-branch/src/app/zap-templates/zcl/data-model/chip/operational-credentials-cluster.xml[connectedhomeip: v1.4 の枝の operational-credentials-cluster.xml(機器が持てる Fabric の数)]
+* https://github.com/project-chip/connectedhomeip/blob/master/src/setup_payload/SetupPayload.h[connectedhomeip: SetupPayload.h(QR コードの欄の長さ)]
+* https://github.com/project-chip/connectedhomeip/blob/v1.4-branch/docs/guides/nrfconnect_factory_data_configuration.md[connectedhomeip: v1.4 の枝の工場のデータの手引き(工場で機器に入れる物)]
 * https://support.google.com/wallet/answer/16759973[Google Wallet ヘルプ: Residential keys(管理会社が出す住まいの鍵。更新の日付の表示なし)]
 * https://support.google.com/googleplay/answer/9037938[Google Play ヘルプ: Keep your device & apps working with Google Play services(Google Play services の更新の手順)]
 * https://csa-iot.org/newsroom/the-connectivity-standards-alliance-announces-aliro-a-new-effort-to-make-mobile-devices-wearables-central-to-a-digital-access-future/[CSA: Aliro の取り組みの発表(2023年11月9日)]
@@ -3134,4 +3145,712 @@ Wallet のヘルプが、管理会社の鍵について「物理の鍵の代わ�
 * https://9to5google.com/2026/03/24/this-nfc-keypad-adds-tap-to-unlock-to-nukis-matter-smart-lock/[9to5Google、Andrew Romero(2026年3月24日)。Nuki の NFC のキーパッドの記事]
 * https://9to5google.com/2026/11/09/november-2026-google-system-updates/[9to5Google、Abner Li「What's new in Android's November 2026 Google System Updates」(2026年11月9日)]
 * https://nerdschalk.com/google-home-wallet-home-key-setup-apk-teardown[Nerds Chalk、Kapill M Malani(2026年11月10日更新)。Google Home アプリ 4.37.27.0 の解析。非公式]
+endif::[]
+
+// ===== article: 22-phone-keys-for-houses-and-offices =====
+---
+slug: phone-keys-for-houses-and-offices
+number: 22
+date: 2026.11.11
+label: 解説 22
+category.ja: セキュリティ
+category.en: Security
+title.ja: 戸建てと事務所で、電話の鍵をどう持つか
+title.en: Phone keys for houses and offices: who issues them, and who revokes them
+subtitle.ja: ホームのアプリ、財布、自分で出す鍵。誰が鍵を出し、誰が止めるかから決める
+subtitle.en: Home apps, wallets, and keys you issue yourself. Start from who issues a key and who revokes it
+description.ja: 電話で扉を開ける道は、家の仕組みのアプリ、財布、財布を通さないアプリ、カードの四つです。どれを選ぶかは、誰が鍵を出し、誰が止めるかで決まります。戸建ては家の仕組みのアプリで足り、扉の側で予備の管理者の鍵、登録先の扱い、更新の決め方を整えます。事務所では、情報システム部門がカードと自社のアプリで鍵を出し、財布の社員証は後から足す物として扱います。Apple Wallet Access Program、NFC & SE Platform、Google Wallet の社員証について会社が書いている事を整理し、認証と権限を分ける形と、誰が何の記録をとるかを示します。
+description.en: There are four ways to put a door key on a phone or card: home apps, wallets, apps that do not go through a wallet, and cards. The right choice depends on who issues a key and who revokes it. This article covers detached houses and offices, summarizes what Apple and Google have published about their wallet access programs, and explains how this site separates authentication from authorization.
+---
+ifdef::lang-ja[]
+= 戸建てと事務所で、電話の鍵をどう持つか
+
+電話で扉を開ける道は、いくつもあります。家の仕組みのアプリに錠を登録する道、財布に鍵を入れる道、財布を通さないアプリで開ける道、そしてカードです。どれを選ぶかは、技術の良し悪しよりも先に、誰が鍵を出し、誰が止めるかで決まります。
+
+戸建ての家と事務所では、この答えが違います。戸建てでは、鍵を出すのも止めるのも住む人です。事務所では、会社が社員に鍵を出し、退職の日に止めます。この記事では、四つの道を並べ、戸建てと事務所のそれぞれで、どの道を使い、扉の側で何を決めておくかを書きます。会社が正式に書いている事と、このサイトの考えは分けて書きます。この記事の内容は、2026年11月11日に確かめた物です。
+
+== 鍵を電話とカードに持たせる四つの道
+
+[cols="2,3,3"]
+|===
+| 道 | 鍵を出すのは誰か | 主な形
+
+| 家の仕組みのアプリ(Apple のホーム、Google Home)
+| 住む人
+| 一つの家のための物。錠を登録した人が、家族や客に鍵を渡す
+
+| 財布(Apple Wallet、Google Wallet の社員証など)
+| 財布の制度に入った会社が、鍵を電話に入れる
+| 電話の財布に、入館の鍵が入る
+
+| 財布を通さないアプリ
+| 扉の管理者(会社の情報システム部門など)
+| 管理者が出すアプリで開ける。Android は NFC と BLE、iPhone は BLE
+
+| カード
+| 扉の管理者
+| 発行者の署名を扉が確かめる形のカード(Aliro のカードなど)
+|===
+
+家の仕組みのアプリでも、財布に鍵が入る事があります。ただ、その鍵を出す元は家の仕組みで、鍵を出し、止めるのは住む人です。表の「財布」は、会社が制度に入って、社員などの電話に鍵を入れる形を指しています。
+
+== 戸建ては、家の仕組みのアプリで足りる
+
+戸建ての家では、鍵を出す人と使う人が、同じ家族の中に収まります。Matter と Aliro に対応した錠を家の仕組みに登録すれば、財布に鍵が入ります(link:/guide/google-wallet-home-key/[Google Wallet に戸建ての家の鍵が入る])。戸建てでは、この道で足ります。
+
+そのうえで、扉の側で決めておく事が三つあります。どれも、このサイトの要求仕様に置いている事です。
+
+=== 予備の管理者の鍵
+
+据付のときに、管理者の鍵とは別に、予備の管理者の鍵を作ります。予備の秘密の部分は封をして、持ち主が持ちます。
+
+管理者の鍵をなくしたときは、室内の側の物理の操作と、予備の鍵の両方を使って、管理者の鍵を入れ直します。予備もなくしたときは、鍵を持つモジュールを替えます。機械の鍵を全部なくしたときに、シリンダーを替えるのと同じです。製造者が合鍵を持つ必要はありません(R-AC-23)。
+
+=== 扉を登録した先
+
+扉を Matter の錠として登録した先(Matter の Fabric)は、管理者の口の一つとして扱います。
+
+* 登録の窓は、管理者の鍵の操作か、室内の側の物理の操作でだけ開きます
+* 今の登録先の一覧を見られ、足した事と外した事が記録に残ります
+* 持ち主が替わるときは、登録先を全部外します
+
+Matter の SDK の実装(connectedhomeip の v1.4 の枝)では、登録先を外しても、その登録先が入れた鍵は錠に残ります。そこで、登録先を外すときは、その登録先が入れた鍵も一緒に消します(R-AC-24、R-CT-26)。
+
+=== 更新
+
+扉のソフトの更新は、製造者が署名して配ります。入れる時期と方法は、持ち主が決めます。製造者は、配った版を公開の一覧に載せます。持ち主は、扉に入っている版を一覧と照らせます(R-EL-34、R-RS-19)。
+
+== 戸建ての扉が、工場から家に届くまで
+
+扉の中の鍵が、どの段で誰の手にあるかを並べます。このサイトの決めでは、扉を開ける鍵は、工場でも出荷でも入れません。
+
+[cols="1,1,3,3"]
+|===
+| 段 | 誰が | する事 | 扉の中の鍵
+
+| 工場
+| 製造者
+| 組み立てと試験。個体の台帳に、扉とモジュールの番号を書く
+| 更新を確かめる公開鍵と、機器の証明書だけ。扉を開ける鍵は入れない
+
+| 出荷
+| 製造者
+| 送る
+| 誰の鍵も無い
+
+| 据付
+| 施工の人
+| 配線、網の区画分け、時刻の設定。試験に使った鍵を消す。持ち主の管理者の公開鍵を入れ、予備の鍵を封をして渡す
+| 持ち主の管理者の公開鍵。秘密の部分は、施工の人が持ち帰らない
+
+| 引き渡し
+| 持ち主
+| 自分で、鍵を出す、止める、入れ直す
+| 持ち主が出した鍵
+
+| 使う間
+| 持ち主
+| 鍵の管理を続ける
+| 鍵は全部、持ち主の側。製造者が持つのは、更新の署名の鍵、個体の台帳、交換の部品(R-RS-20)
+|===
+
+使う間に起きる事と、その手当てです。
+
+[cols="2,4,3"]
+|===
+| 出来事 | 手当て | 製造者の関わり
+
+| 端末をなくした
+| 持ち主が、その端末の鍵を止める
+| 無し
+
+| 管理者の鍵をなくした
+| 室内の側の物理の操作と、予備の鍵で入れ直す
+| 無し
+
+| 予備もなくした
+| 鍵を持つモジュールを替える
+| 交換の部品を出す。個体の台帳を書き換える
+
+| 持ち主が替わる
+| 登録先と、その登録先が入れた鍵を全部消し、新しい持ち主が管理者の鍵を入れる
+| 無し
+
+| 機器が古くなった
+| 更新を入れるか、機器を替える
+| 署名した更新を配る。交換の部品を出す
+|===
+
+== 事務所では、家の仕組みのアプリでは足りない
+
+家の仕組みのアプリは、一つの家のための物です。会社が社員に鍵を出し、退職の日に止める、という使い方には合いません。
+
+このサイトの決めでは、事務所の鍵を出すのは、その会社の情報システム部門です。アカウントと同じく、本人と権限の管理の一つとして扱います(R-EB-33)。
+
+主な道は、カードと、財布を通さないアプリの二つです。まずこの二つで、全部の扉が開く状態を作ります(R-EB-38、R-CM-17)。財布の社員証は、そのうえで足す物です。
+
+事務所の扉は、家の仕組みのアプリからの鍵の登録と解錠を受けない設定にします(R-AC-24)。社員が自分の電話の家の仕組みに会社の扉を登録すると、会社の台帳の外に管理者が増えるからです。
+
+== 財布の社員証を足す場合
+
+ここでは、会社が正式に書いている事を整理します。
+
+=== Apple Wallet Access Program
+
+Apple には、財布に入館の鍵を入れるための制度として、Apple Wallet Access Program があります。手引きは、参加する会社の役割を三つに分けています。
+
+[cols="1,4"]
+|===
+| 役割 | 手引きの説明
+
+| Credential Manager
+| Apple の仕組みと直接つながる、主となる会社。鍵を電話に入れ、止める
+
+| Credential Provider
+| 電話に入れる資格情報を届ける。暗号の元を握る。読取機の製造者が担う例が書かれている
+
+| Participating Provider
+| 建物を持つか、管理する者。Credential Manager を通じて Apple と契約する
+|===
+
+事務所の会社は、三つ目の Participating Provider の立場で入る形です。
+
+手引きは、Credential Manager に次の事を求めています。
+
+* 本番の稼働率 99.99%
+* 複数の地域に備え、30分以内に切り替える
+* 全体が止まる障害に、15分以内に応じる
+* 検査用、負荷の試験用、本番の三つの環境
+
+読取機は、Apple が試験して認証します。使える資格情報の技術は、MIFARE DESFire、Seos、Aliro です。費用と対象の国は、手引きに書かれていません。
+
+開けるかどうかの判断は、読取機か制御の機械が行い、Apple の仕組みと電話は関わらない、と手引きは書いています。
+
+=== NFC & SE Platform
+
+Apple には別に、開発者が自分のアプリから iPhone の NFC を使える道として、NFC & SE Platform があります。iOS 18.1 からの物です。対象には、社員証、家の鍵、ホテルの鍵などが挙がっていて、対象の国に日本が入っています。使うには、Apple との契約と費用、アプレットを認定の試験所で確かめる事が要ります。
+
+=== Google Wallet の社員証
+
+Google Wallet には、社員証(Corporate Badge)があります。Google Wallet の更新の記録(2024年6月4日)は、対応する入館の方式と Account Hub(例として NXP)を使う開発者が、社員証を組み込める、と書いています。
+
+=== 財布を通さないアプリ
+
+ここは、Apple、Google、CSA の発表ではなく、会社の説明です。Aliro を扱う会社 Safetrust の資料(2026年6月18日)は、次のように書いています。
+
+* iOS と Android では BLE で、Android では NFC で、Aliro の資格情報を出せる
+* 客が自分で発行者を持つ形も選べる
+
+== 認証と権限を分ける
+
+財布の社員証を足すときに、扉の側で考える仕事は二つです。
+
+* *認証*: 電話の中の鍵が本物で、写しではない事を確かめられるようにする
+* *権限*: その鍵を、どの扉に、いつ通すかを決める
+
+Aliro の仕様も、資格を与える者(Access Manager)と、資格の文書に署名する者(Credential Issuer)を、別の役割として定めています(link:/guide/aliro/[Aliroとは何か])。
+
+ただし Aliro では、発行者が署名した文書が、そのまま通してよい印になります。役割を分けるだけでは、財布に鍵を載せる会社の署名一つで扉が開きます。
+
+そこで、このサイトの決めでは、次のようにします(R-AC-25)。
+
+* 財布に鍵を載せる会社の署名は、鍵が本物である事の確かめにだけ使う
+* 扉は、管理者が登録した鍵だけを通す
+* 登録は、読取機にかざして行える。カードの登録と同じ手順です
+* 財布に鍵を載せる会社の仕組みが止まっていても、登録と取り消しができる
+* 財布に鍵を載せる会社には、誰がどの扉を通れるかの台帳と、出入りの記録を渡さない
+
+これで良くなる事は二つです。財布に鍵を載せる会社が攻められても、扉は開きません。鍵を出す事と止める事が、会社(情報システム部門)の手に残ります。
+
+=== 誰が何の記録をとるか
+
+[cols="2,4"]
+|===
+| 誰が | 何の記録
+
+| 扉
+| 誰の鍵で、いつ開いたか。拒んだか
+
+| 扉の管理者
+| 誰の鍵を、どの扉に、いつ登録し、取り消したか
+
+| 財布に鍵を載せる会社
+| どの電話に鍵を入れ、いつ止めたか
+
+| 製造者
+| どの扉にどのモジュールを組み込み、どこへ出したか。配った版
+|===
+
+出入りの記録は、扉と扉の管理者の側にだけ残ります。財布に鍵を載せる会社が持つのは、鍵を入れた事と止めた事の記録です。
+
+== 事務所の扉が、使えるようになるまで
+
+[cols="1,4"]
+|===
+| 段 | する事
+
+| 工事と試験
+| 配線、網の区画分け、試験
+
+| 試験の鍵を消す
+| 試験に使った鍵を消し、扉が「鍵の無い状態」を返す事を確かめる(R-CT-27)
+
+| 管理者の鍵を入れる
+| 情報システム部門が、自分で管理者の鍵を入れる。予備の鍵は会社が保管する(R-EB-39)
+
+| 鍵を出す
+| 社員に、カードとアプリの鍵を出す
+
+| 退職の日
+| アカウントと、全部の経路の鍵を、同じ日に止める(R-EB-34)
+|===
+
+== 分かっていない事
+
+2026年11月11日の時点で、次の事は会社の公開の資料に見つかりませんでした。
+
+* Apple Wallet Access Program の費用と、対象の国
+* Aliro を使うときに、誰が資格の文書に署名するか
+* 財布を通さないアプリが、Aliro の認証を受けられるか
+* iPhone の BLE で開けるときに、アプリを開く操作が要るか
+
+== 出典
+
+すべて 2026年11月11日に確かめました。
+
+*会社と団体が発表した物*
+
+* https://register-docs.apple.com/apple-pay/access/program-guide/index.html[Apple: Apple Wallet Access Program の手引き]
+* https://register-docs.apple.com/apple-pay/access/program-guide/overview/participant-roles/[Apple: Apple Wallet Access Program の手引き。参加する会社の役割(Credential Manager、Credential Provider、Participating Provider)]
+* https://register-docs.apple.com/apple-pay/access/program-guide/requirements/[Apple: Apple Wallet Access Program の手引き。要件(稼働率、地域の備え、障害への対応、環境、読取機の認証、資格情報の技術)]
+* https://register-docs.apple.com/apple-pay/access/program-guide/use-cases/access-nfc-transactions/[Apple: Apple Wallet Access Program の手引き。かざして開ける流れと、開けるかの判断]
+* https://developer.apple.com/support/nfc-se-platform/[Apple Developer: NFC & SE Platform(iOS 18.1 から。対象の用途と国、契約、認定の試験所)]
+* https://developers.google.com/wallet/docs/release-notes[Google Wallet: 更新の記録。2024年6月4日の項(社員証、Account Hub)]
+* https://github.com/project-chip/connectedhomeip/blob/v1.4-branch/src/app/clusters/door-lock-server/door-lock-server.cpp[connectedhomeip: v1.4 の枝の door-lock-server.cpp(登録先を外しても、その登録先が入れた鍵が錠に残る事)]
+
+*会社の資料*
+
+* https://www.safetrust.com/wp-content/uploads/2026/06/Aliro-Datasheet.pdf[Safetrust: Aliro の資料(2026年6月18日)。iOS と Android の BLE、Android の NFC、客が自分で発行者を持つ形。会社の説明]
+endif::[]
+
+// ===== article: 23-membership-card-on-phone =====
+---
+slug: membership-card-on-phone
+number: 23
+date: 2026.11.12
+label: 解説 23
+category.ja: セキュリティ
+category.en: Security
+title.ja: 電話を会員証にする
+title.en: Turning a phone into a membership card
+subtitle.ja: 財布のパス、かざすパス、入館の鍵。貸し借りを防ぐ強さと、記録を誰が信用できるかで選ぶ
+subtitle.en: Wallet passes, tap passes, and access keys. Choose by how well each resists lending, and by who needs to trust the entry record
+description.ja: 会員証は入る権利の証で、扉の鍵と同じ形をしています。電話に載せる道には、財布のふつうのパス、かざす NFC のパス、入館の鍵の三つの段があります。どの段を選ぶかは、貸し借りと写しをどこまで防ぎたいかと、入った記録を誰が信用できる必要があるかで決まります。Apple と Google が会員証について書いている事を整理し、場面ごとに向く段、認証と権限を分ける形、記録が両方に通用するための条件を示します。
+description.en: A membership card is proof of the right to enter, which gives it the same shape as a door key. There are three tiers for putting one on a phone: a plain wallet pass, an NFC pass, and an access key held in the phone's secure element. This article summarizes what Apple and Google have published about each tier, suggests which tier suits which kind of facility, and explains why entry records need a third party when the issuer and the member have different interests.
+---
+ifdef::lang-ja[]
+= 電話を会員証にする
+
+運動の施設、共用の仕事場、貸し倉庫、図書館、団体、店。どこも、会員に入る権利を渡し、その証として会員証を出します。会員証は入る権利の証で、扉の鍵と同じ形をしています。
+
+会員証を電話に載せる道は、一つではありません。強さの違う三つの段があります。どれを選ぶかは、二つの事で決まります。貸し借りと写しを、どこまで防ぎたいか。入った記録を、誰が信用できる必要があるか。
+
+扉の鍵の話は、link:/guide/phone-keys-for-houses-and-offices/[戸建てと事務所で、電話の鍵をどう持つか]に書きました。この記事では、会員証の話をします。会社が正式に書いている事と、このサイトの考えは分けて書きます。この記事の内容は、2026年11月12日に確かめた物です。
+
+== 財布に会員証を入れる三つの段
+
+ここでは、会社が正式に書いている事を整理します。
+
+[cols="2,4,4,3"]
+|===
+| 段 | 中身 | 始めるのに要る事 | 貸し借りと写しへの強さ
+
+| 1. ふつうのパス
+| 財布に会員証を表示し、画面のバーコードか QR を読ませる
+| Apple は、開発者のアカウントで作る証明書で署名する。Google は、発行者の登録と利用規約への同意
+| 弱い。画面の符号は写せる
+
+| 2. NFC のパス
+| 端末にかざして会員証を出す。Apple は VAS、Google は Smart Tap
+| Apple は、NFC の証明書の申請と、VAS の認定を受けた端末。Google は、Smart Tap に対応した NFC の端末
+| 中ほど。画面の写しは使えない
+
+| 3. 入館の鍵
+| 電話の取り出せない所(Secure Element)に鍵を置き、入口の読取機にかざす
+| Apple との契約
+| 強い。鍵は端末に結ばれ、写せない
+|===
+
+=== 1. ふつうのパス
+
+Apple は、パスの型の一つを、会員証や引換券のための汎用のパスと書いています。パスは、Apple が出す証明書で署名します。この証明書は、開発者のアカウントで作れます。Apple のパスは、利用者の全部の機器に iCloud で配られます。
+
+Google Wallet には、会員カード(Loyalty cards)と汎用のパス(Generic pass)があります。汎用のパスの例には、会員証、図書館の利用証、駐車の券が挙がっています。Google は、発行者を「Google Wallet API を使ってパスを出す、すべての人と会社」と書いています。発行者は、登録して利用規約に同意すれば始められます。
+
+施設が自分で作れる段です。ただし、画面のバーコードや QR は、画面を撮るだけで写せます。
+
+=== 2. NFC のパス
+
+Apple の方式は、Apple Pay Value Added Services(VAS)です。Apple は、団体、スポーツのチーム、運動の施設、地域の集まりを例に挙げています。会員が読取機にかざすと会員のパスが出て、受付が済む、という説明です。始めるには、Apple に NFC の証明書を申請します。端末は、Apple Pay を受けられ、VAS の認定を受けた物が要ります。
+
+Google の方式は Smart Tap です。Smart Tap に対応した NFC の端末が要ります。
+
+かざして読ませるので、画面の写しは使えません。ただ、パスが電話の中の取り出せない鍵に結ばれるかどうかは、どちらの頁にも書かれていません。
+
+=== 3. 入館の鍵
+
+Apple には、財布に入館の鍵を入れる制度として、Apple Wallet Access Program があります。別に、開発者が自分のアプリから iPhone の NFC を使う道として、NFC & SE Platform があります。NFC & SE Platform は、家の鍵や社員証のほかに、店の会員の特典と、催しの切符も対象に挙げています。対象の国には、日本が入っています。どちらも、Apple との契約が要ります。
+
+鍵は電話の取り出せない所にあり、端末に結ばれます。写せません。
+
+=== 店の端末と、入口の読取機は別の物
+
+1 と 2 の段で会員証を読む端末は、店の支払いの端末の系統です。入口の読取機とは別の物です。
+
+1 のパスで入口を開けるなら、入口で画面の QR を読ませる事になります。その QR は、写しが取れます。
+
+== どの段を選ぶか
+
+ここからは、このサイトの考えです。場面ごとに、向く段を並べます。
+
+[cols="3,1,4"]
+|===
+| 場面 | 向く段 | 理由
+
+| 点数をためるだけの会員証。会員の番号を見せるだけ
+| 1
+| 施設が自分で作れる
+
+| 受付でかざして、来た事を知らせる(人が居る受付)
+| 2
+| かざすだけで受付が済む。画面の写しは使えない
+
+| 人の居ない施設(終日開いている運動の施設、共用の仕事場、貸し倉庫)
+| 3
+| 会員証が、そのまま入口の鍵になる。貸し借りを防げる
+
+| 回数や時間で料金が決まる施設
+| 3
+| 入った記録が、料金の元になる
+
+| いくつもの店、いくつもの会社で使う会員証
+| 3
+| 電話の鍵は一つで、店ごとに自分の台帳に登録できる
+|===
+
+3 の鍵を持つ会員に、1 のパスを一緒に配る形も取れます。会員の種類や期限は、財布の画面で見せます。入口は、3 の鍵で開けます。
+
+== 認証と権限を分ける
+
+会員証を入館の鍵(3 の段)で出すときも、扉の鍵と同じく、仕事を分けて考えます。
+
+[cols="1,3,3"]
+|===
+| 仕事 | 扉の鍵では | 会員証では
+
+| 認証
+| 電話の鍵が本物で、写しではない事を確かめられるようにする。財布に鍵を載せる会社が担う
+| 同じ。財布に鍵を載せる会社が担う
+
+| 権限
+| どの扉に、いつ通すかを決め、退職の日に止める。扉の管理者が担う
+| 会員の種類、期限、使える店を決め、退会の日に止める。施設が担う
+
+| 記録
+| 誰が、いつ、どの扉を開けたか。扉がとる
+| 誰が、いつ、どこに入ったか。入口がとる
+|===
+
+このサイトの決めでは、次のようにします。
+
+* 財布に鍵を載せる会社の署名は、鍵が本物である事の確かめにだけ使います。入口は、施設が登録した鍵だけを通します(R-AC-25)
+* 鍵は、端末の鍵に結びます(R-AC-21)
+* 登録は、受付の読取機にかざして行えます
+* 財布に鍵を載せる会社には、誰がどの施設に入れるかの台帳と、入った記録を渡しません
+
+== なぜ第三者が要るか
+
+ここも、このサイトの考えです。
+
+会員証を出す側と使う側の利害が分かれる所では、出す側だけがとった記録は、使う側から信用されません。出す側は、相手の名前の会員証を、自分で作れるからです。
+
+[cols="2,2,2,4"]
+|===
+| 場面 | 出す側 | 使う側 | 争いになる事
+
+| 回数や時間で払う施設
+| 施設
+| 会員
+| 何回、何時間使ったか
+
+| 貸室
+| 部屋を貸す側
+| 借りる人
+| 借りた時間を超えたか。使っていない時間に入ったか
+
+| 宿泊
+| 宿
+| 泊まる人
+| 留守の間に、誰かが入ったか
+|===
+
+記録が両方に通用するには、次の三つが要ります。
+
+. 第三者が、「この鍵は、この人の電話の鍵である」事を保証する
+. 鍵を、端末の鍵に結ぶ
+. 入口の記録の鍵を、出す側が取り出せない所に置く
+
+出す側と使う側が同じ所、たとえば自分の家では、第三者は要りません。
+
+== 扉と同じ仕組みで作れる
+
+このサイトの考えでは、会員証は扉と同じ仕組みで作れます。
+
+* 施設の側が持つ表が、扉の表から会員の台帳に替わるだけです
+* 電話の鍵は一つです。店ごとに自分の台帳に登録するので、いくつもの店で同じ電話を使えます
+* 財布に鍵を載せる会社は、会員がどの店に入ったかを知りません
+* 電話を持たない会員には、発行者の署名を入口が確かめる形のカードを渡します
+* 財布を使わない道として、財布を通さないアプリがあります。Android は NFC と BLE、iPhone は BLE で使います(R-CM-17)
+
+== 分かっていない事
+
+2026年11月12日の時点で、次の事は会社の公開の資料に見つかりませんでした。
+
+* NFC のパス(2 の段)が、端末の鍵に結ばれるか
+* Apple の NFC の証明書と、NFC & SE Platform の条件と費用
+* Google の Smart Tap の端末の認定の中身
+
+== 出典
+
+すべて 2026年11月12日に確かめました。
+
+*会社が発表した物*
+
+* https://developer.apple.com/wallet/get-started/[Apple Developer: Wallet を始める(パスの型、署名、iCloud で全部の機器に配る事)]
+* https://developer.apple.com/wallet/loyalty-passes/[Apple Developer: 会員と特典のパス(VAS、NFC の証明書、端末の認定、運動の施設の例)]
+* https://developer.apple.com/support/nfc-se-platform/[Apple Developer: NFC & SE Platform(対象の用途と国)]
+* https://register-docs.apple.com/apple-pay/access/program-guide/index.html[Apple: Apple Wallet Access Program の手引き]
+* https://developers.google.com/wallet/retail/loyalty-cards[Google Wallet: 会員カード]
+* https://developers.google.com/wallet/retail/loyalty-cards/getting-started/issuer-onboarding[Google Wallet: 発行者の登録]
+* https://developers.google.com/wallet/generic[Google Wallet: 汎用のパス]
+* https://developers.google.com/wallet/smart-tap/introduction/overview[Google Wallet: Smart Tap]
+endif::[]
+
+// ===== article: 24-keys-for-lodging-and-rental-rooms =====
+---
+slug: keys-for-lodging-and-rental-rooms
+number: 24
+date: 2026.11.12
+label: 解説 24
+category.ja: セキュリティ
+category.en: Security
+title.ja: 宿と貸室で、電話の鍵をどう渡すか
+title.en: Phone keys for lodging and rental rooms: how to hand them over
+subtitle.ja: 一度きりの客に、期限つきの鍵を渡す。本人確認、鍵を渡す道、両方が信用できる記録
+subtitle.en: Give one-time guests a key with an expiry. Identity checks, ways to deliver the key, and records both sides can trust
+description.ja: 宿と、時間や日で貸す部屋の鍵は、住宅や事務所の鍵と違います。使う人は一度きりで、期限は時刻で決まり、アプリは入れてもらえません。予約ごとに期限つきの鍵を出し、扉が自分の時計で期限を確かめる形、客に鍵を渡す四つの道、厚生労働省と国土交通省が書いている本人確認の決まり、鍵を出す側と使う側の両方が信用できる記録の条件、時間で貸す部屋の扱いを示します。
+description.en: Keys for hotels, inns, and rooms rented by the hour or day differ from keys for homes and offices. Guests come once, keys expire at a set time, and guests rarely install an app. This article covers issuing a key per reservation that the door checks against its own clock, four ways to deliver a key to a guest, the identity check rules published by Japan's Ministry of Health, Labour and Welfare and the Ministry of Land, Infrastructure, Transport and Tourism, the conditions for entry records that both the operator and the guest can trust, and how to handle rooms rented by the hour.
+---
+ifdef::lang-ja[]
+= 宿と貸室で、電話の鍵をどう渡すか
+
+ホテル、旅館、簡易宿所、住宅を使った宿泊。貸し会議室や貸しスペースのように、時間や日で貸す部屋。こうした所の鍵は、住宅や事務所の鍵と違います。使う人は一度きりです。期限は時刻で決まります。客にアプリを入れてもらう事は、まずできません。
+
+もう一つ違う事があります。鍵を出す側と使う側の利害が分かれます。留守の間に誰かが入ったか、いつ出たか、借りた時間を超えたか。入った記録が、争いと料金の元になります。
+
+戸建てと事務所の鍵の話は、link:/guide/phone-keys-for-houses-and-offices/[戸建てと事務所で、電話の鍵をどう持つか]に、会員証の話は、link:/guide/membership-card-on-phone/[電話を会員証にする]に書きました。この記事では、宿と貸室の鍵の話をします。役所と会社が正式に書いている事と、このサイトの考えは分けて書きます。この記事の内容は、2026年11月12日に確かめた物です。
+
+== 住宅や事務所と、何が違うか
+
+[cols="2,3,3"]
+|===
+| 観点 | 住宅、事務所 | 宿、貸室
+
+| 使う人
+| 家族、社員。同じ人が長く使う
+| 客、借りる人。一度きりか、短い間
+
+| 期限
+| 無いか、長い
+| 時刻で決まる。泊まる間、借りている時間だけ
+
+| アプリ
+| 入れてもらえる
+| 入れてもらえない事が多い
+
+| 鍵を出す側と使う側
+| 同じか、同じ会社の中
+| 利害が分かれる。入ったか、いつ出たかが、争いと料金の元になる
+
+| 人の居る受付
+| ある事が多い
+| 置かない運営が増えている
+
+| 法令
+| 住宅、事業所の決まり
+| 宿泊には、本人確認と名簿の決まりがある
+|===
+
+== 鍵を出す、止める
+
+ここからは、このサイトの決めです。
+
+宿と貸室の鍵の管理者は、その経営者です。発行者の鍵は、経営者の機械の、取り出せない所に置きます(R-LR-01)。
+
+鍵は予約ごとに出します。一つの鍵は、部屋と、始まりと終わりの日時を持ちます。扉は、自分の時計で期限を確かめます。網が止まっていても、終わった予約の鍵は通りません(R-LR-02)。
+
+泊まる日を延ばす、早く着く、部屋を替える。どの場合も、新しい鍵を出し、前の鍵を止めます。出した事と止めた事は、台帳に追記で残します(R-LR-03)。
+
+予約を受ける仕組みは、外の網に向いています。そこで、発行者の鍵と同じ機械には置きません。同じ機械に置くと、予約の仕組みを破られたときに、全部の部屋の鍵を作られるからです(R-LR-01)。
+
+客室は、内側から、外からの通常の解錠を拒めるようにします(在室ロック)。内側からは、いつでも機械で開きます(R-LR-05)。
+
+== 客に鍵を渡す四つの道
+
+客がアプリを入れなくても鍵を受け取れる道を、一つ以上持ちます。どの道を使うかは、経営者が決めます(R-LR-10)。
+
+[cols="2,3,2,3"]
+|===
+| 道 | 客に要る物 | 強さ | 向く場面
+
+| 財布(Apple、Google)の鍵
+| 電話。予約の知らせから財布に入れる
+| 強い。鍵は端末に結ばれ、写せない
+| 電話を持つ客。受付を置かない宿
+
+| 受付で渡すカード
+| 無し。受付か、自動チェックインの機器で受け取る
+| 中ほど。発行者の署名を扉が確かめる形なら写しにくい。なくせば止める
+| 電話を持たない客、財布を使わない客
+
+| 暗証番号
+| 無し。番号を覚えるだけ
+| 弱い。写しが取れる
+| 貸し会議室、貸しスペース。財布が使えないときの予備
+
+| 予約の知らせから開く一時の鍵
+| 電話と、知らせを開く手段
+| 形による。画面に出す符号は写しが取れる
+| 短い時間で貸す部屋。財布に入れない客
+|===
+
+=== 会社が書いている事
+
+Apple と Google は、財布に入れられる鍵の種類に、ホテルの鍵を挙げています。Apple は Apple Platform Security の「Access key types」の頁で、Google は Google Wallet の Access の一覧で書いています。
+
+財布に鍵を載せるのは、財布の制度に入った会社です。Apple Wallet Access Program の手引きでは、この会社を Credential Manager と呼んでいます。建物を持つか、管理する者は Participating Provider と呼ばれ、Credential Manager を通じて入ります。宿の経営者は、この Participating Provider の立場で入る形です。
+
+=== このサイトの決め
+
+このサイトの決めでは、財布の鍵は、認証と権限を分ける形で受けます(R-LR-11、R-AC-25)。
+
+* 財布に鍵を載せる会社の署名は、鍵が本物である事の確かめにだけ使います
+* 扉は、経営者の予約の仕組みが登録した鍵だけを、泊まる間、借りている間だけ通します
+* 財布に鍵を載せる会社には、誰がどの部屋に入れるかの台帳と、出入りの記録を渡しません
+
+暗証番号と画面に出す符号は、写しが取れます。使うときは、部屋と期限を限り、使われた事が記録で分かるようにします。端末の鍵に結んだ鍵より弱い事を、経営者が承知して選びます(R-LR-12)。
+
+財布と、財布に鍵を載せる会社の仕組みが止まっても、カードか、暗証番号か、受付で開けられるようにします(R-LR-13)。
+
+== 本人確認が済んだ人にだけ鍵を渡す(宿泊)
+
+=== 役所が書いている事
+
+厚生労働省は、「旅館業における衛生等管理要領」を改正しました。改正日は令和7年3月11日、施行日は令和7年4月1日です。厚生労働省の案内「令和7年4月1日からフロント要件が変わります！」が、改正の中身を説明しています。
+
+玄関帳場(フロント)を置かない場合の条件は、三つです。
+
+. 緊急のときの体制。求めに応じて、通常おおむね10分程度で、職員等が駆けつけられる事
+. 本人確認と、出入りの状況の確認
+. 鍵の受渡しを、適切に行う事
+
+本人確認と出入りの確認は、二つの形から選べます。
+
+[cols="1,4"]
+|===
+| 形 | 中身
+
+| カメラ
+| 営業者が設置したビデオカメラ等で、常時鮮明な画像で行う
+
+| ICT と鍵
+| ICT を使って本人確認を行う。本人確認を受けた者に交付した鍵が無ければ、宿泊者専用区域に出入りできないようにする。出入りの状況を、顔を判別できる角度で録画する
+|===
+
+本人確認の方法には、新しい形が加わりました。営業者と宿泊する人が、本人確認に必要な情報(氏名、住所、連絡先など)と、営業者が出す二次元コードや暗証番号などを、事前に共有します。宿泊する人は、それを施設の自動チェックイン機器等で示し、営業者が照合します。その様子は、顔を判別できる角度で録画します。
+
+日本国内に住所の無い外国人の宿泊者には、旅券の呈示を求め、写しを名簿と一緒に保存します。自動チェックイン機器等による電子的な保存も含まれます。
+
+国土交通省の民泊制度ポータルサイトは、住宅を使った宿泊について書いています。宿泊の開始までに、宿泊者それぞれについて本人確認を行います。方法は、対面か、対面と同等の ICT を使う方法です。対面と同等というのは、顔と旅券が画像で鮮明に確認でき、その画像が届出住宅の中か近くなどから発信されていると確認できる事です。例として、テレビ電話やタブレット端末が挙がっています。宿泊者名簿は 3 年間保存します。
+
+このほかに、自治体の条例で条件が加わる事があります。
+
+=== このサイトの決め
+
+このサイトの決めでは、本人確認が済んだ人にだけ鍵を渡します。その鍵が無ければ、宿泊する人だけが入る区域には入れません。本人確認の記録(いつ、どの方法で行ったか)と、鍵を出した記録は、同じ予約の下に結びます(R-LR-20)。
+
+本人確認と名簿は、経営者の仕組みが受け持ちます。扉と錠は、名簿も旅券の写しも持ちません。扉の記録には、鍵の識別だけを残します(R-LR-21)。名簿と旅券の写しは、気をつけて扱う情報を含むからです。
+
+出入りを録画するカメラは、構内で録画できるようにします。録画と扉の記録を時刻で照らせるように、扉とカメラの時刻を同じ相手に合わせます(R-LR-22)。
+
+== 記録を、両方が信用できる物にする
+
+宿と貸室では、鍵を出す側と使う側の利害が分かれます。
+
+[cols="1,4"]
+|===
+| 場面 | 争いになる事
+
+| 宿泊
+| 留守の間に、誰かが入ったか。いつ出たか
+
+| 貸室
+| 借りた時間を超えたか。使っていない時間に入ったか
+|===
+
+ここからは、このサイトの考えです。
+
+出す側だけがとった記録は、使う側から信用されません。出す側は、相手の名前の鍵を、自分で作れるからです。記録が両方に通用するには、次の三つが要ります。会員証の話(link:/guide/membership-card-on-phone/[電話を会員証にする])と同じ条件です。
+
+. 第三者(財布に鍵を載せる会社)が、鍵が本物である事を保証する
+. 鍵を、端末の鍵に結ぶ
+. 扉の記録の鍵を、経営者が取り出せない所に置く
+
+このサイトの決めでは、部屋の出入りは、扉が、連番と連鎖と署名のついた記録として残します。客は、自分が泊まった間、借りていた間の、自分の部屋の記録を見られます(R-LR-30)。
+
+清掃、点検、経営者の側の人の鍵は、部屋と、曜日と時間帯を限ります。客の居る部屋を経営者の側の鍵で開けたときは、客に知らせが届き、その記録を客が見られます。緊急のときに入る手順を決め、入った事を記録に残します(R-LR-04)。
+
+== 時間で貸す部屋
+
+時間で貸す部屋では、終わりの時刻が、次の人の始まりになります。このサイトの決めでは、次のようにします。
+
+* 予約の始まりの前と、終わりの後は、借りる人の鍵で開きません(R-LR-40)
+* 終わりの時刻に中に人が居ても、内側からは出られます(R-LR-40)
+* 終わりの後に扉が開いたままなら、経営者に知らせます(R-LR-40)
+* 予約と予約の間に、清掃と確かめのための時間を置けます。長さは経営者が決めます(R-LR-41)
+* 料金が時間や回数で決まる所では、入った時刻と出た時刻の記録を、料金の元として書き出せます(R-LR-31)
+
+== 決まっていない事
+
+2026年11月12日の時点で、次の事は決まっていません。
+
+* 財布のホテルの鍵を、どの会社の仕組みで載せるか。Apple と Google の制度に入った会社が要ります
+* 宿が今使っている予約と受付の仕組みと、鍵の管理のソフトのつなぎ方
+* 緊急のときに経営者の側が入る手順と、客への知らせ方
+* 予約の知らせから開く一時の鍵の形と、強さ
+
+== 出典
+
+すべて 2026年11月12日に確かめました。
+
+*役所が発表した物*
+
+* https://www.mhlw.go.jp/content/001439321.pdf[厚生労働省: 令和7年4月1日からフロント要件が変わります！(旅館業における衛生等管理要領の改正。改正日 令和7年3月11日、施行日 令和7年4月1日。玄関帳場を置かない場合の条件、本人確認の方法、外国人の宿泊者の旅券)]
+* https://www.mlit.go.jp/kankocho/minpaku/business/host/responsibility01.html[国土交通省 民泊制度ポータルサイト: 住宅宿泊事業者の業務(本人確認、対面と同等の方法、宿泊者名簿の保存)]
+
+*会社が発表した物*
+
+* https://support.apple.com/guide/security/access-key-types-sec30bdef041/web[Apple Platform Security: Access key types(財布に入れられる鍵の種類。頁の日付 2024年5月7日)]
+* https://register-docs.apple.com/apple-pay/access/program-guide/overview/participant-roles/[Apple: Apple Wallet Access Program の手引き。参加する会社の役割(Credential Manager、Participating Provider)]
+* https://developers.google.com/wallet/identity[Google Wallet: Access の一覧]
 endif::[]
