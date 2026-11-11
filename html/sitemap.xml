@@ -2,27 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://door.aiseed.dev/</loc>
-    <lastmod>2026-09-17</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://door.aiseed.dev/blog/</loc>
-    <lastmod>2026-09-17</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://door.aiseed.dev/blog/apps-that-cannot-be-fixed/</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://door.aiseed.dev/blog/drawing-to-3d/</loc>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://door.aiseed.dev/blog/start/</loc>
-    <lastmod>2026-09-17</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://door.aiseed.dev/guide/</loc>
-    <lastmod>2026-09-17</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
@@ -127,17 +127,17 @@
   </url>
   <url>
     <loc>https://door.aiseed.dev/check/</loc>
-    <lastmod>2026-09-17</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://door.aiseed.dev/consult/</loc>
-    <lastmod>2026-09-17</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://door.aiseed.dev/3d/</loc>
-    <lastmod>2026-09-17</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <priority>0.5</priority>
   </url>
 </urlset>

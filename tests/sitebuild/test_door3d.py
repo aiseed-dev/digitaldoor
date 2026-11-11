@@ -110,9 +110,11 @@ def test_license_mentions_three_js():
 
 
 def test_home_links_to_3d():
-    """ホームに、この頁への入口が一つある。"""
+    """ホームに、本文の入口と、上の並び(メニュー)の入口がある。上の並びの入口は全部の頁に出る(test_site_nav)。"""
     home = (HTML / "index.html").read_text(encoding="utf-8")
-    assert home.count('href="/3d/"') == 1
+    assert home.count('href="/3d/"') == 2
+    assert re.search(r'<p class="to-3d"><a href="/3d/">', home)
+    assert '<a href="/3d/">立体図</a>' in re.search(r"<nav>.*?</nav>", home, re.S)[0]
 
 
 def test_sitemap_lists_3d_and_every_url_is_a_file():
