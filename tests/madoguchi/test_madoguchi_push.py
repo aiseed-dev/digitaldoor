@@ -40,7 +40,7 @@ def _users(pb, n: int) -> list[str]:
 
 
 def _put(pb, owner: str, at: str = AT, state: str = "効いている", issuer: str = ISSUER) -> dict:
-    """疑似の PocketBase に、今ある写しを置く。"""
+    """疑似の PocketBase に、今あるコピーを置く。"""
     return pb.add_record("shoukai", {"owner": owner, "issuer": issuer, "made_at": at, "sheet": sheet(at, state)})
 
 
@@ -93,7 +93,7 @@ def test_delete_missing(pb, creds, push, tmp_path):
 @pytest.mark.parametrize("dry", [False, True])
 def test_empty_file_stops(pb, creds, push, tmp_path, dry):
     """8.3: 列が空の時は、PocketBase に触れる前に、何も変えずに止まる(終了コード 1、
-    `エラー: 写しが空です。何も変えていません`)。今ある写しは一枚も消えず、kikai で入る要求も出ない。--dry-run でも同じ。"""
+    `エラー: コピーが空です。何も変えていません`)。今あるコピーは一枚も消えず、kikai で入る要求も出ない。--dry-run でも同じ。"""
     a, b = _users(pb, 2)
     _put(pb, a)
     _put(pb, b)
@@ -101,7 +101,7 @@ def test_empty_file_stops(pb, creds, push, tmp_path, dry):
     f = write_items(tmp_path / "empty.json", [])
     res = push("--file", f, "--env", creds.env, *(["--dry-run"] if dry else []))
     assert res.code == 1
-    assert "エラー: 写しが空です。何も変えていません" in res.err_lines
+    assert "エラー: コピーが空です。何も変えていません" in res.err_lines
     assert pb.requests == []
     assert pb.records("shoukai") == before
     no_secrets(res, creds.identity, creds.password, pb=pb)
@@ -134,7 +134,7 @@ def test_same_when_only_time_differs(pb, creds, push, tmp_path):
 def test_dry_run(pb, creds, push, tmp_path):
     """11.1 の働きの 3、8.4: --dry-run は、レコードを作る・直す・消す要求(POST、PATCH、DELETE)を一つも出さず、
     `作る <owner>`、`直す <owner>`、`消す <owner>` の行と、最後に `作る <n>、直す <n>、消す <n>、同じ <n>(試しなので、何も変えていません)`。
-    入る(1)と今ある写しを引く(2)は行う。"""
+    入る(1)と今あるコピーを引く(2)は行う。"""
     a, b, c, d = _users(pb, 4)
     _put(pb, a)
     _put(pb, b, AT, "効いている")
@@ -152,14 +152,14 @@ def test_dry_run(pb, creds, push, tmp_path):
 
 
 def test_other_issuer_stops(pb, creds, push, tmp_path):
-    """11.1 の働きの 4、8.4 の 3: 今ある写しに、ファイルと違う issuer の物があれば、何も変えずに終了コード 1、
-    `エラー: ほかの発行者の写しがあります`。"""
+    """11.1 の働きの 4、8.4 の 3: 今あるコピーに、ファイルと違う issuer の物があれば、何も変えずに終了コード 1、
+    `エラー: ほかの発行者のコピーがあります`。"""
     a, b = _users(pb, 2)
     _put(pb, a, issuer=OTHER_ISSUER)
     f = write_items(tmp_path / "shoukai.json", [item(b)])
     res = push("--file", f, "--env", creds.env)
     assert res.code == 1
-    assert "エラー: ほかの発行者の写しがあります" in res.err_lines
+    assert "エラー: ほかの発行者のコピーがあります" in res.err_lines
     assert _changes(pb) == []
     no_secrets(res, creds.identity, creds.password, pb=pb)
 
@@ -190,8 +190,8 @@ def test_one_failure_continues(pb, creds, push, tmp_path):
     "sheet_not_dict",
 ])
 def test_bad_file_no_request(pb, creds, push, tmp_path, case):
-    """11.1 の働きの 6、8.3: 写しのファイルの形が違う時、PocketBase に要求を出さずに終了コード 1、
-    `エラー: 写しのファイルが読めません(<理由>)`。"""
+    """11.1 の働きの 6、8.3: コピーのファイルの形が違う時、PocketBase に要求を出さずに終了コード 1、
+    `エラー: コピーのファイルが読めません(<理由>)`。"""
     a, b = "aaaa1111", "bbbb2222"
     good = [item(a), item(b)]
     f = tmp_path / "shoukai.json"
@@ -237,7 +237,7 @@ def test_bad_file_no_request(pb, creds, push, tmp_path, case):
         write_items(f, [x])
     res = push("--file", f, "--env", creds.env)
     assert res.code == 1
-    assert any(ln.startswith("エラー: 写しのファイルが読めません(") for ln in res.err_lines), res.err
+    assert any(ln.startswith("エラー: コピーのファイルが読めません(") for ln in res.err_lines), res.err
     assert pb.requests == []
 
 
@@ -246,12 +246,12 @@ def test_owner_forty_chars_ok(pb, creds, push, tmp_path):
     owner = "a" * 40
     f = write_items(tmp_path / "shoukai.json", [item(owner)])
     res = push("--file", f, "--env", creds.env)
-    assert not any(ln.startswith("エラー: 写しのファイルが読めません") for ln in res.err_lines)
+    assert not any(ln.startswith("エラー: コピーのファイルが読めません") for ln in res.err_lines)
     assert any(r.path == AUTH_PATH for r in pb.requests)
 
 
 def test_paging(pb, creds, push, tmp_path):
-    """11.1 の働きの 7、8.4 の 2: 今ある写しが一頁(perPage の上限 1000)に入らない数でも、全部を引いてから比べる。
+    """11.1 の働きの 7、8.4 の 2: 今あるコピーが一頁(perPage の上限 1000)に入らない数でも、全部を引いてから比べる。
     page を 1 から増やして引く。全部が同じなら、作る・直す・消すは出ない。"""
     n = 1001
     owners = _users(pb, n)
@@ -267,7 +267,7 @@ def test_paging(pb, creds, push, tmp_path):
 
 
 def test_list_request_shape(pb, creds, push, tmp_path):
-    """8.4 の 2: 今ある写しは GET shoukai/records に page、perPage(1000 以下)、skipTotal、fields を付けて引く。"""
+    """8.4 の 2: 今あるコピーは GET shoukai/records に page、perPage(1000 以下)、skipTotal、fields を付けて引く。"""
     a, = _users(pb, 1)
     f = write_items(tmp_path / "shoukai.json", [item(a)])
     assert push("--file", f, "--env", creds.env).code == 0
@@ -358,7 +358,7 @@ def test_no_default_env_uses_environment(pb, push, tmp_path, home, monkeypatch):
 
 
 def test_auth_failure_stops(pb, creds, push, tmp_path):
-    """8.4 の 1: 入れない時は `エラー: 窓口に入れませんでした(HTTP <数>)`、終了コード 1。写しには触れない。"""
+    """8.4 の 1: 入れない時は `エラー: 窓口に入れませんでした(HTTP <数>)`、終了コード 1。コピーには触れない。"""
     env = write_env(tmp_path / "bad.env", {"MADOGUCHI_URL": pb.url, "MADOGUCHI_IDENTITY": creds.identity,
                                             "MADOGUCHI_PASSWORD": "wrong-password-for-test"})
     f = write_items(tmp_path / "shoukai.json", [item("aaaa1111")])
@@ -369,7 +369,7 @@ def test_auth_failure_stops(pb, creds, push, tmp_path):
 
 
 def test_list_failure_stops(pb, creds, push, tmp_path):
-    """8.4、8.5: 今ある写しを引くのが失敗したら、そこで止まり終了コード 1。作る・直す・消すは出さない。"""
+    """8.4、8.5: 今あるコピーを引くのが失敗したら、そこで止まり終了コード 1。作る・直す・消すは出さない。"""
     pb.overrides.append(lambda r: (500, {"status": 500, "message": "x", "data": {}})
                         if r.method == "GET" and REC_PATH.match(r.path) else None)
     a, = _users(pb, 1)
@@ -381,7 +381,7 @@ def test_list_failure_stops(pb, creds, push, tmp_path):
 
 
 def test_network_failure(pb, creds, push, tmp_path):
-    """8.4、8.5: 網の失敗(閉じた口)は、そこで止まり終了コード 1。エラーは `エラー: ` で始まる行で、追跡は出さない。"""
+    """8.4、8.5: ネットワークの失敗(閉じたポート)は、そこで止まり終了コード 1。エラーは `エラー: ` で始まる行で、追跡は出さない。"""
     s = socket.socket()
     s.bind(("127.0.0.1", 0))
     port = s.getsockname()[1]
@@ -428,7 +428,7 @@ def test_r_cm_13_2_record_failure_debug_hides_secrets(pb, creds, push, tmp_path)
     res = push("--file", f, "--env", creds.env, "--debug")
     assert res.code == 1
     no_secrets(res, creds.identity, creds.password, pb=pb)
-    assert "c07b" not in res.out + res.err      # 送った本文(写しの中身)を例外に入れない
+    assert "c07b" not in res.out + res.err      # 送った本文(コピーの中身)を例外に入れない
     assert "validation_missing_rel_records" not in res.out + res.err   # 応答の本文を例外に入れない
 
 
@@ -464,12 +464,12 @@ def test_r_cm_13_4_environment_wins(pb, creds, push, tmp_path, monkeypatch):
 # ---- R-AC-13 ----
 
 def test_r_ac_13_1_no_listen(pb, creds, push, tmp_path, monkeypatch):
-    """R-AC-13 11.1 の 1: push は socket の bind と listen を呼ばない(待ち受けの口を作らない)。"""
+    """R-AC-13 11.1 の 1: push は socket の bind と listen を呼ばない(待ち受けるポートを開かない)。"""
     a, = _users(pb, 1)
     f = write_items(tmp_path / "shoukai.json", [item(a)])
 
     def forbidden(*args, **kw):
-        raise AssertionError("待ち受けの口を作った")
+        raise AssertionError("待ち受けるポートを開いた")
 
     monkeypatch.setattr(socket.socket, "bind", forbidden)
     monkeypatch.setattr(socket.socket, "listen", forbidden)
@@ -496,7 +496,7 @@ def test_r_ac_13_2_only_two_paths(pb, creds, push, tmp_path):
 
 
 def test_r_ac_13_3_no_secrets_in_file_and_bodies(pb, creds, push, tmp_path):
-    """R-AC-13 11.1 の 3、設計書 22.10 の R-AC-13 の 2: kanri の置き場から portal export で作った写しのファイルと、
+    """R-AC-13 11.1 の 3、設計書 22.10 の R-AC-13 の 2: kanri の置き場から portal export で作ったコピーのファイルと、
     道具が送った本文に、資格情報の sig の値、識別の全部、発行者の公開鍵の 16 進、鍵のファイルの道が入っていない。"""
     from digitalkey.kanri import Unit
     from digitalkey.kanri import cli as kanri_cli
@@ -543,12 +543,12 @@ def test_dispatch_from_digitalkey_cli(capsys, home):
     assert "--file" in out and "--dry-run" in out
 
 
-# ---- 入り口の役(8.4 の 1 の後) ----
+# ---- アカウントの役(8.4 の 1 の後) ----
 
 @pytest.mark.parametrize("dry", [False, True])
 def test_wrong_role_entrance(pb, push, tmp_path, home, dry):
     """R-CM-13 8.4: 入った直後に応答の record の yaku を確かめ、shoukai でなければ、ほかの要求を出さずに終了コード 1、
-    `エラー: この道具の役の入り口ではありません(要る役: shoukai)`。shoukai を引く要求も書く要求も出ない(--dry-run でも同じ)。
+    `エラー: この道具の役のアカウントではありません(要る役: shoukai)`。shoukai を引く要求も書く要求も出ない(--dry-run でも同じ)。
     識別、パスワード、札、応答の役の値は出さない。"""
     ident, pw = pb.add_kikai("asa")
     env = write_env(tmp_path / "asa.env", {"MADOGUCHI_URL": pb.url, "MADOGUCHI_IDENTITY": ident,
@@ -559,7 +559,7 @@ def test_wrong_role_entrance(pb, push, tmp_path, home, dry):
     f = write_items(tmp_path / "shoukai.json", [item(pb.add_user()["id"])])
     res = push("--file", f, "--env", env, *(["--dry-run"] if dry else []))
     assert res.code == 1
-    assert "エラー: この道具の役の入り口ではありません(要る役: shoukai)" in res.err_lines
+    assert "エラー: この道具の役のアカウントではありません(要る役: shoukai)" in res.err_lines
     assert [r.path for r in pb.requests] == [AUTH_PATH]
     assert pb.record_requests() == []
     assert pb.records("shoukai") == before

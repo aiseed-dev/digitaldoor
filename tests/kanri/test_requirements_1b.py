@@ -17,7 +17,7 @@ REV = "2026-12-10T12:00"
 NOW = "2026-12-20T12:00"
 ADM = dict(by="adm", role="管理者")
 ROSTER = dict(by="adm", role="名簿の係")
-ROUTER_CHECK = {"外からの口": "良い", "見覚えのない設定とアカウント": "良い"}
+ROUTER_CHECK = {"外部からのアクセス経路": "良い", "見覚えのない設定とアカウント": "良い"}
 
 
 # ---- R-NW-02 ----
@@ -36,27 +36,27 @@ def test_r_nw_02_no_segment_and_retired_segment(dunit, refused):
     """R-NW-02 区画の無い使用の機器は F_NO_SEGMENT(詳細 空)。区画 来客 を廃止にすると、そこの使用の機器は詳細 来客。
     廃止の区画への register_device と change_device は UNKNOWN_SEGMENT(20.13 の 3)。"""
     assert findings(dunit, NOW, RB.F_NO_SEGMENT, "ルーター1") == [("ルーター1", RB.F_NO_SEGMENT, "")]
-    dunit.change_device("ルーター1", reason="来客の網へ", segment="来客", **ADM)
+    dunit.change_device("ルーター1", reason="来客のネットワークへ", segment="来客", **ADM)
     assert findings(dunit, NOW, RB.F_NO_SEGMENT, "ルーター1") == []
     dunit.register_segment("来客", state="廃止", **ADM)
     assert findings(dunit, NOW, RB.F_NO_SEGMENT, "ルーター1") == [("ルーター1", RB.F_NO_SEGMENT, "来客")]
-    refused(dunit, RB.UNKNOWN_SEGMENT, dunit.register_device, "無線1", "網の機器", "使用", segment="来客", **ADM,
+    refused(dunit, RB.UNKNOWN_SEGMENT, dunit.register_device, "無線1", "ネットワークの機器", "使用", segment="来客", **ADM,
             detail="来客")
     refused(dunit, RB.UNKNOWN_SEGMENT, dunit.change_device, "複合機1", reason="移す", segment="来客", **ADM,
             detail="来客")
 
 
-@pytest.mark.parametrize("item", ["区画", "外からの口"])
+@pytest.mark.parametrize("item", ["区画", "外部からのアクセス経路"])
 def test_r_nw_02_bad_item(dunit, item):
-    """R-NW-02 確かめで 区画 か 外からの口 を 悪い と書くと F_BAD_ITEM(詳細に項目の名)。後の確かめで 良い と書くと消え、
+    """R-NW-02 確かめで 区画 か 外部からのアクセス経路 を 悪い と書くと F_BAD_ITEM(詳細に項目の名)。後の確かめで 良い と書くと消え、
     後の確かめでその項目が空なら 悪い のまま残る(20.13 の 4)。
 
     限界(20.13 の 5): 台帳で確かめられるのは載せ方までで、実際のつなぎ方とポートの転送は、人の点検の記録(項目 区画、
-    外からの口)で照らす。網を読む照らし合わせは段 6。"""
+    外部からのアクセス経路)で照らす。ネットワークを読む照らし合わせは段 6。"""
     first = {**ROUTER_CHECK, item: "悪い"}
     dunit.check_device("ルーター1", "点検", first, at="2026-12-01T09:00", **ADM)
     assert findings(dunit, NOW, RB.F_BAD_ITEM, "ルーター1") == [("ルーター1", RB.F_BAD_ITEM, item)]
-    other = {"外からの口": "良い", "見覚えのない設定とアカウント": "良い", "版": "良い"}
+    other = {"外部からのアクセス経路": "良い", "見覚えのない設定とアカウント": "良い", "バージョン": "良い"}
     if item == "区画":
         dunit.check_device("ルーター1", "点検", other, at="2026-12-02T09:00", **ADM)   # 区画 は空
         assert findings(dunit, NOW, RB.F_BAD_ITEM, "ルーター1") == [("ルーター1", RB.F_BAD_ITEM, item)]
@@ -86,24 +86,24 @@ def test_r_nw_03_support_ended(dunit):
 
 
 def test_r_nw_03_support_near(dunit, refused):
-    """R-NW-03 設定 更新の期限の知らせの日数 を 30 にすると、2027-03-01(残り 30 日)と 2027-03-31(残り 0 日)で F_SUPPORT_NEAR、
+    """R-NW-03 設定 更新の期限の通知の日数 を 30 にすると、2027-03-01(残り 30 日)と 2027-03-31(残り 0 日)で F_SUPPORT_NEAR、
     2027-02-28(残り 31 日)と 2027-04-01 では出ない。設定が無ければどの日も出ない。0、-1、三十 は BAD_SETTING(20.13 の 3)。"""
     dunit.change_device("ルーター1", reason="製造者の公表を見た", support_until="2027-03-31", **ADM)
     days = ["2027-02-28T12:00", "2027-03-01T12:00", "2027-03-31T12:00", "2027-04-01T12:00"]
     for d in days:
         assert findings(dunit, d, RB.F_SUPPORT_NEAR, "ルーター1") == []
-    dunit.set_setting("更新の期限の知らせの日数", "30", reason="管理者が決めた", **ADM)
+    dunit.set_setting("更新の期限の通知の日数", "30", reason="管理者が決めた", **ADM)
     got = {d: findings(dunit, d, RB.F_SUPPORT_NEAR, "ルーター1") for d in days}
     near = [("ルーター1", RB.F_SUPPORT_NEAR, "2027-03-31")]
     assert got == {days[0]: [], days[1]: near, days[2]: near, days[3]: []}
     for v in ("0", "-1", "三十"):
-        refused(dunit, reasons.BAD_SETTING, dunit.set_setting, "更新の期限の知らせの日数", v, reason="試し", **ADM)
+        refused(dunit, reasons.BAD_SETTING, dunit.set_setting, "更新の期限の通知の日数", v, reason="試し", **ADM)
 
 
 def test_r_nw_03_install_needs_initial_password(dunit, refused):
     """R-NW-03 据え付けの確かめに 初めのパスワード が無いと NEED_ITEM(詳細 初めのパスワード)で、伝票は増えない。
     当たらない は通る(20.13 の 4)。"""
-    refused(dunit, RB.NEED_ITEM, dunit.check_device, "ルーター1", "据え付け", {"外からの口": "良い"},
+    refused(dunit, RB.NEED_ITEM, dunit.check_device, "ルーター1", "据え付け", {"外部からのアクセス経路": "良い"},
             at="2026-12-01T09:00", **ADM, detail="初めのパスワード")
     slip = dunit.check_device("ルーター1", "据え付け", {"初めのパスワード": "当たらない"}, at="2026-12-01T09:00", **ADM)
     assert slip.form == "機器_確かめ"
@@ -121,16 +121,16 @@ def test_r_nw_03_initial_password_bad_then_fixed(dunit):
 
 
 def test_r_nw_03_updates(dunit, refused):
-    """R-NW-03 版 1.0 で登録し、record_update("1.1") の後 版 は 1.1、機器_更新の 前の版 は 1.0。当てられなかった の後も 1.1 で、
+    """R-NW-03 バージョン 1.0 で登録し、record_update("1.1") の後 バージョン は 1.1、機器_更新の 前のバージョン は 1.0。当てられなかった の後も 1.1 で、
     理由が伝票に残る。当てられなかった で理由が空なら NEED_REASON(20.13 の 6)。"""
     dunit.register_device("ルーター2", "ルーター", "使用", version="1.0", **ADM)
     s = dunit.record_update("ルーター2", "1.1", at="2026-12-01T09:00", **ADM)
-    assert dunit.device("ルーター2").版 == "1.1"
-    assert (s["前の版"], s["後の版"], s["結果"]) == ("1.0", "1.1", "当てた")
+    assert dunit.device("ルーター2").バージョン == "1.1"
+    assert (s["前のバージョン"], s["後のバージョン"], s["結果"]) == ("1.0", "1.1", "当てた")
     f = dunit.record_update("ルーター2", "1.2", result="当てられなかった", reason="製造者の更新が止まっている",
                             at="2026-12-02T09:00", **ADM)
-    assert dunit.device("ルーター2").版 == "1.1"
-    assert (f["前の版"], f["後の版"], f["結果"], f["理由"]) == ("1.1", "1.2", "当てられなかった", "製造者の更新が止まっている")
+    assert dunit.device("ルーター2").バージョン == "1.1"
+    assert (f["前のバージョン"], f["後のバージョン"], f["結果"], f["理由"]) == ("1.1", "1.2", "当てられなかった", "製造者の更新が止まっている")
     refused(dunit, RB.NEED_REASON, dunit.record_update, "ルーター2", "1.2", result="当てられなかった",
             at="2026-12-03T09:00", **ADM)
 
@@ -138,14 +138,14 @@ def test_r_nw_03_updates(dunit, refused):
 # ---- R-NW-04 ----
 
 def test_r_nw_04_router_inspection_needs_two_items(dunit, refused):
-    """R-NW-04 種類 ルーター の点検で、外からの口 か 見覚えのない設定とアカウント が空なら NEED_ITEM(詳細に足りない最初の項目)。
+    """R-NW-04 種類 ルーター の点検で、外部からのアクセス経路 か 見覚えのない設定とアカウント が空なら NEED_ITEM(詳細に足りない最初の項目)。
     種類 プリンター の点検は、どちらが空でも通る(20.13 の 1)。"""
     ck = dunit.check_device
-    refused(dunit, RB.NEED_ITEM, ck, "ルーター1", "点検", {"版": "良い"}, at="2026-12-01T09:00", **ADM,
-            detail="外からの口")
-    refused(dunit, RB.NEED_ITEM, ck, "ルーター1", "点検", {"外からの口": "良い"}, at="2026-12-01T09:00", **ADM,
+    refused(dunit, RB.NEED_ITEM, ck, "ルーター1", "点検", {"バージョン": "良い"}, at="2026-12-01T09:00", **ADM,
+            detail="外部からのアクセス経路")
+    refused(dunit, RB.NEED_ITEM, ck, "ルーター1", "点検", {"外部からのアクセス経路": "良い"}, at="2026-12-01T09:00", **ADM,
             detail="見覚えのない設定とアカウント")
-    assert ck("複合機1", "点検", {"版": "良い"}, at="2026-12-01T09:00", **ADM).form == "機器_確かめ"
+    assert ck("複合機1", "点検", {"バージョン": "良い"}, at="2026-12-01T09:00", **ADM).form == "機器_確かめ"
 
 
 def test_r_nw_04_inspection_is_recorded(dunit):
@@ -174,7 +174,7 @@ def test_r_nw_04_no_setting_no_overdue(dunit):
     assert findings(dunit, "2030-01-01T00:00", RB.F_CHECK_OVERDUE) == []
     dunit.set_setting("点検の間の日数", "90", reason="管理者が決めた", **ADM)
     assert len(findings(dunit, "2030-01-01T00:00", RB.F_CHECK_OVERDUE, "ルーター1")) == 1
-    dunit.set_setting("点検の間の日数", "", reason="知らせを止める", **ADM)
+    dunit.set_setting("点検の間の日数", "", reason="通知を止める", **ADM)
     assert findings(dunit, "2030-01-01T00:00", RB.F_CHECK_OVERDUE) == []
 
 
@@ -211,12 +211,12 @@ def test_r_nw_05_owner_set_inactive_and_replaced(dunit, refused):
 
 def test_r_rs_04_vendor_inventory(dunit, access, grant, forms):
     """R-RS-04 業者と連携先に渡している権限と鍵の目録を持つ(20.13 の 1〜4)。"""
-    # 1. v1 に ルーター1 の機器の権限(終了つき)と管理者の口 maint。v1 に扉 玄関 の権限と門番を通す錠。t1 にも機器の権限と口
+    # 1. v1 に ルーター1 の機器の権限(終了つき)と管理者のインターフェース maint。v1 に扉 玄関 の権限と門番を通す錠。t1 にも機器の権限とインターフェース
     p_dev, maint = access(dunit, "v1", account="maint")
     p_door, _, _ = grant(dunit, "v1")
     gate = dunit.issue_entity(p_door, GATE, **ADM, at=AT).実体
     p_t1, _ = access(dunit, "t1")
-    # 2. 目録は v1 の二つの権限だけ(申請を書いた順)。機器の権限の 残り は管理者の口の行一つで 効いている
+    # 2. 目録は v1 の二つの権限だけ(申請を書いた順)。機器の権限の 残り は管理者のインターフェースの行一つで 効いている
     inv = dunit.vendor_inventory(at=dt(IN))
     assert [h.権限 for h in inv] == [p_dev, p_door]
     assert p_t1 not in [h.権限 for h in inv]
@@ -244,8 +244,8 @@ def test_r_rs_04_vendor_physical_key_until_returned(dunit, grant):
 
 
 def test_r_rs_04_shared_account(dunit, access):
-    """R-RS-04 一つの口を複数の人が使う機器: 複合機1 の口 admin を t1 と t2 に出す(拒まない)と F_SHARED_ACCOUNT(詳細 admin)が
-    一つ。一人の口に パスワードを替えた の削除を書くと、止まっていない admin の主体が一人になり、消える(20.13)。"""
+    """R-RS-04 一つのインターフェースを複数の人が使う機器: 複合機1 のインターフェース admin を t1 と t2 に出す(拒まない)と F_SHARED_ACCOUNT(詳細 admin)が
+    一つ。一人のインターフェースに パスワードを替えた の削除を書くと、止まっていない admin の主体が一人になり、消える(20.13)。"""
     _, a = access(dunit, "t1", "複合機1")
     _, b = access(dunit, "t2", "複合機1")
     assert findings(dunit, NOW, RB.F_SHARED_ACCOUNT) == [("複合機1", RB.F_SHARED_ACCOUNT, "admin")]
@@ -264,9 +264,9 @@ def _cli(*argv):
 
 
 def test_r_ac_15_doors_and_devices_on_one_sheet(dfile_unit, grant, refused, forms, capsys):
-    """R-AC-15 一人の全経路を一覧にし、一度の操作で全部を失効できる。機器の口も同じ一枚(20.13 の 1〜5、20.8 の例)。"""
+    """R-AC-15 一人の全経路を一覧にし、一度の操作で全部を失効できる。機器のインターフェースも同じ一枚(20.13 の 1〜5、20.8 の例)。"""
     u = dfile_unit
-    # 1. s1 に、扉 玄関 の権限から門番を通す錠(E1)、機器 ルーター1 の権限から管理者の口 admin(E2)
+    # 1. s1 に、扉 玄関 の権限から門番を通す錠(E1)、機器 ルーター1 の権限から管理者のインターフェース admin(E2)
     p_door, _, _ = grant(u, "s1")
     e1 = u.issue_entity(p_door, GATE, **ADM, at=AT).実体
     p_dev, _, _ = grant(u, "s1", "機器", "ルーター1")
@@ -284,7 +284,7 @@ def test_r_ac_15_doors_and_devices_on_one_sheet(dfile_unit, grant, refused, form
     assert s.済み is False
     refused(u, reasons.NOT_ALL_STOPPED, u.confirm_stopped, "s1", **ADM, at=dt(REV), detail=e2.番号)
     r = u.reconcile(e2.番号, at=dt(REV))
-    assert (r.結果, r.詳細) == ("違い", "口が残ったまま")
+    assert (r.結果, r.詳細) == ("違い", "インターフェースが残ったまま")
     # 5. 命令 progress の人が読む行は 7 列(20.8 の例のとおり)。--json の行に鍵 機器
     capsys.readouterr()
     assert _cli("progress", "--dir", u.root, "--subject", "s1", "--at", REV) == 0
@@ -327,9 +327,9 @@ def test_r_ac_10_device_permission_max_days(dunit, refused):
 # ---- 機器の紛失と廃棄(R-AC-15、R-NW-05) ----
 
 def test_r_ac_15_r_nw_05_lost_and_retired_device(dunit, access, grant, request_, approve, refused, forms):
-    """R-AC-15 R-NW-05 機器の紛失と廃棄(20.13): 紛失で機器の権限を全部止め、扉の権限は止めない。口は削除まで知らせに残る。
-    戻しても権限は戻らない。廃棄の後は確かめと知らせ、変更と更新と申請を拒む。"""
-    # 1. t1 の発行済み(管理者の口 E1)、v1 の承認だけ、t2 の申請中。t1 には扉 玄関 の門番を通す錠の権限も
+    """R-AC-15 R-NW-05 機器の紛失と廃棄(20.13): 紛失で機器の権限を全部止め、扉の権限は止めない。インターフェースは削除まで通知に残る。
+    戻しても権限は戻らない。廃棄の後は確かめと通知、変更と更新と申請を拒む。"""
+    # 1. t1 の発行済み(管理者のインターフェース E1)、v1 の承認だけ、t2 の申請中。t1 には扉 玄関 の門番を通す錠の権限も
     p1, e1 = access(dunit, "t1")
     p2 = request_(dunit, "v1", "機器", "ルーター1")
     approve(dunit, p2.id)
@@ -360,7 +360,7 @@ def test_r_ac_15_r_nw_05_lost_and_retired_device(dunit, access, grant, request_,
     got = dunit.change_device("ルーター1", reason="壊れた", state="廃棄", at=dt(REV), **ADM)
     assert [s["権限"] for s in got.権限_失効] == [p4]
     assert findings(dunit, REV, RB.F_NO_DISPOSAL_CHECK) == [("ルーター1", RB.F_NO_DISPOSAL_CHECK, "")]
-    dunit.check_device("ルーター1", "廃棄", {"中に残る物": "良い", "網から外した": "良い"}, at=REV, **ADM)
+    dunit.check_device("ルーター1", "廃棄", {"中に残る物": "良い", "ネットワークから外した": "良い"}, at=REV, **ADM)
     assert findings(dunit, REV, RB.F_NO_DISPOSAL_CHECK) == []
     refused(dunit, RB.DEVICE_RETIRED, dunit.change_device, "ルーター1", reason="直し", place="倉庫", **ADM)
     refused(dunit, RB.DEVICE_RETIRED, dunit.record_update, "ルーター1", "9.9", at=REV, **ADM)
@@ -381,7 +381,7 @@ def test_r_nw_05_r_rs_04_refusals_leave_ledger_unchanged(dunit, access, grant, r
     refused(u, reasons.NAME_HAS_COMMA, u.register_segment, "設,備", **ADM)
     refused(u, RB.DUPLICATE_DEVICE, u.register_device, "ルーター1", "ルーター", "使用", **ADM)
     refused(u, RB.UNKNOWN_SEGMENT, u.register_device, "PC1", "PC", "使用", segment="設備", **ADM)
-    refused(u, RB.NEED_ITEM, u.check_device, "ルーター1", "据え付け", {"版": "良い"}, at="2026-12-01T09:00", **ADM)
+    refused(u, RB.NEED_ITEM, u.check_device, "ルーター1", "据え付け", {"バージョン": "良い"}, at="2026-12-01T09:00", **ADM)
     refused(u, RB.NOT_OWNER, u.check_device, "ルーター1", "点検", ROUTER_CHECK, at="2026-12-01T09:00",
             by="t2", role="本人")
     assert u.ledger.count() == n0
@@ -407,8 +407,8 @@ def test_r_nw_05_r_rs_04_owner_role(dunit, refused):
 
 
 def test_r_nw_05_r_rs_04_route_and_permission_kind(dunit, grant, refused):
-    """R-NW-05 R-RS-04 扉の権限から管理者の口は DEVICE_ONLY。機器の権限から門番を通す錠は NO_DOOR_FOR_ROUTE。
-    機器の権限から account の無い管理者の口は NEED_ACCOUNT(20.13 の拒否と役 3)。"""
+    """R-NW-05 R-RS-04 扉の権限から管理者のインターフェースは DEVICE_ONLY。機器の権限から門番を通す錠は NO_DOOR_FOR_ROUTE。
+    機器の権限から account の無い管理者のインターフェースは NEED_ACCOUNT(20.13 の拒否と役 3)。"""
     pd, _, _ = grant(dunit, "t1")
     refused(dunit, RB.DEVICE_ONLY, dunit.issue_entity, pd, ACCESS, account="admin", **ADM, at=AT)
     pdev, _, _ = grant(dunit, "t1", "機器", "ルーター1")

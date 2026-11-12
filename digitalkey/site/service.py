@@ -1,6 +1,6 @@
 """事業所サーバーの中身。扉ごとのコントローラと、鍵の台帳を一つに束ねる。
 
-予約と資格情報の発行(使い方.md「予約と資格情報の発行の口」): 予約、予約からの鍵の発行、予約の取消(出した鍵を失効)、
+予約と資格情報の発行(使い方.md「予約と資格情報の発行のインターフェース」): 予約、予約からの鍵の発行、予約の取消(出した鍵を失効)、
 鍵からの署名つき資格情報(扉コントローラ仕様書 5.2a)。記録は台帳の伝票で、追記だけ。
 """
 from __future__ import annotations
@@ -35,7 +35,7 @@ class Conflict(Exception):
 
 
 def load_issuer(vault) -> Ed25519Signer:
-    """金庫の発行者の鍵を開く。無ければ作る(権限 600、上書きしない)。取り出せない所へ移すときは同じ口で差し替える。"""
+    """金庫の発行者の鍵を開く。無ければ作る(権限 600、上書きしない)。取り出せない所へ移すときは同じインターフェースで差し替える。"""
     p = vault / ISSUER_FILE
     if not p.exists():
         signer = Ed25519Signer.generate()
@@ -125,7 +125,7 @@ class Site:
         if _ts(departure) <= _ts(arrival):
             raise ValueError("出発は到着より後にしてください")
         return self.ledger.append("予約", {"主体": subject, "層": layer, "到着": arrival, "出発": departure,
-                                           "錠": door_id, "連絡先": contact, "受付符号": secrets.token_urlsafe(16)},
+                                           "錠": door_id, "連絡先": contact, "受付コード": secrets.token_urlsafe(16)},
                                   issuer=by.name)
 
     def _reservation(self, rid: str) -> Slip:
@@ -140,7 +140,7 @@ class Site:
 
     def _reservation_dict(self, y: Slip) -> dict:
         return {"id": y.id, "subject": y["主体"], "layer": y["層"], "arrival": y["到着"], "departure": y["出発"],
-                "door": y["錠"], "contact": y["連絡先"], "checkin_code": y["受付符号"],
+                "door": y["錠"], "contact": y["連絡先"], "checkin_code": y["受付コード"],
                 "cancelled": self._cancel_of(y.id)}
 
     def reservations(self) -> list[dict]:

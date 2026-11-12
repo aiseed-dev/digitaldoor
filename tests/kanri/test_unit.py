@@ -144,7 +144,7 @@ def test_create_example(tmp_path):
     assert u.public_key == signer.public_key()
     assert u.signer is signer
     assert u.root == tmp_path / "A"
-    assert set(u.routes) == {"署名つき資格情報", "門番を通す錠", "物理キー", "管理者の口"}   # 20.2: 組み込みは四つ
+    assert set(u.routes) == {"署名つき資格情報", "門番を通す錠", "物理キー", "管理者のインターフェース"}   # 20.2: 組み込みは四つ
 
 
 def test_create_writes_two_slips_with_init_role(make_unit):

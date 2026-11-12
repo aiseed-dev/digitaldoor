@@ -2,7 +2,7 @@
 
 番号なし(サイトの決まりの確かめ)。スクリプトは node から require すると、
 頁を触らずに純粋な関数だけを module.exports に出す。サインインの後の動き
-(送る、一覧、消す、写しの表)のうち、表示の文字を作る所と、戻りの URL を読む所を
+(送る、一覧、消す、コピーの表)のうち、表示の文字を作る所と、戻りの URL を読む所を
 ここで確かめる。PocketBase と DOM を通した動きは、docs/窓口仕様書.md 11.4 で手で確かめる。
 node が無い環境では skip する。
 """
@@ -176,7 +176,7 @@ SHEET = {"owner": "k3x9m2p7q1w8e5r", "issuer": "3f2a9c0d1e4b5a67", "made_at": "2
 
 
 def test_sheet_view_ok():
-    """写しの表: 終了の空は「期限なし」、扉は「、」でつなぎ、扉が無ければ機器。"""
+    """コピーの表: 終了の空は「期限なし」、扉は「、」でつなぎ、扉が無ければ機器。"""
     v = run(f"M.sheetView([{json.dumps(SHEET, ensure_ascii=False)}])")
     assert v["state"] == "ok"
     assert v["madeAt"] == "2026-12-10T12:00" and v["issuer"] == "3f2a9c0d1e4b5a67"
@@ -187,7 +187,7 @@ def test_sheet_view_ok():
 
 
 def test_sheet_view_none_and_unreadable():
-    """写しが無ければ none。形式が違えば unreadable。"""
+    """コピーが無ければ none。形式が違えば unreadable。"""
     assert run("M.sheetView([])") == {"state": "none"}
     assert run("M.sheetView(undefined)") == {"state": "none"}
     other = dict(SHEET, sheet=dict(SHEET["sheet"], **{"形式": "digitalkey-shoukai/2"}))

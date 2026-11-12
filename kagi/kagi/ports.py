@@ -1,4 +1,4 @@
-"""口の表（ports.toml）と `ss -ltnp` の出力を突き合わせる。K-07。ss は人が走らせてファイルで渡す。"""
+"""ポートの表（ports.toml）と `ss -ltnp` の出力を突き合わせる。K-07。ss は人が走らせてファイルで渡す。"""
 
 from __future__ import annotations
 
@@ -24,18 +24,18 @@ def load(path: Path) -> list[dict]:
     try:
         data = tomllib.loads(path.read_text("utf-8"))
     except OSError as e:
-        raise Refused(f"口の表を読めない: {path} ({type(e).__name__})") from None
+        raise Refused(f"ポートの表を読めない: {path} ({type(e).__name__})") from None
     except (tomllib.TOMLDecodeError, UnicodeDecodeError) as e:
         m = re.search(r"line \d+, column \d+", str(e))
         raise Refused(
-            f"口の表が TOML として読めない: {path} ({m.group(0) if m else type(e).__name__})"
+            f"ポートの表が TOML として読めない: {path} ({m.group(0) if m else type(e).__name__})"
         ) from None
     ports = data.get("port", [])
     if not isinstance(ports, list) or not all(isinstance(p, dict) for p in ports):
-        raise Refused("口の表の port は [[port]] の並びで書く")
+        raise Refused("ポートの表の port は [[port]] の並びで書く")
     for i, p in enumerate(ports, 1):
         if not isinstance(p.get("port"), int):
-            raise Refused(f"口の表の {i} 件目に port（数）が無い")
+            raise Refused(f"ポートの表の {i} 件目に port（数）が無い")
     return ports
 
 
@@ -65,9 +65,9 @@ def parse_ss(text: str) -> list[Listen]:
 
 @dataclass
 class Diff:
-    unlisted: list[Listen]  # 表に無い口
-    closed: list[dict]  # 表にあって開いていない口
-    outward: list[tuple[Listen, str]]  # 外向きで表の bind と違う口（口、表の bind）
+    unlisted: list[Listen]  # 表に無いポート
+    closed: list[dict]  # 表にあって開いていないポート
+    outward: list[tuple[Listen, str]]  # 外向きで表の bind と違うポート（ポート、表の bind）
 
     @property
     def any(self) -> bool:
@@ -89,19 +89,19 @@ def compare(table: list[dict], listens: list[Listen], host: str | None = None) -
         if l.bind not in OUTWARD or l.port not in by_port:
             continue
         binds = {str(p.get("bind", "")) for p in by_port[l.port]}
-        # 表が外向き（0.0.0.0, ::, * のどれか）を許していれば、外向きの口は表の通り
+        # 表が外向き（0.0.0.0, ::, * のどれか）を許していれば、外向きのポートは表の通り
         if not (binds & OUTWARD):
             outward.append((l, ", ".join(sorted(binds)) or "（書いていない）"))
     return Diff(unlisted, closed, outward)
 
 
 def table(diff: Diff, host: str | None) -> str:
-    head = f"機械 {host}" if host else "表の全部の機械"
+    head = f"サーバー {host}" if host else "表の全部のサーバー"
     if not diff.any:
-        return f"{head}: 表と口の一覧に差は無い。"
+        return f"{head}: 表とポートの一覧に差は無い。"
     lines = [f"{head}: 差がある。", "", "| 差 | host | port | bind | process |", "|---|---|---|---|---|"]
     for l in diff.unlisted:
-        lines.append(f"| 表に無い口 | {host or ''} | {l.port} | {l.bind} | {l.process} |")
+        lines.append(f"| 表に無いポート | {host or ''} | {l.port} | {l.bind} | {l.process} |")
     for p in diff.closed:
         lines.append(
             f"| 表にあって開いていない | {p.get('host', '')} | {p['port']} | {p.get('bind', '')} | {p.get('service', '')} |"

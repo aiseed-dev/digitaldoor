@@ -1,6 +1,6 @@
-"""設計書 20.9: 台帳だけでできる照らし合わせ(知らせ)。表の一行ずつ、見る状態、境目の値、並び。
+"""設計書 20.9: 台帳だけでできる照らし合わせ(通知)。表の一行ずつ、見る状態、境目の値、並び。
 
-知らせは一つの機器に複数出るので、言葉と機器で絞って比べる(20.13)。`at` は固定の値を渡す。
+通知は一つの機器に複数出るので、言葉と機器で絞って比べる(20.13)。`at` は固定の値を渡す。
 """
 from __future__ import annotations
 
@@ -28,7 +28,7 @@ def _words(u, at, device):
 
 
 def test_example_20_9(make_unit):
-    """R-NW-02 R-NW-03 R-NW-05 20.9 の例: 設定の無い置き場で、使用のルーター(責任者、区画、更新の期限が空、確かめなし)の知らせは
+    """R-NW-02 R-NW-03 R-NW-05 20.9 の例: 設定の無い置き場で、使用のルーター(責任者、区画、更新の期限が空、確かめなし)の通知は
     F_NO_OWNER、F_NO_SEGMENT、F_NO_SUPPORT_END、F_NO_INSTALL_CHECK の 4 件で、この順。"""
     u = make_unit()
     u.register_device("ルーター1", "ルーター", "使用", **ADM)
@@ -40,7 +40,7 @@ def test_order_by_device_registration_then_table(dunit):
     """20.9: 並びは機器_登録を台帳に書いた順、同じ機器の中では表の順。Finding の型で返す。"""
     got = dunit.device_findings(at=dt(NOW))
     assert all(type(f).__name__ == "Finding" for f in got)
-    assert [(f.機器, f.知らせ, f.詳細) for f in got] == [
+    assert [(f.機器, f.通知, f.詳細) for f in got] == [
         ("ルーター1", RB.F_NO_OWNER, ""), ("ルーター1", RB.F_NO_SEGMENT, ""),
         ("ルーター1", RB.F_NO_SUPPORT_END, ""), ("ルーター1", RB.F_NO_INSTALL_CHECK, ""),
         ("玄関の錠", RB.F_NO_OWNER, ""), ("玄関の錠", RB.F_NO_SUPPORT_END, ""), ("玄関の錠", RB.F_NO_INSTALL_CHECK, ""),
@@ -55,7 +55,7 @@ def test_no_devices_no_findings(make_unit):
 
 
 def test_findings_do_not_write(dunit):
-    """20.9: 知らせは拒否ではなく、台帳に何も書かない。"""
+    """20.9: 通知は拒否ではなく、台帳に何も書かない。"""
     n = dunit.ledger.count()
     dunit.device_findings(at=dt(NOW))
     assert dunit.ledger.count() == n
@@ -152,9 +152,9 @@ def test_support_ended_boundary(dunit, at, ended):
 
 @pytest.mark.parametrize("state", ["準備", "休止", "紛失", "廃棄"])
 def test_support_ended_only_in_use(dunit, state):
-    """R-NW-03 20.9: 期限を過ぎた知らせも、見る状態は 使用 だけ。"""
+    """R-NW-03 20.9: 期限を過ぎた通知も、見る状態は 使用 だけ。"""
     _device_in(dunit, "PC1", state, support_until="2027-03-31")
-    dunit.set_setting("更新の期限の知らせの日数", "30", reason="試し", **ADM)
+    dunit.set_setting("更新の期限の通知の日数", "30", reason="試し", **ADM)
     assert findings(dunit, "2027-04-01T00:00", RB.F_SUPPORT_ENDED, "PC1") == []
     assert findings(dunit, "2027-03-31T00:00", RB.F_SUPPORT_NEAR, "PC1") == []
 
@@ -176,9 +176,9 @@ def test_today_is_local_date_of_aware_at(dunit):
     ("2027-04-01T00:00", False),   # 過ぎた
 ])
 def test_support_near_boundary(dunit, at, near):
-    """R-NW-03 20.9 F_SUPPORT_NEAR: 設定 更新の期限の知らせの日数 が N で、0 <= 期限 - 今日 <= N 日。詳細は期限。"""
+    """R-NW-03 20.9 F_SUPPORT_NEAR: 設定 更新の期限の通知の日数 が N で、0 <= 期限 - 今日 <= N 日。詳細は期限。"""
     _device_in(dunit, "PC1", "使用", support_until="2027-03-31")
-    dunit.set_setting("更新の期限の知らせの日数", "30", reason="管理者が決めた", **ADM)
+    dunit.set_setting("更新の期限の通知の日数", "30", reason="管理者が決めた", **ADM)
     want = [("PC1", RB.F_SUPPORT_NEAR, "2027-03-31")] if near else []
     assert findings(dunit, at, RB.F_SUPPORT_NEAR, "PC1") == want
 
@@ -187,9 +187,9 @@ def test_support_near_needs_setting(dunit):
     """R-NW-03 20.9: 設定を書いていない間(最後の設定の値が空の時を含む)は F_SUPPORT_NEAR を出さない。"""
     _device_in(dunit, "PC1", "使用", support_until="2027-03-31")
     assert findings(dunit, "2027-03-31T12:00", RB.F_SUPPORT_NEAR) == []
-    dunit.set_setting("更新の期限の知らせの日数", "30", reason="管理者が決めた", **ADM)
+    dunit.set_setting("更新の期限の通知の日数", "30", reason="管理者が決めた", **ADM)
     assert len(findings(dunit, "2027-03-31T12:00", RB.F_SUPPORT_NEAR)) == 1
-    dunit.set_setting("更新の期限の知らせの日数", "", reason="知らせを止める", **ADM)
+    dunit.set_setting("更新の期限の通知の日数", "", reason="通知を止める", **ADM)
     assert findings(dunit, "2027-03-31T12:00", RB.F_SUPPORT_NEAR) == []
 
 
@@ -206,7 +206,7 @@ def test_no_install_check_only_in_use(dunit, state):
 def test_install_check_clears(dunit):
     """R-NW-03 20.9: 据え付けの確かめを書くと消える。点検の確かめでは消えない。"""
     _device_in(dunit, "PC1", "使用")
-    dunit.check_device("PC1", "点検", {"版": "良い"}, at="2026-12-01T09:00", **ADM)
+    dunit.check_device("PC1", "点検", {"バージョン": "良い"}, at="2026-12-01T09:00", **ADM)
     assert len(findings(dunit, NOW, RB.F_NO_INSTALL_CHECK, "PC1")) == 1
     dunit.check_device("PC1", "据え付け", {"初めのパスワード": "良い"}, at="2026-12-02T09:00", **ADM)
     assert findings(dunit, NOW, RB.F_NO_INSTALL_CHECK, "PC1") == []
@@ -215,20 +215,20 @@ def test_install_check_clears(dunit):
 def test_bad_item_per_item_in_form_order(dunit):
     """R-NW-02 R-NW-03 R-NW-04 20.9 F_BAD_ITEM: 確かめの項目の今の値が 悪い。項目ごとに一つ、様式の項目の順。詳細は項目の名。"""
     _device_in(dunit, "PC1", "使用")
-    dunit.check_device("PC1", "点検", {"網から外した": "悪い", "版": "悪い", "初めのパスワード": "悪い", "区画": "良い"},
+    dunit.check_device("PC1", "点検", {"ネットワークから外した": "悪い", "バージョン": "悪い", "初めのパスワード": "悪い", "区画": "良い"},
                        at="2026-12-01T09:00", **ADM)
     assert findings(dunit, NOW, RB.F_BAD_ITEM, "PC1") == [
-        ("PC1", RB.F_BAD_ITEM, "初めのパスワード"), ("PC1", RB.F_BAD_ITEM, "版"), ("PC1", RB.F_BAD_ITEM, "網から外した")]
+        ("PC1", RB.F_BAD_ITEM, "初めのパスワード"), ("PC1", RB.F_BAD_ITEM, "バージョン"), ("PC1", RB.F_BAD_ITEM, "ネットワークから外した")]
 
 
 def test_bad_item_current_value_is_last_nonempty(dunit):
     """R-NW-02 20.7、20.9: 項目の今の値は、その項目が空でない最後の確かめ(台帳に書いた順)の値。"""
     _device_in(dunit, "PC1", "使用")
-    dunit.check_device("PC1", "点検", {"区画": "悪い", "版": "悪い"}, at="2026-12-02T09:00", **ADM)
+    dunit.check_device("PC1", "点検", {"区画": "悪い", "バージョン": "悪い"}, at="2026-12-02T09:00", **ADM)
     # 日時が前でも、台帳に後に書いた物が今の値
-    dunit.check_device("PC1", "点検", {"区画": "良い", "版": ""}, at="2026-12-01T09:00", **ADM)
-    assert findings(dunit, NOW, RB.F_BAD_ITEM, "PC1") == [("PC1", RB.F_BAD_ITEM, "版")]
-    dunit.check_device("PC1", "点検", {"版": "当たらない"}, at="2026-12-03T09:00", **ADM)
+    dunit.check_device("PC1", "点検", {"区画": "良い", "バージョン": ""}, at="2026-12-01T09:00", **ADM)
+    assert findings(dunit, NOW, RB.F_BAD_ITEM, "PC1") == [("PC1", RB.F_BAD_ITEM, "バージョン")]
+    dunit.check_device("PC1", "点検", {"バージョン": "当たらない"}, at="2026-12-03T09:00", **ADM)
     assert findings(dunit, NOW, RB.F_BAD_ITEM, "PC1") == []
 
 
@@ -236,7 +236,7 @@ def test_bad_item_current_value_is_last_nonempty(dunit):
 def test_bad_item_only_in_use(dunit, state):
     """20.9: F_BAD_ITEM の見る状態は 使用 だけ。"""
     _device_in(dunit, "PC1", "使用")
-    dunit.check_device("PC1", "点検", {"版": "悪い"}, at="2026-12-01T09:00", **ADM)
+    dunit.check_device("PC1", "点検", {"バージョン": "悪い"}, at="2026-12-01T09:00", **ADM)
     dunit.change_device("PC1", reason="試し", state=state, at=dt(NOW), **ADM)
     assert findings(dunit, NOW, RB.F_BAD_ITEM, "PC1") == []
 
@@ -256,9 +256,9 @@ def test_check_overdue_uses_latest_datetime_not_ledger_order(dunit):
     """R-NW-04 20.14: 「最後の確かめ」は据え付けと点検の日時のうち一番遅い物(台帳に書いた順ではない)。廃棄の確かめは数えない。"""
     _device_in(dunit, "PC1", "使用")
     dunit.set_setting("点検の間の日数", "30", reason="管理者が決めた", **ADM)
-    dunit.check_device("PC1", "点検", {"版": "良い"}, at="2027-01-10T09:00", **ADM)
+    dunit.check_device("PC1", "点検", {"バージョン": "良い"}, at="2027-01-10T09:00", **ADM)
     dunit.check_device("PC1", "据え付け", {"初めのパスワード": "良い"}, at="2026-12-01T09:00", **ADM)
-    dunit.check_device("PC1", "廃棄", {"中に残る物": "良い", "網から外した": "良い"}, at="2027-03-01T09:00", **ADM)
+    dunit.check_device("PC1", "廃棄", {"中に残る物": "良い", "ネットワークから外した": "良い"}, at="2027-03-01T09:00", **ADM)
     assert findings(dunit, "2027-02-09T09:00", RB.F_CHECK_OVERDUE, "PC1") == []
     assert findings(dunit, "2027-02-09T09:01", RB.F_CHECK_OVERDUE, "PC1") == \
         [("PC1", RB.F_CHECK_OVERDUE, "2027-01-10T09:00")]
@@ -280,11 +280,11 @@ def test_check_overdue_only_in_use(dunit, state):
     assert findings(dunit, NOW, RB.F_CHECK_OVERDUE, "PC1") == []
 
 
-# ---- 管理者の口 ----
+# ---- 管理者のインターフェース ----
 
 def test_shared_account(dunit, access):
-    """R-RS-04 20.9 F_SHARED_ACCOUNT: 止まっていない管理者の口のうち、同じ口の名で主体が二人以上。口の名ごとに一つ、
-    その口の名の最初の実体_発行を書いた順。同じ人の二つは数えない。"""
+    """R-RS-04 20.9 F_SHARED_ACCOUNT: 止まっていない管理者のインターフェースのうち、同じインターフェースの名で主体が二人以上。インターフェースの名ごとに一つ、
+    そのインターフェースの名の最初の実体_発行を書いた順。同じ人の二つは数えない。"""
     access(dunit, "t1", "複合機1", "service")
     access(dunit, "t1", "複合機1", "admin")
     access(dunit, "t1", "複合機1", "admin")
@@ -326,16 +326,16 @@ def test_retired_device_findings(dunit):
     """20.9: 廃棄の機器に出るのは F_NO_DISPOSAL_CHECK と F_ACCESS_LEFT だけ。廃棄の確かめの後は何も出ない。"""
     _device_in(dunit, "PC1", "廃棄")
     assert _words(dunit, NOW, "PC1") == [RB.F_NO_DISPOSAL_CHECK]
-    dunit.check_device("PC1", "廃棄", {"中に残る物": "良い", "網から外した": "良い"}, at="2026-12-21T09:00", **ADM)
+    dunit.check_device("PC1", "廃棄", {"中に残る物": "良い", "ネットワークから外した": "良い"}, at="2026-12-21T09:00", **ADM)
     assert _words(dunit, NOW, "PC1") == []
 
 
 def test_access_left(dunit, access):
-    """R-AC-15 20.9 F_ACCESS_LEFT: 紛失か廃棄の機器の管理者の口に、止まった でない物がある。詳細は実体の番号を、
+    """R-AC-15 20.9 F_ACCESS_LEFT: 紛失か廃棄の機器の管理者のインターフェースに、止まった でない物がある。詳細は実体の番号を、
     実体_発行を書いた順に「, 」でつなぐ。使用の機器には出さない。"""
     _, a = access(dunit, "t1")
     _, b = access(dunit, "t2")
-    access(dunit, "t1", "複合機1")   # 使用の機器の口は挙がらない
+    access(dunit, "t1", "複合機1")   # 使用の機器のインターフェースは挙がらない
     assert findings(dunit, NOW, RB.F_ACCESS_LEFT) == []
     dunit.change_device("ルーター1", reason="なくした", state="紛失", at=dt(NOW), **ADM)
     assert findings(dunit, NOW, RB.F_ACCESS_LEFT) == [("ルーター1", RB.F_ACCESS_LEFT, f"{a.番号}, {b.番号}")]
@@ -348,7 +348,7 @@ def test_access_left(dunit, access):
 
 
 def test_access_left_includes_ended_access(dunit, access):
-    """R-AC-15 20.9: 終了を過ぎて、実体_失効の無い管理者の口も、削除の伝票が出るまで 止まった ではない(進み具合の表)。"""
+    """R-AC-15 20.9: 終了を過ぎて、実体_失効の無い管理者のインターフェースも、削除の伝票が出るまで 止まった ではない(進み具合の表)。"""
     _, a = access(dunit, "t1", end="2026-12-05T00:00")
     got = dunit.change_device("ルーター1", reason="なくした", state="紛失", at=dt(NOW), **ADM)
     assert got.実体_失効 == []
@@ -357,7 +357,7 @@ def test_access_left_includes_ended_access(dunit, access):
 
 @pytest.mark.parametrize("state", ["紛失", "廃棄"])
 def test_lost_or_retired_findings(dunit, state):
-    """20.9: 紛失の機器には責任者の知らせと F_ACCESS_LEFT、廃棄の機器には F_NO_DISPOSAL_CHECK と F_ACCESS_LEFT だけ。"""
+    """20.9: 紛失の機器には責任者の通知と F_ACCESS_LEFT、廃棄の機器には F_NO_DISPOSAL_CHECK と F_ACCESS_LEFT だけ。"""
     _device_in(dunit, "PC1", state)
     want = [RB.F_NO_OWNER] if state == "紛失" else [RB.F_NO_DISPOSAL_CHECK]
     assert _words(dunit, NOW, "PC1") == want

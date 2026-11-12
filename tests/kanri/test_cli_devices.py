@@ -21,7 +21,7 @@ REV = "2026-12-10T12:00"
 SLIP = re.compile(r"^(\S+) (\S+)$")
 BY = ("--by", "adm", "--role")   # 書く命令の by(--role は続けて書く)
 
-DEVICE_KEYS = ["名前", "種類", "責任者", "置き場", "区画", "扉の系統", "扉", "製造者", "型", "製造番号", "網の番号", "版",
+DEVICE_KEYS = ["名前", "種類", "責任者", "置き場", "区画", "扉の系統", "扉", "製造者", "型", "製造番号", "ネットワークの番号", "バージョン",
                "更新の期限", "更新の当て方", "秘密の在庫の番号", "記録の送り先", "中に残る物", "状態"]
 
 
@@ -87,7 +87,7 @@ def _access(kanri, d, pid, account="admin"):
 # ---- 20.12 の例 ----
 
 def test_spec_example(kanri, file_unit):
-    """20.12 の例: device add は `機器_登録 <番号>`。device findings は `<機器>\\t<知らせ>\\t<詳細>` を一行ずつ。
+    """20.12 の例: device add は `機器_登録 <番号>`。device findings は `<機器>\\t<通知>\\t<詳細>` を一行ずつ。
     要る項目の無い据え付けの device check は `拒否: 確かめの項目が足りません(初めのパスワード)`、終了コード 1。"""
     d = file_unit.root
     num = _one_slip(kanri("device", "add", "--dir", d, *BY, "管理者", "--name", "ルーター1", "--kind", "ルーター",
@@ -99,7 +99,7 @@ def test_spec_example(kanri, file_unit):
                          "ルーター1\t更新の期限が分かりません\t", "ルーター1\t据え付けの確かめがありません\t"]
     n = Unit.open(d).ledger.count()
     res = kanri("device", "check", "--dir", d, *BY, "管理者", "--name", "ルーター1", "--scene", "据え付け",
-                "--item", "外からの口=良い", "--at", IN)
+                "--item", "外部からのアクセス経路=良い", "--at", IN)
     assert res.code == 1
     assert res.err.strip() == "拒否: 確かめの項目が足りません(初めのパスワード)"
     assert Unit.open(d).ledger.count() == n
@@ -253,22 +253,22 @@ def test_device_check_and_checks(kanri, dfile_unit):
     `項目=結果` を様式の項目の順に「, 」でつなぐ。--json の 結果 は辞書。"""
     d = dfile_unit.root
     num = _one_slip(kanri("device", "check", "--dir", d, *BY, "管理者", "--name", "ルーター1", "--scene", "点検",
-                          "--item", "見覚えのない設定とアカウント=悪い", "--item", "外からの口=悪い",
-                          "--item", "外からの口=良い", "--note", "転送を閉じた", "--at", "2026-12-01T09:00"),
+                          "--item", "見覚えのない設定とアカウント=悪い", "--item", "外部からのアクセス経路=悪い",
+                          "--item", "外部からのアクセス経路=良い", "--note", "転送を閉じた", "--at", "2026-12-01T09:00"),
                     "機器_確かめ")
     slip = Unit.open(d).ledger.get(num)
-    assert (slip["外からの口"], slip["見覚えのない設定とアカウント"], slip["所見"], slip["日時"]) == \
+    assert (slip["外部からのアクセス経路"], slip["見覚えのない設定とアカウント"], slip["所見"], slip["日時"]) == \
         ("良い", "悪い", "転送を閉じた", "2026-12-01T09:00")
     res = kanri("device", "checks", "--dir", d, "--name", "ルーター1")
     assert res.code == 0
     line, = res.lines
     cols = line.split("\t")
     assert cols[:4] == [num, "ルーター1", "点検", "2026-12-01T09:00"]
-    assert cols[4] == "外からの口=良い, 見覚えのない設定とアカウント=悪い"
+    assert cols[4] == "外部からのアクセス経路=良い, 見覚えのない設定とアカウント=悪い"
     assert cols[5:] == ["転送を閉じた", "adm"]
     item, = kanri("device", "checks", "--dir", d, "--name", "ルーター1", "--json").json["items"]
     assert item == {"番号": num, "機器": "ルーター1", "場面": "点検", "日時": "2026-12-01T09:00",
-                    "結果": {"外からの口": "良い", "見覚えのない設定とアカウント": "悪い"}, "所見": "転送を閉じた",
+                    "結果": {"外部からのアクセス経路": "良い", "見覚えのない設定とアカウント": "悪い"}, "所見": "転送を閉じた",
                     "書いた人": "adm"}
 
 
@@ -276,9 +276,9 @@ def test_device_check_argument_errors(kanri, dfile_unit):
     """20.12: --item に = の無い物は 2。--scene の選べる値のほかは 2。"""
     d = dfile_unit.root
     base = ("device", "check", "--dir", d, *BY, "管理者", "--name", "複合機1", "--at", IN)
-    assert kanri(*base, "--scene", "点検", "--item", "版").code == 2
-    assert kanri(*base, "--scene", "修理", "--item", "版=良い").code == 2
-    assert kanri(*base, "--scene", "点検", "--item", "版=良い").code == 0
+    assert kanri(*base, "--scene", "点検", "--item", "バージョン").code == 2
+    assert kanri(*base, "--scene", "修理", "--item", "バージョン=良い").code == 2
+    assert kanri(*base, "--scene", "点検", "--item", "バージョン=良い").code == 0
 
 
 def test_device_checks_unknown(kanri, dfile_unit):
@@ -292,7 +292,7 @@ def test_device_update(kanri, dfile_unit):
     d = dfile_unit.root
     _one_slip(kanri("device", "update", "--dir", d, *BY, "管理者", "--name", "ルーター1", "--version", "1.1",
                     "--at", "2026-12-01T09:00"), "機器_更新")
-    assert Unit.open(d).device("ルーター1").版 == "1.1"
+    assert Unit.open(d).device("ルーター1").バージョン == "1.1"
     res = kanri("device", "update", "--dir", d, "--by", "ops", "--role", "運用", "--name", "ルーター1", "--version", "1.2",
                 "--failed", "--at", "2026-12-02T09:00")
     assert res.code == 1 and res.err.strip() == "拒否: 理由が要ります"
@@ -300,20 +300,20 @@ def test_device_update(kanri, dfile_unit):
                           "--version", "1.2", "--failed", "--reason", "容量が足りない", "--at", "2026-12-02T09:00"),
                     "機器_更新")
     slip = Unit.open(d).ledger.get(num)
-    assert (slip["結果"], slip["理由"], slip["前の版"]) == ("当てられなかった", "容量が足りない", "1.1")
+    assert (slip["結果"], slip["理由"], slip["前のバージョン"]) == ("当てられなかった", "容量が足りない", "1.1")
 
 
 # ---- device findings ----
 
 def test_device_findings_json_and_empty(kanri, file_unit):
-    """20.12: device findings --json は items。知らせが無ければ何も出さず、終了コード 0。"""
+    """20.12: device findings --json は items。通知が無ければ何も出さず、終了コード 0。"""
     d = file_unit.root
     res = kanri("device", "findings", "--dir", d, "--at", IN)
     assert (res.code, res.out) == (0, "")
     _one_slip(kanri("device", "add", "--dir", d, *BY, "管理者", "--name", "PC1", "--kind", "PC", "--state", "休止"),
               "機器_登録")
     j = kanri("device", "findings", "--dir", d, "--at", IN, "--json").json
-    assert j == {"ok": True, "items": [{"機器": "PC1", "知らせ": RB.F_NO_OWNER, "詳細": ""}]}
+    assert j == {"ok": True, "items": [{"機器": "PC1", "通知": RB.F_NO_OWNER, "詳細": ""}]}
 
 
 @pytest.mark.parametrize("cmd", [
@@ -352,10 +352,10 @@ def test_access_remove(kanri, dfile_unit):
     res = kanri("access", "remove", "--dir", d, *BY, "管理者", "--entity", eid, "--result", "捨てた")
     assert res.code == 1 and res.err.startswith("拒否: 様式に合いません")
     num = _one_slip(kanri("access", "remove", "--dir", d, "--by", "ops", "--role", "運用", "--entity", eid,
-                          "--result", "パスワードを替えた", "--note", "共用の口"), "管理者の口_削除")
+                          "--result", "パスワードを替えた", "--note", "共用のインターフェース"), "管理者のインターフェース_削除")
     slip = Unit.open(d).ledger.get(num)
-    assert (slip["実体"], slip["機器"], slip["口の名"], slip["結果"], slip["備考"]) == \
-        (eid, "ルーター1", "admin", "パスワードを替えた", "共用の口")
+    assert (slip["実体"], slip["機器"], slip["インターフェースの名"], slip["結果"], slip["備考"]) == \
+        (eid, "ルーター1", "admin", "パスワードを替えた", "共用のインターフェース")
     res = kanri("access", "remove", "--dir", d, *BY, "管理者", "--entity", eid, "--json")
     assert res.code == 1 and res.json == {"ok": False, "理由": RB.ALREADY_REMOVED, "詳細": ""}
 
@@ -391,7 +391,7 @@ def test_import_device_rows(kanri, dfile_unit, tmp_path):
     assert res.json["飛ばした"] == [{"行": 2, "理由": RB.UNKNOWN_DEVICE}]
 
 
-@pytest.mark.parametrize("item", ["業者の最長の日数", "自己承認", "点検の間の日数", "更新の期限の知らせの日数"])
+@pytest.mark.parametrize("item", ["業者の最長の日数", "自己承認", "点検の間の日数", "更新の期限の通知の日数"])
 def test_setting_set_items(kanri, dfile_unit, item):
     """20.12: setting set の --item は四つ。"""
     value = "許す" if item == "自己承認" else "30"

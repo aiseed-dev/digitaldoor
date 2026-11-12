@@ -27,7 +27,7 @@ class Subject:
 
 @dataclass(frozen=True)
 class Door:
-    """この発行者の扉。状態は 使用 / 撤去。失効の最長の分数は、扉に据付で入れた revocation_max_age_s を分で写した値
+    """この発行者の扉。状態は 使用 / 撤去。失効の最長の分数は、扉に据付で入れた revocation_max_age_s を分に直した値
     (空は None。R-AC-14)。"""
     名前: str
     経路: list[str]
@@ -67,7 +67,7 @@ class Permission:
 @dataclass(frozen=True)
 class Entity:
     """経路の実体。番号は実体_発行の伝票の番号。失効は実体_失効の番号か空。回収は、物理キーなら物理キー_回収、
-    管理者の口なら管理者の口_削除の番号(どちらも無ければ空)。機器は管理者の口の時の機器の名前(扉の経路では空)。"""
+    管理者のインターフェースなら管理者のインターフェース_削除の番号(どちらも無ければ空)。機器は管理者のインターフェースの時の機器の名前(扉の経路では空)。"""
     番号: str
     権限: str
     主体: str
@@ -174,7 +174,7 @@ class Reconcile:
 
 @dataclass(frozen=True)
 class Segment:
-    """網の区画。状態は 使用 / 廃止。"""
+    """ネットワークの区画。状態は 使用 / 廃止。"""
     名前: str
     説明: str
     状態: str
@@ -194,8 +194,8 @@ class Device:
     製造者: str
     型: str
     製造番号: str
-    網の番号: str
-    版: str
+    ネットワークの番号: str
+    バージョン: str
     更新の期限: str
     更新の当て方: str
     秘密の在庫の番号: str
@@ -228,9 +228,9 @@ class Check:
 
 @dataclass(frozen=True)
 class Finding:
-    """台帳だけでできる照らし合わせの知らせ。拒否ではない。知らせは reasons の F_ で始まる言葉。"""
+    """台帳だけでできる照らし合わせの通知。拒否ではない。通知は reasons の F_ で始まる言葉。"""
     機器: str
-    知らせ: str
+    通知: str
     詳細: str
 
 

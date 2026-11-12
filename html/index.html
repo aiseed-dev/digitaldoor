@@ -114,7 +114,7 @@
             <p class="lead">スマートドアは、鍵を出す所、開けるかを決めて記録する扉のコントローラ、開け閉めする電子錠に分かれます。開け閉めの部品は買えます。課題は、その周りにあります。</p>
 
             <figure class="door-fig">
-                <svg class="door-svg" viewBox="0 0 640 400" role="img" aria-label="スマートドアの絵。扉、読取機、電子錠、扉のコントローラ、安全側のマイコン、電源、網">
+                <svg class="door-svg" viewBox="0 0 640 400" role="img" aria-label="スマートドアの絵。扉、リーダー、電子錠、扉のコントローラ、安全側のマイコン、電源、ネットワーク">
                     <rect class="wall" x="0" y="0" width="640" height="400"/>
                     <line class="floor" x1="0" y1="380" x2="640" y2="380"/>
                     <!-- 枠と扉 -->
@@ -133,7 +133,7 @@
                     <!-- 電子錠 -->
                     <rect class="hot" x="398" y="216" width="14" height="52" rx="2"/>
                     <rect class="metal" x="412" y="236" width="12" height="10"/>
-                    <!-- 読取機、ドアホン -->
+                    <!-- リーダー、ドアホン -->
                     <rect class="hot" x="456" y="190" width="46" height="74" rx="6"/>
                     <circle class="part" cx="479" cy="210" r="8"/>
                     <rect class="part" x="466" y="228" width="26" height="26" rx="3"/>
@@ -143,9 +143,9 @@
                     <!-- 電源 -->
                     <rect class="part" x="60" y="220" width="44" height="58" rx="3"/>
                     <text class="lbl" x="82" y="298" text-anchor="middle">電源</text>
-                    <!-- 網(ルーター) -->
+                    <!-- ネットワーク(ルーター) -->
                     <rect class="part" x="540" y="24" width="66" height="30" rx="4"/>
-                    <text class="lbl" x="573" y="72" text-anchor="middle">網</text>
+                    <text class="lbl" x="573" y="72" text-anchor="middle">ネットワーク</text>
                     <!-- 配線 -->
                     <path class="wire" d="M104 248 H170 V41 H240"/>
                     <path class="wire" d="M479 190 V66 H330 V60"/>
@@ -162,13 +162,13 @@
                     <circle class="pin" cx="574" cy="208" r="12"/><text class="pin-t" x="574" y="208">H</text>
                 </svg>
                 <ul class="legend">
-                    <li><span class="k">A</span><b>読取機、ドアホン</b> <small>鍵を読み、結果を渡す。差し替えられる部品</small></li>
+                    <li><span class="k">A</span><b>リーダー、ドアホン</b> <small>鍵を読み、結果を渡す。差し替えられる部品</small></li>
                     <li><span class="k">B</span><b>電子錠</b> <small>開け閉めする部品。買えばすむ</small></li>
-                    <li><span class="k">C</span><b>扉のコントローラ</b> <small>開けるかを決め、記録する。網が無くても動く(課題 3、4)</small></li>
+                    <li><span class="k">C</span><b>扉のコントローラ</b> <small>開けるかを決め、記録する。ネットワークが無くても動く(課題 3、4)</small></li>
                     <li><span class="k">D</span><b>安全側のマイコン</b> <small>無線を持たない。通信の側が暴走しても、誤って開けない</small></li>
                     <li><span class="k">E</span><b>取っ手、サムターン</b> <small>内側からは、いつでも機械で開く</small></li>
                     <li><span class="k">F</span><b>電源</b> <small>建物から扉の機器へ</small></li>
-                    <li><span class="k">G</span><b>網(ルーター)</b> <small>鍵と知らせを運ぶ。止まることも、破られることもある(課題 3)</small></li>
+                    <li><span class="k">G</span><b>ネットワーク(ルーター)</b> <small>鍵と通知を運ぶ。止まることも、破られることもある(課題 3)</small></li>
                     <li><span class="k">H</span><b>スマートフォン、カード</b> <small>本人が持つ鍵の入れ物。中の鍵の管理が本題(課題 1、2)</small></li>
                 </ul>
             </figure>
@@ -176,15 +176,15 @@
             <div class="flow" aria-label="スマートドアの仕組み">
                 <div class="flow-row">
                     <div class="flow-box key"><b><span class="mark">1</span><span class="mark">2</span>鍵の発行</b>誰に、どの扉を、いつまで。<br><small>管理者、発行者の鍵、台帳。人事の届けから入社と退職を受ける</small></div>
-                    <div class="flow-box"><b><span class="mark">3</span>網とクラウド、業者</b>鍵や知らせを運ぶ。<br><small>止まることも、破られることもある</small></div>
+                    <div class="flow-box"><b><span class="mark">3</span>ネットワークとクラウド、業者</b>鍵や通知を運ぶ。<br><small>止まることも、破られることもある</small></div>
                 </div>
                 <p class="flow-down">↓ 署名つきの鍵(資格情報)</p>
                 <div class="flow-row">
                     <div class="flow-box"><b>スマートフォン、カード、暗証番号</b><small>本人が持つ鍵の入れ物</small></div>
                     <span class="flow-arrow">→</span>
-                    <div class="flow-box"><b>読取機、ドアホン</b><small>鍵を読み、結果を渡す</small></div>
+                    <div class="flow-box"><b>リーダー、ドアホン</b><small>鍵を読み、結果を渡す</small></div>
                     <span class="flow-arrow">→</span>
-                    <div class="flow-box key"><b><span class="mark">4</span>扉のコントローラ</b>開けるかを決め、記録する。<br><small>網が無くても動く</small></div>
+                    <div class="flow-box key"><b><span class="mark">4</span>扉のコントローラ</b>開けるかを決め、記録する。<br><small>ネットワークが無くても動く</small></div>
                     <span class="flow-arrow">→</span>
                     <div class="flow-box"><b>電子錠</b><small>開け閉めする部品</small></div>
                 </div>
@@ -234,9 +234,9 @@
             </div>
 
             <div class="issue">
-                <h3><span class="mark">3</span>網とクラウドが止まったら</h3>
-                <p>網が切れた扉には、失効の知らせが届きません。扉が止めるのは、鍵の期限が切れたときだけです。だから、本当の守りは期限の長さです。</p>
-                <div class="dg" role="img" aria-label="網が切れた扉で、30日の鍵は失効の後も開き続け、1日の鍵は翌日に止まる図">
+                <h3><span class="mark">3</span>ネットワークとクラウドが止まったら</h3>
+                <p>ネットワークが切れた扉には、失効の通知が届きません。扉が止めるのは、鍵の期限が切れたときだけです。だから、本当の守りは期限の長さです。</p>
+                <div class="dg" role="img" aria-label="ネットワークが切れた扉で、30日の鍵は失効の後も開き続け、1日の鍵は翌日に止まる図">
                     <div class="tl">
                         <span></span><div class="tl-note"><span style="left:10%">↓ 3 日目に台帳で失効</span></div>
                         <span>30 日の鍵</span>
@@ -245,7 +245,7 @@
                         <div class="tl-bar"><div class="tl-seg good" style="left:0;width:10%"></div><div class="tl-seg bad" style="left:10%;width:3.3%"></div><div class="tl-mark" style="left:10%"></div></div>
                         <span class="tl-scale"><span>発行</span><span>30 日</span></span>
                     </div>
-                    <p class="dg-cap">期限を短くして、網が届くときに出し直します(R-AC-14)。端末が失効の一覧を運ぶ方法もあります(R-AC-22)。</p>
+                    <p class="dg-cap">期限を短くして、ネットワークが届くときに出し直します(R-AC-14)。端末が失効の一覧を運ぶ方法もあります(R-AC-22)。</p>
                 </div>
                 <p class="more-link">→ <a href="/guide/open-specification/">扉のコントローラの仕様</a></p>
             </div>
@@ -255,10 +255,10 @@
                 <p>攻撃を全部防ぐことはできません。入られる前提で、守りを重ねます。扉が乗っ取られると、判断も記録も攻撃者の物になります。</p>
                 <div class="dg" role="img" aria-label="入られる前提で重ねる守りの五段">
                     <div class="stack">
-                        <div>入る口を減らす(外に開く口、実行できる物、部品を少なく)</div>
+                        <div>侵入の経路を減らす(外部に公開するインターフェース、実行できる物、部品を少なく)</div>
                         <div>中で動く物が本物かを、更新と起動のたびに署名で確かめる</div>
                         <div>実行してよい物を決めておき、増えた物に気づく</div>
-                        <div>知らせと記録を、機械の外へ出す(入られた機械の記録は消される)</div>
+                        <div>通知と記録を、機器の外へ出す(入られた機器の記録は消される)</div>
                         <div>現場で切り離し、予備に入れ替え、戻す</div>
                     </div>
                 </div>
@@ -294,7 +294,7 @@
                     </ul>
                 </div>
                 <div class="entry">
-                    <h3>扉、錠、読取機をつくる方</h3>
+                    <h3>扉、錠、リーダーをつくる方</h3>
                     <p>何を満たすかを、番号と理由と確かめ方で書いています。</p>
                     <ul>
                         <li><a href="https://github.com/aiseed-dev/digitaldoor/blob/main/docs/要求仕様/README.md">要求仕様</a></li>
@@ -332,7 +332,7 @@
                 <a href="/check/" class="activity-link"><div class="activity-item">
                     <div class="activity-number">始め方</div>
                     <h3>確かめの始め方</h3>
-                    <p>申し込む前に決める事、運用の決まり、AI に渡す物と渡さない物、業者への知らせ、最初の一つの確かめ方。</p>
+                    <p>申し込む前に決める事、運用の決まり、AI に渡す物と渡さない物、業者への通知、最初の一つの確かめ方。</p>
                 </div></a>
                 <a href="/guide/keys-belong-to-managers/" class="activity-link"><div class="activity-item">
                     <div class="activity-number">17</div>
@@ -347,7 +347,7 @@
                 <a href="/guide/resist-attacks/" class="activity-link"><div class="activity-item">
                     <div class="activity-number">16</div>
                     <h3>サイバー攻撃に耐える扉</h3>
-                    <p>入られる前提で、口を減らし、本物かを確かめ、気づいて外に知らせ、切り離して戻します。</p>
+                    <p>入られる前提で、侵入の経路を減らし、本物かを確かめ、気づいて外に知らせ、切り離して戻します。</p>
                 </div></a>
                 <a href="/guide/layers/" class="activity-link"><div class="activity-item">
                     <div class="activity-number">04</div>
@@ -379,7 +379,7 @@
                         <div class="activity-number" style="font-size: 0.7rem;">2026.11.11</div>
                         <div class="activity-content">
                             <h3>扉の図面を立体にして見せる頁を作りました</h3>
-                            <p>集合住宅の玄関ドアの姿図を、つまみ一つで立体に変え、扉が署名と期限を確かめて開ける様子、網が切れた時、止めた鍵、火災の信号の時の動きを見られる頁を作りました。図面も写真も使わず、文章の指示から AI が書いた物です。</p>
+                            <p>集合住宅の玄関ドアの姿図を、つまみ一つで立体に変え、扉が署名と期限を確かめて開ける様子、ネットワークが切れた時、止めた鍵、火災の信号の時の動きを見られる頁を作りました。図面も写真も使わず、文章の指示から AI が書いた物です。</p>
                         </div>
                     </div>
                 </a>
@@ -401,7 +401,7 @@
 
         <section id="about">
             <h2>このサイトについて</h2>
-            <p>aiseed が運営しています。aiseed は収益を目的としない団体です。このサイトの仕様、道具、解説、手引きは無料で、会費と認証の制度はありません。</p>
+            <p>aiseed が運営しています。aiseed は収益を目的としない団体です。このサイトの仕様、道具、解説、ガイドは無料で、会費と認証の制度はありません。</p>
             <p>相談と教室は、aiseed とは別に、運営している者が個人として受ける仕事で、時間に応じた料金をいただきます。くわしくは「<a href="/consult/">相談と教室</a>」を見てください。</p>
             <p>仕様と道具は、各社が参考にして自社で開発し、自社で運用するための物です。問題や困りごとに気づいたら、<a href="https://github.com/aiseed-dev/digitaldoor/issues">Issues</a> で知らせてください。要求の番号に整えて、仕様に反映します。</p>
             <p>文章は CC BY 4.0、コードは AGPL-3.0-or-later、扉のコントローラは Apache-2.0 です。</p>

@@ -1,4 +1,4 @@
-"""盤 — Flet。ペアリングの QR、錠と扉の状態、施錠と解錠、開発用の出来事(火災・停電・扉)。判断は door。"""
+"""パネル — Flet。ペアリングの QR、錠と扉の状態、施錠と解錠、開発用の出来事(火災・停電・扉)。判断は door。"""
 from __future__ import annotations
 
 import asyncio
@@ -34,7 +34,7 @@ def stop_shared_node() -> None:
 
 
 async def main(page: ft.Page):
-    page.title = "digitalkey 扉の盤"
+    page.title = "digitalkey 扉のパネル"
     door = Door(os.environ.get("DIGITALKEY_DOOR_URL", "http://127.0.0.1:8797"))
     try:
         node = shared_node(door)
@@ -84,8 +84,8 @@ async def main(page: ft.Page):
             ft.Column([
                 status, mode, err,
                 ft.Row([
-                    ft.Button("施錠", on_click=act(door.lock, "盤")),
-                    ft.Button("解錠", on_click=act(door.unlock, "盤")),
+                    ft.Button("施錠", on_click=act(door.lock, "パネル")),
+                    ft.Button("解錠", on_click=act(door.unlock, "パネル")),
                 ]),
                 ft.Text("開発用の出来事", size=14),
                 ft.Row([

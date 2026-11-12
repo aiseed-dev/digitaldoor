@@ -3,7 +3,7 @@
 """毎朝の一覧。窓口(お問い合わせと照会)に届いた、状態が「新しい」のお問い合わせの件数と、一件ごとの日時・種類・件名を
 標準出力に出す(窓口仕様書 9 章)。
 
-deb2 で動かすサイトの運用の道具です。Python の標準ライブラリだけで動き(入れる物は無い)、deb2 の公開の写し
+deb2 で動かすサイトの運用の道具です。Python の標準ライブラリだけで動き(入れる物は無い)、deb2 の公開のクローン
 (~/dev/digitaldoor)の .venv の python で動かします。digitalkey は import しません。
 
     .venv/bin/python deploy/madoguchi/toiawase_daily.py
@@ -15,7 +15,7 @@ deb2 で動かすサイトの運用の道具です。Python の標準ライブ�
     2026-11-11 21:03<TAB>質問<TAB>件名の文
     2026-11-12 06:40<TAB>教室<TAB>件名の文
 
-  - 一行目の時刻と、一件ごとの受けた日時は、動かした機械の地方時です。並びは古い順です。
+  - 一行目の時刻と、一件ごとの受けた日時は、動かしたコンピューターの地方時です。並びは古い順です。
   - 件名の改行、タブ、制御文字は空白に直し、80 文字を超える件名は 80 文字で切って「…」を付けます。
   - 0 件の時は `新しいお問い合わせはありません(<時刻> 現在)` の一行です。
   - 本文、メールアドレス、送った人、レコードの id は出しません。中身は窓口の管理画面で読みます。
@@ -24,17 +24,17 @@ deb2 で動かすサイトの運用の道具です。Python の標準ライブ�
 環境変数が勝ちます。パスワードと識別を受ける引数はありません。
 
   MADOGUCHI_URL       窓口の PocketBase の基の URL(https:// で始まる物。試しの http://127.0.0.1 なども受ける)
-  MADOGUCHI_IDENTITY  kikai のレコードの識別(email)。役 asa のレコード(このレコードは照会の写しを読めない)
+  MADOGUCHI_IDENTITY  kikai のレコードの識別(email)。役 asa のレコード(このレコードは照会のコピーを読めない)
 
-入った直後に、応答のレコードの役(yaku)が asa かを確かめ、違えばほかの要求を出さずに止まります(役の違う入り口では、
+入った直後に、応答のレコードの役(yaku)が asa かを確かめ、違えばほかの要求を出さずに止まります(役の違うアカウントでは、
 窓口の決まりが空の一覧を返し、届いているのに「ありません」と出てしまうため)。
   MADOGUCHI_PASSWORD  同じレコードのパスワード
 
 パスワード、札、識別は、標準出力、標準エラー、例外の文に出しません。
 
-終了コード: 0 読めた(0 件を含む)、1 止まった(入れない、役の違う入り口、網の失敗、値の不足、env のファイルの権限)、
+終了コード: 0 読めた(0 件を含む)、1 止まった(入れない、役の違うアカウント、ネットワークの失敗、値の不足、env のファイルの権限)、
 2 引数の誤り(URL の形を含む)。エラーは `エラー: ` で始まる行で標準エラーに出し(deploy/web/crontab.example の
-見張りの決まりと同じ)、追跡は --debug の時だけ出します。
+監視の決まりと同じ)、追跡は --debug の時だけ出します。
 """
 from __future__ import annotations
 
@@ -134,7 +134,7 @@ def need(values: dict[str, str], url_arg: str | None) -> tuple[str, str, str]:
 
 # ---- 窓口への要求 ----
 def call(base: str, method: str, path: str, body: dict | None = None, token: str = "") -> tuple[int, object]:
-    """(HTTP の数, 応答の JSON か None)。HTTP の誤りは数で返し、網の失敗は Stop にする。本文は例外に入れない。"""
+    """(HTTP の数, 応答の JSON か None)。HTTP の誤りは数で返し、ネットワークの失敗は Stop にする。本文は例外に入れない。"""
     headers = {"Accept": "application/json"}
     data = None
     if body is not None:
@@ -167,7 +167,7 @@ def sign_in(base: str, identity: str, password: str) -> str:
         raise Stop(f"窓口に入れませんでした(HTTP {status})")
     record = data.get("record")
     if not isinstance(record, dict) or record.get("yaku") != ROLE:
-        raise Stop(f"この道具の役の入り口ではありません(要る役: {ROLE})")
+        raise Stop(f"この道具の役のアカウントではありません(要る役: {ROLE})")
     return token
 
 

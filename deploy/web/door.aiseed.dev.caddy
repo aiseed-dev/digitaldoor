@@ -1,7 +1,7 @@
 # door.aiseed.dev の Caddy の設定の見本(deb2)。
 #
-# 写し方:
-#   1. このファイルの中身を、deb2 の /etc/caddy/Caddyfile に写す(または import で取り込む)。
+# コピーの仕方:
+#   1. このファイルの中身を、deb2 の /etc/caddy/Caddyfile にコピーする(または import で取り込む)。
 #      `import cf` は、Caddyfile の先頭にある設定の束(スニペット cf)を使う
 #   2. sudo caddy validate --config /etc/caddy/Caddyfile      # 書き方を確かめる
 #   3. sudo systemctl reload caddy                            # 取り込む

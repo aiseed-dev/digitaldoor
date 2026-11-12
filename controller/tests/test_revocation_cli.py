@@ -1,7 +1,7 @@
 """失効の一覧を作る命令 `revocation` と、共通の引数 `--revocation-max-age`(扉コントローラ仕様書 5.2c、試験の対 45)の試験。
 
 命令が出した JSON を、扉の側の `Controller.accept_revocation` に渡して確かめる。
-`--revocation-max-age` は、`serve` が HTTP の口を開く所(cli の `serve`)を差し替えて、渡る `Config` を見る。
+`--revocation-max-age` は、`serve` が HTTP のインターフェースを開く所(cli の `serve`)を差し替えて、渡る `Config` を見る。
 """
 import json
 import time

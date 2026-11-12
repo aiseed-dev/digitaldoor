@@ -1,4 +1,4 @@
-"""QR を読む部分 — 画像(JPEG や PNG のバイト列)から QR の文字を取り出す。差し替え口です。
+"""QR を読む部分 — 画像(JPEG や PNG のバイト列)から QR の文字を取り出す。差し替えのインターフェースです。
 
 読み取りの方法の選び(Android と iOS の `flet build` で使える物を調べて選んだ):
 
@@ -11,9 +11,9 @@
   * Flet 本体に QR を読む部品は無い。flet-camera の撮影(`take_picture`)か画像の流し(`on_stream_image`。JPEG に符号化されて届く)から読む。
   * 読み取りの Flutter 拡張(mobile_scanner 等)を自前で書く道もあるが、Flutter の組み立てを手元で確かめられないので、今は選ばない。
 
-実機(Android、iOS)で読めることは、まだ確かめていない。そのため読み取りは `QrReader` の口にして、アプリは口だけを知る。
+実機(Android、iOS)で読めることは、まだ確かめていない。そのため読み取りは `QrReader` のインターフェースにして、アプリはインターフェースだけを知る。
 PC と疑似(fake.py の FakeQrReader)で回る試験を置き、実機では「渡す側の QR を読めるか」を確かめる。
-libzbar が無い機械(読み込みに失敗する)では `available()` が偽になり、アプリは 32 桁を打ち込む道だけを出す。
+libzbar が無いコンピューター(読み込みに失敗する)では `available()` が偽になり、アプリは 32 桁を打ち込む道だけを出す。
 """
 from __future__ import annotations
 

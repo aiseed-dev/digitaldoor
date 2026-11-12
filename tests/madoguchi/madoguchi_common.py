@@ -60,7 +60,7 @@ def sheet(at: str, state: str = "効いている", pid: str = PID) -> dict:
 
 
 def item(owner: str, at: str = "2026-12-10T12:00", state: str = "効いている", issuer: str = ISSUER) -> dict:
-    """写しの一人分(設計書 22.7 の形)。"""
+    """コピーの一人分(設計書 22.7 の形)。"""
     return {"owner": owner, "issuer": issuer, "made_at": at, "sheet": sheet(at, state)}
 
 

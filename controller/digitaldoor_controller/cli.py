@@ -36,7 +36,7 @@ def read_key_file(path: Path | str) -> Ed25519Signer:
 
 def parse_time(text: str) -> int:
     """unix 秒(整数)か、ISO 8601 の日時(2026-10-21T09:00:00+09:00 など)を unix 秒にする。
-    時差の無い日時は、この機械の地方時として読む。"""
+    時差の無い日時は、このコンピューターの地方時として読む。"""
     try:
         return int(text)
     except ValueError:
@@ -105,10 +105,10 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(
         prog="digitaldoor-controller", description="扉側のコントローラ(中核)",
         epilog="記録の署名は Ed25519 で、鍵は置き場の audit.ed25519 です(前からの置き場で audit.key がある物は HMAC のまま)。"
-               "伝票は一件ずつ <扉>-<連番>.json として箱へ出し、受け手は pubkey で写した公開鍵だけで check-box で検べます。"
+               "伝票は一件ずつ <扉>-<連番>.json として箱へ出し、受け手は pubkey でコピーした公開鍵だけで check-box で検べます。"
                "発行者と管理者の側では keygen で鍵を作り(秘密鍵のファイルは権限 600)、issue で資格情報を、trust-change で信頼の一覧の変更の要求を、"
                "JSON で出します。revocation は発行者の鍵で署名した失効の一覧を JSON で出します。"
-               "この四つは置き場(--dir)を使わず、網も要りません。")
+               "この四つは置き場(--dir)を使わず、ネットワークも要りません。")
     ap.add_argument("--dir", default=os.environ.get("DIGITALKEY_DOOR_DIR", "vault"), help="記録と鍵の置き場")
     ap.add_argument("--name", default="door", help="扉の名前。伝票のファイル名と door の欄に入る")
     ap.add_argument("--host", default="127.0.0.1")
@@ -122,19 +122,19 @@ def main(argv=None) -> int:
                     help="信頼する発行者の一覧(JSON。{発行者の識別: {\"public_key\": 16 進, \"doors\": [扉の名前, ...]}})。"
                          "管理者の変更が記録にあるときは、記録の一覧を使う")
     ap.add_argument("--revocation-max-age", type=float, default=0.0, metavar="秒",
-                    help="失効の知らせの古さの上限。発行者の失効の一覧の issued_at からこの秒数を過ぎると、"
+                    help="失効の通知の古さの上限。発行者の失効の一覧の issued_at からこの秒数を過ぎると、"
                          "期限の長さがこの秒数より長い資格情報を拒む。0 はこの規則を使わない(既定)")
     sub = ap.add_subparsers(dest="cmd", required=True)
-    s = sub.add_parser("serve", help="模擬の接点で core を開く(開発の口の故障注入も開く)")
+    s = sub.add_parser("serve", help="模擬の接点で core を開く(開発用のインターフェースの故障注入も開く)")
     s.add_argument("--box", help="伝票を出す箱(フォルダ)。動いている間、増えた記録を続けて出す")
     sub.add_parser("verify", help="監査の連鎖を検査")
-    sub.add_parser("pubkey", help="署名の公開鍵を 16 進で表示する。据付のときに受け手の台帳へ写す")
+    sub.add_parser("pubkey", help="署名の公開鍵を 16 進で表示する。据付のときに受け手の台帳へ登録する")
     e = sub.add_parser("export", help="まだ出していない記録を伝票にして箱へ出す(続きは置き場の export.cursor)")
     e.add_argument("--box", required=True, help="伝票を出す箱(フォルダ)。無ければ何も出さない")
     c = sub.add_parser("check-box", help="受け手の側で、箱の伝票を公開鍵で検べる(置き場は使わない)")
     c.add_argument("--box", required=True, help="伝票の箱")
     c.add_argument("--door", required=True, help="扉の名前")
-    c.add_argument("--pubkey", required=True, help="台帳に写した公開鍵(16 進)")
+    c.add_argument("--pubkey", required=True, help="台帳に登録した公開鍵(16 進)")
     k = sub.add_parser("keygen", help="発行者か管理者の Ed25519 の鍵の対を作る。秘密鍵は --out のファイル(権限 600)に書き、公開鍵と発行者の識別を JSON で出す",
                        description="秘密鍵(32 バイト)を権限 600 で --out に書く。ある名前には書かない。"
                                    "公開鍵の 16 進(信頼の一覧と --admin-key に入れる)と、発行者の識別(公開鍵の SHA-256 の先頭 16 桁。資格情報の issuer)を JSON で出す。")
@@ -146,7 +146,7 @@ def main(argv=None) -> int:
     i.add_argument("--subject", required=True, help="仮名化した主体")
     i.add_argument("--doors", required=True, metavar="NAME[,NAME...]", help="開けてよい扉の名前(コンマで区切る)")
     i.add_argument("--from", dest="from_", required=True, metavar="TIME",
-                   help="有効の始まり。unix 秒か ISO 8601(2026-10-21T09:00:00+09:00)。時差の無い日時はこの機械の地方時")
+                   help="有効の始まり。unix 秒か ISO 8601(2026-10-21T09:00:00+09:00)。時差の無い日時はこのコンピューターの地方時")
     i.add_argument("--until", required=True, metavar="TIME", help="有効の終わり。--from と同じ書き方")
     i.add_argument("--once", action="store_true", help="一回限りの資格情報にする")
     t = sub.add_parser("trust-change", help="管理者の鍵で署名した、信頼の一覧の変更の要求を JSON で出す",

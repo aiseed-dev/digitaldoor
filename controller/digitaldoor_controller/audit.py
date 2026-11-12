@@ -30,7 +30,7 @@ class Signer(Protocol):
 
 @dataclass
 class HmacSigner:
-    """ソフトの署名。鍵は箱の中のファイル。STSAFE に替えるときは同じ口で。"""
+    """ソフトの署名。鍵は箱の中のファイル。STSAFE に替えるときは同じインターフェースで。"""
 
     key: bytes
 
@@ -58,7 +58,7 @@ class Ed25519Verifier:
 
 
 class Ed25519Signer:
-    """ソフトの公開鍵署名。秘密鍵は箱の中のファイル。STSAFE に替えるときは同じ口で。"""
+    """ソフトの公開鍵署名。秘密鍵は箱の中のファイル。STSAFE に替えるときは同じインターフェースで。"""
 
     alg = "Ed25519"
 
@@ -108,7 +108,7 @@ class Entry:
     event: str
     result: str = ""
     subject: str = ""  # 仮名化した識別子
-    route: str = ""    # 系統1/系統2/有線/機械
+    route: str = ""    # 系統1/系統2/有線/機械キー
     detail: str = ""
     prev_hash: str = ""
     hash: str = ""

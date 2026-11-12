@@ -7,15 +7,15 @@
 
 場面(手順は docs/使い方.md の「実演」):
   check    錠に届くことを確かめる(施錠の命令を一つ送る)
-  kantan   開け閉めは部品の仕事。錠のドライバで直接、次に疑似の扉の口(POST /unlock)から開け閉めする
-  sono-hi  その日の鍵。扉は網が無くても、発行者の署名と期間を自分で確かめる
-  kigen    止めたつもり。網の届かない扉では、台帳で失効しても、期限が来るまで開く
+  kantan   開け閉めは部品の仕事。錠のドライバで直接、次に疑似の扉のインターフェース(POST /unlock)から開け閉めする
+  sono-hi  その日の鍵。扉はネットワークが無くても、発行者の署名と期間を自分で確かめる
+  kigen    止めたつもり。ネットワークの届かない扉では、台帳で失効しても、期限が来るまで開く
   keiro    経路が散る。同じ人の鍵を一つの経路で失効しても、別の経路で開く
   more     発行者の鍵が漏れたら。信頼の一覧を変えられるのは管理者の鍵だけ
   kiroku   記録で確かめる。記録の連鎖を検べ、一字の書き換えを見つける
   all      check を除く全部を順に(kantan から kiroku まで)
 
-しくみ: 疑似の扉(digitaldoor_controller の Controller と HTTP の口)を同じプロセスの中で開き、接点に
+しくみ: 疑似の扉(digitaldoor_controller の Controller と HTTP のインターフェース)を同じプロセスの中で開き、接点に
 digitalkey.contacts.LockDriverContacts を差す。錠は --fake の疑似の Sesame か、--lock の錠のドライバ
 (digitalkey.locks の登録簿。`sesame:<UUID>` は BLE の実機)。一つの場面は一つの手順ずつ進み、Enter で次へ行く
 (--yes なら待たない)。場面ごとに一時の置き場(扉の記録、鍵、台帳)を作り直し、終わったら消すので、どの場面からでも
@@ -64,7 +64,7 @@ class Unreachable(Exception):
 
 
 class SimClock:
-    """疑似の扉の時計。HTTP の口は POST のたびに時計を `time.time()` へ進めるので、口の側の `time` をこれに替える。"""
+    """疑似の扉の時計。HTTP のインターフェースは POST のたびに時計を `time.time()` へ進めるので、インターフェースの側の `time` をこれに替える。"""
 
     def __init__(self, now: float) -> None:
         self.now = now
@@ -116,7 +116,7 @@ class UI:
 
 
 class Stage:
-    """一つの場面の置き場。一時のフォルダ、疑似の扉(同じプロセスの HTTP の口)、錠、鍵。with で使い、出るときに全部消す。"""
+    """一つの場面の置き場。一時のフォルダ、疑似の扉(同じプロセスの HTTP のインターフェース)、錠、鍵。with で使い、出るときに全部消す。"""
 
     def __init__(self, lock_factory, *, issuers: tuple[str, ...] = ("発行者",)) -> None:
         self.driver = lock_factory()   # 指定が合わなければここで止まる(置き場はまだ作らない)
@@ -151,7 +151,7 @@ class Stage:
         self.contacts.close()
         shutil.rmtree(self.dir, ignore_errors=True)
 
-    # ---- 疑似の扉の口 ----
+    # ---- 疑似の扉のインターフェース ----
     def http(self, method: str, path: str, body: dict | None = None):
         data = json.dumps(body).encode() if body is not None else None
         req = urllib.request.Request(self.base + path, data=data, method=method,
@@ -183,7 +183,7 @@ class Stage:
         return "開きました" if r == "解錠" else f"拒みました: {self._refusal(since)}" if r == "拒否" else r
 
     def unlock(self) -> str:
-        """疑似の扉の口 POST /unlock(同じ機械の Matter の橋が使う口)。"""
+        """疑似の扉のインターフェース POST /unlock(同じコンピューターの Matter の橋が使うインターフェース)。"""
         r = self._sent(lambda: self.http("POST", "/unlock", {"by": "jitsuen"}))["result"]
         return "開きました" if r == "解錠" else f"拒みました: {r}"
 
@@ -220,7 +220,7 @@ class Stage:
         return "拒否: " + ([e["detail"] for e in rows if e["kind"] == "設定"] or ["?"])[-1]
 
     def ledger(self) -> Keyring:
-        """受け入れの台帳(網の向こうにある物)。鍵の操作は同じ錠のドライバで動く。"""
+        """受け入れの台帳(ネットワークの向こうにある物)。鍵の操作は同じ錠のドライバで動く。"""
         return Keyring(Ledger(self.dir / "daicho"), {DOOR: self.driver})
 
 
@@ -240,14 +240,14 @@ def scene_kantan(st: Stage, ui: UI) -> None:
     ui.result(st.drive("unlock"))
     ui.step("同じく直接、閉めます")
     ui.result(st.drive("lock"))
-    ui.step("疑似の扉の口から開けます(POST /unlock)")
+    ui.step("疑似の扉のインターフェースから開けます(POST /unlock)")
     ui.result(st.unlock())
-    ui.step("疑似の扉の口から閉めます(POST /lock)")
+    ui.step("疑似の扉のインターフェースから閉めます(POST /lock)")
     ui.result(st.lock())
 
 
 def scene_sono_hi(st: Stage, ui: UI) -> None:
-    ui.title("sono-hi その日の鍵", "扉は網が無くても、発行者の署名と期間を自分で確かめます。")
+    ui.title("sono-hi その日の鍵", "扉はネットワークが無くても、発行者の署名と期間を自分で確かめます。")
     ui.step("清掃の人に 9〜12 時の資格情報を出します")
     cred = st.issue("発行者", cid="seisou-1021", subject="seisou-001", start=at(0, 9), end=at(0, 12))
     ui.note(f"発行者の識別 {st.issuer_id('発行者')}。署名は発行者の鍵、扉は公開鍵だけを持つ")
@@ -262,7 +262,7 @@ def scene_sono_hi(st: Stage, ui: UI) -> None:
 
 
 def scene_kigen(st: Stage, ui: UI) -> None:
-    ui.title("kigen 止めたつもり", "網の届かない扉では、失効は有効期限でしか効きません。")
+    ui.title("kigen 止めたつもり", "ネットワークの届かない扉では、失効は有効期限でしか効きません。")
     keyring = st.ledger()
     ui.step("辞める人に、30 日の資格情報を出してあります")
     month = st.issue("発行者", cid="yamada-30d", subject="yamada-taro", start=at(0, 8), end=at(30, 8))
@@ -350,13 +350,13 @@ def scene_kiroku(st: Stage, ui: UI) -> None:
     v = st.http("GET", "/verify")
     ui.note(f"記録 {v['count']} 件。連番、前の記録のハッシュ、Ed25519 の署名を順に見る")
     ui.result("連鎖は正しい" if v["ok"] else f"連鎖が壊れています: {v['count']} 番「{v['why']}」")
-    ui.step("記録の写しを一字だけ書き換えて検べます")
+    ui.step("記録のコピーを一字だけ書き換えて検べます")
     copy = st.dir / "copy"
     shutil.copytree(st.vault, copy)
     text = (copy / "audit.jsonl").read_text(encoding="utf-8")
     (copy / "audit.jsonl").write_text(text.replace('"result": "期限の外"', '"result": "期限の内"', 1), encoding="utf-8")
     ok, n, why = Audit(load_signer(copy), copy / "audit.jsonl").verify()
-    ui.note("拒んだ理由の「期限の外」を「期限の内」に書き換えた写し")
+    ui.note("拒んだ理由の「期限の外」を「期限の内」に書き換えたコピー")
     ui.result("連鎖は正しい" if ok else f"壊れています: {n} 番「{why}」")
     ok, n, why = st.audit.verify()
     ui.note(f"もとの記録は{'正しいままです' if ok else '壊れています'}")

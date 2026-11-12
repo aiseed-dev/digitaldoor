@@ -1,12 +1,12 @@
 """seed のサーバーの「人の出入り」を、係の机から管理する（設計書 §3.4 の机の画面の四つ目）。
 
-この部品は seed のサーバー（https://github.com/aiseed-dev/seed ）の管理の口を前提にしている。
-digitaldoor には 2026-11-11 に写した。切り離すかは運営者が決める（kagi/README.md）。
+この部品は seed のサーバー（https://github.com/aiseed-dev/seed ）の管理のインターフェースを前提にしている。
+digitaldoor には 2026-11-11 にコピーした。切り離すかは運営者が決める（kagi/README.md）。
 
-seed のサーバーは運営者の鍵で Claude を呼ぶので、誰がその口を使えるかを、欄と決まりのはっきりした
+seed のサーバーは運営者の鍵で Claude を呼ぶので、誰がそのインターフェースを使えるかを、欄と決まりのはっきりした
 フォームの形で管理する。
 
-サーバーの管理の口（`/api/admin/*`。要求の頭 `x-seed-invite` に管理者の token）を `urllib` で呼ぶ。
+サーバーの管理のインターフェース（`/api/admin/*`。要求の頭 `x-seed-invite` に管理者の token）を `urllib` で呼ぶ。
 kagi は seed を import しない。要る言葉と決まりは、ここに書く。
 
 - 管理者の token は作業の場所の `seed-admin.json`（600）にだけ置く。画面・記録・例外の文には出さない。
@@ -101,7 +101,7 @@ def check_url(url: str) -> str:
     if p.scheme not in ("https", "http") or not p.hostname:
         raise Refused("サーバーの URL は https://… の形で書く")
     if p.username or p.password or p.query or p.fragment:
-        raise Refused("サーバーの URL に名前・合言葉・? や # を入れない")
+        raise Refused("サーバーの URL に名前・パスワード・? や # を入れない")
     if p.scheme == "http" and p.hostname not in LOCAL_HOSTS:
         raise Refused("http の URL は通さない（token が平文で流れるため）。https://… にする")
     return u
@@ -204,7 +204,7 @@ def urllib_transport(method: str, url: str, headers: dict, body: bytes | None) -
 
 
 class Client:
-    """管理の口。`transport(method, url, headers, body) -> (status, bytes)` を差し替えられる。"""
+    """管理のインターフェース。`transport(method, url, headers, body) -> (status, bytes)` を差し替えられる。"""
 
     def __init__(self, conn: Conn, transport=None):
         self.conn = conn
@@ -357,7 +357,7 @@ def state_rows(o: dict) -> list[list[str]]:
 
     audit_word = {"on": "書いています", "off": "書いていません", "error": "書けなくなっています"}
     rows = [
-        ["サーバー", f"動いています（版 {o.get('version', '?')}）"],
+        ["サーバー", f"動いています（バージョン {o.get('version', '?')}）"],
         ["受け付け", yes("paused", "止めています", "受け付けています")],
         ["Claude を呼べるか", yes("read", "呼べます", "呼べません")],
         ["外の鍵", f"Claude {have('claude')}、Pl@ntNet {have('plantnet')}"],
@@ -398,7 +398,7 @@ def attention(o: dict, audit_: dict | None = None) -> list[tuple[str, list[str]]
         warn("受け付けを止めています。戻すには下の「受け付けを再開する」を押します。")
     if "read" in o and not o.get("read"):
         warn(
-            "写真を読み取れず、話す口も使えません。Claude の鍵が入っていません。サーバーで次を打ちます。"
+            "写真を読み取れず、話すインターフェースも使えません。Claude の鍵が入っていません。サーバーで次を打ちます。"
             "二行目で鍵を貼り、Enter の後に Ctrl-D で終えます（鍵がもう在る時は作り直しません）。",
             "sudo install -d -o root -g root -m 700 /etc/credstore",
             "sudo test -e /etc/credstore/seed.anthropic || sudo sh -c 'umask 077; cat > /etc/credstore/seed.anthropic'",
@@ -420,7 +420,7 @@ def attention(o: dict, audit_: dict | None = None) -> list[tuple[str, list[str]]
         )
     if au.get("verified") is False:
         warn(
-            "操作の記録が書き換えられています。誰かが機械の中に入った印です。"
+            "操作の記録が書き換えられています。誰かがサーバーの中に入った印です。"
             "表からの被害を増やさないために、下の「受け付けを止める」を押します。"
             "次に、サーバーで知らない入り方が無いかを見ます。",
             "last -n 20",
@@ -804,7 +804,7 @@ def admin_token_prefill(d: Path, conn: Conn | None) -> dict:
         "id": ADMIN_TOKEN_ID,
         "where": f"pc:{conn_path(d)}（600）",
         "holder": os.environ.get("USER", ""),
-        "role": f"kagi の机から {host} の管理の口を使う（範囲 admin）",
+        "role": f"kagi の机から {host} の管理のインターフェースを使う（範囲 admin）",
         "expires": "",
         "lost": "サーバーで新しい管理者の token を出し、kagi の「人の出入り」で入れ替える",
         "leaked": "サーバーで、その token を取り消す → 操作の記録で範囲を見る → 新しい token を出して入れ替える → 書く",

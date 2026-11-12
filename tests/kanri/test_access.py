@@ -1,4 +1,4 @@
-"""設計書 20.8: 機器を対象にした権限と、経路「管理者の口」(出す、止める、効くまで、照らす、削除、進み具合、失効)。
+"""設計書 20.8: 機器を対象にした権限と、経路「管理者のインターフェース」(出す、止める、効くまで、照らす、削除、進み具合、失効)。
 
 段 1b の実装より先に書いた。発行と実体は固定の時刻(ISSUE_AT)で出す。
 """
@@ -121,8 +121,8 @@ def test_may_open_ignores_device_permissions(dunit, access):
 # ---- 実体を出す ----
 
 def test_issue_access_example(dunit, grant):
-    """20.8 の例: t1 の機器 ルーター1 の発行済みの権限 P から issue_entity(P, "管理者の口", account="admin")
-    → 実体_発行(経路 管理者の口、扉 空、機器 ルーター1、識別 admin)。Issued.資格情報 は None。"""
+    """20.8 の例: t1 の機器 ルーター1 の発行済みの権限 P から issue_entity(P, "管理者のインターフェース", account="admin")
+    → 実体_発行(経路 管理者のインターフェース、扉 空、機器 ルーター1、識別 admin)。Issued.資格情報 は None。"""
     pid, _, ps = grant(dunit, "t1", "機器", "ルーター1")
     got = _issue_access(dunit, pid)
     assert got.資格情報 is None
@@ -163,7 +163,7 @@ def test_issue_access_role_admin_only(dunit, grant, refused):
 
 
 def test_issue_access_unknown_route_before_role(dunit, refused):
-    """19.8: 管理者の口も登録簿にある経路。知らない経路は役より先に UNKNOWN_ROUTE で、管理者の口はそうならない。"""
+    """19.8: 管理者のインターフェースも登録簿にある経路。知らない経路は役より先に UNKNOWN_ROUTE で、管理者のインターフェースはそうならない。"""
     refused(dunit, reasons.ROLE_NOT_ALLOWED, dunit.issue_entity, "x", ACCESS, account="admin", by="nobody",
             role="発行者", at=AT)
 
@@ -189,7 +189,7 @@ def test_issue_access_subject_inactive_before_device_only(dunit, grant, refused)
 
 
 def test_device_only(dunit, grant, refused):
-    """R-NW-05 R-RS-04 20.8 の 1、20.13 の拒否と役 3: 扉の権限から管理者の口は DEVICE_ONLY。"""
+    """R-NW-05 R-RS-04 20.8 の 1、20.13 の拒否と役 3: 扉の権限から管理者のインターフェースは DEVICE_ONLY。"""
     pid, _, _ = grant(dunit, "t1")
     refused(dunit, RB.DEVICE_ONLY, _issue_access, dunit, pid, detail="")
     dunit.register_group("事務所", ["玄関"], **ADM)
@@ -221,7 +221,7 @@ def test_issue_access_later_checks(dunit, grant, refused):
 
 
 def test_access_uses_account_not_key_number(dunit, grant, refused):
-    """20.8、20.14: 管理者の口は account を使い、key_number を使わない。ほかの経路は account を使わない。"""
+    """20.8、20.14: 管理者のインターフェースは account を使い、key_number を使わない。ほかの経路は account を使わない。"""
     pid, _, _ = grant(dunit, "t1", "機器", "ルーター1")
     refused(dunit, RB.NEED_ACCOUNT, dunit.issue_entity, pid, ACCESS, key_number="K-1", **ADM, at=AT)
     got = dunit.issue_entity(pid, ACCESS, account="admin", key_number="K-9", **ADM, at=AT)
@@ -241,7 +241,7 @@ def test_account_length_is_form(dunit, grant, refused):
 
 
 def test_shared_account_is_not_refused(dunit, access):
-    """R-RS-04 20.8: 同じ機器と同じ口の名の実体を、何人分でも出せる(拒まない)。同じ人に二度も出せる。"""
+    """R-RS-04 20.8: 同じ機器と同じインターフェースの名の実体を、何人分でも出せる(拒まない)。同じ人に二度も出せる。"""
     _, a = access(dunit, "t1", "複合機1")
     _, b = access(dunit, "t2", "複合機1")
     _, c = access(dunit, "t1", "複合機1")
@@ -250,7 +250,7 @@ def test_shared_account_is_not_refused(dunit, access):
 
 
 def test_entities_include_access(dunit, access, grant):
-    """R-AC-15 20.8: entities(subject) は扉の鍵と機器の口を同じ一覧に並べる(実体_発行を台帳に書いた順)。"""
+    """R-AC-15 20.8: entities(subject) は扉の鍵と機器のインターフェースを同じ一覧に並べる(実体_発行を台帳に書いた順)。"""
     pd, _, _ = grant(dunit, "t1")
     g = dunit.issue_entity(pd, GATE, **ADM, at=AT).実体
     _, a = access(dunit, "t1")
@@ -258,7 +258,7 @@ def test_entities_include_access(dunit, access, grant):
         [(g.番号, GATE, ""), (a.番号, ACCESS, "ルーター1")]
 
 
-# ---- 経路「管理者の口」の四つの働き ----
+# ---- 経路「管理者のインターフェース」の四つの働き ----
 
 def test_route_issue_directly(dunit, grant):
     """20.8 の表の 出す: RouteIssue(識別=account, 発行者="", 資格情報=None)。key_number が空なら NEED_ACCOUNT。"""
@@ -290,17 +290,17 @@ def test_route_stop_and_effective_by(dunit, access):
 
 
 def test_route_reconcile(dunit, access, refused):
-    """20.8 の表の 照らす: 進み具合の状態が 人の作業が要る なら 違い(口が残ったまま)、ほかは 照らせない(段 6)。"""
+    """20.8 の表の 照らす: 進み具合の状態が 人の作業が要る なら 違い(インターフェースが残ったまま)、ほかは 照らせない(段 6)。"""
     _, e = access(dunit, "t1")
     at = dt(REV)
     r = dunit.reconcile(e.番号, at=at)
-    assert (r.結果, r.詳細) == ("照らせない", "機械の中との照らし合わせは段 6")
+    assert (r.結果, r.詳細) == ("照らせない", "機器の中との照らし合わせは段 6")
     dunit.revoke_subject("t1", "退職", **ADM, at=at)
     r = dunit.reconcile(e.番号, at=at)
-    assert (r.結果, r.詳細) == ("違い", "口が残ったまま")
+    assert (r.結果, r.詳細) == ("違い", "インターフェースが残ったまま")
     dunit.remove_access(e.番号, **ADM)
     r = dunit.reconcile(e.番号, at=at)
-    assert (r.結果, r.詳細) == ("照らせない", "機械の中との照らし合わせは段 6")
+    assert (r.結果, r.詳細) == ("照らせない", "機器の中との照らし合わせは段 6")
 
 
 # ---- 進み具合 ----
@@ -342,7 +342,7 @@ def test_progress_access_after_revoke_permission(dunit, access):
 
 
 def test_revoke_skips_removed_access(dunit, access):
-    """20.2 の 失効の 2: 削除の伝票がある管理者の口には、実体_失効を書かない。行は 止まった。"""
+    """20.2 の 失効の 2: 削除の伝票がある管理者のインターフェースには、実体_失効を書かない。行は 止まった。"""
     pid, e = access(dunit, "t1")
     dunit.remove_access(e.番号, "消した", **ADM)
     rev = dunit.revoke_subject("t1", "退職", **ADM, at=dt(REV))
@@ -364,12 +364,12 @@ def test_confirm_stopped_waits_for_removal(dunit, access, refused):
 # ---- 削除 ----
 
 def test_remove_access_slip(dunit, access):
-    """20.8、20.3: remove_access は 管理者の口_削除 を書く(発行者 by、宛先 実体の主体、根拠 [実体_発行])。
-    書く値は 実体、機器、口の名、結果(既定 消した)、備考、役。Entity.回収 はその番号。"""
+    """20.8、20.3: remove_access は 管理者のインターフェース_削除 を書く(発行者 by、宛先 実体の主体、根拠 [実体_発行])。
+    書く値は 実体、機器、インターフェースの名、結果(既定 消した)、備考、役。Entity.回収 はその番号。"""
     _, e = access(dunit, "t1")
     slip = dunit.remove_access(e.番号, by="ops", role="運用")
-    assert slip.form == "管理者の口_削除" and slip.issuer == "ops" and slip.to == "t1" and slip.basis == [e.番号]
-    assert (slip["実体"], slip["機器"], slip["口の名"], slip["結果"], slip["備考"], slip["役"]) == \
+    assert slip.form == "管理者のインターフェース_削除" and slip.issuer == "ops" and slip.to == "t1" and slip.basis == [e.番号]
+    assert (slip["実体"], slip["機器"], slip["インターフェースの名"], slip["結果"], slip["備考"], slip["役"]) == \
         (e.番号, "ルーター1", "admin", "消した", "", "運用")
     assert {x.番号: x for x in dunit.entities("t1")}[e.番号].回収 == slip.id
 
@@ -378,8 +378,8 @@ def test_remove_access_slip(dunit, access):
 def test_remove_access_results(dunit, access, result):
     """20.8: result は 消した、パスワードを替えた、機器を初期化、機器が無い。note は 備考。"""
     _, e = access(dunit, "t1")
-    slip = dunit.remove_access(e.番号, result, "共用の口", **ADM)
-    assert (slip["結果"], slip["備考"]) == (result, "共用の口")
+    slip = dunit.remove_access(e.番号, result, "共用のインターフェース", **ADM)
+    assert (slip["結果"], slip["備考"]) == (result, "共用のインターフェース")
 
 
 def test_remove_access_refusals(dunit, access, grant, refused):
@@ -407,7 +407,7 @@ def test_remove_access_owner_role(dunit, access, grant, refused):
 
 
 def test_remove_access_refusal_order(dunit, access, grant, refused):
-    """20.8 の削除の確かめの順: 実体 → 管理者の口か → 責任者 → 削除済み。"""
+    """20.8 の削除の確かめの順: 実体 → 管理者のインターフェースか → 責任者 → 削除済み。"""
     pd, _, _ = grant(dunit, "t1")
     g = dunit.issue_entity(pd, GATE, **ADM, at=AT).実体
     _, e = access(dunit, "t1")
@@ -418,7 +418,7 @@ def test_remove_access_refusal_order(dunit, access, grant, refused):
 
 
 def test_remove_access_before_revoke_and_on_retired(dunit, access):
-    """20.8: 失効の前にも書ける(人が先に口を消した時)。機器が廃棄でも書ける。削除の後、その行は 止まった。"""
+    """20.8: 失効の前にも書ける(人が先にインターフェースを消した時)。機器が廃棄でも書ける。削除の後、その行は 止まった。"""
     _, a = access(dunit, "t1")
     dunit.remove_access(a.番号, **ADM)
     assert _row(dunit, "t1", a.番号, IN).状態 == "止まった"
@@ -429,7 +429,7 @@ def test_remove_access_before_revoke_and_on_retired(dunit, access):
 
 
 def test_return_physical_and_remove_access_do_not_cross(dunit, access, grant, refused):
-    """20.8: 物理キーの実体に remove_access は NOT_ACCESS、管理者の口の実体に return_physical は NOT_PHYSICAL。"""
+    """20.8: 物理キーの実体に remove_access は NOT_ACCESS、管理者のインターフェースの実体に return_physical は NOT_PHYSICAL。"""
     pd, _, _ = grant(dunit, "t1")
     k = dunit.issue_entity(pd, PHYSICAL, key_number="K-7", **ADM, at=AT).実体
     _, e = access(dunit, "t1")
@@ -437,10 +437,10 @@ def test_return_physical_and_remove_access_do_not_cross(dunit, access, grant, re
     refused(dunit, reasons.NOT_PHYSICAL, dunit.return_physical, e.番号, **ADM)
 
 
-# ---- 扉の経路に管理者の口は書けない ----
+# ---- 扉の経路に管理者のインターフェースは書けない ----
 
 def test_register_door_refuses_access_route(dunit, refused):
-    """20.2、20.14: register_door の routes に 管理者の口 があれば、unit.routes にあっても UNKNOWN_ROUTE(詳細 管理者の口)。"""
+    """20.2、20.14: register_door の routes に 管理者のインターフェース があれば、unit.routes にあっても UNKNOWN_ROUTE(詳細 管理者のインターフェース)。"""
     assert ACCESS in dunit.routes
     refused(dunit, reasons.UNKNOWN_ROUTE, dunit.register_door, "裏口", [GATE, ACCESS], **ADM, detail=ACCESS)
     refused(dunit, reasons.UNKNOWN_ROUTE, dunit.register_door, "裏口", [ACCESS], **ADM, detail=ACCESS)

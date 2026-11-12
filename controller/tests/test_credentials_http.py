@@ -1,6 +1,6 @@
-"""発行者の署名つき資格情報の HTTP の口(POST /credential、POST /trust、GET /trust)の試験。
+"""発行者の署名つき資格情報の HTTP のインターフェース(POST /credential、POST /trust、GET /trust)の試験。
 
-HTTP の口は POST のたびに時計を実時間へ進めるので、この試験の資格情報の期限は実時間のまわりに取る。
+HTTP のインターフェースは POST のたびに時計を実時間へ進めるので、この試験の資格情報の期限は実時間のまわりに取る。
 """
 import json
 import threading
@@ -104,7 +104,7 @@ def test_http_credential_from_untrusted_vendor_is_rejected_and_recorded(world):
 
 
 def test_http_bad_signature_and_range_and_once(world):
-    """R-AC-09 R-AC-10: HTTP の口でも、署名の不一致、範囲の外、一回限りの二度目を、仕様の理由の言葉で拒む。"""
+    """R-AC-09 R-AC-10: HTTP のインターフェースでも、署名の不一致、範囲の外、一回限りの二度目を、仕様の理由の言葉で拒む。"""
     ctl, base, admin = world
     a = Ed25519Signer.generate()
     call(base, "POST", "/trust", {"request": add_req(admin, a, "r-1")})
@@ -131,7 +131,7 @@ def test_http_bad_signature_and_range_and_once(world):
 
 
 def test_http_unsynced_clock_rejects_credential():
-    """R-AC-02: 時計が未同期の扉は、HTTP の口からの資格情報も「時刻が未同期」で拒む。"""
+    """R-AC-02: 時計が未同期の扉は、HTTP のインターフェースからの資格情報も「時刻が未同期」で拒む。"""
     a = Ed25519Signer.generate()
     ctl = Controller(SimContacts(), Audit(HmacSigner(b"k" * 32)), Config(autolock_s=999), name=DOOR,
                      trust={key_id(a.public_key()): {"public_key": a.public_key().hex(), "doors": [DOOR]}})
@@ -170,7 +170,7 @@ def test_http_bad_trust_requests_change_nothing(world):
 
 
 def test_http_records_only_grow_through_credential_paths(world):
-    """R-CT-14: 資格情報と信頼の口を通しても、記録は減らず、前の記録は変わらない。"""
+    """R-CT-14: 資格情報と信頼のインターフェースを通しても、記録は減らず、前の記録は変わらない。"""
     ctl, base, admin = world
     a = Ed25519Signer.generate()
     seen = []

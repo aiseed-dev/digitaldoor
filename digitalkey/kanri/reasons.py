@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""拒否の理由の言葉(設計書 19.11、20.11、21.11、22.8)と、知らせの言葉(20.11。`F_` で始まる定数)と、拒否 `Refused`。
+"""拒否の理由の言葉(設計書 19.11、20.11、21.11、22.8)と、通知の言葉(20.11。`F_` で始まる定数)と、拒否 `Refused`。
 
 どのメソッドも、拒む時は `Refused(理由, 詳細)` を投げ、台帳に何も書きません。
 理由は下の定数のどれかで、命令 `digitalkey kanri` は `拒否: <理由>` か `拒否: <理由>(<詳細>)` を出します。
-知らせ(`device_findings` の `Finding.知らせ`)は拒否ではなく、台帳だけで分かる足りない所を挙げる言葉です。
+通知(`device_findings` の `Finding.通知`)は拒否ではなく、台帳だけで分かる足りない所を挙げる言葉です。
 """
 from __future__ import annotations
 
@@ -55,7 +55,7 @@ GATE_NO_PERMISSION = "権限がありません"
 GATE_REVOKED = "失効しています"
 GATE_OUT_OF_PERIOD = "期間の外"
 
-# 段 1b(20.11): 機器の台帳と管理者の口
+# 段 1b(20.11): 機器の台帳と管理者のインターフェース
 DUPLICATE_DEVICE = "同じ名前の機器があります"
 UNKNOWN_DEVICE = "この台帳の機器ではありません"
 UNKNOWN_SEGMENT = "登録されていない区画です"
@@ -63,9 +63,9 @@ DEVICE_RETIRED = "廃棄した機器です"
 NOT_OWNER = "この機器の責任者ではありません"
 NEED_ITEM = "確かめの項目が足りません"
 NEED_REASON = "理由が要ります"
-DEVICE_ONLY = "管理者の口は機器の権限だけです"
-NEED_ACCOUNT = "口の名が要ります"
-NOT_ACCESS = "管理者の口ではありません"
+DEVICE_ONLY = "管理者のインターフェースは機器の権限だけです"
+NEED_ACCOUNT = "インターフェースの名が要ります"
+NOT_ACCESS = "管理者のインターフェースではありません"
 ALREADY_REMOVED = "削除済みです"
 
 # 段 2a(21.11): 失効の一覧
@@ -76,7 +76,7 @@ UNKNOWN_GENERATION = "その世代の一覧がありません"
 ACCOUNT_LINKED = "その番号は、ほかの主体に結ばれています"
 NOT_LINKED = "結ばれていません"
 
-# 知らせの言葉(20.9、20.11)。拒否ではない
+# 通知の言葉(20.9、20.11)。拒否ではない
 F_NO_OWNER = "責任者がいません"
 F_OWNER_INACTIVE = "責任者が有効ではありません"
 F_NO_SEGMENT = "区画が決まっていません"
@@ -87,9 +87,9 @@ F_SUPPORT_NEAR = "更新の期限が近づいています"
 F_NO_INSTALL_CHECK = "据え付けの確かめがありません"
 F_BAD_ITEM = "確かめの結果が悪いままです"
 F_CHECK_OVERDUE = "点検の間が空いています"
-F_SHARED_ACCOUNT = "一つの口を複数の人が使っています"
+F_SHARED_ACCOUNT = "一つのインターフェースを複数の人が使っています"
 F_NO_DISPOSAL_CHECK = "廃棄の確かめがありません"
-F_ACCESS_LEFT = "止まっていない口があります"
+F_ACCESS_LEFT = "止まっていないインターフェースがあります"
 
 
 class Refused(ValueError):

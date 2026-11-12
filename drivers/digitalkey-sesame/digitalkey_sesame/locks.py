@@ -1,6 +1,6 @@
 """digitalkey の錠ドライバ(entry point `digitalkey.locks`)。
 
-  sesame:<機器UUID>      BLE 直結。事前に `digitalkey sesame register`(新しい Sesame)か `import`(スマートフォンの鍵を写す)で鍵を置いておく
+  sesame:<機器UUID>      BLE 直結。事前に `digitalkey sesame register`(新しい Sesame)か `import`(スマートフォンの鍵をコピーする)で鍵を置いておく
   sesameweb:<機器UUID>   CANDY HOUSE の Web API(Hub 3 経由)。API key と機器の secret key は
                          $SESAME_KEYS が指す JSON({"api_key": "...", "<uuid>": "<secret hex>"})か、
                          環境変数 SESAME_API_KEY / SESAME_SECRET_<UUIDの16進を大文字で> で渡す

@@ -17,7 +17,7 @@
 - 失効の一覧: accept_revocation で、信頼する発行者の署名と世代を確かめて受け、発行者ごとに前の一覧を丸ごと置き換える。
   present に一緒に運んだ一覧(revocation)は、資格情報より先に受ける。同じ世代は「同じ」で記録しない。
   起動のときは記録(設定/失効の一覧 受理)から状態を作り直す。信頼の一覧から外した発行者の状態も残す(仕様書 5.2c)
-- 失効の知らせの古さ: revocation_max_age_s が 0 より大きいとき、一覧の issued_at からその秒数を過ぎた発行者の、
+- 失効の通知の古さ: revocation_max_age_s が 0 より大きいとき、一覧の issued_at からその秒数を過ぎた発行者の、
   期限の長さがその秒数より長い資格情報を拒む。0 はこの規則を使わない(仕様書 5.2c、R-AC-14)
 """
 from __future__ import annotations
@@ -41,7 +41,7 @@ class Config:
     power_policy: str = "release"  # release(停電で解放) / hold(停電で保持)
     fire_policy: str = "release"
     time_jump_s: float = 300.0     # 同期済みの時計がこれを超えて動いたら「時刻のずれ」
-    revocation_max_age_s: float = 0.0  # 失効の知らせの古さの上限(秒)。0 はこの規則を使わない(仕様書 5.2c)
+    revocation_max_age_s: float = 0.0  # 失効の通知の古さの上限(秒)。0 はこの規則を使わない(仕様書 5.2c)
 
     def check(self) -> None:
         """許されない値なら ValueError。"""
@@ -168,7 +168,7 @@ class Controller:
 
     def on_auth(self, subject: str, route: str = "系統1", *, valid: bool = True, reason: str = "",
                 duress: bool = False, detail: str = "") -> str:
-        """読取機か上の層から「この資格情報が提示された」と来る。有効性の判定は上の層(発行者)の仕事。"""
+        """リーダーか上の層から「この資格情報が提示された」と来る。有効性の判定は上の層(発行者)の仕事。"""
         if not valid:
             self._log("認証", "拒否", result=reason or "無効", subject=subject, route=route, detail=detail)
             return "拒否"
@@ -200,10 +200,10 @@ class Controller:
 
     # ---- 署名つき資格情報(仕様書 5.2a) ----
     def present(self, credential, route: str = "遠隔", *, revocation=None) -> str:
-        """発行者の署名つき資格情報を、扉が自分で確かめて受ける。網も発行者のサーバーも要らない。
+        """発行者の署名つき資格情報を、扉が自分で確かめて受ける。ネットワークも発行者のサーバーも要らない。
 
         確かめて外れたら、理由を結果にして認証の拒否を記録する。通れば on_auth の判断(火災、二人同時、自動施錠)を通る。
-        一回限りの資格情報は、通ったら「使用」を記録に足す。強要の印は持たせない(読取機の判定結果で受ける)。
+        一回限りの資格情報は、通ったら「使用」を記録に足す。強要の印は持たせない(リーダーの判定結果で受ける)。
         revocation は端末が一緒に運んだ失効の一覧。先に受け、結果が受理、同じ、拒否のどれでも続けて資格情報を確かめる。
         """
         if revocation is not None:
@@ -271,9 +271,9 @@ class Controller:
         return "施錠"
 
     def refuse_remote(self, action: str, addr: str) -> None:
-        """同じ機械以外から /lock /unlock が来たときの拒否を記録する(口が拒んだ事実だけで、状態は動かさない)。"""
-        self._log("操作", "解錠" if action == "unlock" else "施錠", result="拒否", route="網",
-                  detail=f"同じ機械以外からの要求 {addr}")
+        """同じコンピューター以外から /lock /unlock が来たときの拒否を記録する(インターフェースが拒んだ事実だけで、状態は動かさない)。"""
+        self._log("操作", "解錠" if action == "unlock" else "施錠", result="拒否", route="ネットワーク",
+                  detail=f"同じコンピューター以外からの要求 {addr}")
 
     def note_fault(self, detail: str, result: str = "", route: str = "") -> None:
         """開発の故障注入の指示(か、その拒否)を、種別「試験」で記録に残す(仕様書 5.5)。状態は動かさない。"""

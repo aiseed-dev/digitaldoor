@@ -1,4 +1,4 @@
-"""開発の口(仕様書 5.5)の試験。仕様書 第 8 章の表の 26〜30。
+"""開発用のインターフェース(仕様書 5.5)の試験。仕様書 第 8 章の表の 26〜30。
 
 期待値は仕様書から決めている。WebSocket は依存を増やさないよう、RFC 6455 の小さな相手をここに書く。
 """
@@ -31,7 +31,7 @@ FAULT_KEYS = {"lock", "clock_offset_s", "failures"}
 
 
 def sub(faults: dict) -> dict:
-    """版 1 の間は欄が足されうる(仕様書 5.5 版)。ここで確かめる三つの欄だけを取り出す。"""
+    """バージョン 1 の間は欄が足されうる(仕様書 5.5 バージョン)。ここで確かめる三つの欄だけを取り出す。"""
     return {k: faults[k] for k in ("lock", "clock_offset_s", "failures")}
 
 def new_ctl(autolock_s=999.0, now=None):
@@ -205,7 +205,7 @@ class WS:
 
 
 def lan_address():
-    """この機械の、ループバックでない IPv4 の番地。無ければ None。"""
+    """このコンピューターの、ループバックでない IPv4 の番地。無ければ None。"""
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("192.0.2.1", 9))     # 送りはしない。経路から自分の番地を引くだけ
@@ -216,10 +216,10 @@ def lan_address():
     return None if addr.startswith("127.") or addr == "0.0.0.0" else addr
 
 
-# ---- 26 定義と版 ----
+# ---- 26 定義とバージョン ----
 
 def test_openapi_documented_paths_are_served_and_versioned():
-    """R-DV-11: 定義にある口はどれも 404 を返さず、定義に無い口は 404。応答のすべてに定義と同じ版の API-Version が付く。"""
+    """R-DV-11: 定義にあるインターフェースはどれも 404 を返さず、定義に無いインターフェースは 404。応答のすべてに定義と同じバージョンの API-Version が付く。"""
     ctl = new_ctl()
     with serve(ctl, dev=True) as (_, base):
         status, headers, raw = request(base, "GET", "/openapi.json")
@@ -259,7 +259,7 @@ def test_openapi_documented_paths_are_served_and_versioned():
 
 
 def test_openapi_and_version_header_without_dev():
-    """R-DV-11: 開発でない扉も定義を返し、応答のすべてに API-Version が付く。開発の口(/fault)は 404。"""
+    """R-DV-11: 開発でない扉も定義を返し、応答のすべてに API-Version が付く。開発用のインターフェース(/fault)は 404。"""
     ctl = new_ctl()
     with serve(ctl, dev=False) as (_, base):
         doc = call(base, "GET", "/openapi.json")
@@ -485,7 +485,7 @@ def test_clock_default():
 
 
 def test_fault_is_404_when_not_dev():
-    """R-DV-03: 開発でない扉では故障注入の口は無い(404)。錠は注入されない。"""
+    """R-DV-03: 開発でない扉では故障注入のインターフェースは無い(404)。錠は注入されない。"""
     ctl = new_ctl()
     with serve(ctl, dev=False) as (_, base):
         assert request(base, "GET", "/fault")[0] == 404
@@ -521,7 +521,7 @@ def test_fault_bad_request_changes_nothing(body):
 
 
 def test_fault_from_other_machine_is_403_and_recorded():
-    """R-DV-03: 同じ機械でない相手からの故障注入は 403 で拒み、記録に残す。何も変えない。"""
+    """R-DV-03: 同じコンピューターでない相手からの故障注入は 403 で拒み、記録に残す。何も変えない。"""
     lan = lan_address()
     if lan is None:
         pytest.skip("ループバックでない番地が無い")
@@ -535,7 +535,7 @@ def test_fault_from_other_machine_is_403_and_recorded():
             pytest.skip("自分の LAN の番地へつなげない")
         assert status == 403
         assert len(ctl.audit.entries) > before                  # 拒んだことが残る
-        assert call(base, "GET", "/fault")["lock"] == "正常"     # 同じ機械からは受ける
+        assert call(base, "GET", "/fault")["lock"] == "正常"     # 同じコンピューターからは受ける
         assert ctl.contacts.fault_lock == "正常"
         assert not [r for r in fault_records(audit_rows(base)) if "応答しない" in record_text(r)
                     and r["result"] != "拒否"]

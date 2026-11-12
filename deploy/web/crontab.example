@@ -4,8 +4,8 @@
 # ログの置き場を先に作る(例):
 #   mkdir -p ~/log/digitaldoor
 #
-# 公開: 公開の写し ~/dev/digitaldoor を origin の main に進め、点検して /srv/door/www を付け替える。
-#       写しの .venv は miniforge で作った python(publish.py は標準ライブラリだけで動く)。
+# 公開: 公開のクローン ~/dev/digitaldoor を origin の main に進め、点検して /srv/door/www を付け替える。
+#       クローンの .venv は miniforge で作った python(publish.py は標準ライブラリだけで動く)。
 */10 * * * * cd ~/dev/digitaldoor && .venv/bin/python tools/publish.py --repo ~/dev/digitaldoor --root /srv/door >> ~/log/digitaldoor/publish.log 2>&1
 #
 # 窓口の毎朝の一覧: 状態が「新しい」のお問い合わせの件数と、一件ごとの日時・種類・件名をログに書く
@@ -17,4 +17,4 @@
 # (docs/使い方.md の「ニュースの仕組み」)。push された main を、上の公開の仕事が取りに行く。
 #
 # ログは追記で増えるので、残す長さは運営者が決める(logrotate 等)。
-# 失敗は終了コード 0 以外で終わり、ログに「エラー:」の行が残る。見張りに使うときは、この行を見る。
+# 失敗は終了コード 0 以外で終わり、ログに「エラー:」の行が残る。監視に使うときは、この行を見る。

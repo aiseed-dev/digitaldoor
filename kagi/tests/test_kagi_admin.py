@@ -1,4 +1,4 @@
-"""「人の出入り」の画面の中身（seed のサーバーの管理の口）。サーバーは偽の返事で置き換える。"""
+"""「人の出入り」の画面の中身（seed のサーバーの管理のインターフェース）。サーバーは偽の返事で置き換える。"""
 
 import datetime as dt
 import json
@@ -234,7 +234,7 @@ def test_load_all_and_rows(tmp_path):
     d, _env = _dir(tmp_path)
     data = admin.load_all(_client(d))
     rows = dict(map(tuple, admin.state_rows(data["overview"])))
-    assert rows["サーバー"] == "動いています（版 0.9）"
+    assert rows["サーバー"] == "動いています（バージョン 0.9）"
     assert rows["受け付け"] == "止めています"
     assert rows["Claude を呼べるか"] == "呼べません"
     assert rows["外の鍵"] == "Claude 在る、Pl@ntNet 無い"
@@ -310,7 +310,7 @@ def test_overview_unknown_and_missing_keys():
     assert rows["受け付け"] == "分からない" and rows["操作の記録"] == "分からない"
     assert "今日の残り" not in rows and "入れる人" not in rows
     assert admin.attention(o) == []
-    assert admin.state_rows({})[0] == ["サーバー", "動いています（版 ?）"]
+    assert admin.state_rows({})[0] == ["サーバー", "動いています（バージョン ?）"]
     o2 = {"tokens": "壊れた", "remaining": None, "keys": [], "denied_today": "多い"}
     admin.state_rows(o2)
     assert admin.attention(o2, None) == []
@@ -530,7 +530,7 @@ def test_pending_rows_and_old_server(tmp_path):
             "photos": ["a.jpg"],
         }
     ]
-    # 預かりの口の無い古いサーバーなら None（画面に出さない）。他の断りはそのまま
+    # 預かりのインターフェースの無い古いサーバーなら None（画面に出さない）。他の断りはそのまま
     old = Fake({("GET", "/api/admin/pending"): (404, {"detail": "Not Found"})})
     assert admin.load_all(_client(d, old))["pending"] is None
     bad = Fake({("GET", "/api/admin/pending"): (500, {"error": "x"})})

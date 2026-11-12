@@ -1,4 +1,4 @@
-"""Samba の設定（smb.conf）を読み、口と認証の形を見る。設計書 §3.2、鍵の管理 §5e。K-07。
+"""Samba の設定（smb.conf）を読み、待ち受けと認証の形を見る。設計書 §3.2、鍵の管理 §5e。K-07。
 
 値は出さない。`password` を名に含む行は「ある」とだけ出す。`include` は辿らない。
 """
@@ -158,7 +158,7 @@ def check(conf: Conf) -> list[Finding]:
     bio = conf.get(g, "bindinterfacesonly")
     if not ifs or not _is_true(bio):
         why = "interfaces が無い" if not ifs else "bind interfaces only が yes でない"
-        out.append(Finding(True, g, "interfaces / bind interfaces only", f"全部の口に聞く（{why}）"))
+        out.append(Finding(True, g, "interfaces / bind interfaces only", f"全部のインターフェースで待ち受ける（{why}）"))
     elif bad := _outward_interfaces(ifs):
         out.append(
             Finding(True, g, "interfaces", f"LAN の外を向く項目が {len(bad)} 個（0.0.0.0 か公の番地）")

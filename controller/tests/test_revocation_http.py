@@ -1,8 +1,8 @@
-"""失効の一覧の HTTP の口(扉コントローラ仕様書 5.2c、試験の対 44)の試験。
+"""失効の一覧の HTTP のインターフェース(扉コントローラ仕様書 5.2c、試験の対 44)の試験。
 
-POST /revocation、GET /revocation、POST /credential の任意の欄 revocation、OpenAPI の定義(版 1.3.0)。
-HTTP の口は POST のたびに扉の時計を `clock.now()` へ進めるので、止まった時計(FixedClock)を渡して時刻を固定する。
-一覧は仕様の形をここで組み立てて署名する(実装の口に頼らない)。
+POST /revocation、GET /revocation、POST /credential の任意の欄 revocation、OpenAPI の定義(バージョン 1.3.0)。
+HTTP のインターフェースは POST のたびに扉の時計を `clock.now()` へ進めるので、止まった時計(FixedClock)を渡して時刻を固定する。
+一覧は仕様の形をここで組み立てて署名する(実装のインターフェースに頼らない)。
 """
 import contextlib
 import json
@@ -28,7 +28,7 @@ EVENT = "失効の一覧"
 
 
 class FixedClock:
-    """止まった扉の時計(server.Clock と同じ口)。"""
+    """止まった扉の時計(server.Clock と同じインターフェース)。"""
 
     offset_s = 0.0
 
@@ -173,18 +173,18 @@ def test_http_get_revocation_has_no_secret():
 
 
 def test_http_stale_rule_through_http():
-    """R-AC-14: 試験の対 44。revocation_max_age_s を入れた扉は、HTTP の口でも一覧の無い発行者の長い資格情報を「失効の知らせが古い」で拒む。"""
+    """R-AC-14: 試験の対 44。revocation_max_age_s を入れた扉は、HTTP のインターフェースでも一覧の無い発行者の長い資格情報を「失効の通知が古い」で拒む。"""
     a = Ed25519Signer.generate()
     with door([a], max_age=3600) as (ctl, _, base):
         assert call(base, "POST", "/credential", {"credential": cred(a, "c-0040")})["result"] == "拒否"
-        assert last_auth_reason(base) == "失効の知らせが古い"
+        assert last_auth_reason(base) == "失効の通知が古い"
         r = call(base, "POST", "/credential", {"credential": cred(a, "c-0040"),
                                                "revocation": make_list(a, generation=1, issued_at=T0)})
         assert r["result"] == "解錠" and r["revocation"] == "受理"
 
 
 def test_openapi_has_revocation_paths_and_version_1_3_0():
-    """R-DV-11 R-AC-22: 試験の対 44。定義に /revocation の GET と POST、/credential の欄 revocation があり、版は 1.3.0 で見出しも同じ。"""
+    """R-DV-11 R-AC-22: 試験の対 44。定義に /revocation の GET と POST、/credential の欄 revocation があり、バージョンは 1.3.0 で見出しも同じ。"""
     with door() as (ctl, _, base):
         status, headers, doc = request(base, "GET", "/openapi.json")
         assert status == 200
@@ -210,7 +210,7 @@ def _lan_address():
 
 
 def test_http_revocation_is_accepted_from_other_machines():
-    """R-AC-22: 試験の対 44。/revocation は署名で守る口で、相手の住所は問わない(同じ機械でない相手からも受理する)。"""
+    """R-AC-22: 試験の対 44。/revocation は署名で守るインターフェースで、相手の住所は問わない(同じコンピューターでない相手からも受理する)。"""
     lan = _lan_address()
     if lan is None:
         pytest.skip("ループバックでない番地が無い")

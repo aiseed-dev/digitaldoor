@@ -201,8 +201,8 @@ def test_no_digitalkey_import():
 
 def test_wrong_role_entrance(pb, daily, tmp_path):
     """9 章: 入った直後に応答の record の yaku を確かめ、asa でなければ、toiawase を引く要求を出さずに終了コード 1、
-    `エラー: この道具の役の入り口ではありません(要る役: asa)`。識別、パスワード、札、応答の役の値は出さない。
-    (役の違う入り口だと、決まりが空の一覧を返し、「ありません」と正常に終わってしまうため。)"""
+    `エラー: この道具の役のアカウントではありません(要る役: asa)`。識別、パスワード、札、応答の役の値は出さない。
+    (役の違うアカウントだと、決まりが空の一覧を返し、「ありません」と正常に終わってしまうため。)"""
     ident, pw = pb.add_kikai("shoukai")
     env = write_env(tmp_path / "shoukai.env", {"MADOGUCHI_URL": pb.url, "MADOGUCHI_IDENTITY": ident,
                                                 "MADOGUCHI_PASSWORD": pw})
@@ -210,7 +210,7 @@ def test_wrong_role_entrance(pb, daily, tmp_path):
     _toiawase(pb, user["id"], "質問", "届いている件名", "2026-11-11 12:03:00.000Z")
     res = daily("--env", env)
     assert res.code == 1
-    assert "エラー: この道具の役の入り口ではありません(要る役: asa)" in res.err_lines
+    assert "エラー: この道具の役のアカウントではありません(要る役: asa)" in res.err_lines
     assert [r.path for r in pb.requests] == [AUTH_PATH]
     assert pb.record_requests() == []
     assert "新しいお問い合わせ" not in res.out

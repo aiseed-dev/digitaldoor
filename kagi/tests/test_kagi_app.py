@@ -57,8 +57,8 @@ def test_build_cards(tmp_path):
     assert any(r[0] == "near" and r[1] == "期限が近い" for r in inv["rows"])
 
     prt = c["ports"]
-    assert "表に無い口 1" in prt["summary"] and "外向きで表と違う口 1" in prt["summary"]
-    assert ["表に無い口", "h", "5432", "127.0.0.1", "postgres"] in prt["rows"]
+    assert "表に無いポート 1" in prt["summary"] and "外向きで表と違うポート 1" in prt["summary"]
+    assert ["表に無いポート", "h", "5432", "127.0.0.1", "postgres"] in prt["rows"]
     assert any(r[0].startswith("外向きで表と違う") and r[2] == "22" for r in prt["rows"])
 
     scn = c["scan"]

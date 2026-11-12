@@ -53,7 +53,7 @@ def login(pb, ident, pw, coll="kikai"):
 
 @pytest.fixture
 def world(pb):
-    """二人の本人(u1、u2)と、二つの kikai(shoukai、asa)の札。u1、u2 の問い合わせと写しを一つずつ置く。"""
+    """二人の本人(u1、u2)と、二つの kikai(shoukai、asa)の札。u1、u2 の問い合わせとコピーを一つずつ置く。"""
     u1, u2 = pb.add_user(), pb.add_user()
     w = {"pb": pb, "u1": u1, "u2": u2,
          "t1": pb.token_for("users", u1["id"]), "t2": pb.token_for("users", u2["id"]),
@@ -120,7 +120,7 @@ def test_toiawase_create_update_delete(world):
 
 
 def test_shoukai_rules(world):
-    """仕様書 3.4: 本人は自分の写しだけを見る。shoukai の kikai は一覧、見る、作る、直す、消すができる。asa は読めず書けない。
+    """仕様書 3.4: 本人は自分のコピーだけを見る。shoukai の kikai は一覧、見る、作る、直す、消すができる。asa は読めず書けない。
     owner は一人に一枚(一意の索引で 400)。"""
     pb, u1, u2 = world["pb"], world["u1"], world["u2"]
     path = "/api/collections/shoukai/records"

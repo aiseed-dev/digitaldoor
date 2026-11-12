@@ -1,4 +1,4 @@
-"""Aliro の読取機を Matter で設定する値(digitalkey.aliro)。"""
+"""Aliro のリーダーを Matter で設定する値(digitalkey.aliro)。"""
 import json
 import os
 
@@ -26,7 +26,7 @@ def test_reader_config_has_the_lengths_matter_expects_and_a_matching_pair():
 
 
 def test_broken_configs_are_refused():
-    """長さの違う欄、対でない鍵、曲線の上に無い点は、読取機に送る前に止める。"""
+    """長さの違う欄、対でない鍵、曲線の上に無い点は、リーダーに送る前に止める。"""
     c = A.ReaderConfig.generate()
     other = A.ReaderConfig.generate()
     bad = [A.ReaderConfig(c.signing_key[:31], c.verification_key, c.group_identifier),
@@ -40,7 +40,7 @@ def test_broken_configs_are_refused():
 
 
 def test_secrets_stay_out_of_repr_and_the_printed_output(tmp_path, capsys):
-    """R-AC-11 R-AC-20: 読取機の SigningKey と発行者の秘密鍵は、repr と画面に出さず、権限 600 のファイルにだけ書く。"""
+    """R-AC-11 R-AC-20: リーダーの SigningKey と発行者の秘密鍵は、repr と画面に出さず、権限 600 のファイルにだけ書く。"""
     c = A.ReaderConfig.generate()
     assert c.signing_key.hex() not in repr(c)
     k = A.IssuerKey.generate()
@@ -57,7 +57,7 @@ def test_secrets_stay_out_of_repr_and_the_printed_output(tmp_path, capsys):
 
 
 def test_issuer_public_key_goes_in_as_credential_type_6():
-    """R-AC-20: 読取機に入れるのは発行者の公開鍵だけで、SetCredential の CredentialType 6(AliroCredentialIssuerKey)。"""
+    """R-AC-20: リーダーに入れるのは発行者の公開鍵だけで、SetCredential の CredentialType 6(AliroCredentialIssuerKey)。"""
     k = A.IssuerKey.generate()
     f = A.issuer_key_credential(k.public, credential_index=2)
     assert f["command"] == 0x22 and f["timed"] is True
@@ -70,7 +70,7 @@ def test_issuer_public_key_goes_in_as_credential_type_6():
 
 
 def test_matter_fields_command(tmp_path, capsys):
-    """命令行で、読取機の設定と発行者の鍵の二つの命令の欄を出せる。"""
+    """命令行で、リーダーの設定と発行者の鍵の二つの命令の欄を出せる。"""
     rf = tmp_path / "reader.json"
     A.main(["reader-config", "--out", str(rf), "--ble-uwb"])
     pub = A.IssuerKey.generate().public.hex()

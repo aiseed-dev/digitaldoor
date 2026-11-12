@@ -23,7 +23,7 @@ def call(base, method, path, body=None):
 
 
 def test_http_gate():
-    """R-CT-15 R-CT-19 R-CT-20: HTTP の口で命令を受け、読取機の判定結果を受け、状態と記録を照会する。"""
+    """R-CT-15 R-CT-19 R-CT-20: HTTP のインターフェースで命令を受け、リーダーの判定結果を受け、状態と記録を照会する。"""
     ctl = Controller(SimContacts(), Audit(HmacSigner(b"k" * 32)), Config(autolock_s=999))
     ctl.set_time(1.0, True)
     srv = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(ctl, threading.Lock()))
@@ -44,7 +44,7 @@ def test_http_gate():
 
 
 def test_records_only_grow(tmp_path):
-    """R-CT-14: 一通りの操作と HTTP の口の全部を通しても、記録は減らず、前の記録は変わらない。消す口は無い。"""
+    """R-CT-14: 一通りの操作と HTTP のインターフェースの全部を通しても、記録は減らず、前の記録は変わらない。消すインターフェースは無い。"""
     path = tmp_path / "audit.jsonl"
     ctl = Controller(SimContacts(), Audit(HmacSigner(b"k" * 32), path), Config(autolock_s=999))
     ctl.set_time(1.0, True)
@@ -82,7 +82,7 @@ def test_stuck_box_does_not_stop_decisions():
 
     def exporter():
         stuck.set()
-        release.wait(10)          # 網の共有フォルダが固まったつもり
+        release.wait(10)          # ネットワークの共有フォルダが固まったつもり
         return 0
 
     start_workers(ctl, lock, exporter=exporter, interval=0.05)

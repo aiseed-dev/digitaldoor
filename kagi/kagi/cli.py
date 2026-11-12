@@ -19,7 +19,7 @@ INVENTORY_TEMPLATE = """\
 # [[secret]]
 # id = "web1-app-env"           # 一意の名
 # kind = "token"                # password | token | key | cert | passphrase | other
-# where = "web1:/etc/app/env"   # 置き場。機械:パス か 紙/金庫 の名。値ではない
+# where = "web1:/etc/app/env"   # 置き場。サーバー:パス か 紙/金庫 の名。値ではない
 # holder = "suzuki"             # 持つ人
 # role = "業務のサーバーが外の API を呼ぶ"   # 一つの役（K-01）
 # made = 2026-11-04             # 作った日
@@ -30,7 +30,7 @@ INVENTORY_TEMPLATE = """\
 """
 
 PORTS_TEMPLATE = """\
-# 口の表（K-07）。機械ごとに、開けてよい口を一件ずつ [[port]] に書く。
+# ポートの表（K-07）。サーバーごとに、開けてよいポートを一件ずつ [[port]] に書く。
 # kagi check ports --host NAME --ss FILE で `ss -ltnp` の出力と突き合わせる。
 # bind が 0.0.0.0 か :: か * なら外向き。
 #
@@ -44,32 +44,32 @@ PORTS_TEMPLATE = """\
 """
 
 MACHINES_TEMPLATE = """\
-# 機械の表と鍵の表。人が書く。値は書かない（公開鍵の指紋は値ではない。秘密鍵とパスワードは書かない。K-13）。
+# サーバーの表と鍵の表。人が書く。値は書かない（公開鍵の指紋は値ではない。秘密鍵とパスワードは書かない。K-13）。
 # kagi machine collect / check / fix / install、kagi key list が読む。
 #
 # [[machine]]
-# host = "db1"                  # 機械の名
+# host = "db1"                  # サーバーの名
 # ssh = "db1"                   # ~/.ssh/config の名（無ければ host）。入るのは人の ssh と人の鍵
 # role = "社内のデータベース"     # 一つの役
 # os = "debian-13"
 # users = ["aoki"]              # 入れてよい人（アカウント）
 # admins = ["aoki"]             # sudo を持ってよい人。入れる時は先頭が最初の管理者
 # keys = ["suzuki-pc"]          # 入れてよい鍵（下の [[key]] の id）
-# hostkey = "SHA256:…"          # 機械の鍵（ed25519）の指紋。機械の画面で見て書く
+# hostkey = "SHA256:…"          # ホストの鍵（ed25519）の指紋。サーバーの画面で見て書く
 # services = ["app", "caddy"]   # 動いているべきサービス（systemd）。止まっていたら直す手が出る
-# user_services = ["sync"]      # 写しを取る人の systemd（systemctl --user）で動いているべき物
+# user_services = ["sync"]      # コピーを取る人の systemd（systemctl --user）で動いているべき物
 # data = ["/srv/photos"]        # 大きさを見るデータの置き場（写真の元など、文字でない重い物）
 # timers = ["backup"]           # 動いているべき timer（控えなど）。止まると「直す」に出る
-# local = true                  # この PC 自身（写しを ssh でなくここで取る）
-# lan = "192.168.1.0/24"        # 入れる時: ssh を通す網。無ければどこからでも（回数を絞る）
+# local = true                  # この PC 自身（コピーを ssh でなくここで取る）
+# lan = "192.168.1.0/24"        # 入れる時: ssh を通すネットワーク。無ければどこからでも（回数を絞る）
 # profile = "server"            # 入れる時: server | desktop
-# encrypt = true                # 入れる時: 盤を暗号化する機械（選ぶのは人）
+# encrypt = true                # 入れる時: ディスクを暗号化するサーバー（選ぶのは人）
 #
 # [[door]]                      # 入口の表: 外から来る入口ごとに、誰が、何で守られて入るか
 # host = "web1"
 # site = "app.example.org"      # Caddy の設定の入口の名
 # who = "招待した人"             # 誰が入れるか（人の言葉）
-# auth = "app"                  # public（誰でも）| app（裏のアプリが確かめる）| gate（Caddy が確かめる）| lan（網で絞る）
+# auth = "app"                  # public（誰でも）| app（裏のアプリが確かめる）| gate（Caddy が確かめる）| lan（ネットワークで絞る）
 #
 # [[key]]
 # id = "suzuki-pc"              # 在庫表（inventory.toml）にも同じ id で一件書く
@@ -122,7 +122,7 @@ def cmd_check_inventory(args) -> int:
     res = inventory.check(secrets, args.days)
     print(inventory.table(res, args.days))
     if not secrets:
-        # 在庫表が空でも「抜けも期限切れも無い」になるので、鍵の表に鍵があれば一行言う（機械の表が読めた時だけ）
+        # 在庫表が空でも「抜けも期限切れも無い」になるので、鍵の表に鍵があれば一行言う（サーバーの表が読めた時だけ）
         path = _dir(args) / machine.FILENAME
         table = _optional(machine.load, path) if path.exists() else None
         if table and table.keys:
@@ -236,7 +236,7 @@ def _table(args) -> machine.Table:
 
 
 def _optional(load, path: Path):
-    """口の表と在庫表は、無ければ無しで進む（機械の突き合わせの脇役）。"""
+    """ポートの表と在庫表は、無ければ無しで進む（サーバーの突き合わせの脇役）。"""
     try:
         return load(path)
     except inventory.Refused:
@@ -256,13 +256,13 @@ def _log(args, action: str, detail: str) -> None:
 
 
 def _checked(args, host: str):
-    """（写し、見つけた物）。写しは --facts か、作業の場所の一番新しい物。"""
+    """（コピー、見つけた物）。コピーは --facts か、作業の場所の一番新しい物。"""
     d = _dir(args)
     table = _table(args)
     table.machine(host)
     path = Path(args.facts) if getattr(args, "facts", None) else machine.latest_facts(d, host)
     if path is None:
-        raise inventory.Refused(f"{host} の写しが無い。kagi machine collect --host {host}（か --facts FILE）")
+        raise inventory.Refused(f"{host} のコピーが無い。kagi machine collect --host {host}（か --facts FILE）")
     facts = machine.load_facts(path)
     inv = _optional(inventory.load, d / "inventory.toml")
     findings = machine.check(
@@ -281,9 +281,9 @@ def cmd_machine_list(args) -> int:
     except inventory.Refused as e:
         _err(str(e))
         return 2
-    print(f"機械 {len(table.machines)} 台。")
+    print(f"サーバー {len(table.machines)} 台。")
     if table.machines:
-        print("\n| host | 役 | OS | 写し |\n|---|---|---|---|")
+        print("\n| host | 役 | OS | コピー |\n|---|---|---|---|")
     for m in table.machines:
         f = machine.latest_facts(_dir(args), m["host"])
         print(f"| {m['host']} | {m.get('role', '')} | {m.get('os', '')} | {f.name if f else '無い'} |")
@@ -328,7 +328,7 @@ def cmd_machine_check(args) -> int:
             if args.host:
                 _err(str(e))
                 return 2
-            print(f"機械 {host}: 見ていない（{e}）")
+            print(f"サーバー {host}: 見ていない（{e}）")
             code = max(code, 1)
             continue
         print(machine.table(host, facts, findings))
@@ -363,7 +363,7 @@ def cmd_machine_install(args) -> int:
         return 2
     for p in paths:
         print(f"書いた: {p}")
-    print("パスワードと盤は書いていない（インストーラーで人が打つ・選ぶ）。次は 手順.md。")
+    print("パスワードとディスクは書いていない（インストーラーで人が打つ・選ぶ）。次は 手順.md。")
     return 0
 
 
@@ -393,7 +393,7 @@ def cmd_key_fingerprint(args) -> int:
 
 
 def cmd_weekly(args) -> int:
-    """週の定例（連載 第 11 章）: 全部の機械の写しを取り直し、一枚の報告を weekly-<日>.md に書く。"""
+    """週の定例（連載 第 11 章）: 全部のサーバーのコピーを取り直し、一枚の報告を weekly-<日>.md に書く。"""
     import datetime as dt
 
     d = _dir(args)
@@ -409,15 +409,15 @@ def cmd_weekly(args) -> int:
             try:
                 text = machine.collect(None if local else str(m.get("ssh", host)), paths=m.get("data"))
                 machine.save_facts(d, host, text)
-                _err(f"写しを取った: {host}")
+                _err(f"コピーを取った: {host}")
                 if not local:
                     _log(args, "machine.collect", host)
             except inventory.Refused as e:
-                failed.append(f"- {host}: 写しが取れなかった（{e}）")
+                failed.append(f"- {host}: コピーが取れなかった（{e}）")
                 _err(f"{host}: {e}")
     text = report.build(d, args.days, tokens_file=Path(args.tokens) if args.tokens else None)
     if failed:
-        text += "\n## 写しが取れなかった機械\n\n" + "\n".join(failed) + "\n"
+        text += "\n## コピーが取れなかったサーバー\n\n" + "\n".join(failed) + "\n"
     out = d / f"weekly-{dt.date.today().isoformat()}.md"
     out.write_text(text, "utf-8")
     print(text)
@@ -449,17 +449,17 @@ def parser() -> argparse.ArgumentParser:
     s = sub.add_parser("init", parents=[common], help="三つのファイルの雛形を作る")
     s.set_defaults(func=cmd_init)
 
-    c = sub.add_parser("check", help="在庫表、口の表、smb.conf を確かめる").add_subparsers(
+    c = sub.add_parser("check", help="在庫表、ポートの表、smb.conf を確かめる").add_subparsers(
         dest="what", required=True
     )
     s = c.add_parser("inventory", parents=[common], help="期限切れ、期限の近い物、欄の抜け")
     s.add_argument("--days", type=int, default=30)
     s.set_defaults(func=cmd_check_inventory)
-    s = c.add_parser("ports", parents=[common], help="口の表と ss -ltnp の出力の差")
+    s = c.add_parser("ports", parents=[common], help="ポートの表と ss -ltnp の出力の差")
     s.add_argument("--ss", required=True, help="ss -ltnp の出力のファイル（kagi は ss を走らせない）")
-    s.add_argument("--host", default=None, help="表のどの機械か")
+    s.add_argument("--host", default=None, help="表のどのサーバーか")
     s.set_defaults(func=cmd_check_ports)
-    s = c.add_parser("smb", help="smb.conf の口と認証の形（値は出さない）")
+    s = c.add_parser("smb", help="smb.conf の待ち受けと認証の形（値は出さない）")
     s.add_argument("--conf", required=True, help="smb.conf のファイル（include は辿らない）")
     s.set_defaults(func=cmd_check_smb, sub_dir=None)
 
@@ -487,24 +487,24 @@ def parser() -> argparse.ArgumentParser:
     s.add_argument("--ss", default=None, help="ss -ltnp の出力のファイル")
     s.add_argument("--host", default=None)
     s.add_argument("--scan", nargs="+", default=None, metavar="PATH", help="走査する場所")
-    s.add_argument("--smb", default=None, metavar="FILE", help="smb.conf（口の節に足す）")
+    s.add_argument("--smb", default=None, metavar="FILE", help="smb.conf（ポートの節に足す）")
     s.add_argument("--exclude", action="append", default=[], metavar="GLOB")
     s.set_defaults(func=cmd_report)
 
     mc = sub.add_parser(
-        "machine", help="Linux の機械を入れる、見る（機械は変えない。直す手は文で出す）"
+        "machine", help="Linux のサーバーを入れる、見る（サーバーは変えない。直す手は文で出す）"
     ).add_subparsers(dest="what", required=True)
-    s = mc.add_parser("list", parents=[common], help="機械の表と、写しの有無")
+    s = mc.add_parser("list", parents=[common], help="サーバーの表と、コピーの有無")
     s.set_defaults(func=cmd_machine_list)
-    s = mc.add_parser("script", help="機械で走らせる読むだけの文を出す（人が読める）")
+    s = mc.add_parser("script", help="サーバーで走らせる読むだけの文を出す（人が読める）")
     s.set_defaults(func=cmd_machine_script, sub_dir=None)
-    s = mc.add_parser("collect", parents=[common], help="写しを取る（人の ssh で、鍵でだけ。読むだけ）")
+    s = mc.add_parser("collect", parents=[common], help="コピーを取る（人の ssh で、鍵でだけ。読むだけ）")
     s.add_argument("--host", required=True)
-    s.add_argument("--local", action="store_true", help="この機械で取る（ssh を使わない）")
+    s.add_argument("--local", action="store_true", help="この PC で取る（ssh を使わない）")
     s.set_defaults(func=cmd_machine_collect)
-    s = mc.add_parser("check", parents=[common], help="写しを機械の表・口の表・在庫表と突き合わせる")
-    s.add_argument("--host", default=None, help="無ければ表の全部の機械")
-    s.add_argument("--facts", default=None, metavar="FILE", help="写しのファイル（無ければ一番新しい物）")
+    s = mc.add_parser("check", parents=[common], help="コピーをサーバーの表・ポートの表・在庫表と突き合わせる")
+    s.add_argument("--host", default=None, help="無ければ表の全部のサーバー")
+    s.add_argument("--facts", default=None, metavar="FILE", help="コピーのファイル（無ければ一番新しい物）")
     s.set_defaults(func=cmd_machine_check)
     s = mc.add_parser("fix", parents=[common], help="直す手を sh の文で出す（走らせるのは人）")
     s.add_argument("--host", required=True)
@@ -520,23 +520,23 @@ def parser() -> argparse.ArgumentParser:
     ky = sub.add_parser("key", help="ssh の鍵の表（公開鍵と指紋だけ。秘密鍵は読まない）").add_subparsers(
         dest="what", required=True
     )
-    s = ky.add_parser("list", parents=[common], help="鍵、持つ人、指紋、入れてよい機械、在庫表の期限")
+    s = ky.add_parser("list", parents=[common], help="鍵、持つ人、指紋、入れてよいサーバー、在庫表の期限")
     s.set_defaults(func=cmd_key_list)
     s = ky.add_parser("fingerprint", help="公開鍵のファイル（.pub）の指紋")
     s.add_argument("file")
     s.set_defaults(func=cmd_key_fingerprint, sub_dir=None)
 
     s = sub.add_parser(
-        "weekly", parents=[common], help="週の定例: 全部の機械の写しを取り直し、一枚の報告を書く"
+        "weekly", parents=[common], help="週の定例: 全部のサーバーのコピーを取り直し、一枚の報告を書く"
     )
-    s.add_argument("--no-collect", action="store_true", help="写しを取り直さない（今ある写しで）")
+    s.add_argument("--no-collect", action="store_true", help="コピーを取り直さない（今あるコピーで）")
     s.add_argument("--days", type=int, default=30)
     s.add_argument(
         "--tokens", default=None, metavar="FILE", help=f"出した token の台帳（既定 {tokens.DEFAULT}）"
     )
     s.set_defaults(func=cmd_weekly)
 
-    s = sub.add_parser("app", parents=[common], help="係の机の画面（Flet の PC 版。網には出さない）")
+    s = sub.add_parser("app", parents=[common], help="係の机の画面（Flet の PC 版。ネットワークには出さない）")
     s.set_defaults(func=cmd_app)
     return p
 

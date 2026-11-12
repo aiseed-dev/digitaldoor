@@ -4,7 +4,7 @@
 扉 `玄関`(三つの経路)。置き場は tmp_path に作り、発行者の鍵は `Ed25519Signer.generate()` を `signer` で渡す。
 疑似の扉は `Controller(SimContacts(), Audit(Ed25519Signer.generate()), name=..., trust=...)`。
 
-段 1b(設計書 20.13)の下ごしらえ `setup_devices` と、置き場 `dunit`、`dfile_unit`、機器の権限と管理者の口を出す `access` も置く。
+段 1b(設計書 20.13)の下ごしらえ `setup_devices` と、置き場 `dunit`、`dfile_unit`、機器の権限と管理者のインターフェースを出す `access` も置く。
 段 2a(設計書 21.13)の下ごしらえ `setup_revocations` と、置き場 `runit`、`rfile_unit`、署名つき資格情報を出す `cred` も置く。
 段 5a(設計書 22.10)の下ごしらえ `setup_portal` と、置き場 `punit`、`pfile_unit`、名簿の係 ros が結ぶ `link` も置く。
 
@@ -124,7 +124,7 @@ def forms():
 
 def _door(u, name: str = "玄関", at: str | None = None, trust: dict | None = None, config=None):
     """19.13 の疑似の扉。at を渡せば、扉の時計をその地方時の unix 秒にして同期済みにする。
-    config は扉の Config(21.13。省けば Config() で、失効の知らせの古さの規則を使わない)。"""
+    config は扉の Config(21.13。省けば Config() で、失効の通知の古さの規則を使わない)。"""
     from digitaldoor_controller.audit import Audit, Ed25519Signer
     from digitaldoor_controller.contacts import SimContacts
     from digitaldoor_controller.controller import Config, Controller
@@ -187,7 +187,7 @@ def dfile_unit(file_unit):
 
 
 def _access(u, subject="t1", device="ルーター1", account="admin", *, start=T0, end=T1):
-    """機器の権限を申請、承認、発行し、管理者の口の実体を出す。(権限の番号, Entity) を返す。"""
+    """機器の権限を申請、承認、発行し、管理者のインターフェースの実体を出す。(権限の番号, Entity) を返す。"""
     pid, _, _ = _grant(u, subject, "機器", device, start, end)
     got = u.issue_entity(pid, ACCESS, account=account, by="adm", role="管理者", at=dt(ISSUE_AT))
     return pid, got.実体
@@ -238,7 +238,7 @@ def cred():
 
 def setup_portal(u) -> None:
     """22.10 の共通の下ごしらえ(19.13 の adm、apr、s1 に足す): ros(名簿の係)、s2(社員)。
-    呼び名は、写しに出ていないことを文字列で確かめられるよう、ほかの値と重ならない架空の文字列にする。"""
+    呼び名は、コピーに出ていないことを文字列で確かめられるよう、ほかの値と重ならない架空の文字列にする。"""
     u.register_subject("ros", "名簿係の架空の呼び名ロ", "社員", False, by="adm", role="名簿の係")
     u.assign_role("ros", "名簿の係", reason="名簿の当番", by="adm", role="管理者")
     u.register_subject("s2", "照会の架空の呼び名ニ", "社員", False, by="adm", role="名簿の係")

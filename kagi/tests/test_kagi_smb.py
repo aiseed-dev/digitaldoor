@@ -78,7 +78,7 @@ def test_bad(tmp_path, capsys):
         "署名が任意",
         "ゲストが入れる（Never でない）",
         "| 直す | public | guest ok / public | ゲストが入れる |",
-        "全部の口に聞く",
+        "全部のインターフェースで待ち受ける",
         "| 直す | public | valid users | 個人で付けている",
         "| 直す | public | write list | 個人で付けている",
         "member server",

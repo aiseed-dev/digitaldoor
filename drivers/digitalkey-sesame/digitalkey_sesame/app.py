@@ -10,40 +10,40 @@ PC でもスマートフォンでも同じ画面です。複数の Sesame の鍵
 【これは画面の歯止めで、鍵の守りではありません】
 Sesame の錠が知っている鍵は 32 桁の一つだけで、錠の側では人を分けられません。以下の役の分け方は、このアプリの画面の
 中の約束です。32 桁を持つ人が別の道具(このリポジトリの命令行や公開の SDK)を使えば、歯止めは通ります。防げるのは、
-受け取った人がこのアプリで鍵をさらに写して広げることです。一人を本当に止めるには、Sesame をリセットして登録し直し、
+受け取った人がこのアプリで鍵をさらにコピーして広げることです。一人を本当に止めるには、Sesame をリセットして登録し直し、
 残る人に渡し直します。
 
 役 — 鍵ごとに「管理者」か「利用者」を持ちます。一台の端末で、ある Sesame は管理者、別の Sesame は利用者、ということがあります。
-  管理者   その端末で登録した鍵、または管理者として渡された鍵。今までの版で登録した鍵(役の欄が無い物)も管理者で引き継ぎます
-  利用者   利用者として渡された鍵。管理者の符号が無い鍵は利用者で入り、あとから管理者には上がりません
+  管理者   その端末で登録した鍵、または管理者として渡された鍵。今までのバージョンで登録した鍵(役の欄が無い物)も管理者で引き継ぎます
+  利用者   利用者として渡された鍵。管理者コードが無い鍵は利用者で入り、あとから管理者には上がりません
 
 利用者の画面(最初の画面。全員)
   鍵のある Sesame     鍵のある Sesame を並べる(役つき)。押すと近くから探してつなぎ、ログインして、施錠と解錠、電池、角度を出す
   解錠、施錠、トグル    「自分の呼び名」が Sesame の履歴に残る(名乗りなので、偽ることもできる)
-  鍵を削除            この端末の鍵だけを消す。ほかの機械に写しがあれば、そちらは使える
+  鍵を削除            この端末の鍵だけを消す。ほかの端末にコピーがあれば、そちらは使える
   鍵を受け取る        渡す人の画面の QR を、このアプリのカメラで読む。読み取りが使えないときは、32 桁を打ち込む道がある(利用者として入る)
 
 管理者の画面(管理者の鍵がある端末だけ。最初の Sesame を登録するために、鍵が一つも無い端末でも開く。利用者の鍵しか無い端末では開かない)
   探す、登録          近くの Sesame を並べる。未登録の Sesame とだけ登録でき、鍵を作ってこの端末に保存する(管理者になる)
   渡す                管理者の鍵の Sesame を、利用者として、または管理者として渡す。相手の呼び名を入れ、QR を出す。
-                     PC に写すときは「32 桁を見せる」(管理者として写すときは管理者の符号も出る。`digitalkey sesame import` に入れる)
+                     PC にコピーするときは「32 桁を見せる」(管理者としてコピーするときは管理者コードも出る。`digitalkey sesame import` に入れる)
   渡した相手の控え      誰に、いつ、どの役で、どの道で渡したか。この端末から渡した分だけ。追記だけで、消さない。リセット前の行は印が付く
   リセットと渡し直し    止めたい人がいるときの順序の案内
   端末の認証           管理者の画面を開くときに、端末の認証(生体認証か PIN)を求めるか。管理者が選ぶ(スマートフォンのアプリ)
 
-渡し方は対面で、アプリからアプリへ直接です。網(LINE、メール、クラウド)を通しません。渡す側の画面に QR を出し(60 秒で自動で閉じて
+渡し方は対面で、アプリからアプリへ直接です。ネットワーク(LINE、メール、クラウド)を通しません。渡す側の画面に QR を出し(60 秒で自動で閉じて
 消える)、受け取る側が自分のアプリのカメラで読みます。端末のふつうのカメラアプリや、画像を読み取るサービスは通しません。周りの人に
-撮られない所で行います。受け取る側は、その Sesame にログインできたときだけ保存します(R-CM-13)。QR の中身は、版、UUID、32 桁、役、
-管理者の符号(管理者のときだけ)で、人の名前は入れません(handoff.py)。
+撮られない所で行います。受け取る側は、その Sesame にログインできたときだけ保存します(R-CM-13)。QR の中身は、バージョン、UUID、32 桁、役、
+管理者コード(管理者のときだけ)で、人の名前は入れません(handoff.py)。
 
-鍵について: 鍵は登録のときに錠と端末の間で作る 16 バイト(32 桁の 16 進)で、Sesame が知っている鍵はこの一つだけです。写した物は
+鍵について: 鍵は登録のときに錠と端末の間で作る 16 バイト(32 桁の 16 進)で、Sesame が知っている鍵はこの一つだけです。コピーした物は
 全部同じ鍵で、持つ物は誰でもこの Sesame を開けられます。鍵はログ欄、logging、例外の文、標準出力に出しません(R-CM-12)。人が見られるのは、
 管理者が確かめた上で行う「渡す」の表示だけで、閉じると消えます。
 
 鍵の置き場: PC では ~/.config/digitalkey/sesame-keys.json(権限 600。`digitalkey sesame` の命令と共用)。スマートフォンでは端末の
-安全な保管庫(Android Keystore、iOS のキーチェーン。Flet の SecureStorage)です。今までの版は SharedPreferences に置いていたので、
-新しい版を初めて起動したときに保管庫へ移します(写す → 読み戻して一致を確かめる → 元を消す。途中で失敗したら元は消さず、今までの置き場のまま
-動く)。移す前に、念のため鍵を PC に写しておくことを勧めます。保管庫はエラーのときに中身を消す設定(reset_on_error)を無効にしています。
+安全な保管庫(Android Keystore、iOS のキーチェーン。Flet の SecureStorage)です。今までのバージョンは SharedPreferences に置いていたので、
+新しいバージョンを初めて起動したときに保管庫へ移します(コピーする → 読み戻して一致を確かめる → 元を消す。途中で失敗したら元は消さず、今までの置き場のまま
+動く)。移す前に、念のため鍵を PC にコピーしておくことを勧めます。保管庫はエラーのときに中身を消す設定(reset_on_error)を無効にしています。
 鍵は端末のバックアップで別の端末へ移りません(Android はアプリのデータをバックアップから外し、iOS はこの端末だけの扱いにします)。
 
 組み方、入れ方、困ったときは skills/sesame-app/SKILL.md にあります。
@@ -76,7 +76,7 @@ NEARBY_SECONDS = 5      # 32 桁を打ち込む道で、近くの Sesame を探�
 GUARD_NOTE = "これは画面の歯止めで、鍵の守りではありません。"
 GUARD_DETAIL = (
     "Sesame の錠が知っている鍵は 32 桁の一つだけで、錠の側では人を分けられません。役の分け方は、このアプリの画面の中の約束です。"
-    "32 桁を持つ人が別の道具を使えば、歯止めは通ります。防げるのは、受け取った人がこのアプリで鍵をさらに写して広げることです。"
+    "32 桁を持つ人が別の道具を使えば、歯止めは通ります。防げるのは、受け取った人がこのアプリで鍵をさらにコピーして広げることです。"
     "一人を本当に止めるには、Sesame をリセットして登録し直し、残る人に渡し直します。")
 RESET_GUIDE = (
     "止めたい人がいるときの順序です。Sesame の錠は鍵を一つしか知らないので、一人だけを止めることはできません。\n"
@@ -197,7 +197,7 @@ class SesameApp:
                       ft.Segment(value=ROLE_ADMIN, label=ft.Text("管理者として"))])
         self.to_field = ft.TextField(label="相手の呼び名 (控えに残ります。人の名前は QR に入りません)")
         self.btn_qr = ft.Button(content="QR を出す", icon=ft.Icons.QR_CODE, on_click=self.on_hand_qr)
-        self.btn_digits = ft.OutlinedButton(content="32 桁を見せる (PC に写すとき、QR を読めない相手)",
+        self.btn_digits = ft.OutlinedButton(content="32 桁を見せる (PC にコピーするとき、QR を読めない相手)",
                                             icon=ft.Icons.KEY, on_click=self.on_hand_digits)
         self.ledger_list = ft.Column(spacing=2)
         self.auth_switch = ft.Switch(label="管理者の画面を開くとき、端末の認証 (生体認証か PIN) を求める",
@@ -214,7 +214,7 @@ class SesameApp:
             self.scan_button, self.list_placeholder, self.device_list,
             ft.Divider(),
             ft.Text("渡す", weight=ft.FontWeight.BOLD),
-            ft.Text("対面で、アプリからアプリへ直接渡します。網(LINE、メール、クラウド)は通しません。"
+            ft.Text("対面で、アプリからアプリへ直接渡します。ネットワーク(LINE、メール、クラウド)は通しません。"
                     "周りの人に撮られない所で、相手のアプリのカメラに QR を読ませます。",
                     size=12, color=ft.Colors.ON_SURFACE_VARIANT),
             self.target_dd, self.role_seg, self.to_field,
@@ -800,9 +800,9 @@ class SesameApp:
             self._render_status()
             self._refresh_roles()
 
-        lines = ["この端末に保存した鍵を消します。この Sesame も、ほかの機械に写した鍵も消えません。",
-                 "ほかの機械(PC や別のスマートフォン)に写しがあれば、そちらでは使えます。",
-                 "ほかに写しが無いときは、管理者から鍵を受け取り直すか、Sesame をリセットして登録し直すまで、この Sesame を動かせません。"]
+        lines = ["この端末に保存した鍵を消します。この Sesame も、ほかの端末にコピーした鍵も消えません。",
+                 "ほかの端末(PC や別のスマートフォン)にコピーがあれば、そちらでは使えます。",
+                 "ほかにコピーが無いときは、管理者から鍵を受け取り直すか、Sesame をリセットして登録し直すまで、この Sesame を動かせません。"]
         if key is not None and key.is_admin:
             lines.append("この端末が渡した相手の鍵は、消えません(止めるには Sesame のリセットが要ります)。")
         dlg = ft.AlertDialog(
@@ -938,7 +938,7 @@ class SesameApp:
         return dlg
 
     async def on_hand_digits(self, e=None) -> None:
-        """32 桁を見せる(PC の `digitalkey sesame import` に写すとき。QR を読めない相手)。確かめを挟み、了承されたときだけ出す。"""
+        """32 桁を見せる(PC の `digitalkey sesame import` にコピーするとき。QR を読めない相手)。確かめを挟み、了承されたときだけ出す。"""
         ok = self._hand_over_checked()
         if ok is None:
             return
@@ -958,12 +958,12 @@ class SesameApp:
         body = [ft.Text("鍵 (32 桁)", size=12),
                 ft.Text(format_secret_hex(key.secret_hex), size=20, font_family="monospace", selectable=True)]
         if role == ROLE_ADMIN:
-            body += [ft.Text("管理者の符号", size=12),
+            body += [ft.Text("管理者コード", size=12),
                      ft.Text(format_admin_code(admin_code(key.secret, key.device_uuid)), size=20, font_family="monospace", selectable=True),
-                     ft.Text("PC の `digitalkey sesame import` で、鍵に続けてこの符号を入れると管理者として入ります。"
-                             "符号を入れなければ利用者です。", size=12)]
+                     ft.Text("PC の `digitalkey sesame import` で、鍵に続けてこのコードを入れると管理者として入ります。"
+                             "コードを入れなければ利用者です。", size=12)]
         else:
-            body += [ft.Text("PC の `digitalkey sesame import` で、管理者の符号は空のまま Enter します (利用者として入ります)。", size=12)]
+            body += [ft.Text("PC の `digitalkey sesame import` で、管理者コードは空のまま Enter します (利用者として入ります)。", size=12)]
         body.append(ft.Text("人に見せず、チャットやメールに貼らないでください。閉じると画面から消えます。" + GUARD_NOTE,
                             size=12, color=ft.Colors.ON_SURFACE_VARIANT))
         dlg = self._show_secret(f"{ROLE_LABELS[role]}として渡す 32 桁", body)

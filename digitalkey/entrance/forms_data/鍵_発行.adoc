@@ -5,7 +5,7 @@
 
 主体:: [varchar(100), not null]
 錠:: [varchar(40), not null]
-経路:: [varchar(10), in ('遠隔解錠', '暗証番号', '財布', '機械鍵'), not null]
+経路:: [varchar(10), in ('遠隔解錠', '暗証番号', 'ウォレット', '機械鍵'), not null]
 開始:: [datetime, not null]
 終了:: [datetime, not null]
 予約番号:: [varchar(40)]

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""経路 門番を通す錠と、門番が台帳に聞く口 `may_open`、`relay`(設計書 19.8、19.9)。
+"""経路 門番を通す錠と、門番が台帳に聞くインターフェース `may_open`、`relay`(設計書 19.8、19.9)。
 
 錠の鍵は門番(`digitalkey door-serve`、事業所サーバーなど)だけが持ち、本人には何も渡しません。
 門番は要求のたびに台帳に聞くので、失効の伝票を書いた次の要求から開けません。
@@ -33,7 +33,7 @@ class GateRoute:
 
 
 class GateMixin:
-    """門番が台帳に聞く口。読むだけで、台帳に書かない。"""
+    """門番が台帳に聞くインターフェース。読むだけで、台帳に書かない。"""
 
     def may_open(self, subject: str, door: str, *, at: datetime | None = None) -> GateVerdict:
         """その主体が、その扉を、その時刻に開けてよいか。確かめの順: 扉、主体、門番の実体、失効、期間。

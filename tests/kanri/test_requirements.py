@@ -1,4 +1,4 @@
-"""設計書 19.13: 要求ごとの確かめ方。網から切り離して動かす確かめは test_cli.py。
+"""設計書 19.13: 要求ごとの確かめ方。ネットワークから切り離して動かす確かめは test_cli.py。
 
 疑似の扉は Controller(SimContacts(), Audit(Ed25519Signer.generate()), name=..., trust=...)。
 """

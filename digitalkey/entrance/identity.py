@@ -133,7 +133,7 @@ class Identity:
                issuer: str | None = None) -> Slip:
         """人が判定し直す。前の伝票を根拠にして新しい伝票を足す(前の伝票は変えない)。
 
-        by は判定者の名前、issuer は伝票の発行者(既定は by。門から呼ぶときは経営者の符号を確かめたうえで「経営者」)。
+        by は判定者の名前、issuer は伝票の発行者(既定は by。門から呼ぶときは経営者コードを確かめたうえで「経営者」)。
         """
         prev = self.ledger.get(verification_id)
         if prev.form != "本人確認":

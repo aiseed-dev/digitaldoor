@@ -2,7 +2,7 @@
 
 期待値は仕様書 5.2a と 5.2c から決めている。一覧は二つの道で作る。
 - `make_list`: 仕様の形(`body` の欄)をここで組み立て、発行者の鍵で署名する。実装の誤りに引きずられないため
-- `issued_list`: 発行者の側の口 `credentials.revocation_list` を使う。発行者の側の口の確かめ
+- `issued_list`: 発行者の側のインターフェース `credentials.revocation_list` を使う。発行者の側のインターフェースの確かめ
 
 試験の値のファイル `vectors/revocation-1.json` は、使い捨ての鍵を `Ed25519Signer.generate()` で二つ(信頼する A と、
 信頼しない X)作り、`make_list` と同じ組み立てで一覧に、`credentials.issue` で資格情報に署名して書いた。
@@ -65,7 +65,7 @@ def make_list(signer, *, generation=1, issued_at=T0, revoked=(), issuer=None, dr
 
 
 def issued_list(signer, *, generation=1, issued_at=T0, revoked=()):
-    """発行者の側の口で作った一覧。"""
+    """発行者の側のインターフェースで作った一覧。"""
     return credentials.revocation_list(signer, generation=generation, issued_at=issued_at, revoked=list(revoked))
 
 
@@ -136,7 +136,7 @@ def test_revocation_list_shape_and_signature():
 
 
 def test_revocation_list_may_be_empty():
-    """R-AC-22: 失効が無くても、世代を上げた空の一覧を作れる(知らせを新しくするため)。"""
+    """R-AC-22: 失効が無くても、世代を上げた空の一覧を作れる(通知を新しくするため)。"""
     a = Ed25519Signer.generate()
     assert json.loads(issued_list(a, generation=1, revoked=[])["body"])["revoked"] == []
 
@@ -149,7 +149,7 @@ def test_revocation_list_generation_below_one_is_value_error(generation):
 
 
 def test_revocation_list_from_issuer_side_is_accepted_by_door():
-    """R-AC-22: 発行者の側の口で作った一覧を、扉が受理する。"""
+    """R-AC-22: 発行者の側のインターフェースで作った一覧を、扉が受理する。"""
     a = Ed25519Signer.generate()
     ctl = new_ctl(trust_entry((a, [DOOR])))
     assert ctl.accept_revocation(issued_list(a, generation=3, revoked=["c-1"])) == "受理"
@@ -159,7 +159,7 @@ def test_revocation_list_from_issuer_side_is_accepted_by_door():
 def test_reason_constants():
     """R-AC-22 R-AC-14: 理由の言葉の定数は仕様の言葉と同じ。"""
     assert credentials.REVOKED == "失効済み"
-    assert credentials.STALE_REVOCATION == "失効の知らせが古い"
+    assert credentials.STALE_REVOCATION == "失効の通知が古い"
     assert credentials.OLD_GENERATION == "古い世代"
 
 
@@ -210,7 +210,7 @@ def test_parse_revocation_detail_returns_none_for_other_text(text):
 
 # ---- 試験の対 33 ----
 def test_pair33_offline_door_accepts_list_and_rejects_revoked():
-    """R-AC-22: 試験の対 33。網の無い扉が一覧を受理し、一覧にある資格情報は「失効済み」、無い資格情報(同じ発行者)は解錠する。"""
+    """R-AC-22: 試験の対 33。ネットワークの無い扉が一覧を受理し、一覧にある資格情報は「失効済み」、無い資格情報(同じ発行者)は解錠する。"""
     a = Ed25519Signer.generate()
     ctl = new_ctl(trust_entry((a, [DOOR])))
     lst = make_list(a, generation=7, issued_at=T0, revoked=["c-0012", "c-0031"])
@@ -582,7 +582,7 @@ def test_pair39_revoked_once_credential_is_revoked_not_used():
 
 
 def test_pair39_revoked_before_stale():
-    """R-AC-22 R-AC-14: 試験の対 39。失効済みで知らせも古いときは「失効済み」(順番の 5 は 8 より先)。"""
+    """R-AC-22 R-AC-14: 試験の対 39。失効済みで通知も古いときは「失効済み」(順番の 5 は 8 より先)。"""
     a = Ed25519Signer.generate()
     ctl = new_ctl(trust_entry((a, [DOOR])), max_age=3600)
     ctl.accept_revocation(make_list(a, issued_at=T0, revoked=["c-0012"]))
@@ -600,14 +600,14 @@ def test_verify_credential_new_arguments_are_optional():
     revs = {iid(a): state(1, T0, ["c-0012"])}
     assert credentials.verify_credential(c, **kw, revocations=revs).reason == "失効済み"
     assert credentials.verify_credential(c, **kw, revocations={}, max_age=0.0).ok
-    assert credentials.verify_credential(c, **kw, revocations={}, max_age=60.0).reason == "失効の知らせが古い"
+    assert credentials.verify_credential(c, **kw, revocations={}, max_age=60.0).reason == "失効の通知が古い"
     fresh = {iid(a): state(1, T0, [])}
     assert credentials.verify_credential(c, **kw, revocations=fresh, max_age=60.0).ok
 
 
 # ---- 試験の対 40 ----
 def test_pair40_stale_after_max_age_long_rejected_short_passes_then_new_list():
-    """R-AC-14: 試験の対 40。issued_at から設定の秒数を過ぎると長い資格情報は「失効の知らせが古い」、短い物は解錠、新しい世代を受けると長い物も解錠。"""
+    """R-AC-14: 試験の対 40。issued_at から設定の秒数を過ぎると長い資格情報は「失効の通知が古い」、短い物は解錠、新しい世代を受けると長い物も解錠。"""
     a = Ed25519Signer.generate()
     ctl = new_ctl(trust_entry((a, [DOOR])), max_age=3600)
     assert ctl.accept_revocation(make_list(a, generation=1, issued_at=T0)) == "受理"
@@ -616,7 +616,7 @@ def test_pair40_stale_after_max_age_long_rejected_short_passes_then_new_list():
     assert ctl.present(long_) == "解錠"
     ctl.lock_request()
     ctl.set_time(T0 + 3601, True)
-    assert_cred_rejected(ctl, ctl.present(long_), "失効の知らせが古い")
+    assert_cred_rejected(ctl, ctl.present(long_), "失効の通知が古い")
     assert ctl.locked is True
     assert ctl.present(short) == "解錠"
     ctl.lock_request()
@@ -635,25 +635,25 @@ def test_pair40_boundaries():
     assert ctl.present(long_) == "解錠"                       # ちょうど設定の秒数はまだ古くない
     ctl.lock_request()
     ctl.set_time(T0 + 3600 + 1, True)
-    assert_cred_rejected(ctl, ctl.present(long_), "失効の知らせが古い")
+    assert_cred_rejected(ctl, ctl.present(long_), "失効の通知が古い")
     assert ctl.present(equal) == "解錠"                       # 長さが設定以下は通す
 
 
 def test_pair40_age_is_measured_by_issued_at_not_by_receipt():
-    """R-AC-14: 試験の対 40。古さは扉が受け取った時刻ではなく一覧の issued_at で量る。古い issued_at の一覧を今受けても知らせは古い。"""
+    """R-AC-14: 試験の対 40。古さは扉が受け取った時刻ではなく一覧の issued_at で量る。古い issued_at の一覧を今受けても通知は古い。"""
     a = Ed25519Signer.generate()
     ctl = new_ctl(trust_entry((a, [DOOR])), max_age=3600, now=T0 + 10_000)
     assert ctl.accept_revocation(make_list(a, generation=1, issued_at=T0)) == "受理"
-    assert_cred_rejected(ctl, ctl.present(cred(a, "c-long")), "失効の知らせが古い")
+    assert_cred_rejected(ctl, ctl.present(cred(a, "c-long")), "失効の通知が古い")
 
 
 def test_pair40_stale_record_has_issuer_and_id():
-    """R-AC-14: 試験の対 40。「失効の知らせが古い」の拒否は認証の拒否の記録で、詳細に issuer と id が入る。"""
+    """R-AC-14: 試験の対 40。「失効の通知が古い」の拒否は認証の拒否の記録で、詳細に issuer と id が入る。"""
     a = Ed25519Signer.generate()
     ctl = new_ctl(trust_entry((a, [DOOR])), max_age=60)
     ctl.present(cred(a, "c-long"))
     e = auth_entries(ctl)[-1]
-    assert e.result == "失効の知らせが古い" and f"issuer={iid(a)}" in e.detail and "id=c-long" in e.detail
+    assert e.result == "失効の通知が古い" and f"issuer={iid(a)}" in e.detail and "id=c-long" in e.detail
 
 
 def test_pair40_stale_is_checked_after_clock_and_period():
@@ -666,7 +666,7 @@ def test_pair40_stale_is_checked_after_clock_and_period():
 
 
 def test_pair40_stale_is_checked_before_used():
-    """R-AC-14: 試験の対 40。順番の 8 は 9(使用済み)より先。使った一回限りの長い資格情報は、知らせが古くなると「失効の知らせが古い」。"""
+    """R-AC-14: 試験の対 40。順番の 8 は 9(使用済み)より先。使った一回限りの長い資格情報は、通知が古くなると「失効の通知が古い」。"""
     a = Ed25519Signer.generate()
     ctl = new_ctl(trust_entry((a, [DOOR])), max_age=3600)
     ctl.accept_revocation(make_list(a, issued_at=T0))
@@ -674,30 +674,30 @@ def test_pair40_stale_is_checked_before_used():
     assert ctl.present(c) == "解錠"
     ctl.lock_request()
     ctl.set_time(T0 + 7200, True)
-    assert_cred_rejected(ctl, ctl.present(c), "失効の知らせが古い")
+    assert_cred_rejected(ctl, ctl.present(c), "失効の通知が古い")
 
 
 # ---- 試験の対 41 ----
 def test_pair41_resending_old_list_does_not_refresh():
-    """R-AC-14: 試験の対 41。古くなった扉に前に受けた一覧(同じ世代)を送り直すと「同じ」で、長い資格情報は「失効の知らせが古い」のまま。"""
+    """R-AC-14: 試験の対 41。古くなった扉に前に受けた一覧(同じ世代)を送り直すと「同じ」で、長い資格情報は「失効の通知が古い」のまま。"""
     a = Ed25519Signer.generate()
     ctl = new_ctl(trust_entry((a, [DOOR])), max_age=3600)
     lst = make_list(a, generation=3, issued_at=T0)
     assert ctl.accept_revocation(lst) == "受理"
     ctl.set_time(T0 + 5000, True)
     assert ctl.accept_revocation(lst) == "同じ"
-    assert_cred_rejected(ctl, ctl.present(cred(a, "c-long")), "失効の知らせが古い")
+    assert_cred_rejected(ctl, ctl.present(cred(a, "c-long")), "失効の通知が古い")
     assert ctl.revocations[iid(a)]["issued_at"] == T0
     # 端末が一緒に運んでも同じ
-    assert_cred_rejected(ctl, ctl.present(cred(a, "c-long"), revocation=lst), "失効の知らせが古い")
+    assert_cred_rejected(ctl, ctl.present(cred(a, "c-long"), revocation=lst), "失効の通知が古い")
 
 
 # ---- 試験の対 42 ----
 def test_pair42_never_received_long_rejected_short_passes():
-    """R-AC-14: 試験の対 42。設定を入れ、一覧を一度も受けていない扉は、長い資格情報を「失効の知らせが古い」で拒み、短い物は解錠する。"""
+    """R-AC-14: 試験の対 42。設定を入れ、一覧を一度も受けていない扉は、長い資格情報を「失効の通知が古い」で拒み、短い物は解錠する。"""
     a = Ed25519Signer.generate()
     ctl = new_ctl(trust_entry((a, [DOOR])), max_age=3600)
-    assert_cred_rejected(ctl, ctl.present(cred(a, "c-long")), "失効の知らせが古い")
+    assert_cred_rejected(ctl, ctl.present(cred(a, "c-long")), "失効の通知が古い")
     assert ctl.present(cred(a, "c-short", nb=T0 - 600, na=T0 + 3000)) == "解錠"
 
 
@@ -718,11 +718,11 @@ def test_pair42_default_setting_is_zero():
 
 
 def test_pair42_age_is_per_issuer():
-    """R-AC-14: 試験の対 42。知らせの古さは発行者ごと。B の新しい一覧は、一覧を受けていない A の長い資格情報を通さない。"""
+    """R-AC-14: 試験の対 42。通知の古さは発行者ごと。B の新しい一覧は、一覧を受けていない A の長い資格情報を通さない。"""
     a, b = Ed25519Signer.generate(), Ed25519Signer.generate()
     ctl = new_ctl(trust_entry((a, [DOOR]), (b, [DOOR])), max_age=3600)
     assert ctl.accept_revocation(make_list(b, issued_at=T0)) == "受理"
-    assert_cred_rejected(ctl, ctl.present(cred(a, "c-long")), "失効の知らせが古い")
+    assert_cred_rejected(ctl, ctl.present(cred(a, "c-long")), "失効の通知が古い")
     assert ctl.present(cred(b, "c-long-b")) == "解錠"
 
 
@@ -739,7 +739,7 @@ def test_pair43_configure_records_before_and_after():
     assert len(rows) == 1
     assert re.search(r"\b0(\.0)?\b", rows[0].detail) and "3600" in rows[0].detail
     assert rows[0].subject == "管理者"
-    assert_cred_rejected(ctl, ctl.present(cred(a, "c-long")), "失効の知らせが古い")
+    assert_cred_rejected(ctl, ctl.present(cred(a, "c-long")), "失効の通知が古い")
     ctl.configure("管理者", revocation_max_age_s=0)
     assert ctl.present(cred(a, "c-long")) == "解錠"
 

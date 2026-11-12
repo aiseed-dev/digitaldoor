@@ -1,26 +1,26 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""照会用の写しを窓口へ置きに行く(窓口仕様書 8 章)。
+"""照会用のコピーを窓口へ置きに行く(窓口仕様書 8 章)。
 
     digitalkey madoguchi push --file /media/usb/shoukai.json
     digitalkey madoguchi push --file /media/usb/shoukai.json --dry-run
 
-写しのファイルは `digitalkey kanri portal export --out` が出した物です。道具は、窓口の PocketBase のコレクション
+コピーのファイルは `digitalkey kanri portal export --out` が出した物です。道具は、窓口の PocketBase のコレクション
 shoukai を、ファイルと同じ中身にそろえます。
 
-  1. 写しのファイルを確かめる(窓口に触れる前)。形が違う、空の列のファイルは、何も変えずに止まる
-  2. 機械のアカウント(kikai、役 shoukai)で入る。入った応答のレコードの役(yaku)が shoukai でなければ、ほかの要求を
-     出さずに止まる(役の違う入り口では、窓口の決まりが空の一覧を返し、取り違えに気づけないため)
-  3. 今ある写しを全部引く。ファイルと違う発行者の写しがあれば、何も変えずに止まる
-  4. ファイルの順に、無い人の写しを作り、中身(sheet の 時刻 を除いた物と issuer)が違う人の写しを直す
-  5. ファイルに無い人の写しを消す(作る・直すの後)
+  1. コピーのファイルを確かめる(窓口に触れる前)。形が違う、空の列のファイルは、何も変えずに止まる
+  2. システムのアカウント(kikai、役 shoukai)で入る。入った応答のレコードの役(yaku)が shoukai でなければ、ほかの要求を
+     出さずに止まる(役の違うアカウントでは、窓口の決まりが空の一覧を返し、取り違えに気づけないため)
+  3. 今あるコピーを全部引く。ファイルと違う発行者のコピーがあれば、何も変えずに止まる
+  4. ファイルの順に、無い人のコピーを作り、中身(sheet の 時刻 を除いた物と issuer)が違う人のコピーを直す
+  5. ファイルに無い人のコピーを消す(作る・直すの後)
   6. 標準出力に `作った <n>、直した <n>、消した <n>、同じ <n>` を出す
 
 4 と 5 で一件が失敗しても残りを続け、失敗した物を `エラー: 作れませんでした <窓口の番号>(HTTP <数>)` の形で
 標準エラーに出して、終了コード 1 で終わります。--dry-run は 1〜3 を行い、作る・直す・消す物を一件一行で出すだけで、
-窓口の写しを変えません。
+窓口のコピーを変えません。
 
-結んだ人を全部外して窓口の写しを全部消す時は、空の列のファイルでは消えません(途中で切れたファイルや作り損ねた
-ファイルで写しが全部消える事を防ぐため)。運営者が窓口の管理画面で消します。
+結んだ人を全部外して窓口のコピーを全部消す時は、空の列のファイルでは消えません(途中で切れたファイルや作り損ねた
+ファイルでコピーが全部消える事を防ぐため)。運営者が窓口の管理画面で消します。
 
 入る値は env のファイル(一行に 名前=値。権限は 600 か、より狭く)と環境変数から読みます。同じ名前があれば
 環境変数が勝ちます。パスワードと識別を受ける引数はありません(シェルの履歴に残るため)。
@@ -32,7 +32,7 @@ shoukai を、ファイルと同じ中身にそろえます。
 パスワード、札、識別は、標準出力、標準エラー、例外の文に出しません。
 
 終了コード: 0 できた(変える物が無かった時と、--dry-run を含む)、1 止まった、または一件でも失敗した
-(env のファイルの権限、値の不足、写しのファイルの誤り、入れない、役の違う入り口、ほかの発行者の写し、網の失敗)、
+(env のファイルの権限、値の不足、コピーのファイルの誤り、入れない、役の違うアカウント、ほかの発行者のコピー、ネットワークの失敗)、
 2 引数の誤り(--file が無い、URL の形)。エラーは `エラー: ` で始まる行で出し、追跡は --debug の時だけ出します。
 """
 from __future__ import annotations
@@ -56,7 +56,7 @@ ITEM_KEYS = {"owner", "issuer", "made_at", "sheet"}
 OWNER_RE = re.compile(r"[A-Za-z0-9]{1,40}")
 ISSUER_RE = re.compile(r"[0-9a-f]{16}")
 MADE_AT_RE = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}")
-PER_PAGE = 200          # 今ある写しを一度に引く数(PocketBase の上限は 1000)
+PER_PAGE = 200          # 今あるコピーを一度に引く数(PocketBase の上限は 1000)
 TIMEOUT = 30            # 一つの要求を待つ秒
 FIELDS = "id,owner,issuer,made_at,sheet"
 ROLE = "shoukai"        # この道具が入る kikai のレコードの役(yaku)
@@ -136,11 +136,11 @@ def need(values: dict[str, str], url_arg: str | None) -> tuple[str, str, str]:
     return url, values["MADOGUCHI_IDENTITY"], values["MADOGUCHI_PASSWORD"]
 
 
-# ---- 写しのファイル(8.3) ----
+# ---- コピーのファイル(8.3) ----
 def read_items(path: Path) -> list[dict]:
-    """写しのファイルを読み、8.3 の形を確かめる。外れたら Stop。空の列も Stop。"""
+    """コピーのファイルを読み、8.3 の形を確かめる。外れたら Stop。空の列も Stop。"""
     def bad(why: str) -> Stop:
-        return Stop(f"写しのファイルが読めません({why})")
+        return Stop(f"コピーのファイルが読めません({why})")
 
     try:
         raw = path.read_bytes()
@@ -157,7 +157,7 @@ def read_items(path: Path) -> list[dict]:
     if not isinstance(data, list):
         raise bad("一番外が列ではありません")
     if not data:
-        raise Stop("写しが空です。何も変えていません")
+        raise Stop("コピーが空です。何も変えていません")
     seen: set[str] = set()
     issuer = None
     for n, x in enumerate(data, 1):
@@ -194,7 +194,7 @@ class Client:
         self.token = ""
 
     def call(self, method: str, path: str, body: dict | None = None) -> tuple[int, object]:
-        """(HTTP の数, 応答の JSON か None)。HTTP の誤りは数で返し、網の失敗は Stop にする。"""
+        """(HTTP の数, 応答の JSON か None)。HTTP の誤りは数で返し、ネットワークの失敗は Stop にする。"""
         headers = {"Accept": "application/json"}
         data = None
         if body is not None:
@@ -229,12 +229,12 @@ class Client:
             raise Stop(f"窓口に入れませんでした(HTTP {status})")
         record = data.get("record")
         if not isinstance(record, dict) or record.get("yaku") != ROLE:
-            raise Stop(f"この道具の役の入り口ではありません(要る役: {ROLE})")
+            raise Stop(f"この道具の役のアカウントではありません(要る役: {ROLE})")
         self.token = token
 
 
 def fetch_all(client: Client) -> list[dict]:
-    """shoukai の今ある写しを、page を 1 から増やして全部引く。"""
+    """shoukai の今あるコピーを、page を 1 から増やして全部引く。"""
     out: list[dict] = []
     ids: set[str] = set()
     page = 1
@@ -243,12 +243,12 @@ def fetch_all(client: Client) -> list[dict]:
         status, data = client.call("GET", f"/api/collections/shoukai/records?{q}")
         items = data.get("items") if status == 200 and isinstance(data, dict) else None
         if not isinstance(items, list):
-            raise Stop(f"今ある写しを引けませんでした(HTTP {status})")
+            raise Stop(f"今あるコピーを引けませんでした(HTTP {status})")
         for r in items:
             if not isinstance(r, dict) or not isinstance(r.get("id"), str):
-                raise Stop("今ある写しの形が違います")
+                raise Stop("今あるコピーの形が違います")
             if r["id"] in ids:
-                raise Stop("今ある写しの頁が重なっています")
+                raise Stop("今あるコピーの頁が重なっています")
             ids.add(r["id"])
             out.append(r)
         if len(items) < PER_PAGE:
@@ -262,7 +262,7 @@ def _content(sheet) -> object:
 
 
 def plan(items: list[dict], existing: list[dict]) -> tuple[list[tuple[str, dict, str]], list[dict], int]:
-    """(ファイルの順の (作る|直す, 一人分, 今ある写しの id) の列、消す写しの列、同じの数)。"""
+    """(ファイルの順の (作る|直す, 一人分, 今あるコピーの id) の列、消すコピーの列、同じの数)。"""
     by_owner: dict[str, dict] = {}
     for r in existing:
         by_owner.setdefault(r.get("owner"), r)
@@ -289,7 +289,7 @@ def run(args) -> int:
     existing = fetch_all(client)
     issuer = items[0]["issuer"]
     if any(r.get("issuer") != issuer for r in existing):
-        raise Stop("ほかの発行者の写しがあります")
+        raise Stop("ほかの発行者のコピーがあります")
     todo, delete, same = plan(items, existing)
 
     if args.dry_run:
@@ -335,12 +335,12 @@ def build() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(prog="digitalkey madoguchi", description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True, metavar="<命令>")
-    p = sub.add_parser("push", help="照会用の写しを窓口へ置きに行く", description=__doc__,
+    p = sub.add_parser("push", help="照会用のコピーを窓口へ置きに行く", description=__doc__,
                        formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("--file", required=True, help="digitalkey kanri portal export --out が出した写しのファイル")
+    p.add_argument("--file", required=True, help="digitalkey kanri portal export --out が出したコピーのファイル")
     p.add_argument("--env", help=f"入る値のファイル(権限 600。省けば {DEFAULT_ENV}。無ければ環境変数だけを読む)")
     p.add_argument("--url", help="窓口の PocketBase の基の URL(省けば env の MADOGUCHI_URL)")
-    p.add_argument("--dry-run", action="store_true", help="作る・直す・消す物を出すだけで、窓口の写しを変えない")
+    p.add_argument("--dry-run", action="store_true", help="作る・直す・消す物を出すだけで、窓口のコピーを変えない")
     p.add_argument("--debug", action="store_true", help="失敗の時、例外の追跡も出す(パスワード、札、本文は出さない)")
     return ap
 

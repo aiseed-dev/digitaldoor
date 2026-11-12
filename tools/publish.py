@@ -1,45 +1,45 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""サイトの公開の道具。deb2 の写し(clone)から html/ を取り出し、点検し、版として置き、切り替える。
+"""サイトの公開の道具。deb2 のクローンから html/ を取り出し、点検し、バージョンとして置き、切り替える。
 
-Python の標準ライブラリと git だけで動く(入れる物は無い)。deb2 では、写しに miniforge(conda-forge)で作った
+Python の標準ライブラリと git だけで動く(入れる物は無い)。deb2 では、クローンに miniforge(conda-forge)で作った
 .venv の python で動かす(deb2 の Python のアプリは、miniforge の環境をアプリごとの .venv に持つ)。
 
     .venv/bin/python tools/publish.py --repo ~/dev/digitaldoor --root /srv/door             # 取りに行き、点検し、切り替える
     .venv/bin/python tools/publish.py --repo ~/dev/digitaldoor --root /srv/door --dry-run   # 何をするかだけ見る
-    .venv/bin/python tools/publish.py --root /srv/door --status                             # 今の版と、置いた時刻
-    .venv/bin/python tools/publish.py --root /srv/door --rollback                           # 一つ前の版に戻す
+    .venv/bin/python tools/publish.py --root /srv/door --status                             # 今のバージョンと、置いた時刻
+    .venv/bin/python tools/publish.py --root /srv/door --rollback                           # 一つ前のバージョンに戻す
 
 置き場(--root)の中身:
 
-    <root>/releases/<commit の先頭 12 桁>/   置いた版。中は html/ の内容
-    <root>/www                               今の版を指すシンボリックリンク(Caddy の root)
+    <root>/releases/<commit の先頭 12 桁>/   置いたバージョン。中は html/ の内容
+    <root>/www                               今のバージョンを指すシンボリックリンク(Caddy の root)
 
 流れ:
-  1. 写しの origin から --branch を fetch する。写しの位置(HEAD)から origin/<branch> へ早送りできる
+  1. クローンの origin から --branch を fetch する。クローンの位置(HEAD)から origin/<branch> へ早送りできる
      ときだけ進める。できなければ(履歴が書き換えられた等)何も変えずに終わる(終了コード 1)。
-     HEAD が origin/<branch> と同じで、今の版もあるときは何もしない(終了コード 0)
-  2. origin/<branch> の html/ を git archive で取り出し、一時の名前の場所に写す。
-     `_headers` と、名前が `.` で始まる物は写さない
+     HEAD が origin/<branch> と同じで、今のバージョンもあるときは何もしない(終了コード 0)
+  2. origin/<branch> の html/ を git archive で取り出し、一時の名前の場所にコピーする。
+     `_headers` と、名前が `.` で始まる物はコピーしない
   3. 点検する。index.html と 404.html があること。sitemap.xml の URL(https://door.aiseed.dev/ の下)が
-     全部ファイルとしてあること(末尾が / なら index.html)。ファイルの数が今の版の半分を下回らないこと。
-     置いた版の外を指すシンボリックリンクが無いこと。一つでも落ちたら切り替えない
+     全部ファイルとしてあること(末尾が / なら index.html)。ファイルの数が今のバージョンの半分を下回らないこと。
+     置いたバージョンの外を指すシンボリックリンクが無いこと。一つでも落ちたら切り替えない
   4. 一時の名前を releases/<12 桁> に改め、www を一時のリンクから os.replace で一度に付け替える
-  5. 写しを origin/<branch> まで早送りする
-  6. --keep の数だけ新しい順に版を残し、他を消す。今の版と一つ前の版は消さない
+  5. クローンを origin/<branch> まで早送りする
+  6. --keep の数だけ新しい順にバージョンを残し、他を消す。今のバージョンと一つ前のバージョンは消さない
 
-点検に落ちたときの扱い: 写しの位置を進める前に点検するので、落ちたときは写しも www も動かさない
+点検に落ちたときの扱い: クローンの位置を進める前に点検するので、落ちたときはクローンも www も動かさない
 (取り出した一時の場所は消す)。次に動かしたとき、同じ commit をもう一度点検する。直した commit が
-push されて origin が進めば、そこから先へ進む。履歴を書き換えて直す場合は、写しの位置が origin の
-先祖でなくなるので、早送りできないとして止まる。人が写しを直す。
+push されて origin が進めば、そこから先へ進む。履歴を書き換えて直す場合は、クローンの位置が origin の
+先祖でなくなるので、早送りできないとして止まる。人がクローンを直す。
 
-写しを進めるのは切り替えの後。切り替えのあとで写しを進められなかったとき(作業木の変更等)は、
-エラーで終わるが、公開は済んでいる。次に動かしたとき、同じ版を使い回して写しを進め直す。
+クローンを進めるのは切り替えの後。切り替えのあとでクローンを進められなかったとき(作業木の変更等)は、
+エラーで終わるが、公開は済んでいる。次に動かしたとき、同じバージョンを使い回してクローンを進め直す。
 
---rollback は www を一つ前の版に付け替えるだけで、写しの位置は動かさない。そのため、次に動かしたとき、
-origin に新しい commit が無ければ何もせず、戻した版が出続ける。新しい commit が来たら、それに進む。
-「一つ前」は、置いた時刻が今の版より前で一番新しい版。続けて戻すと、さらに前へ行く。
+--rollback は www を一つ前のバージョンに付け替えるだけで、クローンの位置は動かさない。そのため、次に動かしたとき、
+origin に新しい commit が無ければ何もせず、戻したバージョンが出続ける。新しい commit が来たら、それに進む。
+「一つ前」は、置いた時刻が今のバージョンより前で一番新しいバージョン。続けて戻すと、さらに前へ行く。
 
---dry-run は fetch だけ行い(origin/<branch> の記録は更新される)、点検まで試して、版も www も写しも
+--dry-run は fetch だけ行い(origin/<branch> の記録は更新される)、点検まで試して、バージョンも www もクローンも
 変えない。
 
 終了コード: 0 は成功または変更なし、1 は止まった(点検落ち、早送り不可、その他のエラー)。
@@ -68,7 +68,7 @@ except ImportError:  # Linux 以外
 
 SITE_URL = "https://door.aiseed.dev/"
 SKIP_NAMES = {"_headers"}
-PLACED = ".placed"  # 置いた版の中に書く、置いた時刻(エポックからのナノ秒)
+PLACED = ".placed"  # 置いたバージョンの中に書く、置いた時刻(エポックからのナノ秒)
 DEFAULT_KEEP = 5
 
 
@@ -93,7 +93,7 @@ def git(repo: Path, *args: str, check: bool = True, text: bool = True):
 def fetch_target(repo: Path, branch: str) -> str:
     """origin/<branch> を取りに行き、その commit(40 桁)を返す。"""
     if not (repo / ".git").exists():
-        raise PublishError(f"{repo} は git の写しではありません")
+        raise PublishError(f"{repo} は git のクローンではありません")
     git(repo, "fetch", "--quiet", "origin", f"+refs/heads/{branch}:refs/remotes/origin/{branch}")
     return git(repo, "rev-parse", "--verify", f"refs/remotes/origin/{branch}^{{commit}}").stdout.strip()
 
@@ -124,7 +124,7 @@ def placed_ns(release: Path) -> int:
 
 
 def list_releases(root: Path) -> list[Path]:
-    """置いた版を、新しい順に返す。"""
+    """置いたバージョンを、新しい順に返す。"""
     d = releases_dir(root)
     if not d.is_dir():
         return []
@@ -141,7 +141,7 @@ def current_release(root: Path) -> Path | None:
 
 
 def previous_release(root: Path, cur: Path | None) -> Path | None:
-    """今の版より前に置いた版のうち、一番新しい物。"""
+    """今のバージョンより前に置いたバージョンのうち、一番新しい物。"""
     if cur is None:
         return None
     older = [p for p in list_releases(root) if p != cur and (placed_ns(p), p.name) < (placed_ns(cur), cur.name)]
@@ -195,7 +195,7 @@ def skipped(rel: str) -> bool:
 
 
 def extract_html(repo: Path, target: str, dest: Path) -> None:
-    """target の html/ を dest に写す。_headers と `.` で始まる名前は写さない。"""
+    """target の html/ を dest にコピーする。_headers と `.` で始まる名前はコピーしない。"""
     env = dict(os.environ, LC_ALL="C")
     proc = subprocess.Popen(["git", "-C", str(repo), "archive", "--format=tar", target, "html"],
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
@@ -297,9 +297,9 @@ def inspect(base: Path, current: Path | None) -> list[str]:
 def cmd_status(root: Path) -> int:
     cur = current_release(root)
     if cur is None:
-        print("公開している版はありません")
+        print("公開しているバージョンはありません")
         return 0
-    print(f"今の版: {cur.name}(置いた時刻 {stamp(placed_ns(cur))})")
+    print(f"今のバージョン: {cur.name}(置いた時刻 {stamp(placed_ns(cur))})")
     prev = previous_release(root, cur)
     if prev is not None:
         print(f"一つ前: {prev.name}(置いた時刻 {stamp(placed_ns(prev))})")
@@ -310,7 +310,7 @@ def cmd_rollback(root: Path) -> int:
     cur = current_release(root)
     prev = previous_release(root, cur)
     if cur is None or prev is None:
-        raise PublishError("戻せる版がありません")
+        raise PublishError("戻せるバージョンがありません")
     switch_www(root, prev)
     print(f"戻しました: {cur.name} から {prev.name}")
     return 0
@@ -320,16 +320,16 @@ def cmd_publish(repo: Path, root: Path, branch: str, keep: int, dry_run: bool) -
     head = git(repo, "rev-parse", "--verify", "HEAD").stdout.strip()
     cur_branch = git(repo, "symbolic-ref", "--short", "-q", "HEAD", check=False).stdout.strip()
     if cur_branch != branch:
-        raise PublishError(f"写しが {branch} にありません(今は {cur_branch or '分離した HEAD'})")
+        raise PublishError(f"クローンが {branch} にありません(今は {cur_branch or '分離した HEAD'})")
     target = fetch_target(repo, branch)
     short = target[:12]
     cur = current_release(root)
     if head == target and cur is not None:
-        print(f"変更なし: 今の版 {cur.name}")
+        print(f"変更なし: 今のバージョン {cur.name}")
         return 0
     if not can_fast_forward(repo, target):
         raise PublishError(
-            f"早送りできません: 写しの位置 {head[:12]} が origin/{branch} {short} の先祖ではありません"
+            f"早送りできません: クローンの位置 {head[:12]} が origin/{branch} {short} の先祖ではありません"
             "(履歴が書き換えられた可能性)。何も変えていません")
 
     rel_dir = releases_dir(root) / short
@@ -342,15 +342,15 @@ def cmd_publish(repo: Path, root: Path, branch: str, keep: int, dry_run: bool) -
         extract_html(repo, target, work)
         problems = inspect(work, cur)
         if problems:
-            now = f"今の版 {cur.name} のまま" if cur else "公開している版はありません"
+            now = f"今のバージョン {cur.name} のまま" if cur else "公開しているバージョンはありません"
             raise PublishError(f"点検に落ちました({short}): " + "。".join(problems)
-                               + f"。切り替えていません({now})。写しの位置も進めていません")
+                               + f"。切り替えていません({now})。クローンの位置も進めていません")
         if dry_run:
-            same = " (今の版と同じ)" if cur is not None and cur.name == short else ""
+            same = " (今のバージョンと同じ)" if cur is not None and cur.name == short else ""
             print(f"予定: {cur.name if cur else '(なし)'} から {short} に切り替える{same}。点検は通りました。何も変えていません")
             return 0
         (work / PLACED).write_text(str(time.time_ns()))
-        if rel_dir.exists():  # 同じ commit の版が残っている。同じ中身なので使い回す
+        if rel_dir.exists():  # 同じ commit のバージョンが残っている。同じ中身なので使い回す
             shutil.rmtree(work)
             (rel_dir / PLACED).write_text(str(time.time_ns()))
         else:
@@ -365,7 +365,7 @@ def cmd_publish(repo: Path, root: Path, branch: str, keep: int, dry_run: bool) -
         switch_www(root, rel_dir)
     git(repo, "merge", "--ff-only", "--quiet", target)
     gone = prune(root, keep)
-    tail = f"、{len(gone)} 版を消しました" if gone else ""
+    tail = f"、{len(gone)} 個のバージョンを消しました" if gone else ""
     print(f"公開しました: {short}(前は {cur.name if cur else 'なし'}){tail}")
     return 0
 
@@ -408,15 +408,15 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     ap.add_argument("--repo", type=Path, default=Path(__file__).resolve().parent.parent,
-                    help="取りに行く写し(clone)。既定はこの道具のあるリポジトリ")
+                    help="取りに行くクローン。既定はこの道具のあるリポジトリ")
     ap.add_argument("--root", type=Path, required=True, help="置き場(releases/ と www ができる)。例: /srv/door")
     ap.add_argument("--branch", default="main", help="公開するブランチ(既定: main)")
     ap.add_argument("--keep", type=int, default=DEFAULT_KEEP,
-                    help=f"残す版の数(新しい順。既定: {DEFAULT_KEEP})。今の版と一つ前の版は、この数に関わらず消さない")
+                    help=f"残すバージョンの数(新しい順。既定: {DEFAULT_KEEP})。今のバージョンと一つ前のバージョンは、この数に関わらず消さない")
     ap.add_argument("--dry-run", action="store_true", help="何をするかだけ見る(fetch と点検までで、何も変えない)")
     mode = ap.add_mutually_exclusive_group()
-    mode.add_argument("--status", action="store_true", help="今の版の commit と、置いた時刻を出す")
-    mode.add_argument("--rollback", action="store_true", help="一つ前の版に付け替える")
+    mode.add_argument("--status", action="store_true", help="今のバージョンの commit と、置いた時刻を出す")
+    mode.add_argument("--rollback", action="store_true", help="一つ前のバージョンに付け替える")
     ap.add_argument("--debug", action="store_true", help="エラーのとき、例外の追跡も出す")
     return ap
 
@@ -434,7 +434,7 @@ def main(argv: list[str] | None = None) -> int:
             cur = current_release(root)
             prev = previous_release(root, cur)
             if cur is None or prev is None:
-                raise PublishError("戻せる版がありません")
+                raise PublishError("戻せるバージョンがありません")
             print(f"予定: {cur.name} から {prev.name} に戻す。何も変えていません")
             return 0
         if args.dry_run:

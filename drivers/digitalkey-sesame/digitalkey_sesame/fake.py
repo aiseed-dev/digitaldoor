@@ -174,7 +174,7 @@ async def fake_adapter_available() -> tuple[bool, str]:
 
 
 class FakeSesameLock:
-    """疑似の Sesame を、digitalkey の錠のドライバの口(`unlock()` / `lock()`。`digitalkey.entrance.keyring.LockDriver`)で動かす。
+    """疑似の Sesame を、digitalkey の錠のドライバのインターフェース(`unlock()` / `lock()`。`digitalkey.entrance.keyring.LockDriver`)で動かす。
 
     実機と同じ道を通る: 呼ぶたびに SesameDevice を作り、疑似の機器にログインして(秘密は 16 バイトの 0)、LOCK か UNLOCK を送る。
     疑似の機器(`fake`)は呼びの間も残るので、`locked` で今の状態を読める。`reachable = False` にすると、
@@ -297,7 +297,7 @@ def fake_camera_path():
 
 
 class FakeCameraScanner:
-    """カメラで QR を読む口(qrcamera.QrScanner)の疑似。`text` を渡すとそれを読んだことにする。
+    """カメラで QR を読むインターフェース(qrcamera.QrScanner)の疑似。`text` を渡すとそれを読んだことにする。
     `channel`(ファイル)を渡すと、そこに文字が置かれるのを待って読む(疑似の画面で、渡す側と受け取る側を別々に動かすため)。
     `ok=False` は、カメラを始められない場合(許可されない等)。"""
 

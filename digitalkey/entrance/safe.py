@@ -1,7 +1,7 @@
 """金庫 — 記録の置き場と控え。
 
 記録は経営者の箱にある。控えは経営者の箱で暗号化してから、経営者名義の国内VPSへ上げる。
-鍵(合言葉)は経営者が持つ。保存年限のある様式は年限を過ぎた伝票を候補として挙げるだけで、消すのは経営者。
+鍵(パスフレーズ)は経営者が持つ。保存年限のある様式は年限を過ぎた伝票を候補として挙げるだけで、消すのは経営者。
 """
 from __future__ import annotations
 
@@ -42,7 +42,7 @@ def make_archive(root: Path | str, out_dir: Path | str, stamp: str | None = None
 
 
 def encrypt(tar: Path, passphrase_file: Path | str) -> Path:
-    """gpg の対称暗号(AES256)。合言葉のファイルは経営者の箱にだけある。"""
+    """gpg の対称暗号(AES256)。パスフレーズのファイルは経営者の箱にだけある。"""
     if shutil.which("gpg") is None:
         raise RuntimeError("gpg がありません")
     out = tar.with_suffix(".tar.gpg")

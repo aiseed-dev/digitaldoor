@@ -1,7 +1,7 @@
 """設計書 22.10: 段 5a の要求ごとの確かめ方(R-EB-37、R-EB-36、R-LG-07、R-AC-13)。R-AC-19 は test_cli_portal.py。
 
 段 5a の実装より先に書いた。下ごしらえは 19.13 の adm、apr、s1 に ros(名簿の係)を足した物(conftest の punit)。
-呼び名、理由、作業の文は、写しに出ていないことを文字列で確かめられるよう、ほかの値と重ならない架空の文字列にする。
+呼び名、理由、作業の文は、コピーに出ていないことを文字列で確かめられるよう、ほかの値と重ならない架空の文字列にする。
 窓口の番号は、英数字の架空の値をテストが選ぶ。
 """
 from __future__ import annotations
@@ -23,10 +23,10 @@ ROS = dict(by="ros", role="名簿の係")
 ADM = dict(by="adm", role="管理者")
 
 # R-LG-07 の筋書きの、ほかの値と重ならない架空の文字列
-NAME = "写しに出ない呼び名ホ"
-KIND = "写しに出ない種別ヘ"
-REASON = "写しに出ない理由ト"
-DEV_REASON = "写しに出ない機器の理由チ"
+NAME = "コピーに出ない呼び名ホ"
+KIND = "コピーに出ない種別ヘ"
+REASON = "コピーに出ない理由ト"
+DEV_REASON = "コピーに出ない機器の理由チ"
 ACCOUNT = "kuchinonaQ7"
 SUBJ = "hito-ri-07"
 
@@ -52,7 +52,7 @@ def test_r_eb_37_1_unknown_subject_adds_nothing(punit, refused):
 
 
 def test_r_eb_37_2_export_only_linked(punit, forms):
-    """R-EB-37 22.10 の 2: 写しに出るのは結んだ主体だけ。結んだだけで権限の無い主体は 権限 と 鍵 が空の列。
+    """R-EB-37 22.10 の 2: コピーに出るのは結んだ主体だけ。結んだだけで権限の無い主体は 権限 と 鍵 が空の列。
     結ぶ事で、権限_申請ほかの伝票は増えない(増えるのは 主体_結び の一枚だけ)。"""
     u = punit
     before = forms(u)
@@ -88,7 +88,7 @@ def test_r_eb_37_4_one_number_one_subject(punit, refused):
 
 
 def test_r_eb_37_5_states(punit, refused):
-    """R-EB-37 22.10 の 5: 結んだ主体を 退出 にすると写しから外れる。停止 は写しに残る。停止と退出の主体への link_portal は
+    """R-EB-37 22.10 の 5: 結んだ主体を 退出 にするとコピーから外れる。停止 はコピーに残る。停止と退出の主体への link_portal は
     SUBJECT_INACTIVE。退出の主体の unlink_portal は通る。"""
     u = punit
     u.link_portal("s1", A1, "対面", **ROS)
@@ -138,7 +138,7 @@ def test_r_eb_36_3_relink(punit):
 
 @pytest.fixture
 def lg07(punit):
-    """R-LG-07 の筋書き: 架空の呼び名と種別の主体 SUBJ に、扉の権限から三つの経路、機器の権限から管理者の口を出し、
+    """R-LG-07 の筋書き: 架空の呼び名と種別の主体 SUBJ に、扉の権限から三つの経路、機器の権限から管理者のインターフェースを出し、
     結んで、失効させる。(unit, 扉の権限, 機器の権限, 実体の列, 署名つき資格情報の Issued)。"""
     u = punit
     u.register_subject(SUBJ, NAME, KIND, False, **ROS)
@@ -159,7 +159,7 @@ def lg07(punit):
 
 
 def test_r_lg_07_1_no_names_in_export(lg07):
-    """R-LG-07 22.10 の 1: 写しの文に、結んだ主体の呼び名、仮名、主体の識別、権限の理由、申請者と操作者の識別、
+    """R-LG-07 22.10 の 1: コピーの文に、結んだ主体の呼び名、仮名、主体の識別、権限の理由、申請者と操作者の識別、
     19.8 と 20.8 の作業の文が現れない。"""
     u, *_ = lg07
     text = _dump(u.portal_export(at=dt(REV)))
@@ -175,7 +175,7 @@ def test_r_lg_07_1_no_names_in_export(lg07):
 
 def test_r_lg_07_2_identifiers(lg07):
     """R-LG-07 22.10 の 2: 署名つき資格情報と門番を通す錠の行の 識別 は Entity.識別 の先頭 4 文字と「…」で、全部は文に現れない。
-    物理キーの行は鍵の番号、管理者の口の行は口の名がそのまま出る。"""
+    物理キーの行は鍵の番号、管理者のインターフェースの行はインターフェースの名がそのまま出る。"""
     u, _, _, ents, _ = lg07
     got = u.portal_export(at=dt(REV))
     text = _dump(got)
@@ -203,7 +203,7 @@ def test_r_ac_13_1_keys_only(lg07):
 
 
 def test_r_ac_13_2_no_secrets(lg07):
-    """R-AC-13 22.10 の 2: 写しの文に、issue_entity が返した資格情報の sig の値と body の識別の全部、
+    """R-AC-13 22.10 の 2: コピーの文に、issue_entity が返した資格情報の sig の値と body の識別の全部、
     発行者の公開鍵の 16 進が現れない。"""
     u, _, _, ents, i1 = lg07
     text = _dump(u.portal_export(at=dt(REV)))
@@ -218,7 +218,7 @@ def test_r_ac_13_2_no_secrets(lg07):
 
 
 def test_r_ac_13_2_no_key_file_path(file_unit):
-    """R-AC-13 22.10 の 2: 鍵のファイルの道(置き場の 鍵/発行者.key、kanri.json の 鍵のファイル)が写しに現れない。"""
+    """R-AC-13 22.10 の 2: 鍵のファイルの道(置き場の 鍵/発行者.key、kanri.json の 鍵のファイル)がコピーに現れない。"""
     u = file_unit
     u.register_subject("ros", "名簿係の架空の呼び名ロ", "社員", False, by="adm", role="名簿の係")
     u.assign_role("ros", "名簿の係", reason="名簿の当番", by="adm", role="管理者")
@@ -245,7 +245,7 @@ def test_r_ac_13_3_export_writes_nothing(lg07):
 # ---- 働きの確かめ(22.10 の働きの 4) ----
 
 def test_example_states_after_revoke_and_delivery(punit):
-    """R-AC-13 22.10 の働きの 4: 19.10 の例で、失効の後の写しの 鍵 は 22.7 の例と同じ状態と効くまで。
+    """R-AC-13 22.10 の働きの 4: 19.10 の例で、失効の後のコピーの 鍵 は 22.7 の例と同じ状態と効くまで。
     record_delivery の後は、署名つき資格情報の行が 止まった(21.8)。"""
     u = punit
     r = u.request("s1", "扉", "玄関", T0, T1, "業務", by="adm", role="名簿の係")

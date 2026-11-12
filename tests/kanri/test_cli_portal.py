@@ -1,4 +1,4 @@
-"""設計書 22.9: 命令 `digitalkey kanri portal link|unlink|list|export`。網から切り離して動かす確かめ(22.10 の R-AC-19)もここに置く。
+"""設計書 22.9: 命令 `digitalkey kanri portal link|unlink|list|export`。ネットワークから切り離して動かす確かめ(22.10 の R-AC-19)もここに置く。
 
 段 5a の実装より先に書いた。argv は `kanri` の後ろの語。終了コードは main の戻り値か SystemExit の code で読む。
 時刻は `--at` に固定の値を渡す。
@@ -212,7 +212,7 @@ def test_list_empty(kanri, d):
 # ---- portal export ----
 
 def test_export_human(kanri, d, tmp_path):
-    """R-AC-19 22.9 の例: portal export は `写し <人数> 人` と `ファイル <--out>` の二行。--by、--role は要らない。
+    """R-AC-19 22.9 の例: portal export は `コピー <人数> 人` と `ファイル <--out>` の二行。--by、--role は要らない。
     ファイルは権限 600 で新しく作り、中身は portal_export の列を json.dumps(..., ensure_ascii=False) にして改行を一つ付けた物。"""
     u = Unit.open(d)
     _grant_cli_free(u)
@@ -220,7 +220,7 @@ def test_export_human(kanri, d, tmp_path):
     out = tmp_path / "shoukai.json"
     res = kanri("portal", "export", "--dir", d, "--out", out, "--at", REV)
     assert res.code == 0, res.err
-    assert res.lines == ["写し 1 人", f"ファイル {out}"]
+    assert res.lines == ["コピー 1 人", f"ファイル {out}"]
     assert stat.S_IMODE(out.stat().st_mode) == 0o600
     want = Unit.open(d).portal_export(at=dt(REV))
     assert out.read_text(encoding="utf-8") == json.dumps(want, ensure_ascii=False) + "\n"
@@ -238,11 +238,11 @@ def test_export_json(kanri, d, tmp_path):
 
 
 def test_export_empty(kanri, d, tmp_path):
-    """R-AC-19 22.9、22.10 の働きの 5: 結んだ人が居なければ空の列 `[]` を書き、`写し 0 人`。"""
+    """R-AC-19 22.9、22.10 の働きの 5: 結んだ人が居なければ空の列 `[]` を書き、`コピー 0 人`。"""
     out = tmp_path / "shoukai.json"
     res = kanri("portal", "export", "--dir", d, "--out", out, "--at", REV)
     assert res.code == 0, res.err
-    assert res.lines == ["写し 0 人", f"ファイル {out}"]
+    assert res.lines == ["コピー 0 人", f"ファイル {out}"]
     assert out.read_text(encoding="utf-8") == "[]\n"
 
 
@@ -295,7 +295,7 @@ def test_export_does_not_change_ledger(kanri, d, tmp_path):
     assert Unit.open(d).ledger.count() == n
 
 
-# ---- R-AC-19 網から切り離して動かす ----
+# ---- R-AC-19 ネットワークから切り離して動かす ----
 
 _WATCH: dict = {"paths": None}
 _WRITE_FLAGS = os.O_WRONLY | os.O_RDWR | os.O_CREAT | os.O_APPEND | os.O_TRUNC
@@ -331,17 +331,17 @@ if not getattr(sys, "_kanri_portal_test_hook", False):
 
 
 def test_r_ac_19_portal_offline(kanri, tmp_path, monkeypatch):
-    """R-AC-19 22.10: 19.13 の筋書きの網を塞いだまま、続けて portal link、portal list、portal export --out FILE、
+    """R-AC-19 22.10: 19.13 の筋書きのネットワークを塞いだまま、続けて portal link、portal list、portal export --out FILE、
     portal unlink を main([...]) で呼ぶ。全部の終了コードが 0 で、--out のファイルが権限 600 で 22.7 の形の JSON の列。
     書くのは --dir の下と --out だけ。既にある --out は OUT_EXISTS で、ファイルの中身は変わらない。"""
     real_socket = socket.socket
 
     class NoNetwork(real_socket):
         def __init__(self, *a, **kw):
-            raise OSError("網は使わない")
+            raise OSError("ネットワークは使わない")
 
     def no_connection(*a, **kw):
-        raise OSError("網は使わない")
+        raise OSError("ネットワークは使わない")
 
     monkeypatch.setattr(socket, "socket", NoNetwork)
     monkeypatch.setattr(socket, "create_connection", no_connection)

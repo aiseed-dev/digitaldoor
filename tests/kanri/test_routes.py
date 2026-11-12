@@ -1,4 +1,4 @@
-"""設計書 19.8: 経路の差し替え口、登録簿、実体を出す(issue_entity)、効くまで、照らす。"""
+"""設計書 19.8: 経路の差し替えのインターフェース、登録簿、実体を出す(issue_entity)、効くまで、照らす。"""
 from __future__ import annotations
 
 import json
@@ -23,7 +23,7 @@ def _all3(u, pid, key_number="K-7"):
 
 
 def test_registry_has_four_routes():
-    """19.8、20.2: 登録簿 available() は組み込みで四つ(段 1 の三つと 管理者の口)を持つ。"""
+    """19.8、20.2: 登録簿 available() は組み込みで四つ(段 1 の三つと 管理者のインターフェース)を持つ。"""
     got = routes.available()
     assert set(ALL4) <= set(got)
     for name in ALL4:

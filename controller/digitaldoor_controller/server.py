@@ -1,8 +1,8 @@
 """門 — Matter の橋(Node)や上の層から core を叩く小さな HTTP(標準ライブラリだけ)。
 
 GET  /state            いまの状態
-POST /lock  /unlock    上位からの施錠・解錠(JSON: {"by": "..."} )。同じ機械(ループバック)の相手だけ。ほかは 403 で拒んで記録に残す
-POST /auth             読取機からの認証結果 {"subject","route","valid","duress"}
+POST /lock  /unlock    上位からの施錠・解錠(JSON: {"by": "..."} )。同じコンピューター(ループバック)の相手だけ。ほかは 403 で拒んで記録に残す
+POST /auth             リーダーからの認証結果 {"subject","route","valid","duress"}
 POST /event            {"fire": true} | {"mains": false} | {"door_open": true} | {"manual": "機械キー"} | {"tamper": "..."}
 POST /time             {"now": 1700000000}
 POST /credential       発行者の署名つき資格情報 {"credential": {"body","sig"}, "route": "遠隔", "revocation": {"body","sig"}}
@@ -13,13 +13,13 @@ POST /revocation       発行者の署名つきの失効の一覧 {"list": {"bod
 GET  /revocation       発行者ごとの失効の状態 {issuer: {"generation", "issued_at", "revoked"}}(秘密は無い)
 GET  /audit?since=N    監査の差分
 GET  /verify           連鎖の検査
-GET  /openapi.json     この口の全部の定義(OpenAPI 3.1)。応答のすべてに API-Version の見出しが付く
+GET  /openapi.json     このインターフェースの全部の定義(OpenAPI 3.1)。応答のすべてに API-Version の見出しが付く
 GET  /events?since=N   出来事の配信(WebSocket)。監査の記録を連番の順に一件ずつ送る
-GET  /fault  POST /fault  故障注入(開発のときだけ。同じ機械の相手だけ)
+GET  /fault  POST /fault  故障注入(開発のときだけ。同じコンピューターの相手だけ)
                        {"lock": "応答しない"|"途中で切断"|"正常", "clock_offset_s": 秒, "events": "切断"}
 
-/credential、/trust、/revocation は署名で守る口で、相手の住所は問わない(扉コントローラ仕様書 5.2a、5.2c)。
-開発の口(定義、配信、故障注入)は扉コントローラ仕様書 5.5 による。
+/credential、/trust、/revocation は署名で守るインターフェースで、相手の住所は問わない(扉コントローラ仕様書 5.2a、5.2c)。
+開発用のインターフェース(定義、配信、故障注入)は扉コントローラ仕様書 5.5 による。
 """
 from __future__ import annotations
 
@@ -50,7 +50,7 @@ class Clock:
 
 
 def is_loopback(addr: str) -> bool:
-    """同じ機械の相手か。IPv4 を写した IPv6(::ffff:127.0.0.1)も同じ機械として見る。読めない住所は外とする。"""
+    """同じコンピューターの相手か。IPv4 を埋め込んだ IPv6(::ffff:127.0.0.1)も同じコンピューターとして見る。読めない住所は外とする。"""
     try:
         ip = ipaddress.ip_address(addr.split("%")[0])
     except ValueError:
@@ -121,7 +121,7 @@ def make_handler(ctl: Controller, lock: threading.Lock, *, dev: bool = False, cl
             if not hub.enter(self.connection):
                 return self._json(503, {"error": "配信を受ける相手が上限に達しています"})
             try:
-                # WebSocket の切り替えは HTTP/1.1 の応答で返す(この口のほかの応答は HTTP/1.0 のまま)
+                # WebSocket の切り替えは HTTP/1.1 の応答で返す(このインターフェースのほかの応答は HTTP/1.0 のまま)
                 self.wfile.write(("HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\n"
                                   f"Sec-WebSocket-Accept: {events.accept_key(self.headers['Sec-WebSocket-Key'])}\r\n"
                                   f"API-Version: {API_VERSION}\r\n\r\n").encode("ascii"))
@@ -162,11 +162,11 @@ def make_handler(ctl: Controller, lock: threading.Lock, *, dev: bool = False, cl
                 ctl.tick(clock.now()) if ctl.synced else None
                 if u.path == "/fault" and dev:
                     if not is_loopback(self.client_address[0]):
-                        ctl.note_fault(f"同じ機械以外からの要求 {self.client_address[0]}", result="拒否", route="網")
+                        ctl.note_fault(f"同じコンピューター以外からの要求 {self.client_address[0]}", result="拒否", route="ネットワーク")
                         return self._json(403, {"error": "forbidden", "result": "拒否"})
                     return self._set_fault(b)
                 if u.path in ("/lock", "/unlock") and not is_loopback(self.client_address[0]):
-                    # Matter の橋のための口。外の網には開かない(網を通した解錠は /credential の署名つき資格情報だけ)
+                    # Matter の橋のためのインターフェース。外部のネットワークには開かない(ネットワークを通した解錠は /credential の署名つき資格情報だけ)
                     ctl.refuse_remote(u.path[1:], self.client_address[0])
                     return self._json(403, {"error": "forbidden", "result": "拒否"})
                 if u.path == "/lock":
@@ -220,7 +220,7 @@ def start_workers(ctl: Controller, lock: threading.Lock, exporter=None, interval
     """時計と伝票の書き出しを、別々のスレッドで回す。
 
     時計は判断の排他(lock)を取って自動施錠を進める。書き出し(exporter)は排他を持たずに回すので、
-    箱が網の共有フォルダで固まっても、判断、自動施錠、命令の受け付けは止まらない。
+    箱がネットワークの共有フォルダで固まっても、判断、自動施錠、命令の受け付けは止まらない。
     """
 
     def ticker():
@@ -245,7 +245,7 @@ def start_workers(ctl: Controller, lock: threading.Lock, exporter=None, interval
 
 
 def serve(ctl: Controller, host: str = "127.0.0.1", port: int = 8797, exporter=None, dev: bool = False) -> None:
-    """HTTP の口を開く。exporter を渡すと、伝票の書き出しを判断と別に回し続ける。
+    """HTTP のインターフェースを開く。exporter を渡すと、伝票の書き出しを判断と別に回し続ける。
 
     dev=True で故障注入を開く。接点が模擬(SimContacts)のときだけ渡す。本物の錠の扉では開かない。
     """

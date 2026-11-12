@@ -1,8 +1,8 @@
-"""設計書 22.1〜22.8: 段 5a の外に出す名前とデータの型、役と伝票の組、窓口の番号を結ぶ・外す、今の結び、照会用の写し。
+"""設計書 22.1〜22.8: 段 5a の外に出す名前とデータの型、役と伝票の組、窓口の番号を結ぶ・外す、今の結び、照会用のコピー。
 
 段 5a の実装より先に書いた。まだ無い名前(Link、PortalMixin、link_portal など)は関数の中で引く
 (収集は通り、試験は AttributeError などで落ちる)。時刻は固定の値を `at` に渡す。
-呼び名、理由、作業の文は、写しに出ていないことを文字列で確かめられるよう、ほかの値と重ならない架空の文字列にする。
+呼び名、理由、作業の文は、コピーに出ていないことを文字列で確かめられるよう、ほかの値と重ならない架空の文字列にする。
 """
 from __future__ import annotations
 
@@ -399,7 +399,7 @@ def test_reopen_reads_same_links(punit, link):
     assert v.portal_account("s1") == A1 and v.portal_account("s2") == ""
 
 
-# ---- 22.7 写し ----
+# ---- 22.7 コピー ----
 
 def test_export_empty(punit):
     """R-EB-37 22.7: 結んだ人が居なければ空の列。"""
@@ -436,7 +436,7 @@ def test_export_states(punit, link):
 
 
 def test_export_example_22_7(punit, link):
-    """R-AC-13 R-LG-07 22.7 の例: 19.10 の例の s1 を結び、2026-12-10T12:00 の revoke_subject の後、同じ時刻で写しを作る。
+    """R-AC-13 R-LG-07 22.7 の例: 19.10 の例の s1 を結び、2026-12-10T12:00 の revoke_subject の後、同じ時刻でコピーを作る。
     権限は 失効、鍵は 署名つき資格情報 待ち(効くまで 2027-01-01T00:00)、門番を通す錠 止まった、物理キー 人の作業が要る。
     署名つき資格情報と門番を通す錠の識別は先頭 4 文字と「…」、物理キーは鍵の番号そのまま。"""
     u = punit
@@ -457,7 +457,7 @@ def test_export_example_22_7(punit, link):
 
 
 def test_export_before_revoke_all_effective(punit, link):
-    """R-EB-37 22.7: 失効の前、期間の内の写しは、権限 発行済み、鍵は三つとも 効いている(効くまで 空)。"""
+    """R-EB-37 22.7: 失効の前、期間の内のコピーは、権限 発行済み、鍵は三つとも 効いている(効くまで 空)。"""
     u = punit
     pid, *_ = _three_routes(u)
     link(u, "s1", A1)
@@ -467,7 +467,7 @@ def test_export_before_revoke_all_effective(punit, link):
 
 
 def test_export_after_delivery(punit, link):
-    """R-AC-13 22.10 の働きの 4、21.8: 失効の後、record_delivery("玄関", 1) の後の写しでは、署名つき資格情報の行が 止まった。"""
+    """R-AC-13 22.10 の働きの 4、21.8: 失効の後、record_delivery("玄関", 1) の後のコピーでは、署名つき資格情報の行が 止まった。"""
     u = punit
     _three_routes(u)
     link(u, "s1", A1)
@@ -479,7 +479,7 @@ def test_export_after_delivery(punit, link):
 
 
 def test_export_after_end(punit, link):
-    """R-EB-37 22.10 の働きの 3: at を権限の終了の後にした写しでは、権限の状態が 期限切れ(失効していない時)、
+    """R-EB-37 22.10 の働きの 3: at を権限の終了の後にしたコピーでは、権限の状態が 期限切れ(失効していない時)、
     署名つき資格情報の行が 止まった。"""
     u = punit
     _three_routes(u)
@@ -491,7 +491,7 @@ def test_export_after_end(punit, link):
 
 
 def test_export_end_exactly(punit, link):
-    """R-EB-37 19.5、22.7: 終了の時刻ちょうどで切れる。at = 終了 の写しは 期限切れ と 止まった。"""
+    """R-EB-37 19.5、22.7: 終了の時刻ちょうどで切れる。at = 終了 のコピーは 期限切れ と 止まった。"""
     u = punit
     _three_routes(u)
     link(u, "s1", A1)
@@ -530,7 +530,7 @@ def test_export_keys_follow_progress_order(punit, link):
 
 
 def test_export_access_row(punit, link):
-    """R-LG-07 22.7: 管理者の口の行は、口の名をそのまま出す。扉は空の列、機器は機器の名前。権限は機器の権限。"""
+    """R-LG-07 22.7: 管理者のインターフェースの行は、インターフェースの名をそのまま出す。扉は空の列、機器は機器の名前。権限は機器の権限。"""
     u = punit
     u.register_device("ルーター1", "ルーター", "使用", **ADM)
     pid = _grant_r(u, "s1", "機器", "ルーター1", "業務")
@@ -582,7 +582,7 @@ def test_export_does_not_write(punit, link):
 
 
 def test_export_is_json_serializable(punit, link):
-    """R-AC-13 22.7: 写しは JSON にできる形(dict、list、str)だけ。"""
+    """R-AC-13 22.7: コピーは JSON にできる形(dict、list、str)だけ。"""
     u = punit
     _three_routes(u)
     link(u, "s1", A1)
@@ -613,7 +613,7 @@ def test_export_at_none_is_now(punit, link):
 
 
 def test_export_follows_relink(punit, link):
-    """R-EB-36 22.7: 結び直した主体の写しの owner は今の番号。外した主体は出ない。"""
+    """R-EB-36 22.7: 結び直した主体のコピーの owner は今の番号。外した主体は出ない。"""
     u = punit
     link(u, "s1", A1)
     link(u, "s1", A2)

@@ -275,7 +275,7 @@ def test_pair22_remote_unlock_with_untrusted_vendor_key():
 
 
 def test_pair22_trusted_issuer_unlocks_with_no_network():
-    """R-AC-10: 網の無い状態でも、信頼する発行者の資格情報は扉が自分で確かめて解錠する(発行者のサーバーへ問い合わせない)。"""
+    """R-AC-10: ネットワークの無い状態でも、信頼する発行者の資格情報は扉が自分で確かめて解錠する(発行者のサーバーへ問い合わせない)。"""
     a = Ed25519Signer.generate()
     ctl = new_ctl(trust_entry(a, [DOOR]))
     # 扉に渡したのは公開鍵と範囲だけで、発行者への接続は持たない。この状態で通る。
@@ -550,7 +550,7 @@ def test_malformed_credentials_are_rejected_as_format(name):
 
 # ---- 通った後の判断 ----
 def test_after_pass_fire_mode_keeps_release():
-    """R-AC-09: 通った資格情報も読取機の判定結果と同じ判断を通る。火災中は「解放済み」で、記録に issuer と id が残る。"""
+    """R-AC-09: 通った資格情報もリーダーの判定結果と同じ判断を通る。火災中は「解放済み」で、記録に issuer と id が残る。"""
     a = Ed25519Signer.generate()
     ctl = new_ctl(trust_entry(a, [DOOR]))
     ctl.on_fire(True)

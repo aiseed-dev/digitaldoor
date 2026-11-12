@@ -9,7 +9,7 @@
 
 状態は台帳の伝票から毎回導き、別の表やファイルに持ちません。名簿、扉と群、設定は roster、
 申請から実体までは permissions、門番は routes.gate、失効は revoke、区画と機器の台帳は devices、
-失効の一覧と配った記録は revocations、窓口の結びと照会用の写しは portal の各モジュールが、
+失効の一覧と配った記録は revocations、窓口の結びと照会用のコピーは portal の各モジュールが、
 Unit のメソッドとして持ちます。
 """
 from __future__ import annotations
@@ -39,7 +39,7 @@ from .routes import available
 from .routes.gate import GateMixin
 
 FORMAT_NAME = "digitalkey-kanri/1"
-MACHINE = "発行者"     # 機械の伝票(権限_発行、実体_発行、実体_失効、失効_一覧)の伝票の発行者
+MACHINE = "発行者"     # システムの伝票(権限_発行、実体_発行、実体_失効、失効_一覧)の伝票の発行者
 INIT = "初期化"        # 置き場を作る時の最初の二枚だけの役の印
 
 
@@ -216,7 +216,7 @@ class Unit(RosterMixin, PermissionsMixin, GateMixin, RevokeMixin, DevicesMixin, 
 
     def _write(self, form: str, values: dict, *, by: str, role: str, to: str = "", basis=(),
                machine: bool = False) -> Slip:
-        """伝票を一枚書く。人の伝票は発行者 by で、その役だけを通す。機械の伝票は発行者 `発行者` で書く。"""
+        """伝票を一枚書く。人の伝票は発行者 by で、その役だけを通す。システムの伝票は発行者 `発行者` で書く。"""
         self.ledger.roles = {} if machine else {by: {role}}
         try:
             return self.ledger.append(form, values, issuer=MACHINE if machine else by, to=to, basis=list(basis))

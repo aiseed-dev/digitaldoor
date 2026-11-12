@@ -1,5 +1,5 @@
 """設計書 21.12: 命令 `digitalkey kanri` に足す物(revocation publish / show / list / delivered、door add の
---revocation-max-min、revoke の --out)と、出力の形と終了コード。網から切り離して動かす確かめは test_requirements_2a.py。
+--revocation-max-min、revoke の --out)と、出力の形と終了コード。ネットワークから切り離して動かす確かめは test_requirements_2a.py。
 
 argv は `kanri` の後ろの語。終了コードは main の戻り値か SystemExit の code で読む(test_cli.py と同じ)。
 時刻は `--at` に固定の値を渡す。段 2a の実装より先に書いた。

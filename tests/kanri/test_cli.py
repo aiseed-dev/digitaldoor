@@ -1,4 +1,4 @@
-"""設計書 19.12: 命令 `digitalkey kanri`(digitalkey.kanri.cli.main(argv))。網から切り離して動かす確かめ(19.13)もここに置く。
+"""設計書 19.12: 命令 `digitalkey kanri`(digitalkey.kanri.cli.main(argv))。ネットワークから切り離して動かす確かめ(19.13)もここに置く。
 
 argv は `kanri` の後ろの語(`digitalkey/cli.py` の振り分けがほかの命令に渡す形と同じ)。
 終了コードは、main の戻り値か SystemExit の code で読む(どちらの作りでも同じに読む)。
@@ -609,7 +609,7 @@ def test_verify(kanri, file_unit):
     assert res.code == 1 and res.json["ok"] is False and res.json["理由"]
 
 
-# ---- 網から切り離して動かす ----
+# ---- ネットワークから切り離して動かす ----
 
 _WATCH: dict = {"paths": None}
 _WRITE_FLAGS = os.O_WRONLY | os.O_RDWR | os.O_CREAT | os.O_APPEND | os.O_TRUNC
@@ -645,16 +645,16 @@ if not getattr(sys, "_kanri_test_hook", False):
 
 
 def test_r_ac_19_offline_on_admins_machine(kanri, tmp_path, monkeypatch):
-    """R-AC-19 管理者が自分の機械で、網から切り離して、命令だけで発行から失効まで動かせる(19.13 の 1〜3)。"""
-    # 1. 網を使えなくする
+    """R-AC-19 管理者が自分のコンピューターで、ネットワークから切り離して、命令だけで発行から失効まで動かせる(19.13 の 1〜3)。"""
+    # 1. ネットワークを使えなくする
     real_socket = socket.socket
 
     class NoNetwork(real_socket):
         def __init__(self, *a, **kw):
-            raise OSError("網は使わない")
+            raise OSError("ネットワークは使わない")
 
     def no_connection(*a, **kw):
-        raise OSError("網は使わない")
+        raise OSError("ネットワークは使わない")
 
     monkeypatch.setattr(socket, "socket", NoNetwork)
     monkeypatch.setattr(socket, "create_connection", no_connection)

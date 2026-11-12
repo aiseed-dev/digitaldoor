@@ -16,8 +16,8 @@ from .routes import ACCESS
 
 ROSTER = {"名簿の係"}
 ADMIN = {"管理者"}
-SETTINGS = ("業者の最長の日数", "自己承認", "点検の間の日数", "更新の期限の知らせの日数")
-DAYS = ("業者の最長の日数", "点検の間の日数", "更新の期限の知らせの日数")   # 値が空か 1 以上の整数の項目
+SETTINGS = ("業者の最長の日数", "自己承認", "点検の間の日数", "更新の期限の通知の日数")
+DAYS = ("業者の最長の日数", "点検の間の日数", "更新の期限の通知の日数")   # 値が空か 1 以上の整数の項目
 
 
 def split(v: str) -> list[str]:
@@ -128,7 +128,7 @@ class RosterMixin:
 
     # ---- 書く ----
     def register_subject(self, ident: str, name: str, kind: str, vendor: bool, *, by: str, role: str):
-        """主体_登録を書き、鍵の要る人か機械を一人、名簿に載せる(名簿の係)。仮名はソフトが作る(16 桁の 16 進)。
+        """主体_登録を書き、鍵の要る人かシステムを一人、名簿に載せる(名簿の係)。仮名はソフトが作る(16 桁の 16 進)。
         識別に「,」は NAME_HAS_COMMA、同じ識別は DUPLICATE_SUBJECT。"""
         self._begin(ROSTER, by, role)
         v = self._clean("主体_登録", {"識別": ident, "呼び名": name, "種別": kind, "業者": yes(vendor), "役": role})
@@ -168,10 +168,10 @@ class RosterMixin:
     def register_door(self, name: str, routes: list[str], *, by: str, role: str, place: str = "",
                       audit_key: str = "", state: str = "使用", revocation_max_min: int | None = None):
         """扉を書く(管理者)。名前は扉のコントローラに入れた名前と同じにする。routes は unit.routes にある経路の名で、
-        扉を開ける経路だけ(管理者の口は機器の権限だけの経路なので UNKNOWN_ROUTE)。
+        扉を開ける経路だけ(管理者のインターフェースは機器の権限だけの経路なので UNKNOWN_ROUTE)。
         同じ名前の二枚目が今の値になる。state=撤去 の扉には、新しい申請と発行を出さない。
 
-        revocation_max_min は、その扉に据付で入れた失効の知らせの古さ(digitaldoor-controller の
+        revocation_max_min は、その扉に据付で入れた失効の通知の古さ(digitaldoor-controller の
         --revocation-max-age の秒)を分で書いた値(R-AC-14)。None は空(扉はその規則を使っていない)で、二枚目で省くと
         空に戻る。1 より小さい値と整数でない値は FORM。発行の時には拒まず、進み具合の「効くまで」の見立てと、
         出す時の表示に使う。"""
@@ -200,9 +200,9 @@ class RosterMixin:
         return self._write("群", v, by=by, role=role)
 
     def set_setting(self, item: str, value: str, *, reason: str, by: str, role: str):
-        """設定を書く(管理者)。業者の最長の日数、点検の間の日数、更新の期限の知らせの日数 は空か 1 以上の整数、
+        """設定を書く(管理者)。業者の最長の日数、点検の間の日数、更新の期限の通知の日数 は空か 1 以上の整数、
         自己承認 は 許す か 許さない。ほかは BAD_SETTING。変えた人、日時、理由は伝票に残る。
-        点検の間の日数 と 更新の期限の知らせの日数 を書いていない間(値が空の時を含む)は、その知らせを出さない。"""
+        点検の間の日数 と 更新の期限の通知の日数 を書いていない間(値が空の時を含む)は、その通知を出さない。"""
         self._begin(ADMIN, by, role)
         v = self._clean("設定", {"項目": item, "値": value, "理由": reason, "役": role})
         if v["項目"] in DAYS:

@@ -170,7 +170,7 @@ def asset_version() -> str:
 
 # 頁ごとの CSS/JS(style.css と main.js の外)。`?v=` には、そのファイル一つの
 # 中身の sha256 の先頭 8 文字を付ける。中身を変えない three.min.js も同じ作りで、
-# 版が変わらない限り印も変わらない。
+# バージョンが変わらない限り印も変わらない。
 PAGE_ASSETS = (
     "css/door3d.css",
     "js/door3d.js",

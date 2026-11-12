@@ -1,7 +1,7 @@
 """実演の道具 tools/jitsuen.py を、疑似の Sesame(--fake)と --yes で場面ごとに回し、結果の並びが
 docs/使い方.md の「実演」の表のとおりになることを確かめる。
 
-実機にも Bluetooth にも触れず、網にもつながない(扉の口は 127.0.0.1 の空いた口)。
+実機にも Bluetooth にも触れず、ネットワークにもつながない(扉のインターフェースは 127.0.0.1 の空いたポート)。
 結果の行は「   → 」で始まる。拒む理由の言葉は扉コントローラ仕様書 5.2a の言葉そのまま。
 """
 import importlib.util
@@ -52,7 +52,7 @@ def test_check_reaches_the_lock(jit, capsys):
 
 
 def test_kantan_opens_and_closes_directly_and_through_the_door(jit, capsys):
-    """R-CT-03: kantan は錠のドライバで直接、次に疑似の扉の口(POST /unlock、/lock)から、開け閉めする。
+    """R-CT-03: kantan は錠のドライバで直接、次に疑似の扉のインターフェース(POST /unlock、/lock)から、開け閉めする。
     扉の判断は接点を通して同じ錠を動かし、銘柄(疑似の Sesame)を知らない。"""
     out, stage, lock = play(jit, capsys, "kantan")
     assert out == ["開きました", "閉まりました", "開きました", "閉まりました"]
@@ -72,9 +72,9 @@ def test_sono_hi_opens_inside_the_period_and_refuses_outside(jit, capsys):
 
 
 def test_kigen_revocation_in_the_ledger_does_not_reach_the_door(jit, capsys):
-    """R-AC-02 R-AC-03: kigen は、台帳で失効しても網の届かない扉は開き、期限だけが効くことを見せる。
+    """R-AC-02 R-AC-03: kigen は、台帳で失効してもネットワークの届かない扉は開き、期限だけが効くことを見せる。
     1 日の資格情報は、翌日に「期限の外」で拒まれる(不通のときは期限で効く側)。
-    失効の知らせを扉へ届ける側は、この場面が「届かない」ことを見せるだけで、満たしたとは確かめない。"""
+    失効の通知を扉へ届ける側は、この場面が「届かない」ことを見せるだけで、満たしたとは確かめない。"""
     out, stage, lock = play(jit, capsys, "kigen")
     assert out == ["資格情報を出しました(30 日)", "台帳では失効しています", "開きました",
                    "資格情報を出しました(1 日)", "拒みました: 期限の外"]
@@ -118,7 +118,7 @@ def test_more_trust_change_by_the_admin_key_only(jit, capsys):
 
 
 def test_kiroku_finds_the_one_character_change(jit, capsys):
-    """R-CT-12: kiroku は記録の連鎖を検べて「連鎖は正しい」と出し、写しの一字を書き換えると、書き換えた記録の番号と
+    """R-CT-12: kiroku は記録の連鎖を検べて「連鎖は正しい」と出し、コピーの一字を書き換えると、書き換えた記録の番号と
     「内容が変わっています」を出す。もとの記録は正しいまま。"""
     out, stage, _ = play(jit, capsys, "kiroku")
     assert out[:2] == ["記録ができました", "連鎖は正しい"]
@@ -128,7 +128,7 @@ def test_kiroku_finds_the_one_character_change(jit, capsys):
 
 
 def test_unreachable_lock_shows_one_message_and_no_traceback(jit, capsys):
-    """R-CT-04: 錠に届かないときは、例外を見せず、一つの短い文を出して止まる。扉の口から開けるとき、
+    """R-CT-04: 錠に届かないときは、例外を見せず、一つの短い文を出して止まる。扉のインターフェースから開けるとき、
     直接のとき、鍵の台帳から開けるとき、どれでも同じ。"""
     for scene, steps in (("kantan", 1), ("sono-hi", 2), ("keiro", 4)):
         rc = jit.main(["--fake", "--yes", scene], lock_factory=lambda: FakeSesameLock("genkan", reachable=False))
@@ -154,12 +154,12 @@ def test_all_runs_every_scene_in_order(jit, capsys):
 
 
 def test_each_scene_starts_from_a_clean_stage(jit, capsys):
-    """場面は一時の置き場を作り直す。同じ場面を二度回しても同じ結果になり、置き場と口は残らない。"""
+    """場面は一時の置き場を作り直す。同じ場面を二度回しても同じ結果になり、置き場とポートは残らない。"""
     first, stage1, _ = play(jit, capsys, "sono-hi")
     second, stage2, _ = play(jit, capsys, "sono-hi")
     assert first == second
     assert stage1.dir != stage2.dir and not stage1.dir.exists() and not stage2.dir.exists()
-    assert door_server.time.__name__ == "time"  # 口の側の時計を、場面の後で実時間に戻している
+    assert door_server.time.__name__ == "time"  # インターフェースの側の時計を、場面の後で実時間に戻している
     with pytest.raises(OSError):
         socket.create_connection(("127.0.0.1", stage1.srv.server_port), timeout=0.5)
 

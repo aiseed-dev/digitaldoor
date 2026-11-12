@@ -1,4 +1,4 @@
-"""一枚の報告（Markdown）。在庫の数と期限、口の差と Samba、走査の数、記録の検証。値は入れない。"""
+"""一枚の報告（Markdown）。在庫の数と期限、ポートの差と Samba、走査の数、記録の検証。値は入れない。"""
 
 from __future__ import annotations
 
@@ -35,15 +35,15 @@ def build(
         out.append(f"- 読まなかった: {e}")
     out.append("")
 
-    out += ["## 口", ""]
+    out += ["## ポート", ""]
     if ss is None:
         out.append("- 突き合わせていない（`--ss FILE` で `ss -ltnp` の出力を渡す）")
     else:
         try:
             diff = ports.compare(ports.load(d / "ports.toml"), ports.parse_ss(ss.read_text("utf-8")), host)
             out.append(
-                f"- 表に無い口 {len(diff.unlisted)}、表にあって開いていない口 {len(diff.closed)}、"
-                f"外向きで表と違う口 {len(diff.outward)}"
+                f"- 表に無いポート {len(diff.unlisted)}、表にあって開いていないポート {len(diff.closed)}、"
+                f"外向きで表と違うポート {len(diff.outward)}"
             )
             if diff.any:
                 out += ["", ports.table(diff, host)]
@@ -61,7 +61,7 @@ def build(
             out.append(f"- Samba: 読まなかった: {e}")
     out.append("")
 
-    out += ["## 機械", ""]
+    out += ["## サーバー", ""]
     out += machine_lines(d)
     out.append("")
 
@@ -102,7 +102,7 @@ def build(
 
 
 def machine_rows(d: Path, now: dt.datetime | None = None) -> list[dict]:
-    """機械ごとの一行（host、役、写しの名、直す数、直す物の頭）。画面と報告が同じ物を使う。"""
+    """サーバーごとの一行（host、役、コピーの名、直す数、直す物の頭）。画面と報告が同じ物を使う。"""
     table = machine.load(Path(d) / machine.FILENAME)
     try:
         ptable = ports.load(Path(d) / "ports.toml")
@@ -122,8 +122,8 @@ def machine_rows(d: Path, now: dt.datetime | None = None) -> list[dict]:
             "fixes": None,
             "what": [],
             "findings": [],
-            "prev": None,  # 前の写しの名
-            "new": [],  # 前の写しから増えた直す物
+            "prev": None,  # 前のコピーの名
+            "new": [],  # 前のコピーから増えた直す物
             "gone": [],  # 消えた直す物
         }
         path = machine.latest_facts(d, host)
@@ -154,28 +154,28 @@ def machine_lines(d: Path) -> list[str]:
     try:
         rows = machine_rows(d)
     except inventory.Refused:
-        return [f"- 機械の表が無い（`{machine.FILENAME}`。`kagi init` で雛形）"]
+        return [f"- サーバーの表が無い（`{machine.FILENAME}`。`kagi init` で雛形）"]
     if not rows:
-        return ["- 機械の表が空"]
+        return ["- サーバーの表が空"]
     out = []
     for r in rows:
         if r["facts"] is None:
-            out.append(f"- {r['host']}: 写しが無い（`kagi machine collect --host {r['host']}`）")
+            out.append(f"- {r['host']}: コピーが無い（`kagi machine collect --host {r['host']}`）")
         elif r["fixes"]:
-            out.append(f"- {r['host']}: 直す物 {r['fixes']}（{'、'.join(r['what'])}）。写し {r['facts']}")
+            out.append(f"- {r['host']}: 直す物 {r['fixes']}（{'、'.join(r['what'])}）。コピー {r['facts']}")
         else:
-            out.append(f"- {r['host']}: 直す物は無い。写し {r['facts']}")
+            out.append(f"- {r['host']}: 直す物は無い。コピー {r['facts']}")
         out += change_lines(r, "  ")
     return out
 
 
 def change_lines(r: dict, indent: str = "") -> list[str]:
-    """前の写しからの変わり目（連載 第 11 章の「先週の出力と比べる」）。"""
+    """前のコピーからの変わり目（連載 第 11 章の「先週の出力と比べる」）。"""
     if r.get("prev") is None:
         return []
     if not r["new"] and not r["gone"]:
-        return [f"{indent}- 前の写し（{r['prev']}）から、直す物は変わっていない"]
-    out = [f"{indent}- 前の写し（{r['prev']}）から: 増えた {len(r['new'])}、消えた {len(r['gone'])}"]
+        return [f"{indent}- 前のコピー（{r['prev']}）から、直す物は変わっていない"]
+    out = [f"{indent}- 前のコピー（{r['prev']}）から: 増えた {len(r['new'])}、消えた {len(r['gone'])}"]
     out += [f"{indent}  - 増えた: {f.what}: {f.result}" for f in r["new"]]
     out += [f"{indent}  - 消えた: {f.what}: {f.result}" for f in r["gone"]]
     return out

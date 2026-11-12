@@ -37,23 +37,23 @@ def plus(s: str, **kw) -> str:
 # ---- 段 1b(設計書 20 章) ----
 # 段 1b の言葉と経路の名は、実装より先に書くので、`digitalkey.kanri` から引かずに文字で持つ(20.11「言葉で比べてかまいません」)。
 
-ACCESS = "管理者の口"
+ACCESS = "管理者のインターフェース"
 ALL4 = [CREDENTIAL, GATE, PHYSICAL, ACCESS]
-ACCESS_WORK = "機器 {} の管理者の口 {} を止める。分けられない口はパスワードを替えて、削除の伝票に書く"   # 20.8 の表の文
+ACCESS_WORK = "機器 {} の管理者のインターフェース {} を止める。分けられないインターフェースはパスワードを替えて、削除の伝票に書く"   # 20.8 の表の文
 ISSUE_AT = "2026-11-20T00:00"   # 発行と実体を出す時刻(19.13 の試験と同じく開始の前)
 
 # 20.7 の確かめの項目(様式の項目の順)
-CHECK_ITEMS = ["初めのパスワード", "外からの口", "見覚えのない設定とアカウント", "版", "区画", "権限", "記録の送り先",
-               "中に残る物", "網から外した"]
+CHECK_ITEMS = ["初めのパスワード", "外部からのアクセス経路", "見覚えのない設定とアカウント", "バージョン", "区画", "権限", "記録の送り先",
+               "中に残る物", "ネットワークから外した"]
 
 # 20.2 の様式の 20 枚
 FORMS_1B = ["主体_登録", "主体_変更", "役_割当", "扉", "群", "設定", "権限_申請", "権限_承認", "権限_発行", "権限_失効",
             "実体_発行", "実体_失効", "物理キー_回収", "失効_確認",
-            "区画", "機器_登録", "機器_変更", "機器_確かめ", "機器_更新", "管理者の口_削除"]
+            "区画", "機器_登録", "機器_変更", "機器_確かめ", "機器_更新", "管理者のインターフェース_削除"]
 
 
 class RB:
-    """20.11 の拒否の言葉と、知らせの言葉。"""
+    """20.11 の拒否の言葉と、通知の言葉。"""
     DUPLICATE_DEVICE = "同じ名前の機器があります"
     UNKNOWN_DEVICE = "この台帳の機器ではありません"
     UNKNOWN_SEGMENT = "登録されていない区画です"
@@ -61,9 +61,9 @@ class RB:
     NOT_OWNER = "この機器の責任者ではありません"
     NEED_ITEM = "確かめの項目が足りません"
     NEED_REASON = "理由が要ります"
-    DEVICE_ONLY = "管理者の口は機器の権限だけです"
-    NEED_ACCOUNT = "口の名が要ります"
-    NOT_ACCESS = "管理者の口ではありません"
+    DEVICE_ONLY = "管理者のインターフェースは機器の権限だけです"
+    NEED_ACCOUNT = "インターフェースの名が要ります"
+    NOT_ACCESS = "管理者のインターフェースではありません"
     ALREADY_REMOVED = "削除済みです"
 
     F_NO_OWNER = "責任者がいません"
@@ -76,9 +76,9 @@ class RB:
     F_NO_INSTALL_CHECK = "据え付けの確かめがありません"
     F_BAD_ITEM = "確かめの結果が悪いままです"
     F_CHECK_OVERDUE = "点検の間が空いています"
-    F_SHARED_ACCOUNT = "一つの口を複数の人が使っています"
+    F_SHARED_ACCOUNT = "一つのインターフェースを複数の人が使っています"
     F_NO_DISPOSAL_CHECK = "廃棄の確かめがありません"
-    F_ACCESS_LEFT = "止まっていない口があります"
+    F_ACCESS_LEFT = "止まっていないインターフェースがあります"
 
 
 REFUSALS_1B = ["DUPLICATE_DEVICE", "UNKNOWN_DEVICE", "UNKNOWN_SEGMENT", "DEVICE_RETIRED", "NOT_OWNER", "NEED_ITEM",
@@ -89,10 +89,10 @@ FINDINGS_1B = ["F_NO_OWNER", "F_OWNER_INACTIVE", "F_NO_SEGMENT", "F_MIXED_SEGMEN
 
 
 def findings(u, at, word: str | None = None, device: str | None = None) -> list[tuple[str, str, str]]:
-    """device_findings(at=...) を (機器, 知らせ, 詳細) の列にし、知らせの言葉と機器で絞る(20.13「言葉で絞って比べる」)。"""
+    """device_findings(at=...) を (機器, 通知, 詳細) の列にし、通知の言葉と機器で絞る(20.13「言葉で絞って比べる」)。"""
     if isinstance(at, str):
         at = dt(at)
-    out = [(f.機器, f.知らせ, f.詳細) for f in u.device_findings(at=at)]
+    out = [(f.機器, f.通知, f.詳細) for f in u.device_findings(at=at)]
     return [x for x in out if (word is None or x[1] == word) and (device is None or x[0] == device)]
 
 

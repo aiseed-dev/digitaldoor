@@ -1,11 +1,11 @@
-"""機械を入れる時のファイルを作る（Debian 13）。設計書 §3.4。K-03、K-07、K-12、K-13。
+"""サーバーを入れる時のファイルを作る（Debian 13）。設計書 §3.4。K-03、K-07、K-12、K-13。
 
-機械の表（machines.toml）の一件から三つを書く。kagi は機械に触らない。
+サーバーの表（machines.toml）の一件から三つを書く。kagi はサーバーに触らない。
 
-- preseed.cfg: Debian のインストーラーに渡す答え。**パスワードと盤は書かない**（インストーラーが尋ね、人が画面で打つ・選ぶ）。
+- preseed.cfg: Debian のインストーラーに渡す答え。**パスワードとディスクは書かない**（インストーラーが尋ね、人が画面で打つ・選ぶ）。
   root は止め、最初の管理者の authorized_keys に表の公開鍵を入れ、sshd を「鍵でだけ」にする。
 - firstboot.sh: 入れた後に人が sudo で一度走らせる。防火壁、自動の更新、時計、sshd の確かめ。何度走らせても同じ形になる。
-  今ある機械に形を当てる時にも使える（鍵が入っていなければ sshd は変えない）。
+  今あるサーバーに形を当てる時にも使える（鍵が入っていなければ sshd は変えない）。
 - 手順.md: 人がやる事、kagi がやる事、人が確かめる事。
 
 公開鍵だけを読む。秘密鍵のファイルは読まずに拒む（machine.read_pub）。
@@ -49,7 +49,7 @@ def _b64(text: str) -> str:
 
 
 def plan(table: machine.Table, host: str) -> dict:
-    """機械の表の一件を、入れる時の値に直す。足りない物・読めない物は拒む（半端な形で入れない）。"""
+    """サーバーの表の一件を、入れる時の値に直す。足りない物・読めない物は拒む（半端な形で入れない）。"""
     m = table.machine(host)
     os_ = m.get("os", "")
     if os_ not in SUPPORTED:
@@ -75,7 +75,7 @@ def plan(table: machine.Table, host: str) -> dict:
                 raise Refused(f"鍵 {kid} は弱い（{info.type} {info.bits or ''}）。ed25519 を作り直す")
             if "fingerprint" in k and k["fingerprint"] != info.fingerprint:
                 raise Refused(f"鍵 {kid} の表の fingerprint と pub のファイルの指紋が違う")
-            # 公開鍵の後ろの注釈（メールや機械の名）は入れない。代わりに表の id を付ける
+            # 公開鍵の後ろの注釈（メールやコンピューターの名）は入れない。代わりに表の id を付ける
             typ, blob = (
                 [t for t in line.split() if t][:2] if line.split()[0] in machine.KEY_TYPES else (None, None)
             )
@@ -105,7 +105,7 @@ def plan(table: machine.Table, host: str) -> dict:
         try:
             lan = str(ipaddress.ip_network(str(lan), strict=True))
         except ValueError:
-            raise Refused(f"{host} の lan は網（例 192.168.1.0/24）で書く") from None
+            raise Refused(f"{host} の lan はネットワーク（例 192.168.1.0/24）で書く") from None
     allow = list(dict.fromkeys([*admins, *m.get("users", [])]))
     return {
         "host": host,
@@ -215,7 +215,7 @@ ufw default deny outgoing
 ufw allow out 53
 ufw allow out 123/udp
 ufw allow out 80,443/tcp
-# 67/udp は網の番地をもらい直す要求（DHCP）。無いと番地が切れた時に網から落ちる
+# 67/udp はネットワークの番地をもらい直す要求（DHCP）。無いと番地が切れた時にネットワークから落ちる
 ufw allow out 67/udp
 {lan_out}ufw --force enable
 
@@ -242,9 +242,9 @@ def steps(p: dict, today: dt.date) -> str:
     u, h = p["admin"], p["host"]
     keys = "\n".join(f"  - `{kid}`  {fp}" for kid, fp in p["fingerprints"])
     disk = (
-        "「ガイド - ディスク全体を使い、暗号化 LVM をセットアップ」を選び、盤の合言葉を打つ（表の `encrypt = true`）"
+        "「ガイド - ディスク全体を使い、暗号化 LVM をセットアップ」を選び、ディスクのパスフレーズを打つ（表の `encrypt = true`）"
         if p["encrypt"]
-        else "盤を選び、消してよい盤かを画面で確かめる（持ち出す機械なら暗号化 LVM を選ぶ。K-08）"
+        else "ディスクを選び、消してよいディスクかを画面で確かめる（持ち出すコンピューターなら暗号化 LVM を選ぶ。K-08）"
     )
     return f"""\
 # {h} を入れる手順（{today.isoformat()}。`kagi machine install --host {h}` が書いた）
@@ -254,21 +254,21 @@ def steps(p: dict, today: dt.date) -> str:
 {keys}
 
 **このファイルはインストーラーの実機ではまだ確かめていない**（kagi/docs/設計書.md §3.4 の「確かめていない物」）。
-初めて使う時は、消してよい機械か仮想の機械で一度通す。
+初めて使う時は、消してよいコンピューターか仮想マシンで一度通す。
 
 | 歩 | 人がやる | kagi がやった・やる | 人が確かめる |
 |---|---|---|---|
 | 1 | Debian 13 の netinst の ISO を取り、`SHA512SUMS` と署名で確かめ、USB に書く | — | チェックサムが一致 |
-| 2 | この場所で `python3 -m http.server 8000 --bind <この PC の LAN の番地>` を開く（入れ終わったら Ctrl-C で閉じる） | `preseed.cfg` を書いた。パスワードも盤も入っていない | `kagi scan` がこの場所で何も出さない |
+| 2 | この場所で `python3 -m http.server 8000 --bind <この PC の LAN の番地>` を開く（入れ終わったら Ctrl-C で閉じる） | `preseed.cfg` を書いた。パスワードもディスクも入っていない | `kagi scan` がこの場所で何も出さない |
 | 3 | USB から起動 →「Advanced options」→「Automated install」→ 尋ねられたら `http://<この PC の LAN の番地>:8000/preseed.cfg` | — | 言語と名前を尋ねられずに進む |
 | 4 | `{u}` のパスワードを画面で打つ（紙か、覚える。どこにも書き写さない） | — | — |
-| 5 | {disk} | — | 消す盤の名が、思っている盤 |
-| 6 | 再起動を待つ。**機械の画面で** `{u}` で入り `ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub` | — | 出た指紋を `machines.toml` の `hostkey = "SHA256:…"` に書く |
-| 7 | 自分の PC から `ssh {u}@{h}`。初めての機械だと尋ねられる | — | **尋ねられた指紋が 6 の指紋と同じ**なら yes。違えば止める |
-| 8 | `scp firstboot.sh {u}@{h}:` → `ssh -t {u}@{h} sudo sh firstboot.sh` | `firstboot.sh` を書いた | 最後に出る三つ: 防火壁が active、口が 22 だけ、機械の鍵の指紋が 6 と同じ |
+| 5 | {disk} | — | 消すディスクの名が、思っているディスク |
+| 6 | 再起動を待つ。**サーバーの画面で** `{u}` で入り `ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub` | — | 出た指紋を `machines.toml` の `hostkey = "SHA256:…"` に書く |
+| 7 | 自分の PC から `ssh {u}@{h}`。初めてのサーバーだと尋ねられる | — | **尋ねられた指紋が 6 の指紋と同じ**なら yes。違えば止める |
+| 8 | `scp firstboot.sh {u}@{h}:` → `ssh -t {u}@{h} sudo sh firstboot.sh` | `firstboot.sh` を書いた | 最後に出る三つ: 防火壁が active、ポートが 22 だけ、ホストの鍵の指紋が 6 と同じ |
 | 9 | 別の窓で `ssh -o PubkeyAuthentication=no {u}@{h}` | — | **入れない**（Permission denied (publickey)）。鍵でだけ入る形 |
 | 10 | — | `kagi machine collect --host {h}` → `kagi machine check --host {h}` | 「直す物は無い」まで |
-| 11 | `inventory.toml` に足す: `{u}` のパスワード（置き場は紙/記憶）、機械の鍵、{"盤の合言葉、" if p["encrypt"] else ""}入れた鍵。`ports.toml` に 22 | `kagi check inventory`、`kagi key list` | 抜けが無い |
+| 11 | `inventory.toml` に足す: `{u}` のパスワード（置き場は紙/記憶）、ホストの鍵、{"ディスクのパスフレーズ、" if p["encrypt"] else ""}入れた鍵。`ports.toml` に 22 | `kagi check inventory`、`kagi key list` | 抜けが無い |
 | 12 | `kagi log add --actor <自分> --action machine.install --detail {h}` | 一行足す | `kagi log verify` が ok |
 
 止まった時: 3 で preseed が読めなければ、2 の番地と防火壁（この PC の 8000）を見る。8 の途中で切れても、もう一度走らせてよい。

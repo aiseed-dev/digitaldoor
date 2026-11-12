@@ -21,7 +21,7 @@ def client(tmp_path):
 
 def reserve(app, subject="Anna"):
     return app.state.ledger.append("予約", {"主体": subject, "層": "WWOOF", "到着": "2020-01-01T00:00",
-                                          "出発": "2099-01-01T00:00", "錠": "玄関", "受付符号": "tok-" + subject},
+                                          "出発": "2099-01-01T00:00", "錠": "玄関", "受付コード": "tok-" + subject},
                                    issuer="AI社員")
 
 

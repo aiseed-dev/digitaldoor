@@ -1,6 +1,6 @@
-"""盤の起動と avahi-publish-service(Matter の広告に使う命令)の試験。
+"""パネルの起動と avahi-publish-service(Matter の広告に使う命令)の試験。
 
-avahi を入れていない機械で、例外の山ではなく直し方を出して止まること。広告の子プロセスが盤の停止で残らないこと。
+avahi を入れていないコンピューターで、例外の山ではなく直し方を出して止まること。広告の子プロセスがパネルの停止で残らないこと。
 UDP 5541 は開かない(CircuitMatter を作らない)。avahi も入れない。
 """
 import asyncio
@@ -32,11 +32,11 @@ def test_node_stops_before_opening_matter_when_avahi_is_missing(no_avahi, monkey
 
 
 def test_panel_command_prints_the_fix_to_stderr_and_does_not_start(no_avahi, monkeypatch, capsys):
-    """R-CT-18: `digitalkey panel` は、avahi-publish-service が無ければ標準エラーに直し方を出して 1 で終わる。盤は起動しない。"""
+    """R-CT-18: `digitalkey panel` は、avahi-publish-service が無ければ標準エラーに直し方を出して 1 で終わる。パネルは起動しない。"""
     import flet as ft
 
     def boom(*a, **k):
-        raise AssertionError("盤を起動した")
+        raise AssertionError("パネルを起動した")
     monkeypatch.setattr(ft, "run", boom)
     assert cli.main(["panel"]) == 1
     err = capsys.readouterr().err
@@ -45,7 +45,7 @@ def test_panel_command_prints_the_fix_to_stderr_and_does_not_start(no_avahi, mon
 
 
 def test_panel_screen_shows_the_fix_instead_of_crashing(no_avahi, monkeypatch):
-    """R-CT-18: 盤の画面(Flet)を直接開いたときも、例外で落ちず、画面に直し方を出す。"""
+    """R-CT-18: パネルの画面(Flet)を直接開いたときも、例外で落ちず、画面に直し方を出す。"""
     monkeypatch.setattr(panel_main, "_node", None)
     added = []
     page = SimpleNamespace(add=lambda *c: added.extend(c), update=lambda: None, run_task=lambda *a: None)
@@ -55,7 +55,7 @@ def test_panel_screen_shows_the_fix_instead_of_crashing(no_avahi, monkeypatch):
 
 
 def test_stop_ends_the_advertising_child_processes():
-    """R-CT-18: 盤を止めると、広告の子プロセス(avahi-publish-service)も終わる。残さない。"""
+    """R-CT-18: パネルを止めると、広告の子プロセス(avahi-publish-service)も終わる。残さない。"""
     child = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"])
     node = object.__new__(matter_node.MatterNode)
     node._stop = __import__("threading").Event()

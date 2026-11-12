@@ -1,4 +1,4 @@
-"""命令行 `digitalkey`。`digitalkey entrance ...` は玄関(台帳と鍵)、`digitalkey door ...` は扉のコントローラ(模擬の接点)、`digitalkey door-serve` は錠のドライバで動く扉、`digitalkey panel` は盤。"""
+"""命令行 `digitalkey`。`digitalkey entrance ...` は玄関(台帳と鍵)、`digitalkey door ...` は扉のコントローラ(模擬の接点)、`digitalkey door-serve` は錠のドライバで動く扉、`digitalkey panel` はパネル。"""
 from __future__ import annotations
 
 import os
@@ -7,20 +7,20 @@ import sys
 USAGE = """使い方:
   digitalkey entrance <命令> ...   様式・台帳・鍵・本人確認・報告・控え(--help で一覧)
   digitalkey door <命令> ...       扉のコントローラ(別パッケージ digitaldoor-controller。serve | verify | pubkey | export | check-box)
-  digitalkey door-serve (--lock sesame:<UUID> | --fake) ...   錠のドライバで動く扉。door serve と同じ引数に、錠の指定を足す(実機の Sesame や疑似の錠で、扉の HTTP の口を開く)
-  digitalkey panel                 盤(Flet)。$DIGITALKEY_DOOR_URL の door に結び、$DIGITALKEY_PANEL_PORT(既定 8798)で開く
+  digitalkey door-serve (--lock sesame:<UUID> | --fake) ...   錠のドライバで動く扉。door serve と同じ引数に、錠の指定を足す(実機の Sesame や疑似の錠で、扉の HTTP のインターフェースを開く)
+  digitalkey panel                 パネル(Flet)。$DIGITALKEY_DOOR_URL の door に結び、$DIGITALKEY_PANEL_PORT(既定 8798)で開く
   digitalkey <ドライバ名> ...       pip で入れた錠ドライバのコマンド(例: digitalkey-sesame を入れると `digitalkey sesame scan`)
   digitalkey site init <dir> | serve --config site.toml   事業所サーバー(扉のコントローラ+鍵の台帳+HTTP API)
   digitalkey mobile [--web]        管理者と利用者のスマートフォンアプリ(Flet)
-  digitalkey aliro <命令> ...      Aliro の読取機を Matter で設定する値を作る(実装の例。reader-config | issuer-key | matter-fields)
+  digitalkey aliro <命令> ...      Aliro のリーダーを Matter で設定する値を作る(実装の例。reader-config | issuer-key | matter-fields)
   digitalkey update <命令> ...     更新の配布(署名つきの包み、段階配布の表、当てる、自動で戻す、サポート期限)
   digitalkey kanri <命令> ...      鍵の管理(名簿、役、扉と群、権限の申請・承認・発行、経路の実体、一人の全経路の失効。--help で一覧)
-  digitalkey madoguchi push --file FILE [--dry-run]   kanri portal export の写しを窓口(お問い合わせと照会)へ置きに行く
+  digitalkey madoguchi push --file FILE [--dry-run]   kanri portal export のコピーを窓口(お問い合わせと照会)へ置きに行く
 """
 
 
 def _panel() -> int:
-    """盤を開く。起動の前に avahi-publish-service を確かめ、無ければ直し方を標準エラーに出して止まる。
+    """パネルを開く。起動の前に avahi-publish-service を確かめ、無ければ直し方を標準エラーに出して止まる。
     終わるとき(Ctrl-C、SIGTERM、SIGHUP)は、Matter の広告の子プロセスも終わらせる。"""
     import atexit
     import signal

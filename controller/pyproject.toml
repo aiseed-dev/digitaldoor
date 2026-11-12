@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "digitaldoor-controller"
 version = "0.1.0"
-description = "疑似の扉と試験の道具 — digitaldoor の扉コントローラ仕様書を確かめるための扉側のコントローラ(判断、監査の記録、伝票、HTTP の口)"
+description = "疑似の扉と試験の道具 — digitaldoor の扉コントローラ仕様書を確かめるための扉側のコントローラ(判断、監査の記録、伝票、HTTP のインターフェース)"
 readme = "README.md"
 requires-python = ">=3.12"
 license = "Apache-2.0"

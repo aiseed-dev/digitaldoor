@@ -1,7 +1,7 @@
 """サイトの公開の道具 tools/publish.py の試験。
 
-一時ディレクトリに、取りに行く先(裸のリポジトリ)、手元(commit を作る側)、deb2 の写し(clone)、
-置き場(--root)を作って回す。網には出ない(git はローカルだけ)。
+一時ディレクトリに、取りに行く先(裸のリポジトリ)、手元(commit を作る側)、deb2 のクローン、
+置き場(--root)を作って回す。ネットワークには出ない(git はローカルだけ)。
 """
 import importlib.util
 import os
@@ -134,7 +134,7 @@ def test_non_fast_forward_stops_and_changes_nothing(env, capsys):
     git(env.work, "reset", "-q", "--hard", env.first)
     git(env.work, "commit", "-q", "--allow-empty", "-m", "rewritten")
     git(env.work, "push", "-q", "--force", "origin", "main")
-    # 写しを、書き換え前の先の commit に進めておく(origin から見て先祖でなくなる)
+    # クローンを、書き換え前の先の commit に進めておく(origin から見て先祖でなくなる)
     git(env.clone, "fetch", "-q", "origin", f"+{rewritten}:refs/tmp/x")
     git(env.clone, "reset", "-q", "--hard", rewritten)
     before = (env.www(), env.releases(), env.clone_head())
@@ -155,7 +155,7 @@ def test_inspection_failure_does_not_switch(env, capsys, name):
     elif name == "sitemap_missing_url":
         env.commit({"sitemap.xml": sitemap("", "guide/", "gone/")})
     else:
-        env.commit({f"extra/{i}.html": "x" for i in range(10)})  # 今の版を大きくしておく
+        env.commit({f"extra/{i}.html": "x" for i in range(10)})  # 今のバージョンを大きくしておく
         assert env.run(capsys)[0] == 0
         cur = env.www()
         head = env.clone_head()
@@ -207,7 +207,7 @@ def test_keep_prunes_old_but_keeps_current_and_previous(env, capsys):
         time.sleep(0.01)
         assert env.run(capsys, "--keep", "100")[0] == 0
     assert len(env.releases()) == 5
-    # 続けて --keep 1: 今の版(最新)と一つ前は残り、他は消える
+    # 続けて --keep 1: 今のバージョン(最新)と一つ前は残り、他は消える
     ids.append(env.commit({"index.html": "<html>last</html>"}))
     code, out, _ = env.run(capsys, "--keep", "1")
     assert code == 0
@@ -229,9 +229,9 @@ def test_rollback_and_status(env, capsys):
     code, out, _ = env.run(capsys)
     assert code == 0 and "変更なし" in out
     assert env.www() == f"releases/{env.first[:12]}"
-    # これより前の版は無い
+    # これより前のバージョンは無い
     code, _, err = env.run(capsys, "--rollback")
-    assert code != 0 and "戻せる版がありません" in err
+    assert code != 0 and "戻せるバージョンがありません" in err
     # 新しい commit が来たら、それに進む
     third = env.commit({"index.html": "<html>v3</html>"})
     assert env.run(capsys)[0] == 0
@@ -246,7 +246,7 @@ def test_status_without_release(env, capsys):
 def test_rollback_without_previous_fails(env, capsys):
     env.run(capsys)
     code, _, err = env.run(capsys, "--rollback")
-    assert code != 0 and "戻せる版がありません" in err
+    assert code != 0 and "戻せるバージョンがありません" in err
 
 
 def test_dry_run_changes_nothing(env, capsys):

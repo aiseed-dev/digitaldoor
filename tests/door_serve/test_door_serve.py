@@ -1,7 +1,7 @@
 """`digitalkey door-serve`(錠のドライバで動く扉)の試験。
 
-疑似の Sesame(FakeSesameLock)で扉の HTTP の口を開き、HTTP で解錠と施錠をして、記録が残ることを確かめる。
-実機にも Bluetooth にも触れない。口は 127.0.0.1 の空いた口(--port 0)。
+疑似の Sesame(FakeSesameLock)で扉の HTTP のインターフェースを開き、HTTP で解錠と施錠をして、記録が残ることを確かめる。
+実機にも Bluetooth にも触れない。ポートは 127.0.0.1 の空いたポート(--port 0)。
 """
 import json
 import re
@@ -31,7 +31,7 @@ def parse(tmp_path, *extra):
 
 
 class Opened:
-    """open_door で開いた扉。with で使い、出るときに口と裏の処理を閉じる。"""
+    """open_door で開いた扉。with で使い、出るときにポートと裏の処理を閉じる。"""
 
     def __init__(self, args, driver):
         self.srv, self.ctl, self.contacts = door_serve.open_door(args, driver)
@@ -48,7 +48,7 @@ class Opened:
 
 
 def test_http_unlock_and_lock_move_the_lock_and_leave_records(tmp_path):
-    """R-CT-03 R-CT-04 R-CT-20: HTTP の口の解錠と施錠が、錠のドライバ(疑似の Sesame)を動かし、扉の記録に残る。"""
+    """R-CT-03 R-CT-04 R-CT-20: HTTP のインターフェースの解錠と施錠が、錠のドライバ(疑似の Sesame)を動かし、扉の記録に残る。"""
     lock = FakeSesameLock("door")
     with Opened(parse(tmp_path), lock) as door:
         assert call(door.base, "GET", "/state")["locked"] is True and lock.locked
@@ -68,10 +68,10 @@ def test_records_persist_across_restart_and_only_grow(tmp_path):
     """R-CT-14: 扉を立て直しても記録は前の続きで、前の記録は変わらない(追記だけ)。"""
     args = parse(tmp_path)
     with Opened(args, FakeSesameLock("door")) as door:
-        call(door.base, "POST", "/unlock", {"by": "盤"})
+        call(door.base, "POST", "/unlock", {"by": "パネル"})
         before = call(door.base, "GET", "/audit?since=0")
     with Opened(args, FakeSesameLock("door")) as door:
-        call(door.base, "POST", "/lock", {"by": "盤"})
+        call(door.base, "POST", "/lock", {"by": "パネル"})
         after = call(door.base, "GET", "/audit?since=0")
         assert after[:len(before)] == before and len(after) > len(before)
         assert call(door.base, "GET", "/verify")["ok"]

@@ -1,4 +1,4 @@
-"""door(door の中核、HTTP)への小さな口。"""
+"""door(door の中核、HTTP)への小さなインターフェース。"""
 from __future__ import annotations
 
 import json

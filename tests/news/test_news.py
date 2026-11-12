@@ -44,9 +44,9 @@ CSA は認証製品の一覧に錠を足しました(CSA の発表です)。
 
 
 def test_request_holds_the_guide_the_tastes_and_recent_headings(tmp_path, monkeypatch):
-    """頼み文は、手引きと好みと前の数日の見出しを含み、手引きの「使い方」は含まない。"""
+    """頼み文は、ガイドと好みと前の数日の見出しを含み、ガイドの「使い方」は含まない。"""
     monkeypatch.setattr(tsukuru, "HERE", str(tmp_path))
-    (tmp_path / "SKILL.md").write_text("---\nname: news\n---\n# 手引き\n守ること\n\n## 使い方\nCLI の話", encoding="utf-8")
+    (tmp_path / "SKILL.md").write_text("---\nname: news\n---\n# ガイド\n守ること\n\n## 使い方\nCLI の話", encoding="utf-8")
     (tmp_path / "好み.adoc").write_text("= 好み\n分野は規格", encoding="utf-8")
     (tmp_path / "2026-11-10.adoc").write_text("= x\n:日付: 2026-11-10\n\n== 昨日の件\n", encoding="utf-8")
     p = tsukuru.request(datetime.date(2026, 11, 11))
@@ -105,7 +105,7 @@ def test_build_escapes_text_and_links_only_urls():
 
 
 def test_build_skips_the_guide_and_tastes(tmp_path):
-    """news/ の日付の名前の adoc だけを、新しい日から読む。手引きと好みと、件の無い日は読まない。"""
+    """news/ の日付の名前の adoc だけを、新しい日から読む。ガイドと好みと、件の無い日は読まない。"""
     (tmp_path / "SKILL.md").write_text("# x", encoding="utf-8")
     (tmp_path / "好み.adoc").write_text("= 好み\n\n== 分野\n", encoding="utf-8")
     (tmp_path / "2026-11-10.adoc").write_text(GOOD.replace("2026-11-11", "2026-11-10"), encoding="utf-8")

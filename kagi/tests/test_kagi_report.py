@@ -28,10 +28,10 @@ def test_report_one_page_no_values(tmp_path, monkeypatch, capsys):
     rc = cli.main(["report", "--dir", str(d), "--ss", str(ss), "--host", "h", "--scan", str(src)])
     out = capsys.readouterr().out
     assert rc == 0
-    for head in ("# kagi の報告", "## 在庫", "## 口", "## 走査", "## 記録"):
+    for head in ("# kagi の報告", "## 在庫", "## ポート", "## 走査", "## 記録"):
         assert head in out
     assert "期限切れ 1" in out
-    assert "外向きで表と違う口 1" in out
+    assert "外向きで表と違うポート 1" in out
     assert "aws-access-key: 1" in out
     assert "ok 1 lines" in out
     assert FAKE not in out

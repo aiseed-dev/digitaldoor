@@ -24,7 +24,7 @@ def row(uuid_s, secret, name="玄関", role=None):
 
 
 def legacy_raw(*rows):
-    """今までの版が SharedPreferences に書いた形(役の欄なし)。"""
+    """今までのバージョンが SharedPreferences に書いた形(役の欄なし)。"""
     return json.dumps({r["device_uuid"]: r for r in rows}, indent=2)
 
 
@@ -43,7 +43,7 @@ B = row(REGISTERED, OTHER_SECRET, name="勝手口")
 
 
 async def test_migration_copies_verifies_then_removes_the_original():
-    """R-CM-16: 写す → 読み戻して一致を確かめる → 元を消す、の順。移した鍵は全部そろい、役の欄の無い鍵は管理者として書かれる。"""
+    """R-CM-16: コピーする → 読み戻して一致を確かめる → 元を消す、の順。移した鍵は全部そろい、役の欄の無い鍵は管理者として書かれる。"""
     old, new = stores(A, B)
     mig = await migrate_kv(old, new)
     assert (mig.state, mig.use, mig.moved) == ("migrated", "new", 2)

@@ -1,7 +1,7 @@
 """窓口の二つの道具(置きに行く道具 `digitalkey madoguchi push`、毎朝の一覧 `deploy/madoguchi/toiawase_daily.py`)の試しの下ごしらえ。
 
-窓口仕様書 8、9、11.1、11.2 章だけを読んで書いた。相手は疑似の PocketBase(fake_pb.py)だけで、127.0.0.1 の空いた口に立てる。
-外の網は使わない(この置き場の試しの間、127.0.0.1 と ::1 のほかへの接続は例外にする)。
+窓口仕様書 8、9、11.1、11.2 章だけを読んで書いた。相手は疑似の PocketBase(fake_pb.py)だけで、127.0.0.1 の空いたポートに立てる。
+外部のネットワークは使わない(この置き場の試しの間、127.0.0.1 と ::1 のほかへの接続は例外にする)。
 識別とパスワードは、その場で作る乱数(fake_pb.add_kikai)。時刻は固定の値を使う。共に使う値と関数は madoguchi_common.py。
 """
 from __future__ import annotations
@@ -16,13 +16,13 @@ from madoguchi_common import ENV_NAMES, Creds, write_env
 
 @pytest.fixture(autouse=True)
 def _loopback_only(monkeypatch):
-    """外の網へ出さない。127.0.0.1、::1、localhost のほかへの接続は例外にする。"""
+    """外部のネットワークへ出さない。127.0.0.1、::1、localhost のほかへの接続は例外にする。"""
     real = socket.socket.connect
 
     def connect(self, address):
         host = address[0] if isinstance(address, tuple) else address
         if host not in ("127.0.0.1", "::1", "localhost"):
-            raise OSError(f"試しは外の網を使わない: {host}")
+            raise OSError(f"試しは外部のネットワークを使わない: {host}")
         return real(self, address)
 
     monkeypatch.setattr(socket.socket, "connect", connect)
@@ -30,7 +30,7 @@ def _loopback_only(monkeypatch):
 
 @pytest.fixture
 def pb():
-    """疑似の PocketBase を 127.0.0.1 の空いた口に立てる。"""
+    """疑似の PocketBase を 127.0.0.1 の空いたポートに立てる。"""
     with FakePB() as p:
         yield p
 

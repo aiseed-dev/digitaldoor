@@ -19,11 +19,11 @@ REV = "2026-12-10T12:00"
 ADM = dict(by="adm", role="管理者")
 
 
-# ---- 20.11 拒否の言葉と知らせの言葉 ----
+# ---- 20.11 拒否の言葉と通知の言葉 ----
 
 @pytest.mark.parametrize("name", REFUSALS_1B + FINDINGS_1B)
 def test_reason_and_finding_words(name):
-    """20.11: reasons.py に足す拒否の言葉と、知らせの言葉(F_ で始まる定数)。"""
+    """20.11: reasons.py に足す拒否の言葉と、通知の言葉(F_ で始まる定数)。"""
     assert getattr(reasons, name) == getattr(RB, name)
 
 
@@ -31,11 +31,11 @@ def test_reason_and_finding_words(name):
 
 TYPES_1B = {
     "Segment": ["名前", "説明", "状態"],
-    "Device": ["名前", "種類", "責任者", "置き場", "区画", "扉の系統", "扉", "製造者", "型", "製造番号", "網の番号", "版",
+    "Device": ["名前", "種類", "責任者", "置き場", "区画", "扉の系統", "扉", "製造者", "型", "製造番号", "ネットワークの番号", "バージョン",
                "更新の期限", "更新の当て方", "秘密の在庫の番号", "記録の送り先", "中に残る物", "状態"],
     "DeviceChange": ["伝票", "権限_失効", "実体_失効", "失効_一覧"],   # 21.2: 失効_一覧 を最後に足す
     "Check": ["番号", "機器", "場面", "日時", "結果", "所見", "書いた人"],
-    "Finding": ["機器", "知らせ", "詳細"],
+    "Finding": ["機器", "通知", "詳細"],
     "Held": ["主体", "権限", "対象の種類", "対象", "開始", "終了", "状態", "残り"],
 }
 
@@ -57,7 +57,7 @@ def test_entity_and_row_get_device_last(name):
 
 
 def test_access_constant_and_registry():
-    """20.1、20.2: 経路の名の定数 ACCESS = "管理者の口" を外に出し、登録簿 available() の組み込みは四つ。"""
+    """20.1、20.2: 経路の名の定数 ACCESS = "管理者のインターフェース" を外に出し、登録簿 available() の組み込みは四つ。"""
     assert kanri.ACCESS == ACCESS
     assert routes.ACCESS == ACCESS
     got = routes.available()
@@ -72,7 +72,7 @@ def test_unit_has_five_mixins():
 
 
 def test_ledger_opens_with_twenty_three_forms(make_unit):
-    """20.2、21.2、22.2: 台帳は 23 枚の様式で開く(20.2 で 区画、機器_登録、機器_変更、機器_確かめ、機器_更新、管理者の口_削除、
+    """20.2、21.2、22.2: 台帳は 23 枚の様式で開く(20.2 で 区画、機器_登録、機器_変更、機器_確かめ、機器_更新、管理者のインターフェース_削除、
     21.2 で 失効_一覧、失効_配布、22.2 で 主体_結び を足す)。"""
     u = make_unit()
     assert set(u.ledger.form_set) == set(FORMS_5A)
@@ -93,7 +93,7 @@ def _write_calls_1b(u):
         "register_segment": lambda **kw: u.register_segment("設備", **kw),
         "register_device": lambda **kw: u.register_device("ルーター9", "ルーター", "使用", **kw),
         "change_device": lambda **kw: u.change_device("ルーター1", reason="直し", place="二階", **kw),
-        "check_device": lambda **kw: u.check_device("複合機1", "点検", {"版": "良い"}, at="2026-12-01T09:00", **kw),
+        "check_device": lambda **kw: u.check_device("複合機1", "点検", {"バージョン": "良い"}, at="2026-12-01T09:00", **kw),
         "record_update": lambda **kw: u.record_update("ルーター1", "1.1", at="2026-12-01T09:00", **kw),
         "remove_access": lambda **kw: u.remove_access("x", **kw),
     }
@@ -174,10 +174,10 @@ def test_register_segment_example(make_unit):
 
 def test_segments_replace_and_order(dunit):
     """20.5: 同じ名前の二枚目は今の値を置き換える。segments() は廃止も入れ、最初の伝票を台帳に書いた順。"""
-    dunit.register_segment("事務", note="事務の網", state="廃止", **ADM)
+    dunit.register_segment("事務", note="事務のネットワーク", state="廃止", **ADM)
     dunit.register_segment("設備", **ADM)
     got = [(s.名前, s.説明, s.状態) for s in dunit.segments()]
-    assert got == [("扉", "錠、扉のコントローラ、小さなサーバー", "使用"), ("事務", "事務の網", "廃止"),
+    assert got == [("扉", "錠、扉のコントローラ、小さなサーバー", "使用"), ("事務", "事務のネットワーク", "廃止"),
                    ("来客", "来客の無線", "使用"), ("設備", "", "使用")]
 
 
@@ -197,12 +197,12 @@ def test_retired_segment_keeps_devices(dunit):
 
 def test_register_device_example(dunit):
     """20.6 の例: register_device("ルーター1", "ルーター", "使用", owner="t1", segment="事務", support_until="2027-03-31")
-    → 伝票 機器_登録、扉の系統 は偽、版 は空。"""
+    → 伝票 機器_登録、扉の系統 は偽、バージョン は空。"""
     slip = dunit.register_device("ルーター2", "ルーター", "使用", owner="t1", segment="事務", support_until="2027-03-31",
                                  **ADM)
     assert slip.form == "機器_登録" and slip.issuer == "adm" and slip.to == "" and slip.basis == []
     d = dunit.device("ルーター2")
-    assert d.扉の系統 is False and d.版 == ""
+    assert d.扉の系統 is False and d.バージョン == ""
     assert (d.名前, d.種類, d.責任者, d.区画, d.更新の期限, d.状態) == ("ルーター2", "ルーター", "t1", "事務", "2027-03-31", "使用")
 
 
@@ -215,7 +215,7 @@ def test_register_device_all_items(dunit):
         holds="録画、設定", **ADM)
     assert (slip["名前"], slip["種類"], slip["状態"], slip["責任者"], slip["置き場"], slip["区画"], slip["扉"]) == \
         ("録画1", "そのほか", "準備", "t2", "二階の倉庫", "扉", "玄関")
-    assert (slip["製造者"], slip["型"], slip["製造番号"], slip["網の番号"], slip["版"], slip["更新の期限"]) == \
+    assert (slip["製造者"], slip["型"], slip["製造番号"], slip["ネットワークの番号"], slip["バージョン"], slip["更新の期限"]) == \
         ("製造者A", "型A", "SN-001", "00:11:22:33:44:55", "2.0", "2028-03-31")
     assert (slip["更新の当て方"], slip["秘密の在庫の番号"], slip["記録の送り先"], slip["中に残る物"], slip["役"]) == \
         ("人", "kagi-12", "記録のサーバー", "録画、設定", "管理者")
@@ -402,7 +402,7 @@ def test_lost_device_may_return_to_use(dunit):
 # ---- 20.6 紛失と廃棄 ----
 
 def test_lost_example(dunit, access, request_, forms):
-    """R-AC-15 20.6 の例: t1 の発行済みの機器の権限 P1(管理者の口 E1)と v1 の申請中の P2 がある時、紛失にすると
+    """R-AC-15 20.6 の例: t1 の発行済みの機器の権限 P1(管理者のインターフェース E1)と v1 の申請中の P2 がある時、紛失にすると
     機器_変更 1 枚、権限_失効 2 枚(範囲 機器の停止)、実体_失効 1 枚(E1、人の作業が要る)。"""
     p1, e1 = access(dunit, "t1")
     p2 = request_(dunit, "v1", "機器", "ルーター1")
@@ -461,7 +461,7 @@ def test_lost_then_retired_writes_only_change(dunit, access, forms):
 
 
 def test_lost_skips_removed_access(dunit, access):
-    """20.6 の 2、20.2: 削除の伝票がある管理者の口には、実体_失効を書かない(回収の伝票が無い物だけ)。"""
+    """20.6 の 2、20.2: 削除の伝票がある管理者のインターフェースには、実体_失効を書かない(回収の伝票が無い物だけ)。"""
     p1, e1 = access(dunit, "t1")
     dunit.remove_access(e1.番号, "消した", **ADM)
     got = dunit.change_device("ルーター1", reason="なくした", state="紛失", at=dt(REV), **ADM)
@@ -487,14 +487,14 @@ def test_lost_does_not_stop_people(dunit, access):
 
 
 def test_settings_1b_items(dunit, refused):
-    """20.2: 設定の項目に 点検の間の日数、更新の期限の知らせの日数 を足す。値は 1 以上の整数か空で、外れは BAD_SETTING。
+    """20.2: 設定の項目に 点検の間の日数、更新の期限の通知の日数 を足す。値は 1 以上の整数か空で、外れは BAD_SETTING。
     書いていなければ空。"""
-    for item in ("点検の間の日数", "更新の期限の知らせの日数"):
+    for item in ("点検の間の日数", "更新の期限の通知の日数"):
         assert dunit.setting(item) == ""
         slip = dunit.set_setting(item, "30", reason="管理者が決めた", **ADM)
         assert (slip["項目"], slip["値"]) == (item, "30")
         assert dunit.setting(item) == "30"
-        dunit.set_setting(item, "", reason="知らせを止める", **ADM)
+        dunit.set_setting(item, "", reason="通知を止める", **ADM)
         assert dunit.setting(item) == ""
         for v in ("0", "-1", "三十", "1.5"):
             refused(dunit, reasons.BAD_SETTING, dunit.set_setting, item, v, reason="試し", **ADM)

@@ -16,7 +16,7 @@
   GET  /operations                   管理者・受付(鍵の操作の記録)
   GET  /verify                       管理者・保守(記録の連鎖の検査)
 
-予約と資格情報(使い方.md「予約と資格情報の発行の口」、R-DV-13):
+予約と資格情報(使い方.md「予約と資格情報の発行のインターフェース」、R-DV-13):
   POST /reservations {subject,layer,arrival,departure,door,contact}   管理者・受付
   GET  /reservations                 管理者・受付
   GET  /reservations/{id}            管理者・受付(その予約で出した鍵も)

@@ -6,7 +6,7 @@
 .madoguchi .note { color: var(--whisper); font-size: 0.93rem; }
 .madoguchi ul li { line-height: 1.85; }
 
-/* 知らせ(role="status") */
+/* 通知(role="status") */
 .madoguchi-msg { min-height: 1em; color: var(--accent); font-weight: 600; }
 .madoguchi-msg:empty { margin: 0; }
 

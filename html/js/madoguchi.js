@@ -39,7 +39,7 @@
     noItems: "まだ送った物はありません",
     confirmDelete: "この問い合わせを消します。元に戻せません",
     notLinked: "まだ結ばれていません",
-    unreadable: "この写しの形は読めません",
+    unreadable: "このコピーの形は読めません",
     noEnd: "期限なし"
   };
 
@@ -128,7 +128,7 @@
     return out;
   }
 
-  /** 失敗の応答を頁の文にする(4.6)。status 0 は網の失敗。 */
+  /** 失敗の応答を頁の文にする(4.6)。status 0 はネットワークの失敗。 */
   function errorMessage(status, op) {
     if (status === 0) return TEXT.network;
     if (status === 400 && op === "send") return TEXT.badSend;
@@ -198,7 +198,7 @@
   }
 
   /**
-   * 照会用の写しの一覧の items から、表示の形を作る(5.5)。
+   * 照会用のコピーの一覧の items から、表示の形を作る(5.5)。
    * {state: "none"}、{state: "unreadable"}、{state: "ok", madeAt, issuer, perms, keys} のどれか。
    * perms と keys は、表の一行ずつの文字の列。
    */
@@ -377,7 +377,7 @@
     } catch (e) { /* 何もしない */ }
   }
 
-  /** PocketBase を呼ぶ。{status, data}。網の失敗は status 0。 */
+  /** PocketBase を呼ぶ。{status, data}。ネットワークの失敗は status 0。 */
   function api(method, path, body, withToken) {
     var headers = {};
     if (body !== undefined) headers["Content-Type"] = "application/json";
@@ -766,7 +766,7 @@
         el.sheet.appendChild(make("p", TEXT.unreadable));
         return;
       }
-      el.sheet.appendChild(make("p", "写しを作った時刻: " + v.madeAt));
+      el.sheet.appendChild(make("p", "コピーを作った時刻: " + v.madeAt));
       el.sheet.appendChild(make("p", "発行者の識別: " + v.issuer));
       el.sheet.appendChild(make("h3", "権限"));
       if (v.perms.length) {
@@ -781,8 +781,8 @@
         el.sheet.appendChild(make("p", "鍵はありません", "note"));
       }
       el.sheet.appendChild(make("p",
-        "これは台帳の写しです。正は鍵の管理者の台帳で、扉は写しを見ずに自分で確かめます。" +
-        "写しを置き直す間隔は鍵の管理者が決めます。自分の権限が使われた記録は、まだ見られません。", "note"));
+        "これは台帳のコピーです。正は鍵の管理者の台帳で、扉はコピーを見ずに自分で確かめます。" +
+        "コピーを置き直す間隔は鍵の管理者が決めます。自分の権限が使われた記録は、まだ見られません。", "note"));
     });
   }
 

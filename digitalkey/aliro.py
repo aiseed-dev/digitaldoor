@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""Aliro の読取機を Matter で設定するための値を作る — 実装の例(解説 02「Aliroとは何か」)。
+"""Aliro のリーダーを Matter で設定するための値を作る — 実装の例(解説 02「Aliroとは何か」)。
 
-Aliro(CSA、1.0 は 2026-02-26)は、スマートフォンと読取機の間を決める規格です。読取機に「どの読取機として名乗るか」と
+Aliro(CSA、1.0 は 2026-02-26)は、スマートフォンとリーダーの間を決める規格です。リーダーに「どのリーダーとして名乗るか」と
 「どの発行者の資格情報を信じるか」を入れる道の一つが、Matter の Door Lock クラスタ(0x0101)です。Matter 1.4 の
 データモデル(Door Lock クラスタの rev 8)で、次の物が入りました。名前と番号は connectedhomeip の data_model による。
 
@@ -18,20 +18,20 @@ Aliro(CSA、1.0 は 2026-02-26)は、スマートフォンと読取機の間を�
 
 このモジュールが作るのは二つです。
 
-1. 読取機の設定(`ReaderConfig`)。P-256 の鍵の対(SigningKey は秘密の 32 バイト、VerificationKey は非圧縮の公開鍵 65 バイト。
-   先頭が 0x04)と、読取機の組の識別(16 バイト)と、BLE と UWB のための組の鍵(16 バイト)。SetAliroReaderConfig の欄の値になる
+1. リーダーの設定(`ReaderConfig`)。P-256 の鍵の対(SigningKey は秘密の 32 バイト、VerificationKey は非圧縮の公開鍵 65 バイト。
+   先頭が 0x04)と、リーダーの組の識別(16 バイト)と、BLE と UWB のための組の鍵(16 バイト)。SetAliroReaderConfig の欄の値になる
 2. 発行者の鍵(`IssuerKey`)。Aliro の資格情報(Access Document)に署名する Credential Issuer の P-256 の鍵の対。
-   読取機に入れるのは公開鍵(65 バイト)だけで、SetCredential の CredentialType 6 として入れる。秘密鍵は管理者が自分の機械か、
+   リーダーに入れるのは公開鍵(65 バイト)だけで、SetCredential の CredentialType 6 として入れる。秘密鍵は管理者が自分のコンピューターか、
    取り出せない所に持つ(要求仕様 R-AC-11、R-AC-20)。載せ方を担う業者に渡さない
 
-読取機の設定の SigningKey は秘密です。repr とログに出さず、ファイルに書くときは権限 600 にします。
+リーダーの設定の SigningKey は秘密です。repr とログに出さず、ファイルに書くときは権限 600 にします。
 
-作らない物: スマートフォンと読取機の間の取引(NFC、BLE、UWB の上の相互認証、Access Document の検べ)。読取機は買う物で、
+作らない物: スマートフォンとリーダーの間の取引(NFC、BLE、UWB の上の相互認証、Access Document の検べ)。リーダーは買う物で、
 その中は Aliro の認証を受けた製品と、CSA の試験の道具(aliro-access-control)や各社の SDK に任せます。
 Matter の側で命令を送るのは、管理者のアプリかコントローラ(connectedhomeip の chip-tool、matter.js など)です。
-この扉の盤(`digitalkey.panel`)は CircuitMatter の上にあり、Timed Invoke の処理を持たないので、ALIRO の機能を出していません。
+この扉のパネル(`digitalkey.panel`)は CircuitMatter の上にあり、Timed Invoke の処理を持たないので、ALIRO の機能を出していません。
 
-  digitalkey aliro reader-config --out reader.json [--ble-uwb]   読取機の設定を作る(権限 600)。公開の欄だけを表示する
+  digitalkey aliro reader-config --out reader.json [--ble-uwb]   リーダーの設定を作る(権限 600)。公開の欄だけを表示する
   digitalkey aliro issuer-key --out issuer.key                    発行者の鍵の対を作る(秘密鍵は権限 600)
   digitalkey aliro matter-fields --reader reader.json [--issuer-pub HEX] [--credential-index N] [--user-index N]
                                   SetAliroReaderConfig と SetCredential の欄を JSON で出す(octet string は 16 進)
@@ -141,7 +141,7 @@ class ReaderConfig:
 
 @dataclass(frozen=True)
 class IssuerKey:
-    """Credential Issuer の鍵の対。読取機に入れるのは public(65 バイト)だけ。"""
+    """Credential Issuer の鍵の対。リーダーに入れるのは public(65 バイト)だけ。"""
 
     private: bytes   # 32 バイト
     public: bytes    # 65 バイト
@@ -162,7 +162,7 @@ class IssuerKey:
 
 
 def issuer_key_credential(issuer_public: bytes, *, credential_index: int = 1, user_index: int | None = None) -> dict:
-    """発行者の公開鍵を読取機に入れる SetCredential(0x22)の欄。CredentialType 6(AliroCredentialIssuerKey)。
+    """発行者の公開鍵をリーダーに入れる SetCredential(0x22)の欄。CredentialType 6(AliroCredentialIssuerKey)。
 
     UserIndex を null にすると、錠が利用者を作る(規格の SetCredential の取り決め)。利用者の状態と種類は錠の既定に任せる。
     """
@@ -183,10 +183,10 @@ def _write_secret(path: str, data: bytes) -> None:
 
 
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(prog="digitalkey aliro", description="Aliro の読取機を Matter で設定する値を作る(実装の例)",
-                                 epilog="秘密(読取機の SigningKey、発行者の秘密鍵)は権限 600 のファイルにだけ書き、画面には出しません。")
+    ap = argparse.ArgumentParser(prog="digitalkey aliro", description="Aliro のリーダーを Matter で設定する値を作る(実装の例)",
+                                 epilog="秘密(リーダーの SigningKey、発行者の秘密鍵)は権限 600 のファイルにだけ書き、画面には出しません。")
     sub = ap.add_subparsers(dest="cmd", required=True)
-    r = sub.add_parser("reader-config", help="読取機の設定を作る")
+    r = sub.add_parser("reader-config", help="リーダーの設定を作る")
     r.add_argument("--out", required=True); r.add_argument("--ble-uwb", action="store_true", help="GroupResolvingKey も作る")
     i = sub.add_parser("issuer-key", help="発行者の鍵の対を作り、公開鍵を出す")
     i.add_argument("--out", required=True)

@@ -1,7 +1,7 @@
-"""公開 API の定義 — 扉の HTTP の口の全部を OpenAPI 3.1 で書く(仕様書 5.5、R-DV-11)。
+"""公開 API の定義 — 扉の HTTP のインターフェースの全部を OpenAPI 3.1 で書く(仕様書 5.5、R-DV-11)。
 
-定義にある口と扉が受ける口は一致させる。口を足すときは、ここと server.py を一緒に直す。
-版 1 の間は口と欄を足すだけにし、足したら版の二つ目の数を上げる。今ある口の形と意味を変えるときは版 2 にする。
+定義にあるインターフェースと扉が受けるインターフェースは一致させる。インターフェースを足すときは、ここと server.py を一緒に直す。
+バージョン 1 の間はインターフェースと欄を足すだけにし、足したらバージョンの二つ目の数を上げる。今あるインターフェースの形と意味を変えるときはバージョン 2 にする。
 """
 from __future__ import annotations
 
@@ -46,20 +46,20 @@ def _body(schema: dict) -> dict:
     return {"required": False, "content": {"application/json": {"schema": schema}}}
 
 
-_LOOPBACK = {"403": {"description": "同じ機械の相手でない。拒否を記録に残す"}}
+_LOOPBACK = {"403": {"description": "同じコンピューターの相手でない。拒否を記録に残す"}}
 
 
 def document() -> dict:
     p = {
         "/openapi.json": {"get": {"summary": "この定義", "responses": _ok(_OBJ)}},
         "/state": {"get": {"summary": "いまの状態", "responses": _ok(_STATE)}},
-        "/lock": {"post": {"summary": "上位からの施錠(同じ機械の相手だけ。Matter の橋のため)",
+        "/lock": {"post": {"summary": "上位からの施錠(同じコンピューターの相手だけ。Matter の橋のため)",
                            "requestBody": _body({"type": "object", "properties": {"by": {"type": "string"}}}),
                            "responses": {**_ok(_RESULT), **_LOOPBACK}}},
-        "/unlock": {"post": {"summary": "上位からの解錠(同じ機械の相手だけ。Matter の橋のため)",
+        "/unlock": {"post": {"summary": "上位からの解錠(同じコンピューターの相手だけ。Matter の橋のため)",
                              "requestBody": _body({"type": "object", "properties": {"by": {"type": "string"}}}),
                              "responses": {**_ok(_RESULT), **_LOOPBACK}}},
-        "/auth": {"post": {"summary": "読取機からの認証結果(R-CT-19)",
+        "/auth": {"post": {"summary": "リーダーからの認証結果(R-CT-19)",
                            "requestBody": _body({"type": "object", "properties": {
                                "subject": {"type": "string"}, "route": {"type": "string"},
                                "valid": {"type": "boolean"}, "reason": {"type": "string"},
@@ -113,7 +113,7 @@ def document() -> dict:
                           "503": {"description": "同時に受ける相手が上限に達した"}}}},
         "/fault": {
             "get": {"summary": "今の故障注入", "x-dev-only": True, "responses": _ok(_FAULT)},
-            "post": {"summary": "故障注入(開発のときだけ。同じ機械の相手だけ)", "x-dev-only": True,
+            "post": {"summary": "故障注入(開発のときだけ。同じコンピューターの相手だけ)", "x-dev-only": True,
                      "requestBody": _body({"type": "object", "additionalProperties": False, "properties": {
                          "lock": {"type": "string", "enum": ["正常", "応答しない", "途中で切断"]},
                          "clock_offset_s": {"type": "number"},
@@ -125,7 +125,7 @@ def document() -> dict:
     return {
         "openapi": "3.1.0",
         "info": {"title": "digitaldoor 扉のコントローラ", "version": API_VERSION,
-                 "description": "扉コントローラ仕様書(https://door.aiseed.dev)の HTTP の口。応答には API-Version の見出しが付く",
+                 "description": "扉コントローラ仕様書(https://door.aiseed.dev)の HTTP のインターフェース。応答には API-Version の見出しが付く",
                  "license": {"name": "Apache-2.0", "identifier": "Apache-2.0"}},
         "servers": [{"url": "http://127.0.0.1:8797"}],
         "paths": p,

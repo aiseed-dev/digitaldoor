@@ -1,6 +1,6 @@
 """疑似の PocketBase(試しと、窓口の頁を手で確かめるための物。標準ライブラリだけ)。
 
-窓口仕様書(docs/窓口仕様書.md)の 3、4、8、9 章が使う口だけを持ちます。応答の形は、仕様書が確かめた
+窓口仕様書(docs/窓口仕様書.md)の 3、4、8、9 章が使うインターフェースだけを持ちます。応答の形は、仕様書が確かめた
 PocketBase 0.40.4 の形(3、4 章と 14 章の出典)に合わせています。
 
     GET    /api/health
@@ -30,7 +30,7 @@ PocketBase 0.40.4 の形(3、4 章と 14 章の出典)に合わせています�
 - **項目の確かめは、仕様書 3.3、3.4 の制約(要る、選べる値、長さ、形、関係の相手、一意の索引)だけです。** 応答の
   `data` の中の誤りの言葉は本物に似せた物で、同じではありません。
 - **回数の制限(rate limit)、MFA、OTP、ファイル、メールはありません。** `users` の新しい登録は、疑似の提供者を
-  通った時だけです(パスワードでの登録の口はありません)。
+  通った時だけです(パスワードでの登録のインターフェースはありません)。
 - **時刻。** `created` と `updated` は、本物と同じく UTC の `YYYY-MM-DD HH:MM:SS.mmmZ` です。試しは `add_record` で決めた
   値を入れられます。
 
@@ -151,7 +151,7 @@ class _Code:
 
 @dataclass
 class FakePB:
-    """疑似の PocketBase。`start()` で `host` の空いた口(`port=0`)に立てる。"""
+    """疑似の PocketBase。`start()` で `host` の空いたポート(`port=0`)に立てる。"""
     host: str = "127.0.0.1"
     port: int = 0
     deny: bool = False
@@ -197,7 +197,7 @@ class FakePB:
     def url(self) -> str:
         return f"http://{self.host}:{self.port}"
 
-    # ---- 試しが直に使う口 ----
+    # ---- 試しが直に使うインターフェース ----
 
     def add_user(self, *, email: str | None = None, name: str = "", id: str | None = None,
                  password: str | None = None) -> dict:
@@ -237,12 +237,12 @@ class FakePB:
         return copy.deepcopy(rec)
 
     def records(self, collection: str) -> list[dict]:
-        """今のレコード(置いた順)の写し。"""
+        """今のレコード(置いた順)のコピー。"""
         with self._lock:
             return [copy.deepcopy(r) for r in self._data[collection].values()]
 
     def token_for(self, collection: str, rid: str) -> str:
-        """そのレコードの札を作る(試しが本人や機械として呼ぶ時)。"""
+        """そのレコードの札を作る(試しが本人やシステムとして呼ぶ時)。"""
         tok = secrets.token_urlsafe(24)
         with self._lock:
             self._tokens[tok] = (collection, rid)
@@ -255,7 +255,7 @@ class FakePB:
             return list(self._tokens)
 
     def record_requests(self, *, method: str | None = None, collection: str | None = None) -> list[Req]:
-        """受けた要求のうち、レコードの口(/api/collections/<c>/records)への物。"""
+        """受けた要求のうち、レコードのインターフェース(/api/collections/<c>/records)への物。"""
         out = []
         for r in list(self.requests):
             m = re.match(r"^/api/collections/([^/]+)/records(?:/|$)", r.path)
@@ -371,7 +371,7 @@ class FakePB:
     def _new_token(self, collection: str, rid: str) -> str:
         return self.token_for(collection, rid)
 
-    # ---- 口ごとの働き ----
+    # ---- インターフェースごとの働き ----
 
     def handle(self, req: Req, host_header: str) -> tuple[int, dict | None, dict[str, str]]:
         """一つの要求に答える。(数, 本文, 足すヘッダ)。"""
@@ -655,7 +655,7 @@ class _Handler(BaseHTTPRequestHandler):
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="疑似の PocketBase(試しと、窓口の頁を手で確かめるための物)")
-    ap.add_argument("--port", type=int, default=8090, help="待ち受ける口(0 は空いた口)")
+    ap.add_argument("--port", type=int, default=8090, help="待ち受けるポート(0 は空いたポート)")
     ap.add_argument("--host", default="127.0.0.1", help="待ち受ける所(既定 127.0.0.1)")
     ap.add_argument("--deny", action="store_true", help="疑似の提供者の頁が、いつも error を付けて戻す")
     ap.add_argument("--log", action="store_true", help="受けた要求の方法と道を標準エラーに出す")

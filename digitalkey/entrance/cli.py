@@ -70,7 +70,7 @@ def cmd_reserve(args):
     d = _daicho(args)
     token = secrets.token_urlsafe(16)
     den = d.append("予約", {"主体": args.subject, "層": args.layer, "到着": args.start, "出発": args.end,
-                           "錠": args.lock, "連絡先": args.contact or "", "受付符号": token}, issuer=args.issuer)
+                           "錠": args.lock, "連絡先": args.contact or "", "受付コード": token}, issuer=args.issuer)
     print(den.id)
     print(f"/checkin/{token}")
 
@@ -126,7 +126,7 @@ def cmd_serve(args):
 
     cfg = Config(vault=_vault(args), house_lat=args.house_lat, house_lon=args.house_lon,
                  owner_token=args.owner_token or secrets.token_urlsafe(24), locks=_locks(args.lock_driver))
-    print(f"経営者の符号: {cfg.owner_token}", file=sys.stderr)
+    print(f"経営者コード: {cfg.owner_token}", file=sys.stderr)
     uvicorn.run(create_app(cfg), host=args.host, port=args.port)
 
 
@@ -145,7 +145,7 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("list", help="伝票の一覧"); p.add_argument("name", nargs="?"); p.set_defaults(fn=cmd_list)
     p = sub.add_parser("show", help="伝票を表示"); p.add_argument("id"); p.set_defaults(fn=cmd_show)
     sub.add_parser("verify", help="連鎖を検査").set_defaults(fn=cmd_verify)
-    p = sub.add_parser("reserve", help="予約を起こし、チェックインの符号を出す")
+    p = sub.add_parser("reserve", help="予約を起こし、チェックインのコードを出す")
     p.add_argument("subject"); p.add_argument("layer", choices=["WWOOF", "民泊", "貸家", "会議室"])
     p.add_argument("start"); p.add_argument("end"); p.add_argument("lock"); p.add_argument("--contact")
     p.set_defaults(fn=cmd_reserve)

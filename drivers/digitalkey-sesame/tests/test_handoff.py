@@ -40,7 +40,7 @@ def test_keys_without_a_role_field_are_admin_and_unknown_roles_are_user():
 
 
 async def test_role_survives_a_save_and_load_and_a_legacy_file_loads_as_admin(tmp_path):
-    """R-CM-14: 役は保存して読み戻せる。役の欄が無い鍵のファイル(今までの版)は、管理者として読める。"""
+    """R-CM-14: 役は保存して読み戻せる。役の欄が無い鍵のファイル(今までのバージョン)は、管理者として読める。"""
     ks = KeyStore(path=tmp_path / "k.json")
     await ks.put(make_key(UNREGISTERED, role=ROLE_USER))
     await ks.put(make_key(REGISTERED, role=ROLE_ADMIN))
@@ -75,7 +75,7 @@ async def test_a_failed_save_leaves_no_key_behind():
 
 # ---- 渡す中身 ----
 def test_payload_carries_version_uuid_secret_role_and_code_but_no_name():
-    """R-CM-15: QR の中身は 1 行で、版、UUID、32 桁、役、管理者の符号(管理者のときだけ)。人の名前は入らない。"""
+    """R-CM-15: QR の中身は 1 行で、バージョン、UUID、32 桁、役、管理者コード(管理者のときだけ)。人の名前は入らない。"""
     key = make_key(name="山田さんの家")
     user = encode_handoff(key, ROLE_USER)
     admin = encode_handoff(key, ROLE_ADMIN)
@@ -92,7 +92,7 @@ def test_payload_carries_version_uuid_secret_role_and_code_but_no_name():
 
 
 def test_a_user_key_cannot_be_handed_over_as_admin_and_the_code_depends_on_the_key():
-    """R-CM-14: 管理者として渡せるのは管理者の鍵だけ。符号は鍵と UUID から決まり、別の鍵・別の UUID では合わない。"""
+    """R-CM-14: 管理者として渡せるのは管理者の鍵だけ。コードは鍵と UUID から決まり、別の鍵・別の UUID では合わない。"""
     with pytest.raises(ValueError):
         encode_handoff(make_key(role=ROLE_USER), ROLE_ADMIN)
     assert encode_handoff(make_key(role=ROLE_USER), ROLE_USER).endswith(":U")
@@ -104,14 +104,14 @@ def test_a_user_key_cannot_be_handed_over_as_admin_and_the_code_depends_on_the_k
 
 
 def test_without_a_matching_code_the_key_enters_as_user_and_never_upgrades():
-    """R-CM-14: 符号の無い鍵、符号が合わない鍵は、利用者として入る(管理者を名乗っても上がらない)。"""
+    """R-CM-14: コードの無い鍵、コードが合わない鍵は、利用者として入る(管理者を名乗っても上がらない)。"""
     base = f"DDSESAME1:{UNREGISTERED.upper()}:{TEST_SECRET.upper()}"
     assert parse_handoff(base + ":U").role == ROLE_USER
-    forged = parse_handoff(base + ":A")                    # 管理者を名乗るが符号が無い
+    forged = parse_handoff(base + ":A")                    # 管理者を名乗るがコードが無い
     assert forged.role == ROLE_USER and "利用者として" in forged.notice
-    wrong = parse_handoff(base + ":A:00000000")            # 符号が合わない
+    wrong = parse_handoff(base + ":A:00000000")            # コードが合わない
     assert wrong.role == ROLE_USER and "利用者として" in wrong.notice
-    sneaky = parse_handoff(base + ":U:" + admin_code(SECRET, UNREGISTERED))   # 利用者として渡されたのに符号を添えても上がらない
+    sneaky = parse_handoff(base + ":U:" + admin_code(SECRET, UNREGISTERED))   # 利用者として渡されたのにコードを添えても上がらない
     assert sneaky.role == ROLE_USER
     typed = typed_handoff(UNREGISTERED, "0011 2233 4455 6677 8899 aabb ccdd eeff")
     assert typed.role == ROLE_USER and typed.secret == SECRET
@@ -122,7 +122,7 @@ def test_without_a_matching_code_the_key_enters_as_user_and_never_upgrades():
                                  f"DDSESAME1:{UNREGISTERED}:{'zz' * 16}:U", f"DDSESAME1:{UNREGISTERED}:{TEST_SECRET}:X",
                                  f"DDSESAME1:{UNREGISTERED}:{TEST_SECRET}", f"DDSESAME1:{UNREGISTERED}:{TEST_SECRET}:A:1:2", None])
 def test_malformed_payloads_are_refused_without_echoing_the_input(bad):
-    """R-CM-12: 形の違う QR は断る。例外の文に、入力(鍵、符号)を入れない。"""
+    """R-CM-12: 形の違う QR は断る。例外の文に、入力(鍵、コード)を入れない。"""
     with pytest.raises(HandoffError) as ei:
         parse_handoff(bad)
     for piece in (TEST_SECRET, TEST_SECRET.upper(), TEST_SECRET[:-2], UNREGISTERED, "zzzz"):
@@ -130,7 +130,7 @@ def test_malformed_payloads_are_refused_without_echoing_the_input(bad):
 
 
 def test_a_qr_is_small_and_reads_back_with_a_real_decoder():
-    """R-CM-15: 管理者の QR は英数字モードで版が小さく(読み取りやすい粗さ)、本物の読み取り(pyzbar)で中身が戻る。"""
+    """R-CM-15: 管理者の QR は英数字モードでバージョンが小さく(読み取りやすい粗さ)、本物の読み取り(pyzbar)で中身が戻る。"""
     segno = pytest.importorskip("segno")
     payload = encode_handoff(make_key(), ROLE_ADMIN)
     qr = segno.make(payload, error="m", micro=False)
@@ -144,12 +144,12 @@ def test_a_qr_is_small_and_reads_back_with_a_real_decoder():
 
 
 async def test_the_reader_reads_a_tilted_compressed_photo_of_a_qr():
-    """R-CM-15: 読み取りの口(ZbarQrReader)は、斜めで JPEG に圧縮した写真からも QR の文字を取り出す。QR でない画像は None。"""
+    """R-CM-15: 読み取りのインターフェース(ZbarQrReader)は、斜めで JPEG に圧縮した写真からも QR の文字を取り出す。QR でない画像は None。"""
     PIL = pytest.importorskip("PIL.Image")
     from digitalkey_sesame.qrread import ZbarQrReader
     reader = ZbarQrReader()
     if not reader.available():
-        pytest.skip("libzbar が無い機械")
+        pytest.skip("libzbar が無いコンピューター")
     payload = encode_handoff(make_key(), ROLE_ADMIN)
     photo = PIL.open(io.BytesIO(qr_png(payload))).convert("RGB").rotate(20, expand=True, fillcolor=(190, 190, 190)).resize((420, 420))
     jpeg = io.BytesIO()
@@ -162,7 +162,7 @@ async def test_the_reader_reads_a_tilted_compressed_photo_of_a_qr():
 
 
 async def test_the_reader_degrades_to_none_when_the_decoder_is_missing(monkeypatch):
-    """R-CM-15: libzbar を読み込めない機械では、読み取りは使えない(available が偽)と答え、例外を出さない(32 桁を打ち込む道だけになる)。"""
+    """R-CM-15: libzbar を読み込めないコンピューターでは、読み取りは使えない(available が偽)と答え、例外を出さない(32 桁を打ち込む道だけになる)。"""
     from digitalkey_sesame import qrread
     reader = qrread.ZbarQrReader()
     monkeypatch.setitem(__import__("sys").modules, "pyzbar.pyzbar", None)    # import が失敗する
@@ -171,7 +171,7 @@ async def test_the_reader_degrades_to_none_when_the_decoder_is_missing(monkeypat
 
 
 async def test_the_camera_scanner_reads_frames_one_at_a_time_and_stops_when_done():
-    """R-CM-15: アプリのカメラの口は、画像の流れを読み取りに渡し、同じ文字は続けて渡さず、読み終えたら以後を捨てる。
+    """R-CM-15: アプリのカメラのインターフェースは、画像の流れを読み取りに渡し、同じ文字は続けて渡さず、読み終えたら以後を捨てる。
     始めるときは背面のカメラを選び、画面に載り終えるまで数回待ち直す。許可されない(例外)と False を返す。"""
     fc = pytest.importorskip("flet_camera")
     from digitalkey_sesame.fake import FakeQrReader
@@ -233,7 +233,7 @@ async def _registered_fake(uuid_s=UNREGISTERED):
 
 
 async def test_receiving_saves_only_after_a_successful_login_and_keeps_the_role():
-    """R-CM-13: 受け取る側は、その Sesame にログインできたときだけ保存する。符号つきなら管理者、無ければ利用者で入る。"""
+    """R-CM-13: 受け取る側は、その Sesame にログインできたときだけ保存する。コードつきなら管理者、無ければ利用者で入る。"""
     secret = await _registered_fake()
     ks = KeyStore(kv=FakeKV())
     h = parse_handoff(encode_handoff(make_key(secret_hex=secret.hex()), ROLE_USER))
@@ -313,8 +313,8 @@ def _import(monkeypatch, capsys, secret_text, code_text, uuid_s=REGISTERED):
 
 
 def test_pc_import_enters_as_admin_only_with_a_matching_code(monkeypatch, capsys, tmp_path):
-    """R-CM-14: PC の import も同じ規則。管理者の符号が合ったときだけ管理者、符号が無ければ利用者で、合わない符号は保存しない。
-    符号は標準出力と標準エラーに出さない。"""
+    """R-CM-14: PC の import も同じ規則。管理者コードが合ったときだけ管理者、コードが無ければ利用者で、合わないコードは保存しない。
+    コードは標準出力と標準エラーに出さない。"""
     code = admin_code(bytes(16), REGISTERED)
     ks_path = tmp_path / "keys" / "sesame-keys-fake.json"
 
@@ -328,7 +328,7 @@ def test_pc_import_enters_as_admin_only_with_a_matching_code(monkeypatch, capsys
     assert code not in (out.out + out.err).upper().replace(" ", "")
 
     ks_path.unlink()
-    rc, out = _import(monkeypatch, capsys, ZERO_KEY, "00000000")           # 形は合うが、この鍵の符号ではない
+    rc, out = _import(monkeypatch, capsys, ZERO_KEY, "00000000")           # 形は合うが、この鍵のコードではない
     assert rc == 1 and "保存しません" in out.err and not ks_path.exists()
     assert "00000000" not in out.out + out.err
     rc, out = _import(monkeypatch, capsys, ZERO_KEY, "xyz")                # 形が違う
@@ -336,7 +336,7 @@ def test_pc_import_enters_as_admin_only_with_a_matching_code(monkeypatch, capsys
 
 
 def test_pc_register_makes_an_admin_key_and_keys_lists_the_role(capsys, tmp_path):
-    """R-CM-14: その機械で登録した鍵は管理者。`keys` は役を出す(鍵そのものは出さない)。"""
+    """R-CM-14: そのコンピューターで登録した鍵は管理者。`keys` は役を出す(鍵そのものは出さない)。"""
     assert cli.main(["--fake", "register", UNREGISTERED]) == 0
     saved = json.loads((tmp_path / "keys" / "sesame-keys-fake.json").read_text(encoding="utf-8"))[UNREGISTERED]
     assert saved["role"] == ROLE_ADMIN

@@ -1,6 +1,6 @@
 """端末の安全な保管庫(Flet の SecureStorage。flet-secure-storage)に鍵を置く部分と、管理者の画面を開くときの端末の認証。
 
-スマートフォンの鍵は、今までの版では SharedPreferences(アプリの保存領域)に平文で置いていました。この版からは、
+スマートフォンの鍵は、今までのバージョンでは SharedPreferences(アプリの保存領域)に平文で置いていました。このバージョンからは、
 Android Keystore(Android)とキーチェーン(iOS)に守られた保管庫に置きます。初めて起動したときに移し(keystore.migrate_kv)、
 移せたことを確かめてから元を消します。
 
@@ -30,7 +30,7 @@ GATE_VALUE = "ok"
 
 
 class SecureKV:
-    """flet-secure-storage の SecureStorage を、鍵の置き場の口(get/set/remove)に合わせる。"""
+    """flet-secure-storage の SecureStorage を、鍵の置き場のインターフェース(get/set/remove)に合わせる。"""
 
     def __init__(self, storage) -> None:
         self._s = storage

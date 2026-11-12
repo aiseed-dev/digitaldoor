@@ -1,8 +1,8 @@
 """錠のドライバで動く扉 — `digitalkey door-serve`。
 
-扉のコントローラ(digitaldoor_controller)の HTTP の口(/state /lock /unlock /event /audit /verify ほか)を、
+扉のコントローラ(digitaldoor_controller)の HTTP のインターフェース(/state /lock /unlock /event /audit /verify ほか)を、
 模擬の接点ではなく、錠のドライバ(`digitalkey.locks` の登録簿)につないだ接点で開く。
-盤(`digitalkey panel`)や Matter の橋は、この口を叩いて本物の錠を動かす。
+パネル(`digitalkey panel`)や Matter の橋は、このインターフェースを叩いて本物の錠を動かす。
 
   digitalkey door-serve --lock sesame:<機器のUUID>      実機の Sesame(BLE 直結。鍵は `digitalkey sesame import` か `register` で置いておく)
   digitalkey door-serve --fake                          疑似の Sesame(実機にも Bluetooth にも触れない)
@@ -61,7 +61,7 @@ def make_parser() -> argparse.ArgumentParser:
                     help="信頼する発行者の一覧(JSON。{発行者の識別: {\"public_key\": 16 進, \"doors\": [扉の名前, ...]}})。"
                          "管理者の変更が記録にあるときは、記録の一覧を使う")
     ap.add_argument("--revocation-max-age", type=float, default=0.0, metavar="秒",
-                    help="失効の知らせの古さの上限。発行者の失効の一覧の issued_at からこの秒数を過ぎると、"
+                    help="失効の通知の古さの上限。発行者の失効の一覧の issued_at からこの秒数を過ぎると、"
                          "期限の長さがこの秒数より長い資格情報を拒む。0 はこの規則を使わない(既定)。"
                          "鍵の管理の台帳には、同じ値を分で書く(digitalkey kanri door add --revocation-max-min)")
     ap.add_argument("--box", help="伝票を出す箱(フォルダ)。動いている間、増えた記録を続けて出す")
@@ -105,7 +105,7 @@ def build(args, driver=None) -> tuple[Controller, LockDriverContacts, Audit]:
 
 
 def open_door(args, driver=None) -> tuple[ThreadingHTTPServer, Controller, LockDriverContacts]:
-    """扉を組み立て、HTTP の口を開いて返す(serve_forever は呼び手が回す。--port 0 なら空いた口)。時計と伝票の書き出しは裏で回す。"""
+    """扉を組み立て、HTTP のインターフェースを開いて返す(serve_forever は呼び手が回す。--port 0 なら空いたポート)。時計と伝票の書き出しは裏で回す。"""
     ctl, contacts, audit = build(args, driver)
     lock = threading.Lock()
     srv = ThreadingHTTPServer((args.host, args.port), door_server.make_handler(ctl, lock))

@@ -1,4 +1,4 @@
-"""門 — 外から入ってくる伝票の受け口(FastAPI)。
+"""門 — 外部から入ってくる伝票を受けるインターフェース(FastAPI)。
 
 画面は客のチェックイン一枚だけ。経営者の側は画面を持たず、台帳と依頼で回す。
 書き込みはこの門だけが行い、検査するのは構造(様式・権限・追記)だけ。
@@ -51,7 +51,7 @@ def create_app(cfg: Config) -> FastAPI:
     page = resources.files("digitalkey.entrance").joinpath("static", "checkin.html").read_text(encoding="utf-8")
 
     def reservation(token: str):
-        rows = ledger.select("予約", where={"受付符号": token})
+        rows = ledger.select("予約", where={"受付コード": token})
         if not rows:
             raise HTTPException(404, "予約がありません")
         return rows[-1]
@@ -102,7 +102,7 @@ def create_app(cfg: Config) -> FastAPI:
     async def decide(verification_id: str, decision: str = Form(...), reason: str = Form(""),
                      by: str = Form("経営者"), x_owner_token: str = Header(...)):
         if not secrets.compare_digest(x_owner_token, cfg.owner_token):
-            raise HTTPException(403, "経営者の符号が違います")
+            raise HTTPException(403, "経営者コードが違います")
         if decision not in ("承認", "拒否", "保留"):
             raise HTTPException(400, "判定は 承認/拒否/保留")
         v = identity.decide(verification_id, decision, by=by, reason=reason, issuer="経営者")

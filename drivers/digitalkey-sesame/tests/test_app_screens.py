@@ -146,17 +146,17 @@ async def test_the_guard_note_is_on_the_admin_screen_and_in_every_handover_dialo
 
 
 async def test_forgetting_a_key_says_what_stays_and_closes_the_admin_door_when_the_last_admin_key_goes(build):
-    """R-CM-14: 「鍵を削除」の確かめは、ほかの機械の写しの扱いを書く(管理者の鍵では、渡した相手の鍵が消えないことも)。
+    """R-CM-14: 「鍵を削除」の確かめは、ほかの端末のコピーの扱いを書く(管理者の鍵では、渡した相手の鍵が消えないことも)。
     最後の管理者の鍵を消して利用者の鍵だけが残ると、管理者の画面の入口は消える。"""
     app, page = await build(make_key(UNREGISTERED, role=ROLE_ADMIN), make_key(REGISTERED, secret_hex=OTHER_SECRET, role=ROLE_USER))
     app.current_adv = adv_for(REGISTERED)
     await app.on_forget_key()
     text = texts(page.shown[-1])
-    assert "ほかの機械" in text and "写しがあれば" in text and "写しが無い" in text and "渡した相手" not in text
+    assert "ほかの端末" in text and "コピーがあれば" in text and "コピーが無い" in text and "渡した相手" not in text
     app.current_adv = adv_for(UNREGISTERED)
     await app.on_forget_key()
     text = texts(page.shown[-1])
-    assert "ほかの機械" in text and "渡した相手の鍵は、消えません" in text
+    assert "ほかの端末" in text and "渡した相手の鍵は、消えません" in text
     assert app.btn_admin.visible is True
     await page.shown[-1].actions[0].on_click(None)                 # 削除
     assert set(app.keys) == {REGISTERED} and app.btn_admin.visible is False
@@ -215,7 +215,7 @@ def decode_qr_image(dlg):
 
 async def test_handing_over_by_qr_asks_first_records_the_ledger_and_shows_a_readable_qr(build, caplog):
     """R-CM-15: QR で渡すときは、確かめを挟み、相手の呼び名を求め、了承されたときだけ QR を出し、控えを残す。
-    出した QR は読み戻せて、役と管理者の符号が合う。ログと画面の記録欄には鍵も符号も出ない(R-CM-12)。"""
+    出した QR は読み戻せて、役と管理者コードが合う。ログと画面の記録欄には鍵もコードも出ない(R-CM-12)。"""
     caplog.set_level(logging.DEBUG)
     key = make_key(secret_hex=TEST_SECRET, role=ROLE_ADMIN)
     app, page = await build(key)
@@ -273,7 +273,7 @@ async def test_the_shown_qr_closes_by_itself_and_leaves_nothing_on_the_screen(bu
 
 
 async def test_showing_the_digits_for_a_pc_asks_first_and_adds_the_code_only_for_an_admin_handover(build, caplog):
-    """R-CM-12: 32 桁を見せるのは、確かめのあと、渡す画面の中だけ。管理者として渡すときだけ管理者の符号も出る。閉じると消え、ログには出ない。"""
+    """R-CM-12: 32 桁を見せるのは、確かめのあと、渡す画面の中だけ。管理者として渡すときだけ管理者コードも出る。閉じると消え、ログには出ない。"""
     caplog.set_level(logging.DEBUG)
     key = make_key(secret_hex=TEST_SECRET, role=ROLE_ADMIN)
     from digitalkey_sesame.handoff import admin_code, format_admin_code
@@ -359,13 +359,13 @@ async def test_receiving_a_user_qr_makes_a_user_key_whose_admin_screen_stays_clo
 
 
 async def test_receiving_an_admin_qr_makes_an_admin_key(build):
-    """R-CM-14: 管理者として渡された鍵は、符号が合えば管理者の鍵になり、その端末で管理者の画面が開く。符号が無ければ利用者のまま。"""
+    """R-CM-14: 管理者として渡された鍵は、コードが合えば管理者の鍵になり、その端末で管理者の画面が開く。コードが無ければ利用者のまま。"""
     giver = await _giver_key()
     app, _ = await build(make_key(REGISTERED, role=ROLE_USER))
     done, msg = await app.accept_text(encode_handoff(giver, ROLE_ADMIN))
     assert done and "管理者" in msg and (await app.keystore.get(UNREGISTERED)).role == ROLE_ADMIN
     assert app.btn_admin.visible is True
-    # 符号を落とした管理者の QR は、利用者として入る
+    # コードを落とした管理者の QR は、利用者として入る
     app2, _ = await build()
     forged = encode_handoff(giver, ROLE_ADMIN).rsplit(":", 1)[0]
     done, msg = await app2.accept_text(forged)
@@ -388,7 +388,7 @@ async def test_a_wrong_or_unreadable_qr_saves_nothing_and_shows_no_secret(build,
 
 
 async def test_the_receive_dialog_reads_the_qr_with_the_apps_own_camera_and_closes(build):
-    """R-CM-15: 受け取る画面は、アプリのカメラ(差し替え口)で読んだ QR から受け取り、保存できたら閉じてカメラを止める。"""
+    """R-CM-15: 受け取る画面は、アプリのカメラ(差し替えのインターフェース)で読んだ QR から受け取り、保存できたら閉じてカメラを止める。"""
     giver = await _giver_key()
     scanner = FakeCameraScanner(text=encode_handoff(giver, ROLE_USER))
     app, page = await build(scanner=scanner)
@@ -463,7 +463,7 @@ async def test_typing_the_32_digits_enters_as_a_user_after_a_login_check(build, 
 
 
 async def test_a_phone_to_phone_handover_end_to_end(build, caplog):
-    """R-CM-15: 渡す端末が QR を出し、受け取る端末が自分のカメラ(疑似)でそれを読んで受け取るまで。網は通らず、受け取った側で管理者の画面は開かない。"""
+    """R-CM-15: 渡す端末が QR を出し、受け取る端末が自分のカメラ(疑似)でそれを読んで受け取るまで。ネットワークは通らず、受け取った側で管理者の画面は開かない。"""
     import asyncio
     caplog.set_level(logging.DEBUG)
     giver_key = await _giver_key()

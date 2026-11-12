@@ -1,4 +1,4 @@
-"""事業所サーバーのトークン: 設定には SHA-256 だけを置き、役割を共通コア 7.1 の主体に対応づけ、役割ごとに口を分ける。"""
+"""事業所サーバーのトークン: 設定には SHA-256 だけを置き、役割を共通コア 7.1 の主体に対応づけ、役割ごとにインターフェースを分ける。"""
 import hashlib
 import tomllib
 from pathlib import Path
@@ -72,7 +72,7 @@ def test_roles_map_to_core_principals(setup):
 
 
 def test_every_route_by_role(setup):
-    """R-DV-12: 役割ごとに全部の口を叩き、許された口は通り、外の口は 403、トークンが違えば 401。"""
+    """R-DV-12: 役割ごとに全部のインターフェースを叩き、許されたインターフェースは通り、許されないインターフェースは 403、トークンが違えば 401。"""
     c, site, _ = setup
     key = c.post("/keys", json={"subject": "山田", "door": "正面玄関", "start": "2020-01-01 00:00",
                                 "end": "2099-01-01 00:00"}, headers=h("admin-tok")).json()["id"]

@@ -71,7 +71,7 @@ def _state(u, subject, entity_id, at):
 # ---- R-AC-22 ----
 
 def test_r_ac_22_offline_door_uses_carried_list(runit, make_unit, cred, door, refused):
-    """R-AC-22 網の届かない扉が、端末の運んだ署名つきの失効の一覧を使う。古い一覧で戻せない(21.13 の 1〜8)。"""
+    """R-AC-22 ネットワークの届かない扉が、端末の運んだ署名つきの失効の一覧を使う。古い一覧で戻せない(21.13 の 1〜8)。"""
     u = runit
     # 1. s1 と s2 に 玄関 の署名つき資格情報。扉は Config()(最長の時間を使わない)
     _, g1 = cred(u, "s1")
@@ -136,7 +136,7 @@ def test_r_ac_14_door_minutes_shown_in_door_list(rfile_unit, kanri, refused):
 
 
 def test_r_ac_14_stale_door_refuses_long_credential(rfile_unit, kanri, grant, door, tmp_path):
-    """R-AC-14 知らせが古い扉は長い期限の資格情報を拒む。台帳の見立ての時刻に、扉は本当に拒む(21.13 の 2〜8)。
+    """R-AC-14 通知が古い扉は長い期限の資格情報を拒む。台帳の見立ての時刻に、扉は本当に拒む(21.13 の 2〜8)。
 
     限界(21.13 の 8): この見立ては、扉の設定(revocation_max_age_s)が台帳の 失効の最長の分数 × 60 と同じである前提の物。
     扉の設定と台帳の値の照らし合わせは段 3 で足す。扉の時計が合っている事も前提。"""
@@ -168,14 +168,14 @@ def test_r_ac_14_stale_door_refuses_long_credential(rfile_unit, kanri, grant, do
     # 4. t0 に長い資格情報の主体、その 1 分後にもう一人を止める。扉には新しい一覧を渡さない
     u.revoke_subject("s1", "退職", **ADM, at=dt(REV))
     u.revoke_subject("s2", "退職", **ADM, at=dt(plus(REV, minutes=1)))
-    # 5. 長い資格情報の効くまでは t0 + M 分。その 1 分前は 待ち、その時刻は 止まった。扉はその時刻に 失効の知らせが古い で拒む
+    # 5. 長い資格情報の効くまでは t0 + M 分。その 1 分前は 待ち、その時刻は 止まった。扉はその時刻に 失効の通知が古い で拒む
     when = at_minute_up(unix(REV) + M * 60)
     assert when == "2026-12-10T13:00"
     assert _state(u, "s1", j_long["番号"], plus(when, minutes=-1)) == ("待ち", when)
     assert _state(u, "s1", j_long["番号"], when) == ("止まった", "")
     ctl.set_time(unix(when), synced=True)
     assert ctl.present(cred_long) == "拒否"
-    assert ctl.audit.entries[-1].result == "失効の知らせが古い"
+    assert ctl.audit.entries[-1].result == "失効の通知が古い"
     # 6. 長さが M 分の資格情報の効くまでは終了。扉は終了の 1 秒前に 解錠、終了で 期限の外
     assert _state(u, "s2", j_m["番号"], plus(REV, minutes=1)) == ("待ち", s2_end)
     ctl.set_time(unix(s2_end) - 1, synced=True)
@@ -217,7 +217,7 @@ def test_r_ac_14_issued_at_increases_and_door_agrees(runit, cred, door):
     assert ctl.accept_revocation(u.revocation(g_first)) == "受理"
     ctl.set_time(unix(when), synced=True)
     assert ctl.present(b.資格情報) == "拒否"
-    assert ctl.audit.entries[-1].result == "失効の知らせが古い"
+    assert ctl.audit.entries[-1].result == "失効の通知が古い"
     assert ctl.present(a.資格情報) == "拒否"
     assert ctl.audit.entries[-1].result == "失効済み"
 
@@ -308,17 +308,17 @@ if not getattr(sys, "_kanri_test_hook_2a", False):
 
 
 def test_r_ac_19_offline_revocation_list(kanri, tmp_path, monkeypatch):
-    """R-AC-19 網から切り離して動かせる(21.13): 19.13 の筋書きの網を塞いだまま、revoke --out、revocation publish --out、
+    """R-AC-19 ネットワークから切り離して動かせる(21.13): 19.13 の筋書きのネットワークを塞いだまま、revoke --out、revocation publish --out、
     revocation show、revocation list、revocation delivered を呼ぶ。全部 0。--out に {"body", "sig"}。
     書くのは --dir の下と --out だけ。既にある --out は OUT_EXISTS で、台帳の伝票の数は変わらない。"""
     real_socket = socket.socket
 
     class NoNetwork(real_socket):
         def __init__(self, *a, **kw):
-            raise OSError("網は使わない")
+            raise OSError("ネットワークは使わない")
 
     def no_connection(*a, **kw):
-        raise OSError("網は使わない")
+        raise OSError("ネットワークは使わない")
 
     monkeypatch.setattr(socket, "socket", NoNetwork)
     monkeypatch.setattr(socket, "create_connection", no_connection)

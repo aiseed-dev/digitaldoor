@@ -70,13 +70,13 @@ def request(today):
     seen = recent_headings(today)
     before = ("\n".join(f"- {d} {h}" for d, h in seen) or "(まだありません)")
     target = f"news/{today.isoformat()}.adoc"
-    return f"""今日は {today.isoformat()} です。次の手引きと好みに従って、今日のニュースの adoc を 1 つ、`{target}` に書いてください。
+    return f"""今日は {today.isoformat()} です。次のガイドと好みに従って、今日のニュースの adoc を 1 つ、`{target}` に書いてください。
 質問はせず、最後まで進めてください。ファイルを書くほかには、何も作らず、何も変えません。
 どの分野にも書く物が無ければ、ファイルを作らず、その旨だけを答えてください。
 
-<手引き>
+<ガイド>
 {guide()}
-</手引き>
+</ガイド>
 
 <好み>
 {tastes.strip()}

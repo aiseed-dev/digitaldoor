@@ -1,9 +1,9 @@
 """係の机の画面 `kagi app`（Flet の PC 版。設計書 §3.3）。
 
-`build_cards` は Flet を使わない純粋な関数で、在庫・口・走査・記録の結果を札の文字と表に変える。
+`build_cards` は Flet を使わない純粋な関数で、在庫・ポート・走査・記録の結果を札の文字と表に変える。
 `flet` は `run` と `make_main` の中で遅く import する（kagi の本体は標準ライブラリだけのまま）。
-鍵の値は読まない。札に出るのは在庫の id と欄の名、口の番号、path:line と種類、記録の連番と理由だけ。
-四つ目の画面「人の出入り」は seed のサーバーの管理の口を使う（`kagi.admin`）。管理者の token は画面に出さない。
+鍵の値は読まない。札に出るのは在庫の id と欄の名、ポートの番号、path:line と種類、記録の連番と理由だけ。
+四つ目の画面「人の出入り」は seed のサーバーの管理のインターフェースを使う（`kagi.admin`）。管理者の token は画面に出さない。
 """
 
 from __future__ import annotations
@@ -40,14 +40,14 @@ def _inventory_card(d: Path, days: int, today: dt.date) -> dict:
 
 def _ports_card(d: Path, ss_file: Path | None, host: str | None) -> dict:
     card = {
-        "title": "口",
+        "title": "ポート",
         "summary": "",
         "error": None,
         "columns": ["差", "host", "port", "bind", "process"],
         "rows": [],
     }
     if ss_file is None:
-        card["summary"] = "突き合わせていない（ss -ltnp の写しのファイルを選ぶ）"
+        card["summary"] = "突き合わせていない（ss -ltnp のコピーのファイルを選ぶ）"
         return card
     try:
         table = ports.load(d / "ports.toml")
@@ -59,13 +59,13 @@ def _ports_card(d: Path, ss_file: Path | None, host: str | None) -> dict:
         card["error"] = f"ss の出力を読めない: {ss_file} ({type(e).__name__})"
         return card
     diff = ports.compare(table, ports.parse_ss(text), host)
-    head = f"機械 {host}" if host else "表の全部の機械"
+    head = f"サーバー {host}" if host else "表の全部のサーバー"
     card["summary"] = (
-        f"{head}（{Path(ss_file).name}）: 表に無い口 {len(diff.unlisted)}、"
-        f"表にあって開いていない口 {len(diff.closed)}、外向きで表と違う口 {len(diff.outward)}"
+        f"{head}（{Path(ss_file).name}）: 表に無いポート {len(diff.unlisted)}、"
+        f"表にあって開いていないポート {len(diff.closed)}、外向きで表と違うポート {len(diff.outward)}"
     )
     for l in diff.unlisted:
-        card["rows"].append(["表に無い口", host or "", str(l.port), l.bind, l.process])
+        card["rows"].append(["表に無いポート", host or "", str(l.port), l.bind, l.process])
     for p in diff.closed:
         card["rows"].append(
             [
@@ -82,12 +82,12 @@ def _ports_card(d: Path, ss_file: Path | None, host: str | None) -> dict:
 
 
 def _machines_card(d: Path, now: dt.datetime | None = None) -> dict:
-    """機械の札。機械ごとの一行と、直す物の表。値は無い（指紋とアカウントの名と口だけ）。"""
+    """サーバーの札。サーバーごとの一行と、直す物の表。値は無い（指紋とアカウントの名とポートだけ）。"""
     card = {
-        "title": "機械",
+        "title": "サーバー",
         "summary": "",
         "error": None,
-        "columns": ["host", "役", "写し", "直す", "直す物"],
+        "columns": ["host", "役", "コピー", "直す", "直す物"],
         "rows": [],
         "detail_columns": ["host", "何", "見た物"],
         "detail": [],
@@ -95,12 +95,12 @@ def _machines_card(d: Path, now: dt.datetime | None = None) -> dict:
     try:
         rows = report.machine_rows(d, now)
     except inventory.Refused as e:
-        card["summary"] = "機械の表が無い（machines.toml。kagi init で雛形）"
+        card["summary"] = "サーバーの表が無い（machines.toml。kagi init で雛形）"
         card["error"] = str(e) if (d / machine.FILENAME).exists() else None
         return card
     n = sum(1 for r in rows if r["fixes"])
     none = sum(1 for r in rows if r["facts"] is None)
-    card["summary"] = f"機械 {len(rows)} 台、直す物のある機械 {n}、写しの無い機械 {none}"
+    card["summary"] = f"サーバー {len(rows)} 台、直す物のあるサーバー {n}、コピーの無いサーバー {none}"
     for r in rows:
         card["rows"].append(
             [
@@ -116,7 +116,7 @@ def _machines_card(d: Path, now: dt.datetime | None = None) -> dict:
 
 
 def collect_machine(d: Path, host: str, local: bool = False, env: dict | None = None, runner=None) -> Path:
-    """写しを取って置く。ssh を使った時は記録に一行（署名の鍵があれば）。"""
+    """コピーを取って置く。ssh を使った時は記録に一行（署名の鍵があれば）。"""
     m = machine.load(Path(d) / machine.FILENAME).machine(host)
     local = local or m.get("local") is True
     alias = None if local else str(m.get("ssh", host))
@@ -139,7 +139,7 @@ def fix_text(d: Path, host: str) -> str:
         if r["host"] == host and r["facts"]:
             facts = machine.load_facts(Path(d) / machine.FACTS_DIR / r["facts"])
             return machine.fix_script(host, facts, r["findings"])
-    raise inventory.Refused(f"{host} の写しが無い")
+    raise inventory.Refused(f"{host} のコピーが無い")
 
 
 def _scan_card(scan_paths: list[Path], excludes: list[str] | None) -> dict:
@@ -220,7 +220,7 @@ def write_report(
 
 
 def machine_view(d: Path, host: str, now: dt.datetime | None = None) -> dict:
-    """一台の機械の画面の中身: 頭の一行、直す物（手付き）、見るだけ。Flet を使わない。"""
+    """一台のサーバーの画面の中身: 頭の一行、直す物（手付き）、見るだけ。Flet を使わない。"""
     d = Path(d)
     v = {
         "host": host,
@@ -238,11 +238,11 @@ def machine_view(d: Path, host: str, now: dt.datetime | None = None) -> dict:
         v["error"] = str(e)
         return v
     if row is None:
-        v["error"] = f"機械の表に {host} が無い"
+        v["error"] = f"サーバーの表に {host} が無い"
         return v
     v["role"], v["facts"] = row["role"], row["facts"]
     if row["facts"] is None:
-        v["head"] = f"機械 {host}: 写しが無い。「写しを取る」から"
+        v["head"] = f"サーバー {host}: コピーが無い。「コピーを取る」から"
         v["error"] = "、".join(row["what"]) or None
         return v
     facts = machine.load_facts(d / machine.FACTS_DIR / row["facts"])
@@ -256,7 +256,7 @@ def machine_view(d: Path, host: str, now: dt.datetime | None = None) -> dict:
 def keys_view(d: Path) -> dict:
     """鍵の画面の中身。指紋は公開の物。秘密鍵は読まない。"""
     v = {
-        "columns": ["id", "持つ人", "指紋", "入れてよい機械", "在庫表"],
+        "columns": ["id", "持つ人", "指紋", "入れてよいサーバー", "在庫表"],
         "rows": [],
         "problems": [],
         "error": None,
@@ -310,7 +310,7 @@ def add_machine(
     services: str = "",
     local: bool = False,
 ) -> None:
-    """機械の表に一台足す（画面の欄から。名の並びは , で区切る）。"""
+    """サーバーの表に一台足す（画面の欄から。名の並びは , で区切る）。"""
     row = {
         "host": host.strip(),
         "ssh": ssh.strip(),
@@ -364,11 +364,11 @@ def make_main(d: Path):
         def field(label: str, width: int = 220, **kw) -> ft.TextField:
             return ft.TextField(label=label, dense=True, width=width, **kw)
 
-        ss_field = field("ss -ltnp の写しのファイル", 420)
-        host_field = field("host（表に機械が二つ以上なら）")
+        ss_field = field("ss -ltnp のコピーのファイル", 420)
+        host_field = field("host（表にサーバーが二つ以上なら）")
         scan_field = field("走査する場所", 420)
         actor, action, detail = field("actor", 160), field("action", 200), field("detail", 320)
-        m_host, m_ssh = field("機械の名（host）", 180), field("ssh の名か番地（空なら host）", 240)
+        m_host, m_ssh = field("サーバーの名（host）", 180), field("ssh の名か番地（空なら host）", 240)
         m_role = field("役", 300)
         m_users, m_admins = field("入れてよい人（, で区切る）", 240), field("sudo を持ってよい人", 200)
         m_keys, m_services = field("入れてよい鍵の id", 200), field("動いているべきサービス", 260)
@@ -431,7 +431,7 @@ def make_main(d: Path):
         def copier(text: str):
             async def h(e) -> None:
                 await page.clipboard.set(text)
-                toast("写した（機械の端末に貼る）")
+                toast("コピーした（サーバーの端末に貼る）")
 
             return h
 
@@ -456,7 +456,7 @@ def make_main(d: Path):
         def host() -> str | None:
             return (host_field.value or "").strip() or None
 
-        # ---- 機械 ----
+        # ---- サーバー ----
 
         def machines_view() -> list[ft.Control]:
             try:
@@ -464,7 +464,7 @@ def make_main(d: Path):
             except inventory.Refused as e:
                 rows = []
                 top: list[ft.Control] = [
-                    muted("機械の表がまだ無い（machines.toml）。下の「機械を足す」から一台目を書く。"),
+                    muted("サーバーの表がまだ無い（machines.toml）。下の「サーバーを足す」から一台目を書く。"),
                 ]
                 if (d / machine.FILENAME).exists():
                     top.append(err(str(e)))
@@ -475,16 +475,16 @@ def make_main(d: Path):
                 st["host"] = hosts[0] if hosts else None
             chips: list[ft.Control] = []
             for r in rows:
-                state = "写し無し" if r["facts"] is None else (f"直す {r['fixes']}" if r["fixes"] else "よし")
+                state = "コピー無し" if r["facts"] is None else (f"直す {r['fixes']}" if r["fixes"] else "よし")
                 label = f"{r['host']}  {state}"
                 btn = ft.FilledButton if r["host"] == st["host"] else ft.OutlinedButton
                 chips.append(btn(label, on_click=choose(r["host"])))
-            chips.append(ft.TextButton("機械を足す", icon=ft.Icons.ADD, on_click=toggle_add))
+            chips.append(ft.TextButton("サーバーを足す", icon=ft.Icons.ADD, on_click=toggle_add))
             out: list[ft.Control] = [*top, ft.Row(chips, wrap=True)]
             if st["adding"] or not rows:
                 out.append(
                     card(
-                        "機械を足す",
+                        "サーバーを足す",
                         [
                             muted(
                                 "書くのは名と役と、入れてよい人と鍵。パスワードと秘密鍵は書かない。"
@@ -503,12 +503,12 @@ def make_main(d: Path):
                 script = "\n".join(ln for f in v["fixes"] for ln in f["how"])
                 ctl: list[ft.Control] = [
                     ft.Text(v["head"], weight=ft.FontWeight.W_600, selectable=True),
-                    muted(f"役: {v['role'] or '（書いていない）'}　写し: {v['facts'] or '無い'}"),
+                    muted(f"役: {v['role'] or '（書いていない）'}　コピー: {v['facts'] or '無い'}"),
                     ft.Row(
                         [
-                            ft.FilledButton("写しを取る", icon=ft.Icons.SYNC, on_click=collect),
+                            ft.FilledButton("コピーを取る", icon=ft.Icons.SYNC, on_click=collect),
                             ft.OutlinedButton(
-                                "直す手を全部写す",
+                                "直す手を全部コピーする",
                                 icon=ft.Icons.CONTENT_COPY,
                                 on_click=copier(script),
                                 disabled=not script,
@@ -529,7 +529,7 @@ def make_main(d: Path):
                 if v["fixes"]:
                     fx: list[ft.Control] = [
                         muted(
-                            "kagi は機械を変えない。手を読んで、機械の端末で一つずつ。終わったら「写しを取る」。"
+                            "kagi はサーバーを変えない。手を読んで、サーバーの端末で一つずつ。終わったら「コピーを取る」。"
                         )
                     ]
                     for f in v["fixes"]:
@@ -548,7 +548,7 @@ def make_main(d: Path):
                             row.append(
                                 ft.IconButton(
                                     ft.Icons.CONTENT_COPY,
-                                    tooltip="この手を写す",
+                                    tooltip="この手をコピーする",
                                     on_click=copier("\n".join(f["how"])),
                                 )
                             )
@@ -585,7 +585,7 @@ def make_main(d: Path):
 
         async def collect(e) -> None:
             h = st["host"]
-            st["busy"] = f"{h} の写しを取っている（読むだけ）"
+            st["busy"] = f"{h} のコピーを取っている（読むだけ）"
             render()
             try:
                 await asyncio.to_thread(collect_machine, d, h)
@@ -600,7 +600,7 @@ def make_main(d: Path):
             except inventory.Refused as ex:
                 toast(str(ex))
                 return
-            toast(f"書いた: {paths[0].parent}（次は 手順.md。パスワードと盤は入っていない）")
+            toast(f"書いた: {paths[0].parent}（次は 手順.md。パスワードとディスクは入っていない）")
 
         # ---- 鍵 ----
 
@@ -608,11 +608,11 @@ def make_main(d: Path):
             v = keys_view(d)
             c: list[ft.Control] = [
                 muted(
-                    "誰が入れるか（機械の画面）と、どの鍵で入るか（ここ）はひと組。出るのは公開鍵の指紋だけ。"
+                    "誰が入れるか（サーバーの画面）と、どの鍵で入るか（ここ）はひと組。出るのは公開鍵の指紋だけ。"
                 )
             ]
             if v["error"]:
-                c.append(muted("機械の表がまだ無い（machines.toml）。"))
+                c.append(muted("サーバーの表がまだ無い（machines.toml）。"))
             if v["rows"]:
                 c.append(table(v["columns"], v["rows"]))
             c += [err(f"直す: {p}") for p in v["problems"]]
@@ -620,8 +620,8 @@ def make_main(d: Path):
                 "鍵を足す",
                 [
                     muted(
-                        "鍵は人が作る: ssh-keygen -t ed25519 -a 64（合言葉を付ける）。ここに渡すのは .pub だけ。"
-                        "足したら、機械の keys に id を書き、在庫表に同じ id で一件。"
+                        "鍵は人が作る: ssh-keygen -t ed25519 -a 64（パスフレーズを付ける）。ここに渡すのは .pub だけ。"
+                        "足したら、サーバーの keys に id を書き、在庫表に同じ id で一件。"
                     ),
                     ft.Row([k_id, k_holder, k_pub], wrap=True),
                     ft.FilledButton("足す", icon=ft.Icons.ADD, on_click=do_add_key),
@@ -640,7 +640,7 @@ def make_main(d: Path):
                 tc.append(table(tv["columns"], tv["rows"]))
             if tv["fixes"]:
                 tc.append(err(f"期限切れのまま取り消していない物が {tv['fixes']} 件"))
-            return [card("鍵（機械に入る）", c), add, card("出した token（アプリの門に入る）", tc)]
+            return [card("鍵（サーバーに入る）", c), add, card("出した token（アプリの門に入る）", tc)]
 
         async def do_add_key(e) -> None:
             try:
@@ -821,7 +821,7 @@ def make_main(d: Path):
         async def copy_new(e) -> None:
             if g["new"]:
                 await page.clipboard.set(g["new"]["code"])
-                toast("写した。その人にだけ渡す")
+                toast("コピーした。その人にだけ渡す")
 
         async def close_new(e) -> None:
             g["new"] = None
@@ -902,7 +902,7 @@ def make_main(d: Path):
                 problem = str(ex)
             cc: list[ft.Control] = [
                 muted(
-                    "seed のサーバーの管理の口に、管理者の token で入る。token は作業の場所の "
+                    "seed のサーバーの管理のインターフェースに、管理者の token で入る。token は作業の場所の "
                     f"{admin.CONN_FILE} に、持ち主だけが読める形（600）で置く。画面には出さない。"
                     "通すのは https だけ。"
                 )
@@ -976,7 +976,7 @@ def make_main(d: Path):
                         ft.Row(
                             [
                                 ft.Container(mono(cmd), expand=True),
-                                ft.IconButton(ft.Icons.CONTENT_COPY, tooltip="写す", on_click=copier(cmd)),
+                                ft.IconButton(ft.Icons.CONTENT_COPY, tooltip="コピー", on_click=copier(cmd)),
                             ],
                             vertical_alignment=ft.CrossAxisAlignment.START,
                         )
@@ -1014,7 +1014,7 @@ def make_main(d: Path):
                                             selectable=True,
                                         ),
                                         ft.IconButton(
-                                            ft.Icons.CONTENT_COPY, tooltip="写す", on_click=copy_new
+                                            ft.Icons.CONTENT_COPY, tooltip="コピー", on_click=copy_new
                                         ),
                                         ft.TextButton("渡した（消す）", on_click=close_new),
                                     ],
@@ -1201,7 +1201,7 @@ def make_main(d: Path):
             out.append(ft.OutlinedButton("読み直す", icon=ft.Icons.REFRESH, on_click=gate_reload))
             return out
 
-        # ---- 在庫・口・走査・記録・報告 ----
+        # ---- 在庫・ポート・走査・記録・報告 ----
 
         async def do_add_secret(e) -> None:
             vals = {k: f.value or "" for k, f in s_fields.items()}
@@ -1256,7 +1256,7 @@ def make_main(d: Path):
             ]
 
             prt_c: list[ft.Control] = [
-                muted("機械の画面の「写しを取る」でも口は突き合わせる。ここは ss の写しを手で渡す時。"),
+                muted("サーバーの画面の「コピーを取る」でもポートは突き合わせる。ここは ss のコピーを手で渡す時。"),
                 ft.Row(
                     [
                         ss_field,
@@ -1311,7 +1311,7 @@ def make_main(d: Path):
                 card("在庫", inv_c),
                 card("サーバーの外の鍵（在庫表と突き合わせ）", sk_c),
                 card("在庫表に一件足す", add_c),
-                card("口", prt_c),
+                card("ポート", prt_c),
                 card("走査", scn_c),
                 card("記録", aud_c),
                 card("報告", rep_c),
@@ -1320,9 +1320,9 @@ def make_main(d: Path):
         def render() -> None:
             tabs = []
             for key, label, icon in (
-                ("machines", "機械", ft.Icons.DNS_OUTLINED),
+                ("machines", "サーバー", ft.Icons.DNS_OUTLINED),
                 ("keys", "鍵", ft.Icons.KEY_OUTLINED),
-                ("other", "在庫・口・記録", ft.Icons.FACT_CHECK_OUTLINED),
+                ("other", "在庫・ポート・記録", ft.Icons.FACT_CHECK_OUTLINED),
                 ("gate", "人の出入り", ft.Icons.PEOPLE_OUTLINE),
             ):
                 btn = ft.FilledTonalButton if st["view"] == key else ft.TextButton
@@ -1342,7 +1342,7 @@ def make_main(d: Path):
                 *paused_banner(),
                 ft.Row(tabs, wrap=True),
                 *view,
-                muted("鍵の値はこの画面に出ない（K-13）。kagi は機械を変えない。"),
+                muted("鍵の値はこの画面に出ない（K-13）。kagi はサーバーを変えない。"),
             ]
             page.update()
 
@@ -1351,7 +1351,7 @@ def make_main(d: Path):
             return Path(v).expanduser() if v else None
 
         async def pick_ss(e) -> None:
-            files = await picker.pick_files(dialog_title="ss -ltnp の写しを選ぶ")
+            files = await picker.pick_files(dialog_title="ss -ltnp のコピーを選ぶ")
             if files and files[0].path:
                 ss_field.value = files[0].path
                 await use_ss(e)

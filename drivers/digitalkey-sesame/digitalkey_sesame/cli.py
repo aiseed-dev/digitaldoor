@@ -10,11 +10,11 @@
 Keys are stored in ~/.config/digitalkey/sesame-keys.json (or $SESAME_KEYSTORE).
 
 鍵(16 バイト、32 桁の 16 進)は、この Sesame を開けられる唯一の物です。ログにも標準出力にも出しません。
-別の端末(スマートフォンのアプリ)の鍵を写すときは、アプリの管理者の画面の「渡す」で「32 桁を見せる」を選んで 32 桁を出し、
-この機械で `import` します(鍵は引数で受けず、伏せた入力で受けます)。
+別の端末(スマートフォンのアプリ)の鍵をコピーするときは、アプリの管理者の画面の「渡す」で「32 桁を見せる」を選んで 32 桁を出し、
+このコンピューターで `import` します(鍵は引数で受けず、伏せた入力で受けます)。
 
-鍵には役があります。この機械で `register` した鍵は管理者、`import` した鍵は、管理者の符号を添えたときだけ管理者で、
-符号が無ければ利用者です(符号は、スマートフォンの管理者が「管理者として渡す」ときに画面に出す 8 桁です)。
+鍵には役があります。このコンピューターで `register` した鍵は管理者、`import` した鍵は、管理者コードを添えたときだけ管理者で、
+コードが無ければ利用者です(コードは、スマートフォンの管理者が「管理者として渡す」ときに画面に出す 8 桁です)。
 役はアプリの画面の歯止めで、鍵の守りではありません。この命令行は、役にかかわらず鍵があれば Sesame を動かせます。
 """
 from __future__ import annotations
@@ -106,12 +106,12 @@ async def cmd_register(args):
 
 
 async def cmd_import(args):
-    """別の端末(スマートフォンのアプリ)で登録した Sesame の鍵を、この機械の鍵の置き場に取り込む。
+    """別の端末(スマートフォンのアプリ)で登録した Sesame の鍵を、このコンピューターの鍵の置き場に取り込む。
 
-    流れ: 伏せた入力で 32 桁を受ける → 伏せた入力で管理者の符号を受ける(任意。空の Enter なら利用者) → 形を確かめる
-    (32 桁の 16 進でなければ断る。符号は入力があれば 16 進 8 桁) → Sesame を探して BLE でつなぐ → 符号が鍵と合うか確かめる
+    流れ: 伏せた入力で 32 桁を受ける → 伏せた入力で管理者コードを受ける(任意。空の Enter なら利用者) → 形を確かめる
+    (32 桁の 16 進でなければ断る。コードは入力があれば 16 進 8 桁) → Sesame を探して BLE でつなぐ → コードが鍵と合うか確かめる
     (合わなければ断る) → その鍵でログインできることを確かめる → できたときだけ、機種(広告の model_id)と役と一緒に保存する。
-    符号が合ったときだけ管理者で、符号が無ければ利用者として入る。
+    コードが合ったときだけ管理者で、コードが無ければ利用者として入る。
     ログインできなければ何も保存しない。確かめは必ず行う(間違った鍵を置くと、使う場面で初めて動かないと分かるため。飛ばす選択肢は置かない)。
     保存した鍵は鍵の置き場の権限(600)で守られる。鍵を画面にもログにも出さない。
     """
@@ -130,10 +130,10 @@ async def cmd_import(args):
         return 2
     print(fmt_adv(adv))
     if not adv.is_registered:
-        print("この Sesame は未登録です。import は登録済みの Sesame の鍵を写す命令です(未登録なら register を使います)", file=sys.stderr)
+        print("この Sesame は未登録です。import は登録済みの Sesame の鍵をコピーする命令です(未登録なら register を使います)", file=sys.stderr)
         return 1
     if code and not check_admin_code(secret, str(adv.device_uuid), code):
-        print("管理者の符号がこの鍵と合いません。保存しません(符号の無い利用者として入れるときは、符号を空にします)", file=sys.stderr)
+        print("管理者コードがこの鍵と合いません。保存しません(コードの無い利用者として入れるときは、コードを空にします)", file=sys.stderr)
         return 1
     role = ROLE_ADMIN if code else ROLE_USER
     conn = args.backend.Connection(dev, history_tag=args.tag)
@@ -162,8 +162,8 @@ def read_secret() -> str:
 
 
 def read_admin_code() -> str:
-    """管理者の符号を、伏せた入力で任意に受ける(空の Enter なら利用者として取り込む)。試験ではこれを差し替える。"""
-    return getpass("管理者の符号(管理者として写すときだけ。利用者なら空のまま Enter。入力は画面に出ません): ")
+    """管理者コードを、伏せた入力で任意に受ける(空の Enter なら利用者として取り込む)。試験ではこれを差し替える。"""
+    return getpass("管理者コード(管理者としてコピーするときだけ。利用者なら空のまま Enter。入力は画面に出ません): ")
 
 
 async def cmd_action(args):
@@ -215,11 +215,11 @@ def main(argv=None) -> int:
     r = sub.add_parser("register")
     r.add_argument("target")
     r.add_argument("--name", default="")
-    i = sub.add_parser("import", help="別の端末で登録した Sesame の鍵を取り込む(鍵と管理者の符号は伏せた入力で受ける)",
+    i = sub.add_parser("import", help="別の端末で登録した Sesame の鍵を取り込む(鍵と管理者コードは伏せた入力で受ける)",
                        description=cmd_import.__doc__, formatter_class=argparse.RawDescriptionHelpFormatter,
-                       epilog="鍵はコマンドの引数に書かせません(シェルの履歴に残るため)。実行すると 32 桁を尋ね、続けて管理者の符号を尋ねます。"
+                       epilog="鍵はコマンドの引数に書かせません(シェルの履歴に残るため)。実行すると 32 桁を尋ね、続けて管理者コードを尋ねます。"
                               "区切りの空白とハイフンは読み飛ばすので、アプリの「32 桁を見せる」の表示をそのまま貼れます。"
-                              "管理者の符号は、管理者として写すときだけ入れます(利用者なら空の Enter)。")
+                              "管理者コードは、管理者としてコピーするときだけ入れます(利用者なら空の Enter)。")
     i.add_argument("target", help="Sesame の UUID か BLE の住所")
     i.add_argument("--name", default="", help="鍵の置き場に残す名前(既定は機種名)")
     for c in ("status", "lock", "unlock", "toggle", "version"):

@@ -47,7 +47,7 @@ def test_order_by_request(dunit, grant, access):
 
 
 def test_revoked_permission_stays_while_something_is_left(dunit, access, grant):
-    """R-RS-04 20.10: 失効した後でも、管理者の口や物理キーが残っている間は目録に残る。門番の錠は止まるので消える。"""
+    """R-RS-04 20.10: 失効した後でも、管理者のインターフェースや物理キーが残っている間は目録に残る。門番の錠は止まるので消える。"""
     p_dev, e = access(dunit, "v1", account="maint")
     p_door, _, _ = grant(dunit, "v1")
     k = dunit.issue_entity(p_door, PHYSICAL, key_number="K-9", **ADM, at=AT).実体

@@ -4,7 +4,7 @@
 :書ける: 経営者, AI社員
 
 どの層(WWOOF・民泊・貸家・会議室)で、誰が、いつからいつまで、どの錠を使うか。
-受付符号はチェックイン画面のリンクに使う。
+受付コードはチェックイン画面のリンクに使う。
 
 主体:: [varchar(100), not null] 泊まる人・借りる人の氏名
 層:: [varchar(10), in ('WWOOF', '民泊', '貸家', '会議室'), not null]
@@ -12,4 +12,4 @@
 出発:: [datetime, not null]
 錠:: [varchar(40), not null] 対象の錠の識別子
 連絡先:: [varchar(100)]
-受付符号:: [varchar(64), not null]
+受付コード:: [varchar(64), not null]

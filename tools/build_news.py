@@ -133,7 +133,7 @@ def main() -> int:
     </header>
     <main class="index">
         <h1>ニュース</h1>
-        <p class="index-subtitle">扉と鍵に関するニュースです。AI が手引きに沿って元の記事を開いて確かめて書き、人が読んで直した物を載せています。種別の「発表」は当事者が自分で出した物、「報道」は記者が書いた物、「解説」は意見や分析です。詳しくは出典の元の資料をご覧ください。作り方は <a href="https://github.com/aiseed-dev/digitaldoor/tree/main/news">news/</a> にあります。最終更新 {now}</p>
+        <p class="index-subtitle">扉と鍵に関するニュースです。AI がガイドに沿って元の記事を開いて確かめて書き、人が読んで直した物を載せています。種別の「発表」は当事者が自分で出した物、「報道」は記者が書いた物、「解説」は意見や分析です。詳しくは出典の元の資料をご覧ください。作り方は <a href="https://github.com/aiseed-dev/digitaldoor/tree/main/news">news/</a> にあります。最終更新 {now}</p>
         <section class="article-list">{body}
         </section>
     </main>

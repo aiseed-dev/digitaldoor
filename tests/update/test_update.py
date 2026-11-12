@@ -111,7 +111,7 @@ def test_paths_outside_the_release_are_refused(tmp_path):
 
 
 def test_staged_rollout_and_halt(tmp_path):
-    """R-DV-31: 試験導入棟までの版は、試験導入棟と開発には届き、全棟には届かない。止めた版はどの段にも届かない。"""
+    """R-DV-31: 試験導入棟までのバージョンは、試験導入棟と開発には届き、全棟には届かない。止めたバージョンはどの段にも届かない。"""
     for stage, reach in (("開発", True), ("試験導入棟", True), ("全棟", False)):
         d = tmp_path / stage
         d.mkdir()
@@ -126,7 +126,7 @@ def test_staged_rollout_and_halt(tmp_path):
         halted = make_index(d, [{"version": "2.0.1", "stage": "全棟", "halted": True}], serial=2, name="h.json")
         with pytest.raises(U.Refused, match="止め"):
             u.apply(make_pkg(d, "2.0.1"), halted)
-    # 開発の段だけの版は、試験導入棟には届かない
+    # 開発の段だけのバージョンは、試験導入棟には届かない
     d = tmp_path / "x"
     d.mkdir()
     with pytest.raises(U.Refused):
@@ -135,7 +135,7 @@ def test_staged_rollout_and_halt(tmp_path):
 
 
 def test_emergency_route_skips_the_stages_and_is_recorded(tmp_path):
-    """R-DV-39: 緊急の判断がある版は、段を待たずに全棟の機械にも届き、判断(誰が、なぜ)が記録に残る。"""
+    """R-DV-39: 緊急の判断があるバージョンは、段を待たずに全棟のサーバーにも届き、判断(誰が、なぜ)が記録に残る。"""
     u = updater(write_cfg(tmp_path, stage="全棟"))
     idx = make_index(tmp_path, [{"version": "1.0.1", "stage": "開発",
                                  "emergency": {"by": "製造者の品質責任者", "why": "鍵が漏れる不具合"}}])
@@ -146,7 +146,7 @@ def test_emergency_route_skips_the_stages_and_is_recorded(tmp_path):
 
 
 def test_failed_check_rolls_back_and_notifies(tmp_path):
-    """R-DV-32: 当てた後の確かめに失敗したら、直前の版へ自動で戻し、戻したことを記録に残し、知らせる。"""
+    """R-DV-32: 当てた後の確かめに失敗したら、直前のバージョンへ自動で戻し、戻したことを記録に残し、知らせる。"""
     note = tmp_path / "note.txt"
     check = f"{PY} bin/app.py"
     notify = f"{PY} -c \"import sys; open({str(note)!r}, 'w').write(sys.stdin.read())\""
@@ -163,7 +163,7 @@ def test_failed_check_rolls_back_and_notifies(tmp_path):
 
 
 def test_manual_rollback(tmp_path):
-    """R-DV-32: 手で直前の版へ戻せ、記録に残る。"""
+    """R-DV-32: 手で直前のバージョンへ戻せ、記録に残る。"""
     u = updater(write_cfg(tmp_path))
     entries = [{"version": "1.0.0", "stage": "全棟"}, {"version": "1.1.0", "stage": "全棟"}]
     u.apply(make_pkg(tmp_path, "1.0.0"), make_index(tmp_path, entries))
@@ -173,7 +173,7 @@ def test_manual_rollback(tmp_path):
 
 
 def test_an_older_index_cannot_replace_a_newer_one(tmp_path):
-    """R-DV-30 R-DV-31: 前に受けた表より通し番号の小さい表は受けない(止めた版を古い表で戻させない)。"""
+    """R-DV-30 R-DV-31: 前に受けた表より通し番号の小さい表は受けない(止めたバージョンを古い表で戻させない)。"""
     u = updater(write_cfg(tmp_path))
     u.apply(make_pkg(tmp_path, "1.0.0"), make_index(tmp_path, [{"version": "1.0.0", "stage": "全棟"}], serial=5))
     old = make_index(tmp_path, [{"version": "1.1.0", "stage": "全棟"}], serial=4, name="old.json")
@@ -199,7 +199,7 @@ def test_compat_table_warns_and_can_block(tmp_path):
 
 
 def test_usb_media_route_through_the_cli(tmp_path, capsys):
-    """R-DV-33: 網の無い現場で、持ち込んだ包みと表を命令行から当てる。確かめは同じ。"""
+    """R-DV-33: ネットワークの無い現場で、持ち込んだ包みと表を命令行から当てる。確かめは同じ。"""
     cfg = write_cfg(tmp_path)
     media = tmp_path / "usb"; media.mkdir()
     pkg = make_pkg(media, "1.0.0")
@@ -212,7 +212,7 @@ def test_usb_media_route_through_the_cli(tmp_path, capsys):
 
 
 def test_notice_and_log_chain(tmp_path):
-    """R-DV-38: 事前の知らせに版、理由、内容が入る。更新の記録は前の行のハッシュでつながり、書き換えが分かる。"""
+    """R-DV-38: 事前の通知にバージョン、理由、内容が入る。更新の記録は前の行のハッシュでつながり、書き換えが分かる。"""
     u = updater(write_cfg(tmp_path))
     pkg = make_pkg(tmp_path, "1.0.0", reason="規格改定")
     idx = make_index(tmp_path, [{"version": "1.0.0", "stage": "全棟", "support_until": "2099-12-31"}])
@@ -230,7 +230,7 @@ def test_notice_and_log_chain(tmp_path):
 
 
 def test_support_period_and_fleet(tmp_path):
-    """R-DV-40: サポートの終わりを過ぎた版で動いていることを status が示し、fleet が一覧にする。"""
+    """R-DV-40: サポートの終わりを過ぎたバージョンで動いていることを status が示し、fleet が一覧にする。"""
     past = (date.today() - timedelta(days=1)).isoformat()
     u = updater(write_cfg(tmp_path))
     u.apply(make_pkg(tmp_path, "1.0.0"), make_index(tmp_path, [{"version": "1.0.0", "stage": "全棟",

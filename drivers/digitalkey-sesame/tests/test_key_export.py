@@ -32,7 +32,7 @@ def fresh_fakes():
 
 @pytest.fixture(autouse=True)
 def no_admin_code(monkeypatch):
-    """`import` の管理者の符号の尋ね(getpass)は、特に指定しない試験では空(利用者として取り込む)。"""
+    """`import` の管理者コードの尋ね(getpass)は、特に指定しない試験では空(利用者として取り込む)。"""
     monkeypatch.setattr(cli, "read_admin_code", lambda: "")
 
 

@@ -43,7 +43,7 @@ def table_text(pub_path: str, hostkey: str = FP_HOST, extra: str = "") -> str:
 [[machine]]
 host = "box"
 ssh = "box"
-role = "見本の機械"
+role = "見本のサーバー"
 os = "debian-13"
 users = ["aoki"]
 admins = ["aoki"]
@@ -58,7 +58,7 @@ pub = "{pub_path}"
 
 
 def facts_text(**over) -> str:
-    """良い形の写し。over で節を差し替える。"""
+    """良い形のコピー。over で節を差し替える。"""
     sec = {
         "collected": "2026-11-07T08:00:00+0900\nuid=1000",
         "os": 'ID=debian\nVERSION_ID="13"\nPRETTY_NAME="Debian GNU/Linux 13 (trixie)"\nKERNEL=6.12.0\nHOSTNAME=box',
@@ -139,7 +139,7 @@ def test_table_refuses_value_fields_and_bad_names(tmp_path):
         machine.parse_table('[[machine]]\nhost = "a"\n[[machine]]\nhost = "a"\n')
 
 
-# ---- 写しと突き合わせ ----
+# ---- コピーと突き合わせ ----
 
 
 def test_good_machine_has_nothing_to_fix(tbl):
@@ -147,8 +147,8 @@ def test_good_machine_has_nothing_to_fix(tbl):
     assert whats(findings) == []
     seen = whats(findings, fix=False)
     assert ("認証（ssh）", "鍵でだけ入る形。設定のファイルから（Match の中は見ていない）") in seen
-    assert any(w == "写し" and "root でない" in r for w, r in seen)
-    assert any(w == "写し" and "他の人の口のプロセスの名" in r for w, r in seen)
+    assert any(w == "コピー" and "root でない" in r for w, r in seen)
+    assert any(w == "コピー" and "他の人のポートのプロセスの名" in r for w, r in seen)
 
 
 def test_auth_findings(tbl):
@@ -189,11 +189,11 @@ def test_key_findings(tbl):
 
 def test_hostkey_mismatch_and_missing(tbl, tmp_path):
     f = run_check(tbl, facts_text(hostkeys=f"256 {FP_B} (ED25519)"))
-    assert any(w == "機械の鍵" and "表と違う" in r for w, r in whats(f))
+    assert any(w == "ホストの鍵" and "表と違う" in r for w, r in whats(f))
     pub = tmp_path / "a.pub"
     t2 = machine.parse_table(table_text(str(pub)).replace(f'hostkey = "{FP_HOST}"\n', ""))
     f = machine.check(t2, "box", machine.parse_facts(facts_text()), PORTS, {"k-a"}, NOW)
-    assert any(w == "機械の鍵" and f'hostkey = "{FP_HOST}"' in r for w, r in whats(f, fix=False))
+    assert any(w == "ホストの鍵" and f'hostkey = "{FP_HOST}"' in r for w, r in whats(f, fix=False))
 
 
 def test_key_missing_from_inventory_and_table(tbl):
@@ -245,11 +245,11 @@ def test_updates_firewall_ports_time_disk(tbl):
     assert any("一覧が 11 日古い" in r for _w, r in got)
     assert ("更新", "自動の更新が無い（unattended-upgrades）") in got
     assert any(w == "防火壁" for w, _r in got)
-    assert ("口", "表に無い口: 5432（0.0.0.0 postgres）") in got
+    assert ("ポート", "表に無いポート: 5432（0.0.0.0 postgres）") in got
     assert ("時計", "時計が合わせられていない（K-11）") in got
     assert ("サービス", "落ちている: foo.service") in got
-    assert ("盤", "/srv が 91%") in got
-    assert any(w == "盤" and "暗号化されていない" in r for w, r in whats(f, fix=False))
+    assert ("ディスク", "/srv が 91%") in got
+    assert any(w == "ディスク" and "暗号化されていない" in r for w, r in whats(f, fix=False))
     script = machine.fix_script("box", machine.parse_facts(facts_text()), f)
     assert "sudo ufw limit 22/tcp" in script and script.index("ufw limit") < script.index("sudo ufw enable")
 
@@ -257,8 +257,8 @@ def test_updates_firewall_ports_time_disk(tbl):
 def test_old_facts_and_no_ports_table(tbl):
     f = run_check(tbl, facts_text(collected="2026-10-20T08:00:00+0900\nuid=1000"), ports_table=None)
     seen = whats(f, fix=False)
-    assert ("写し", "18 日前の写し（集め直す）") in seen
-    assert ("口", "口の表にこの機械が無い（開いている口 1: 22）") in seen
+    assert ("コピー", "18 日前のコピー（集め直す）") in seen
+    assert ("ポート", "ポートの表にこのサーバーが無い（開いているポート 1: 22）") in seen
 
 
 def test_parse_facts_refuses_other_text():
@@ -266,7 +266,7 @@ def test_parse_facts_refuses_other_text():
         machine.parse_facts("LISTEN 0 128 0.0.0.0:22\n")
 
 
-# ---- 写しを取る ----
+# ---- コピーを取る ----
 
 
 def test_ssh_command_is_keys_only_and_known_hosts_only():
@@ -304,7 +304,7 @@ def test_script_reads_only_and_runs_here():
         assert word not in machine.SCRIPT, word
     for word in ("ufw enable", "ufw allow", "usermod", "passwd -l", "sudo sh", "sudo -"):
         assert word not in machine.SCRIPT, word
-    facts = machine.parse_facts(machine.collect(None))  # この機械で読むだけ
+    facts = machine.parse_facts(machine.collect(None))  # この PC で読むだけ
     assert facts.collected is not None and facts.pairs("os").get("KERNEL")
 
 
@@ -315,7 +315,7 @@ def test_install_files(tbl, tmp_path):
     tbl.machines[0]["lan"] = "192.0.2.0/24"
     files = install.build(tbl, "box", dt.date(2026, 11, 7))
     pre, first, steps = files["preseed.cfg"], files["firstboot.sh"], files["手順.md"]
-    # パスワードも盤も書かない
+    # パスワードもディスクも書かない
     assert "password" not in pre.replace("# No password", "").replace("The password is typed", "").lower()
     assert "partman" not in pre
     assert "d-i passwd/root-login boolean false" in pre and "d-i passwd/username string aoki" in pre
@@ -376,7 +376,7 @@ def test_cli_machine_and_key(tmp_path, capsys, monkeypatch):
     monkeypatch.delenv("KAGI_LOG_KEY_FILE", raising=False)
     monkeypatch.delenv("CREDENTIALS_DIRECTORY", raising=False)
     d = _dir(tmp_path)
-    assert cli.main(["machine", "check", "--dir", str(d), "--host", "box"]) == 2  # 写しが無い
+    assert cli.main(["machine", "check", "--dir", str(d), "--host", "box"]) == 2  # コピーが無い
     assert cli.main(["machine", "check", "--dir", str(d)]) == 1
     assert "見ていない" in capsys.readouterr().out
 
@@ -419,7 +419,7 @@ def test_cli_collect_local_and_log(tmp_path, capsys, monkeypatch):
     monkeypatch.setenv("KAGI_LOG_KEY_FILE", str(keyf))
     assert cli.main(["machine", "collect", "--dir", str(d), "--host", "box", "--local"]) == 0
     assert machine.latest_facts(d, "box") is not None
-    assert not (d / "audit.log").exists()  # この機械で取った時は ssh の鍵を使っていないので足さない
+    assert not (d / "audit.log").exists()  # この PC で取った時は ssh の鍵を使っていないので足さない
 
     def fake(cmd, **kw):
         return subprocess.CompletedProcess(cmd, 0, facts_text(), "")
@@ -435,17 +435,17 @@ def test_app_card_and_report(tmp_path, monkeypatch):
     monkeypatch.delenv("KAGI_LOG_KEY_FILE", raising=False)
     d = _dir(tmp_path)
     c = app.build_cards(d)["machines"]
-    assert c["summary"] == "機械 1 台、直す物のある機械 0、写しの無い機械 1"
+    assert c["summary"] == "サーバー 1 台、直す物のあるサーバー 0、コピーの無いサーバー 1"
     machine.save_facts(
         d, "box", facts_text(sshd="effective=0\nPasswordAuthentication yes", reboot="required")
     )
     c = app.build_cards(d)["machines"]
-    assert "直す物のある機械 1" in c["summary"]
+    assert "直す物のあるサーバー 1" in c["summary"]
     assert c["rows"][0][0] == "box" and "認証（ssh）" in c["rows"][0][4] and "更新" in c["rows"][0][4]
     assert ["box", "更新", "再起動が要る"] in c["detail"]
     assert "sudo systemctl reboot" in app.fix_text(d, "box")
     text = report.build(d)
-    assert "## 機械" in text and "- box: 直す物" in text
+    assert "## サーバー" in text and "- box: 直す物" in text
 
     def fake(cmd, **kw):
         return subprocess.CompletedProcess(cmd, 0, facts_text(), "")
@@ -454,8 +454,8 @@ def test_app_card_and_report(tmp_path, monkeypatch):
     assert p.exists()
     empty = tmp_path / "e"
     empty.mkdir()
-    assert "機械の表が無い" in app.build_cards(empty)["machines"]["summary"]
-    assert "機械の表が無い" in report.build(empty)
+    assert "サーバーの表が無い" in app.build_cards(empty)["machines"]["summary"]
+    assert "サーバーの表が無い" in report.build(empty)
 
 
 # ---- 管理の画面（Flet を使わない所）、サービス、動き ----
@@ -477,7 +477,7 @@ def test_services_and_load(tbl):
     seen = whats(f, fix=False)
     assert ("サービス", "表の 1 件が動いている（sync）") in seen
     assert ("動き", "起動 2026-10-28 14:25:57、load 1.01 1.01 1.00、メモリ 101/123 GB") in seen
-    assert ("盤", "/ 41%") in seen
+    assert ("ディスク", "/ 41%") in seen
     script = machine.fix_script("box", machine.parse_facts(text), f)
     assert "sudo systemctl restart seed" in script and "systemctl status seed" in script
     tbl.machines[0]["user_services"] = ["sd-server"]
@@ -490,8 +490,8 @@ def test_services_and_load(tbl):
 
 def test_port_findings_have_guidance(tbl):
     f = run_check(tbl, facts_text(listen="LISTEN 0 128 0.0.0.0:8080 0.0.0.0:*"))
-    hows = {x.result: x.how for x in f if x.fix and x.what == "口"}
-    assert any("grep ':8080 '" in h[0] for r, h in hows.items() if "表に無い口" in r)
+    hows = {x.result: x.how for x in f if x.fix and x.what == "ポート"}
+    assert any("grep ':8080 '" in h[0] for r, h in hows.items() if "表に無いポート" in r)
     assert all(h for h in hows.values())
 
 
@@ -524,8 +524,8 @@ def test_machine_view_and_local_collect(tmp_path, monkeypatch):
     d.mkdir()
     app.add_machine(d, "box", users="aoki", admins="aoki", local=True)
     v = app.machine_view(d, "box")
-    assert v["facts"] is None and "写しが無い" in v["head"]
-    assert app.machine_view(d, "nope")["error"] == "機械の表に nope が無い"
+    assert v["facts"] is None and "コピーが無い" in v["head"]
+    assert app.machine_view(d, "nope")["error"] == "サーバーの表に nope が無い"
     called = []
 
     def fake(cmd, **kw):
@@ -533,10 +533,10 @@ def test_machine_view_and_local_collect(tmp_path, monkeypatch):
         return subprocess.CompletedProcess(cmd, 0, facts_text(reboot="required"), "")
 
     app.collect_machine(d, "box", runner=fake)
-    assert called == [["sh", "-s"]]  # local = true の機械は ssh を使わない
+    assert called == [["sh", "-s"]]  # local = true のサーバーは ssh を使わない
     assert not (d / "audit.log").exists()
     v = app.machine_view(d, "box")
-    assert v["head"].startswith("機械 box（") and "直す物" in v["head"]
+    assert v["head"].startswith("サーバー box（") and "直す物" in v["head"]
     fix = next(f for f in v["fixes"] if f["result"] == "再起動が要る")
     assert fix["what"] == "更新" and fix["how"] == ["sudo systemctl reboot   # 時を選んで"]
     assert ["OS", "Debian GNU/Linux 13 (trixie)、kernel 6.12.0"] in v["notes"]
@@ -598,15 +598,15 @@ def test_parse_caddy_sites():
 
 def test_door_findings(tbl):
     text = facts_text(caddy=CADDY)
-    # 入口の表にこの機械が無ければ、見るだけで入口を並べる
+    # 入口の表にこのサーバーが無ければ、見るだけで入口を並べる
     f = run_check(tbl, text)
-    assert any(w == "入口" and "入口の表にこの機械が無い（入口 7" in r for w, r in whats(f, fix=False))
+    assert any(w == "入口" and "入口の表にこのサーバーが無い（入口 7" in r for w, r in whats(f, fix=False))
     _doors(
         tbl,
         ("open.example.org", "public", "誰でも"),
         ("app.example.org", "gate", "招待した人"),
         ("admin.example.org", "gate", "係"),
-        (":11444", "gate", "家の機械"),
+        (":11444", "gate", "家のサーバー"),
         ("lan.example.org", "lan", "家の中"),
         ("files.example.org", "lan", "家の中"),
         ("later.example.org", "app", "これから置く"),
@@ -615,7 +615,7 @@ def test_door_findings(tbl):
     fixes = [r for w, r in whats(f) if w == "入口"]
     assert any(r.startswith("表に無い入口: www.example.org") for r in fixes)
     assert any(r.startswith("門が無い: app.example.org") and "招待した人" in r for r in fixes)
-    assert any(r.startswith("網で絞っていない: files.example.org") for r in fixes)
+    assert any(r.startswith("ネットワークで絞っていない: files.example.org") for r in fixes)
     assert "表にあって、Caddy の設定に無い: later.example.org" in fixes
     assert len(fixes) == 4
     notes = [r for w, r in whats(f, fix=False) if w == "入口"]
@@ -631,7 +631,7 @@ def test_door_findings(tbl):
 
 
 def test_script_never_prints_caddy_values(tmp_path):
-    # 写しの文の caddy の所だけを、見本の Caddyfile に当てる。秘密らしい文字列が出ない事
+    # コピーの文の caddy の所だけを、見本の Caddyfile に当てる。秘密らしい文字列が出ない事
     conf = tmp_path / "Caddyfile"
     fake = "not-a-real-hash-Zq81Zq81Zq81Zq81"
     conf.write_text(
@@ -658,7 +658,7 @@ def test_script_never_prints_caddy_values(tmp_path):
 def test_data_paths(tbl, tmp_path):
     f = run_check(tbl, facts_text(data="path /srv/photos 251658240 14% 1503238553\nmissing /mnt/backup"))
     assert ("データ", "置き場が無い: /mnt/backup") in whats(f)
-    assert ("データ", "/srv/photos: 240.0 GB（その盤は 14% 使用、残り 1.4 TB）") in whats(f, fix=False)
+    assert ("データ", "/srv/photos: 240.0 GB（そのディスクは 14% 使用、残り 1.4 TB）") in whats(f, fix=False)
     # 道は引数で渡す（文は変えない）。字を絞る
     assert machine.ssh_command("box", ["/srv/photos"])[-6:] == ["--", "box", "sh", "-s", "--", "/srv/photos"]
     assert machine.ssh_command("box")[-1] == "-s"
@@ -679,9 +679,9 @@ def test_data_paths(tbl, tmp_path):
 def test_encrypt_expected(tbl):
     tbl.machines[0]["encrypt"] = True
     f = run_check(tbl, facts_text(crypt="crypt=0"))
-    assert any(w == "盤" and "encrypt = true" in r for w, r in whats(f))
+    assert any(w == "ディスク" and "encrypt = true" in r for w, r in whats(f))
     f = run_check(tbl, facts_text(crypt="crypt=1"))
-    assert ("盤", "暗号化されている（表の通り）") in whats(f, fix=False) and not whats(f)
+    assert ("ディスク", "暗号化されている（表の通り）") in whats(f, fix=False) and not whats(f)
 
 
 # ---- 連載「Claude と一緒に育てる Debian サーバー」の形（第 5・10・11 章）
@@ -696,7 +696,7 @@ def test_series_shape_firewall_backup_errors(tbl):
     seen = whats(f, fix=False)
     assert any(w == "防火壁" and "fail2ban が動いていない" in r for w, r in seen)
     assert any(w == "控え" and "表に書いていない" in r for w, r in seen)
-    assert ("記録", "この 7 日のエラーの行 12（root でない写しで読めた分）") in seen
+    assert ("記録", "この 7 日のエラーの行 12（root でないコピーで読めた分）") in seen
     # 入りも出も既定は拒否で、fail2ban が動いていれば、防火壁の行は無い
     good = fw.replace("ACCEPT", "DROP").replace("fail2ban=inactive", "fail2ban=active")
     f = run_check(tbl, facts_text(firewall=good))
@@ -836,7 +836,7 @@ def test_changes_since_previous_facts_and_weekly(tmp_path, capsys, monkeypatch):
     assert "増えた 1、消えた 1" in out and "消えた: 更新: 再起動が要る" in out
     assert any("増えた 1、消えた 1" in c for c in app.machine_view(d, "box")["changes"])
 
-    # 週の定例: 写しを取り直し、一枚を書く
+    # 週の定例: コピーを取り直し、一枚を書く
     def fake(cmd, **kw):
         return subprocess.CompletedProcess(cmd, 0, facts_text(collected=stamp), "")
 
@@ -848,7 +848,7 @@ def test_changes_since_previous_facts_and_weekly(tmp_path, capsys, monkeypatch):
     assert cli.main(["weekly", "--dir", str(d), "--tokens", str(ledger)]) == 0
     out = capsys.readouterr().out
     assert (
-        "## 機械" in out
+        "## サーバー" in out
         and "- box: 直す物は無い" in out
         and "消えた: サービス: 落ちている: foo.service" in out
     )
@@ -858,7 +858,7 @@ def test_changes_since_previous_facts_and_weekly(tmp_path, capsys, monkeypatch):
         len(weekly) == 1 and weekly[0].read_text() == out.rstrip("\n") + "\n" or weekly[0].read_text() in out
     )
 
-    # 入れない機械があっても報告は出る
+    # 入れないサーバーがあっても報告は出る
     def down(cmd, **kw):
         return subprocess.CompletedProcess(
             cmd, 255, "", "ssh: connect to host box port 22: No route to host\n"
@@ -866,7 +866,7 @@ def test_changes_since_previous_facts_and_weekly(tmp_path, capsys, monkeypatch):
 
     monkeypatch.setattr(machine.subprocess, "run", down)
     assert cli.main(["weekly", "--dir", str(d), "--tokens", str(ledger)]) == 0
-    assert "写しが取れなかった機械" in capsys.readouterr().out
+    assert "コピーが取れなかったサーバー" in capsys.readouterr().out
 
 
 def test_dir_default_uses_here_when_tables_are_here(tmp_path, monkeypatch):
@@ -943,7 +943,7 @@ def test_confirm_marks_the_eight(tbl):
 
 
 def test_confirm_port_closed_is_not_marked():
-    a = machine.Finding(True, "口", "表にあって開いていない: 8010（seed）")
-    b = machine.Finding(True, "口", "外向きで表と違う: 11435（機械は 0.0.0.0、表は 127.0.0.1）")
+    a = machine.Finding(True, "ポート", "表にあって開いていない: 8010（seed）")
+    b = machine.Finding(True, "ポート", "外向きで表と違う: 11435（サーバーは 0.0.0.0、表は 127.0.0.1）")
     c = machine.Finding(True, "サービス", "動いていない: seed")
     assert [machine._needs_confirm(x) for x in (a, b, c)] == [False, True, False]

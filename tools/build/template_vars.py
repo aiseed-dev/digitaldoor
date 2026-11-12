@@ -164,7 +164,7 @@ BOOK_SUBSERIES = {
         "subtitle_en": "A server at home or on a VPS, your data in your own hands — own your infrastructure with Claude",
         "description_ja": (
             "デスクトップ編の続編。前提は「自宅サーバーかVPSで、データも"
-            "自分で管理する」——本体は自分がrootを持つ機械、データは自分の"
+            "自分で管理する」——本体は自分がrootを持つコンピューター、データは自分の"
             "データベースに。"
             "画面のないDebianをSSHで操り、守りを固め、データベースと自作"
             "アプリを動かし、公開し、データを守る。Claudeと学ぶ方式が最も"

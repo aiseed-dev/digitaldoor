@@ -1,4 +1,4 @@
-"""鍵の受け渡し — 対面で、アプリからアプリへ直接。網(LINE、メール、クラウド)を通さない。
+"""鍵の受け渡し — 対面で、アプリからアプリへ直接。ネットワーク(LINE、メール、クラウド)を通さない。
 
 渡す側のアプリが QR を画面に出し、受け取る側のアプリが自分のカメラで読みます。端末のふつうのカメラアプリや、
 画像を読み取るサービスは通しません。読んだ内容がそちらに残ることがあるためです。読み取りが使えないときは、
@@ -7,16 +7,16 @@
 QR の中身(大文字だけの 1 行。QR の英数字モードに収まり、小さく読みやすい):
 
     DDSESAME1:<機器の UUID>:<鍵の 32 桁>:U
-    DDSESAME1:<機器の UUID>:<鍵の 32 桁>:A:<管理者の符号 8 桁>
+    DDSESAME1:<機器の UUID>:<鍵の 32 桁>:A:<管理者コード 8 桁>
 
-    版(1)、UUID、32 桁、役(U 利用者、A 管理者)、管理者の符号(A のときだけ)。人の名前は入れません。
+    バージョン(1)、UUID、32 桁、役(U 利用者、A 管理者)、管理者コード(A のときだけ)。人の名前は入れません。
 
-管理者の符号は、管理者として渡すときだけ付けます。鍵と UUID から決まる 8 桁(HMAC-SHA256 の先頭)で、
-受け取る側のアプリが形と一致を確かめます。符号の無い鍵は利用者として入り、あとから上がりません。
-これは画面の歯止めで、鍵の守りではありません。符号の作り方はこのリポジトリに公開されていて、32 桁を持つ人が
-別の道具を使えば歯止めは通ります。防げるのは、受け取った人がこのアプリで鍵をさらに写して広げることです。
+管理者コードは、管理者として渡すときだけ付けます。鍵と UUID から決まる 8 桁(HMAC-SHA256 の先頭)で、
+受け取る側のアプリが形と一致を確かめます。コードの無い鍵は利用者として入り、あとから上がりません。
+これは画面の歯止めで、鍵の守りではありません。コードの作り方はこのリポジトリに公開されていて、32 桁を持つ人が
+別の道具を使えば歯止めは通ります。防げるのは、受け取った人がこのアプリで鍵をさらにコピーして広げることです。
 
-受け取る側は、Sesame にログインできたときだけ保存します(R-CM-13)。32 桁と管理者の符号を、ログ、画面の記録欄、
+受け取る側は、Sesame にログインできたときだけ保存します(R-CM-13)。32 桁と管理者コードを、ログ、画面の記録欄、
 例外の文、標準出力に出しません(R-CM-12)。人が見られるのは、渡す側の確かめを済ませた表示だけで、閉じると消えます。
 """
 from __future__ import annotations
@@ -42,21 +42,21 @@ VERSION = 1
 # 細部の選び(作るときに選んだ値。変えるときはここだけ)
 SHOW_SECONDS = 60       # 渡す側が QR や 32 桁を画面に出しておく秒数。過ぎたら自動で閉じて消す
 SCAN_SECONDS = 8        # 受け取る側が、その Sesame の広告を待つ秒数
-CODE_DIGITS = 8         # 管理者の符号の桁数(16 進)。取り違いを見つける長さで、強さを求める物ではない
+CODE_DIGITS = 8         # 管理者コードの桁数(16 進)。取り違いを見つける長さで、強さを求める物ではない
 NAME_MAX = 40           # 控えに残す相手の呼び名の最大文字数
 
 
 class HandoffError(ValueError):
-    """QR や符号の形が違う。文に入力は入れない(鍵がログや画面に残らないように)。"""
+    """QR や管理者コードの形が違う。文に入力は入れない(鍵がログや画面に残らないように)。"""
 
 
 class ReceiveError(Exception):
     """受け取れなかった。何も保存していない。文に鍵は入れない。"""
 
 
-# ---- 管理者の符号 ----
+# ---- 管理者コード ----
 def admin_code(secret: bytes, device_uuid: str) -> str:
-    """管理者として渡すときに付ける符号(16 進 8 桁、大文字)。鍵と UUID から決まる。"""
+    """管理者として渡すときに付けるコード(16 進 8 桁、大文字)。鍵と UUID から決まる。"""
     msg = b"digitaldoor/sesame/admin/v1:" + str(uuidlib.UUID(str(device_uuid))).encode()
     return hmac.new(secret, msg, hashlib.sha256).hexdigest()[:CODE_DIGITS].upper()
 
@@ -66,10 +66,10 @@ def format_admin_code(code: str, group: int = 4) -> str:
 
 
 def normalize_admin_code(text: str) -> str:
-    """人が書き写した符号の区切り(空白、ハイフン)を読み飛ばして大文字にする。形が違えば HandoffError(入力は文に入れない)。"""
+    """人が書き写したコードの区切り(空白、ハイフン)を読み飛ばして大文字にする。形が違えば HandoffError(入力は文に入れない)。"""
     digits = re.sub(r"[\s-]", "", text or "").upper()
     if len(digits) != CODE_DIGITS or not re.fullmatch(r"[0-9A-F]+", digits):
-        raise HandoffError(f"管理者の符号は 16 進 {CODE_DIGITS} 桁です(区切りの空白とハイフンは読み飛ばします)")
+        raise HandoffError(f"管理者コードは 16 進 {CODE_DIGITS} 桁です(区切りの空白とハイフンは読み飛ばします)")
     return digits
 
 
@@ -84,7 +84,7 @@ def check_admin_code(secret: bytes, device_uuid: str, text: str) -> bool:
 # ---- 中身 ----
 @dataclass(frozen=True)
 class Handoff:
-    """読み取った受け渡し。`secret` は repr に出さない。`role` は符号が合ったときだけ管理者。"""
+    """読み取った受け渡し。`secret` は repr に出さない。`role` はコードが合ったときだけ管理者。"""
     device_uuid: str
     secret: bytes = field(repr=False)
     role: str = ROLE_USER
@@ -106,14 +106,14 @@ def encode_handoff(key: DeviceKey, role: str) -> str:
 
 def parse_handoff(text: str) -> Handoff:
     """QR から読んだ 1 行を受け渡しにする。形が違えば HandoffError。
-    役は、管理者の符号が合ったときだけ管理者。符号が無い、または合わないときは利用者で入り、その旨を `notice` に書く。"""
+    役は、管理者コードが合ったときだけ管理者。コードが無い、または合わないときは利用者で入り、その旨を `notice` に書く。"""
     parts = (text or "").strip().split(":")
     head = parts[0] if parts else ""
     if not head.startswith(PREFIX):
         raise HandoffError("鍵の受け渡しの QR ではありません")
     ver = head[len(PREFIX):]
     if ver != str(VERSION):
-        raise HandoffError("この版のアプリでは読めない形の QR です(アプリを新しくしてください)" if ver.isdigit() and len(ver) <= 3
+        raise HandoffError("このバージョンのアプリでは読めない形の QR です(アプリを新しくしてください)" if ver.isdigit() and len(ver) <= 3
                            else "鍵の受け渡しの QR ではありません")
     if len(parts) not in (4, 5):
         raise HandoffError("鍵の受け渡しの QR の形が違います")
@@ -131,17 +131,17 @@ def parse_handoff(text: str) -> Handoff:
         return Handoff(device_uuid, secret, ROLE_USER)
     if len(parts) == 5 and check_admin_code(secret, device_uuid, parts[4]):
         return Handoff(device_uuid, secret, ROLE_ADMIN)
-    return Handoff(device_uuid, secret, ROLE_USER, "管理者の符号が合わないので、利用者として受け取ります")
+    return Handoff(device_uuid, secret, ROLE_USER, "管理者コードが合わないので、利用者として受け取ります")
 
 
 def typed_handoff(device_uuid: str, text: str) -> Handoff:
-    """読み取りが使えないときに、打ち込まれた 32 桁から作る受け渡し。利用者として入る(符号の入口は置かない)。"""
+    """読み取りが使えないときに、打ち込まれた 32 桁から作る受け渡し。利用者として入る(コードの入口は置かない)。"""
     return Handoff(str(uuidlib.UUID(device_uuid)), parse_secret_hex(text), ROLE_USER)
 
 
 def qr_png(payload: str, scale: int = 8) -> bytes:
     """QR の PNG(白地に黒、周りの余白 4 モジュール)。segno は pure Python で、Android と iOS の flet build にそのまま入る。
-    誤り訂正は M。英数字モードに収まるので、版は 4 前後になる(カメラで読みやすい粗さ)。"""
+    誤り訂正は M。英数字モードに収まるので、バージョンは 4 前後になる(カメラで読みやすい粗さ)。"""
     import segno
     out = io.BytesIO()
     segno.make(payload, error="m", micro=False).save(out, kind="png", scale=scale, border=4, dark="#000000", light="#ffffff")
@@ -190,7 +190,7 @@ class HandoffLedger:
 
 # ---- 受け取る ----
 async def find_sesame(backend, device_uuid: str, seconds: float = SCAN_SECONDS):
-    """その UUID の Sesame の広告を、`seconds` 秒まで待つ。見つかれば (広告, 機器の口)、見つからなければ (None, None)。"""
+    """その UUID の Sesame の広告を、`seconds` 秒まで待つ。見つかれば (広告, 機器のインターフェース)、見つからなければ (None, None)。"""
     found: dict = {}
     seen = asyncio.Event()
 

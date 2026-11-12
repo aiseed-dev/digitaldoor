@@ -8,11 +8,11 @@
   digitalkey update index --key maker.key --serial N --entry 1.2.0:全棟[:2027-12-31] [--halt 1.1.0]
                        [--emergency 1.2.1:誰:なぜ] --out index.json     配布の表(index.json と index.sig)を作る
 サーバーの側(設定は update.toml):
-  digitalkey update status [--json]                        今の版、サポート期限、互換の警告
-  digitalkey update apply --package x.ddupd --index index.json   確かめて当てる(網の無い現場は USB から同じ命令)
-  digitalkey update rollback                               直前の版へ戻す
-  digitalkey update notice --package x.ddupd               管理会社へ送る事前の知らせの文
-  digitalkey update fleet <status の JSON を集めた置き場>     サポートの切れた版で動くサーバーの一覧
+  digitalkey update status [--json]                        今のバージョン、サポート期限、互換の警告
+  digitalkey update apply --package x.ddupd --index index.json   確かめて当てる(ネットワークの無い現場は USB から同じ命令)
+  digitalkey update rollback                               直前のバージョンへ戻す
+  digitalkey update notice --package x.ddupd               管理会社へ送る事前の通知の文
+  digitalkey update fleet <status の JSON を集めた置き場>     サポートの切れたバージョンで動くサーバーの一覧
 
 update.toml:
   product = "digitalkey"
@@ -24,7 +24,7 @@ update.toml:
   restart = "systemctl restart digitaldoor-site"    # 付け替えた後に回す命令(省けば回さない)
   notify = "logger -t digitaldoor-update"           # 自動で戻したとき、文を標準入力に渡す命令
   block_on_incompatible = false
-  [components]                           # この機械の部品の版(互換表と照らす)
+  [components]                           # このサーバーの部品のバージョン(互換表と照らす)
   matter-controller = "1.4"
 
 当てる順: 表の署名 → 表の通し番号 → 包みの署名と中身の SHA-256 → 段と止めと緊急 → 互換 → 控え → 展開 →
@@ -263,7 +263,7 @@ class Updater:
             raise Refused("包みの署名が合いません")
         m = json.loads(data)
         if m.get("format") != FORMAT or m.get("product") != self.cfg.product:
-            raise Refused("この機械の物の包みではありません")
+            raise Refused("このサーバーの物の包みではありません")
         names = {"manifest.json", "manifest.sig"} | {f"files/{r}" for r in m["files"]}
         for member in tf.getmembers():
             if member.isdir():
@@ -280,14 +280,14 @@ class Updater:
         return m, tf
 
     def compat_warnings(self, manifest: dict) -> list[str]:
-        """互換表と、この機械の部品の版を照らす(R-DV-36)。"""
+        """互換表と、このサーバーの部品のバージョンを照らす(R-DV-36)。"""
         out = []
         for comp, ok in manifest.get("compat", {}).items():
             have = self.cfg.components.get(comp)
             if have is None:
-                out.append(f"{comp}: この機械の版が設定にありません(合う版: {', '.join(ok)})")
+                out.append(f"{comp}: このサーバーのバージョンが設定にありません(合うバージョン: {', '.join(ok)})")
             elif have not in ok:
-                out.append(f"{comp}: この機械は {have}、合う版は {', '.join(ok)}")
+                out.append(f"{comp}: このサーバーは {have}、合うバージョンは {', '.join(ok)}")
         return out
 
     # ---- 当てる ----
@@ -298,14 +298,14 @@ class Updater:
             m, tf = self.open_package(package)
             entry = _entry(index, m["version"])
             if entry is None:
-                raise Refused(f"配布の表に版 {m['version']} がありません")
+                raise Refused(f"配布の表にバージョン {m['version']} がありません")
             if entry.get("halted"):
-                raise Refused(f"版 {m['version']} は配布を止めています")
+                raise Refused(f"バージョン {m['version']} は配布を止めています")
             emergency = entry.get("emergency") or None
             if not emergency and entry["stage"] not in ACCEPTS[self.cfg.stage]:
-                raise Refused(f"版 {m['version']} はまだ段「{entry['stage']}」までで、この機械(段「{self.cfg.stage}」)には届きません")
+                raise Refused(f"バージョン {m['version']} はまだ段「{entry['stage']}」までで、このサーバー(段「{self.cfg.stage}」)には届きません")
             if m["version"] == self.current():
-                raise Refused(f"版 {m['version']} はもう当たっています")
+                raise Refused(f"バージョン {m['version']} はもう当たっています")
             warnings = self.compat_warnings(m)
             if warnings and self.cfg.block_on_incompatible:
                 raise Refused("互換表と合いません: " + " / ".join(warnings))
@@ -334,18 +334,18 @@ class Updater:
         if ok:
             row = self.log.append(event="適用", **base)
             return {"result": "適用", **base, "log": row["seq"]}
-        # 失敗: 直前の版へ戻す(R-DV-32)
+        # 失敗: 直前のバージョンへ戻す(R-DV-32)
         if before:
             self._switch(self.root / "releases" / before)
             self._restart_and_check()
         row = self.log.append(event="自動で戻した", why=why, **base)
-        self._notify(f"更新 {m['version']} を当てた後の確かめに失敗し、{before or '(前の版なし)'} へ戻しました: {why}")
+        self._notify(f"更新 {m['version']} を当てた後の確かめに失敗し、{before or '(前のバージョンなし)'} へ戻しました: {why}")
         return {"result": "自動で戻した", "why": why, **base, "log": row["seq"]}
 
     def rollback(self) -> dict:
         prev, cur = self.previous(), self.current()
         if not prev:
-            raise Refused("戻す先の版がありません")
+            raise Refused("戻す先のバージョンがありません")
         self._switch(self.root / "releases" / prev)
         ok, why = self._restart_and_check()
         row = self.log.append(event="手で戻した", version=prev, **{"from": cur}, check=ok, why=why)
@@ -394,7 +394,7 @@ class Updater:
         try:
             subprocess.run(shlex.split(self.cfg.notify), input=text, text=True, timeout=30)
         except (OSError, subprocess.TimeoutExpired):
-            pass  # 知らせの不調で戻しを止めない。記録には残っている
+            pass  # 通知の不調で戻しを止めない。記録には残っている
 
 
 def _entry(index: dict | None, version: str) -> dict | None:
@@ -418,23 +418,23 @@ def _rmtree(p: Path) -> None:
 
 
 def notice(manifest: dict, entry: dict | None) -> str:
-    """管理会社へ送る事前の知らせの文(R-DV-38)。送るのは人。"""
-    lines = [f"更新のお知らせ: {manifest['product']} {manifest['version']}",
+    """管理会社へ送る事前の通知の文(R-DV-38)。送るのは人。"""
+    lines = [f"更新の通知: {manifest['product']} {manifest['version']}",
              f"理由: {manifest['reason']}", f"内容: {manifest['summary']}"]
     if entry:
         lines.append(f"配布の段: {entry['stage']}" + ("(緊急の経路)" if entry.get("emergency") else ""))
         if entry.get("emergency"):
             lines.append(f"緊急の判断: {entry['emergency'].get('by', '')} — {entry['emergency'].get('why', '')}")
         if entry.get("support_until"):
-            lines.append(f"この版のサポートの終わり: {entry['support_until']}")
+            lines.append(f"このバージョンのサポートの終わり: {entry['support_until']}")
     if manifest.get("compat"):
-        lines.append("合う部品の版: " + "; ".join(f"{k} {', '.join(v)}" for k, v in manifest["compat"].items()))
+        lines.append("合う部品のバージョン: " + "; ".join(f"{k} {', '.join(v)}" for k, v in manifest["compat"].items()))
     lines.append("錠の解錠の判断は錠と扉のコントローラの中にあり、更新の間も止まりません。")
     return "\n".join(lines)
 
 
 def fleet(directory: Path) -> list[dict]:
-    """status --json を集めた置き場から、サポートの切れた版で動くサーバーを並べる(R-DV-40)。"""
+    """status --json を集めた置き場から、サポートの切れたバージョンで動くサーバーを並べる(R-DV-40)。"""
     out = []
     for p in sorted(Path(directory).glob("*.json")):
         try:
@@ -460,18 +460,18 @@ def main(argv=None) -> int:
     p.add_argument("--version", required=True); p.add_argument("--reason", required=True, choices=REASONS)
     p.add_argument("--summary", required=True); p.add_argument("--from", dest="source", required=True)
     p.add_argument("--out", required=True)
-    p.add_argument("--compat", action="append", default=[], metavar="部品=版,版", help="互換表の一行。何度でも")
+    p.add_argument("--compat", action="append", default=[], metavar="部品=バージョン,バージョン", help="互換表の一行。何度でも")
     i = sub.add_parser("index", help="配布の表(index.json と index.sig)を作る")
     i.add_argument("--key", required=True); i.add_argument("--serial", required=True, type=int)
-    i.add_argument("--entry", action="append", default=[], metavar="版:段[:サポートの終わり]")
-    i.add_argument("--halt", action="append", default=[], metavar="版")
-    i.add_argument("--emergency", action="append", default=[], metavar="版:誰:なぜ")
+    i.add_argument("--entry", action="append", default=[], metavar="バージョン:段[:サポートの終わり]")
+    i.add_argument("--halt", action="append", default=[], metavar="バージョン")
+    i.add_argument("--emergency", action="append", default=[], metavar="バージョン:誰:なぜ")
     i.add_argument("--out", required=True)
-    sub.add_parser("status", help="今の版とサポート期限").add_argument("--json", action="store_true")
-    a = sub.add_parser("apply", help="確かめてから当てる。失敗したら直前の版へ自動で戻す")
+    sub.add_parser("status", help="今のバージョンとサポート期限").add_argument("--json", action="store_true")
+    a = sub.add_parser("apply", help="確かめてから当てる。失敗したら直前のバージョンへ自動で戻す")
     a.add_argument("--package", required=True); a.add_argument("--index", required=True)
-    sub.add_parser("rollback", help="直前の版へ戻す")
-    n = sub.add_parser("notice", help="管理会社へ送る事前の知らせの文を出す")
+    sub.add_parser("rollback", help="直前のバージョンへ戻す")
+    n = sub.add_parser("notice", help="管理会社へ送る事前の通知の文を出す")
     n.add_argument("--package", required=True); n.add_argument("--index")
     f = sub.add_parser("fleet", help="status --json を集めた置き場から、サポートの切れたサーバーを並べる")
     f.add_argument("dir")
@@ -520,7 +520,7 @@ def main(argv=None) -> int:
         if args.cmd == "status":
             s = u.status()
             print(json.dumps(s, ensure_ascii=False) if args.json else
-                  f"版 {s['version'] or '(なし)'}  段 {s['stage']}  サポートの終わり {s['support_until'] or '?'}"
+                  f"バージョン {s['version'] or '(なし)'}  段 {s['stage']}  サポートの終わり {s['support_until'] or '?'}"
                   + ("  ※サポート期限切れ" if s["out_of_support"] else ""))
             return 0
         if args.cmd == "apply":

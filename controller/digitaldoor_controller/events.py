@@ -2,8 +2,8 @@
 
 - `GET /events?since=N` を WebSocket に切り替え、連番が N より後の記録を一件ずつ、`/audit` の一件と同じ欄の JSON で送る
 - 追いついた後は、増えた記録を順に送る。抜かさず、まとめず、同じ物を二度送らない。つなぎ直しは受け取った最後の連番で
-- 判断の排他(lock)の中では記録の写しを取るだけにし、送るのは排他の外で行う。受け手が遅くても判断は止まらない
-- 受け手からの文は、ping に pong、close に close を返して終える。ほかは読み捨てる(この口から命令は受けない)
+- 判断の排他(lock)の中では記録のコピーを取るだけにし、送るのは排他の外で行う。受け手が遅くても判断は止まらない
+- 受け手からの文は、ping に pong、close に close を返して終える。ほかは読み捨てる(このインターフェースから命令は受けない)
 """
 from __future__ import annotations
 
@@ -103,7 +103,7 @@ def stream(sock: socket.socket, audit, lock: threading.Lock, since: int) -> None
     """切れるか close を受けるまで、記録を送り続ける。"""
     sent = max(0, since)
     while True:
-        with lock:  # 排他の中では写しを取るだけ(記録は追記だけなので、一件ずつは変わらない)
+        with lock:  # 排他の中ではコピーを取るだけ(記録は追記だけなので、一件ずつは変わらない)
             rows = audit.entries[sent:]
         for e in rows:
             sock.sendall(frame(OP_TEXT, json.dumps(asdict(e), ensure_ascii=False).encode("utf-8")))

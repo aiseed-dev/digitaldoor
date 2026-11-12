@@ -30,7 +30,7 @@ OUT = SITE / "html" / "check" / "index.html"
 SITE_URL = "https://door.aiseed.dev"
 DESCRIPTION = ("会社の人が、Claude を使って自社のシステムを確かめ始めるための手順。"
                "Anthropic の Cyber Verification Program の Defense Access の申し込み、運用の決まり、"
-               "AI に渡す物と渡さない物、業者への知らせ、最初の一つの確かめ方。")
+               "AI に渡す物と渡さない物、業者への通知、最初の一つの確かめ方。")
 
 STYLE = """        .check h2 { scroll-margin-top: 1rem; }
         .check .toc { background: var(--paper-deep); border: 1px solid var(--rule); border-radius: 4px; padding: 0.8rem 1.2rem; margin: 1.5rem 0 2rem; }

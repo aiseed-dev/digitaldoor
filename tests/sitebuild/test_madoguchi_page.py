@@ -133,7 +133,7 @@ def test_contact_readable_without_script():
 
 
 def test_contact_status_regions():
-    """状態の知らせは role="status" の要素に入れる(5.6)。"""
+    """状態の通知は role="status" の要素に入れる(5.6)。"""
     text = _read(CONTACT)
     assert re.search(r'id="madoguchi-status"[^>]*role="status"', text)
     assert re.search(r'id="madoguchi-signin-status"[^>]*role="status"', text)

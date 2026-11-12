@@ -1,6 +1,6 @@
 """錠のドライバで動く接点(digitalkey/contacts.py)の試験。
 
-扉のコントローラ(digitaldoor_controller)の判断が、接点の口だけを通して錠のドライバを動かすこと。
+扉のコントローラ(digitaldoor_controller)の判断が、接点のインターフェースだけを通して錠のドライバを動かすこと。
 """
 import asyncio
 
@@ -41,7 +41,7 @@ def ctl_with(contacts, **cfg):
 
 
 def test_same_shape_as_the_simulated_contacts():
-    """R-CT-03: 接点の口(fire、mains、door_open、bolt_out、set_lock)を SimContacts と同じ形で満たす。"""
+    """R-CT-03: 接点のインターフェース(fire、mains、door_open、bolt_out、set_lock)を SimContacts と同じ形で満たす。"""
     c = LockDriverContacts(DummyLock("genkan"))
     for name in CONTACT_NAMES:
         assert callable(getattr(c, name)) and callable(getattr(SimContacts(), name))

@@ -3,10 +3,10 @@ requires = ["setuptools>=77"]  # license を SPDX の文字列で書くため
 build-backend = "setuptools.build_meta"
 
 [project]
-# 扉の鍵(digitalkey)ではなく、サーバーと業務システムの秘密の在庫・口・記録を見る道具
+# 扉の鍵(digitalkey)ではなく、サーバーと業務システムの秘密の在庫・ポート・記録を見る道具
 name = "digitaldoor-kagi"
 version = "0.0.1"
-description = "kagi — サーバーと業務システムの秘密の在庫表、口の表、追記だけの記録、Linux の機械の今の形を、表と突き合わせる道具。鍵の値を読まず、機械を変えない"
+description = "kagi — サーバーと業務システムの秘密の在庫表、ポートの表、追記だけの記録、Linux のサーバーの今の形を、表と突き合わせる道具。鍵の値を読まず、サーバーを変えない"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "AGPL-3.0-or-later"

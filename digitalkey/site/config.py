@@ -1,6 +1,6 @@
 """site.toml の読み書き。
 
-トークンは SHA-256(`token_sha256`)で書き、トークンそのものは設定に置かない(使い方.md「事業所サーバーの口とトークン」)。
+トークンは SHA-256(`token_sha256`)で書き、トークンそのものは設定に置かない(使い方.md「事業所サーバーのインターフェースとトークン」)。
 前からの設定の `token`(そのままの値)も読む。読んだ後は、どちらも SHA-256 だけを持つ。
 """
 from __future__ import annotations
@@ -114,7 +114,7 @@ def sample_with_tokens(name: str = "本社", vault: str = "vault") -> tuple[str,
 
 
 def sample(name: str = "本社", vault: str = "vault") -> str:
-    """初期設定の雛形(トークンは捨てる。手引きの見本用)。"""
+    """初期設定の雛形(トークンは捨てる。ガイドの見本用)。"""
     return sample_with_tokens(name, vault)[0]
 
 
@@ -137,7 +137,7 @@ two_person = 1              # 2 にすると二人同時認証
 autolock = 5.0              # 解錠から自動施錠までの秒
 
 # 扉が自分で確かめる署名つき資格情報。有効の終わりは、鍵の終わりと「作った時刻 + max_hours」の早い方。
-# 網が届かない扉で失効が効くまでの最長の時間になる(R-AC-14)。値は管理者が扉ごとの事情で決める
+# ネットワークが届かない扉で失効が効くまでの最長の時間になる(R-AC-14)。値は管理者が扉ごとの事情で決める
 [credentials]
 max_hours = 24
 

@@ -6,7 +6,7 @@ Flet が JPEG に符号化して渡す)を `QrReader` に渡して、QR の文�
 
 カメラの使用許可は、カメラを初期化するときに端末が尋ねる。許可されないと初期化が例外になり、`start()` は False を返す
 (アプリは 32 桁を打ち込む道を案内する)。flet_camera は使うときまで import しない(PC では要らない)。
-Android と iOS の実機で読めることは、まだ確かめていない(差し替え口のため、PC と疑似の試験は fake.py の FakeCameraScanner で回る)。
+Android と iOS の実機で読めることは、まだ確かめていない(差し替えのインターフェースのため、PC と疑似の試験は fake.py の FakeCameraScanner で回る)。
 """
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ log = logging.getLogger(__name__)
 
 
 class QrScanner(Protocol):
-    """カメラで QR を読む口。アプリはこの口だけを知る。"""
+    """カメラで QR を読むインターフェース。アプリはこのインターフェースだけを知る。"""
 
     def build(self):
         """プレビューの部品(Flet のコントロール)。ダイアログに入れる。"""

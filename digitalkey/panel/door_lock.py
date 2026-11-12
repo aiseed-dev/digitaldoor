@@ -5,9 +5,9 @@
 作った物(Matter 1.3 の水準。クラスタの rev 7、機器種別の rev 3):
 - 必須の属性 LockState(0x0000)、LockType(0x0001)、ActuatorEnabled(0x0002)、OperatingMode(0x0025)、
   SupportedOperatingModes(0x0026。通常だけ)と、扉の開閉の DoorState(0x0003。機能 DPS)
-- 命令 LockDoor(0x00)と UnlockDoor(0x01)。扉のコントローラの HTTP の口(POST /lock、/unlock)に渡し、
-  扉が受けたら LockState を写す。扉が拒んだら(火災中の施錠など)属性は変えない。判断は扉が持つ
-- `mirror` で扉の状態(locked、door_open)を LockState と DoorState に写す。盤が扉の /state を見て呼ぶ
+- 命令 LockDoor(0x00)と UnlockDoor(0x01)。扉のコントローラの HTTP のインターフェース(POST /lock、/unlock)に渡し、
+  扉が受けたら LockState に反映する。扉が拒んだら(火災中の施錠など)属性は変えない。判断は扉が持つ
+- `mirror` で扉の状態(locked、door_open)を LockState と DoorState に反映する。パネルが扉の /state を見て呼ぶ
 
 作っていない物と、その訳:
 - 必須のイベント(DoorLockAlarm、LockOperation、LockOperationError)と DPS の DoorStateChange。CircuitMatter 0.4.1 に
@@ -122,7 +122,7 @@ class DoorLock(data_model.Cluster):
 
 
 class DoorLockDevice(simple_device.SimpleDevice):
-    """Matter の Door Lock 機器。施錠と解錠の依頼を外(door)に渡し、返ってきた状態を属性に写す。"""
+    """Matter の Door Lock 機器。施錠と解錠の依頼を外(door)に渡し、返ってきた状態を属性に反映する。"""
 
     DEVICE_TYPE_ID = 0x000A
     REVISION = 3

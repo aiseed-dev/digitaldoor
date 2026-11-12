@@ -1,11 +1,11 @@
-"""機械の表（machines.toml）と、機械の写し（facts）を突き合わせる。設計書 §3.4。
+"""サーバーの表（machines.toml）と、サーバーのコピー（facts）を突き合わせる。設計書 §3.4。
 
-Linux の機械を「見る」側。入れる側は install.py。K-05、K-07、K-11、K-12、K-13、K-14。
+Linux のサーバーを「見る」側。入れる側は install.py。K-05、K-07、K-11、K-12、K-13、K-14。
 
-- 機械の表は人が書く: 機械、役、入れてよい人、管理者、入れてよい鍵（公開鍵の指紋）、機械の鍵の指紋。
-- 写しは、読むだけの決まった sh の文（SCRIPT）を機械で走らせた出力。何も変えず、秘密の値を出さない。
-  人が走らせてファイルで渡すか、`collect` が人の ssh で走らせる（鍵でだけ、機械の鍵は確かめ済みの物だけ）。
-- kagi は機械を変えない。直す手は sh の文として出すだけで、走らせるのは人（sudo は人の手）。
+- サーバーの表は人が書く: サーバー、役、入れてよい人、管理者、入れてよい鍵（公開鍵の指紋）、ホストの鍵の指紋。
+- コピーは、読むだけの決まった sh の文（SCRIPT）をサーバーで走らせた出力。何も変えず、秘密の値を出さない。
+  人が走らせてファイルで渡すか、`collect` が人の ssh で走らせる（鍵でだけ、ホストの鍵は確かめ済みの物だけ）。
+- kagi はサーバーを変えない。直す手は sh の文として出すだけで、走らせるのは人（sudo は人の手）。
 - 鍵は公開鍵と指紋だけを読む。秘密鍵のファイルは読まずに拒む。
 """
 
@@ -31,10 +31,10 @@ HEAD = "# kagi-facts 1"
 OLD_FACTS_DAYS = 7
 OLD_LISTS_DAYS = 7
 DISK_FULL = 85  # %
-NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,62}$")  # 機械の名、ssh の名（先頭に - を許さない）
+NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,62}$")  # サーバーの名、ssh の名（先頭に - を許さない）
 USER = re.compile(r"^[a-z_][a-z0-9_-]{0,31}$")
 # 入口の守り方。public: 誰でも（認証無しが正しい）。app: 裏のアプリが確かめる（招待コード、ログイン）。
-# gate: 前の Caddy が確かめる（basic_auth、forward_auth、Bearer の照合、mTLS）。lan: 網で絞る（remote_ip）。
+# gate: 前の Caddy が確かめる（basic_auth、forward_auth、Bearer の照合、mTLS）。lan: ネットワークで絞る（remote_ip）。
 DOOR_AUTH = ("public", "app", "gate", "lan")
 PATH = re.compile(r"^/[A-Za-z0-9._/@+-]{1,200}$")  # データの置き場。ssh の向こうの sh に渡すので字を絞る
 UNIT = re.compile(r"^[A-Za-z0-9][A-Za-z0-9@._:-]{0,127}$")
@@ -51,9 +51,9 @@ KEY_TYPES = (
 )
 FORBIDDEN_FIELDS = ("value", "private", "password", "passphrase")  # 表に書かせない欄（K-13）
 
-# 機械で走らせる文。読むだけ。POSIX sh。root でなくても走り、root なら見える物が増える。
+# サーバーで走らせる文。読むだけ。POSIX sh。root でなくても走り、root なら見える物が増える。
 SCRIPT = r"""#!/bin/sh
-# kagi の機械の写し（kagi/docs/設計書.md §3.4）。読むだけで、何も変えない。秘密の値は出さない。
+# kagi のサーバーのコピー（kagi/docs/設計書.md §3.4）。読むだけで、何も変えない。秘密の値は出さない。
 LC_ALL=C
 export LC_ALL
 sec() { printf '\n## kagi %s\n' "$1"; }
@@ -252,7 +252,7 @@ def read_pub(path: Path) -> list[tuple[str, KeyInfo]]:
     return out
 
 
-# ---- 機械の表 ----
+# ---- サーバーの表 ----
 
 
 @dataclass
@@ -265,7 +265,7 @@ class Table:
         for m in self.machines:
             if m["host"] == host:
                 return m
-        raise Refused(f"機械の表に {host} が無い（{FILENAME} の [[machine]]）")
+        raise Refused(f"サーバーの表に {host} が無い（{FILENAME} の [[machine]]）")
 
     def key(self, kid: str) -> dict | None:
         return next((k for k in self.keys if k.get("id") == kid), None)
@@ -280,7 +280,7 @@ class Table:
 def _names(row: dict, key: str, what: str) -> list[str]:
     v = row.get(key, [])
     if not isinstance(v, list) or not all(isinstance(x, str) for x in v):
-        raise Refused(f"機械の表の {what} の {key} は名の並びで書く")
+        raise Refused(f"サーバーの表の {what} の {key} は名の並びで書く")
     return v
 
 
@@ -289,51 +289,51 @@ def parse_table(text: str, where: str = FILENAME) -> Table:
         data = tomllib.loads(text)
     except tomllib.TOMLDecodeError as e:
         m = re.search(r"line \d+, column \d+", str(e))
-        raise Refused(f"機械の表が TOML として読めない: {where} ({m.group(0) if m else 'TOML'})") from None
+        raise Refused(f"サーバーの表が TOML として読めない: {where} ({m.group(0) if m else 'TOML'})") from None
     machines, keys, doors = data.get("machine", []), data.get("key", []), data.get("door", [])
     for rows, name in ((machines, "machine"), (keys, "key"), (doors, "door")):
         if not isinstance(rows, list) or not all(isinstance(r, dict) for r in rows):
-            raise Refused(f"機械の表の {name} は [[{name}]] の並びで書く")
+            raise Refused(f"サーバーの表の {name} は [[{name}]] の並びで書く")
         for r in rows:
             bad = [k for k in r if str(k).lower() in FORBIDDEN_FIELDS]
             if bad:
-                raise Refused(f"機械の表に {bad[0]} の欄がある。値は書かない（K-13）。欄を消してから走らせる")
+                raise Refused(f"サーバーの表に {bad[0]} の欄がある。値は書かない（K-13）。欄を消してから走らせる")
     seen: set[str] = set()
     for i, m in enumerate(machines, 1):
         host = m.get("host")
         if not isinstance(host, str) or not NAME.match(host):
-            raise Refused(f"機械の表の {i} 件目の host が名として読めない（英数字と . _ -）")
+            raise Refused(f"サーバーの表の {i} 件目の host が名として読めない（英数字と . _ -）")
         if host in seen:
-            raise Refused(f"機械の表の host が重複: {host}")
+            raise Refused(f"サーバーの表の host が重複: {host}")
         seen.add(host)
         if not NAME.match(str(m.get("ssh", host))):
-            raise Refused(f"機械の表の {host} の ssh が名として読めない（~/.ssh/config の名を書く）")
+            raise Refused(f"サーバーの表の {host} の ssh が名として読めない（~/.ssh/config の名を書く）")
         for k in ("users", "admins"):
             for u in _names(m, k, host):
                 if not USER.match(u):
-                    raise Refused(f"機械の表の {host} の {k} に、アカウントの名として読めない物がある")
+                    raise Refused(f"サーバーの表の {host} の {k} に、アカウントの名として読めない物がある")
         _names(m, "keys", host)
         for path in _names(m, "data", host):
             if not PATH.match(path) or ".." in path:
-                raise Refused(f"機械の表の {host} の data は / から始まる道で書く（英数字と . _ / @ + -）")
+                raise Refused(f"サーバーの表の {host} の data は / から始まる道で書く（英数字と . _ / @ + -）")
         for k in ("services", "user_services", "timers"):
             for u in _names(m, k, host):
                 if not UNIT.match(u):
-                    raise Refused(f"機械の表の {host} の {k} に、サービスの名として読めない物がある")
+                    raise Refused(f"サーバーの表の {host} の {k} に、サービスの名として読めない物がある")
         if "hostkey" in m and not (isinstance(m["hostkey"], str) and FP.match(m["hostkey"])):
-            raise Refused(f"機械の表の {host} の hostkey は指紋（SHA256:…）で書く")
+            raise Refused(f"サーバーの表の {host} の hostkey は指紋（SHA256:…）で書く")
     seen = set()
     for i, k in enumerate(keys, 1):
         kid = k.get("id")
         if not isinstance(kid, str) or not kid:
-            raise Refused(f"機械の表の鍵の {i} 件目に id が無い")
+            raise Refused(f"サーバーの表の鍵の {i} 件目に id が無い")
         if kid in seen:
-            raise Refused(f"機械の表の鍵の id が重複: {kid}")
+            raise Refused(f"サーバーの表の鍵の id が重複: {kid}")
         seen.add(kid)
         if "fingerprint" in k and not (isinstance(k["fingerprint"], str) and FP.match(k["fingerprint"])):
-            raise Refused(f"機械の表の鍵 {kid} の fingerprint は指紋（SHA256:…）で書く")
+            raise Refused(f"サーバーの表の鍵 {kid} の fingerprint は指紋（SHA256:…）で書く")
         if "fingerprint" not in k and "pub" not in k:
-            raise Refused(f"機械の表の鍵 {kid} に fingerprint も pub（公開鍵のファイル）も無い")
+            raise Refused(f"サーバーの表の鍵 {kid} に fingerprint も pub（公開鍵のファイル）も無い")
     for i, d in enumerate(doors, 1):
         if not isinstance(d.get("host"), str) or not isinstance(d.get("site"), str) or not d.get("site"):
             raise Refused(f"入口の表の {i} 件目に host か site が無い")
@@ -346,7 +346,7 @@ def load(path: Path) -> Table:
     try:
         text = Path(path).read_text("utf-8")
     except (OSError, UnicodeDecodeError) as e:
-        raise Refused(f"機械の表を読めない: {path} ({type(e).__name__})。無ければ kagi init") from None
+        raise Refused(f"サーバーの表を読めない: {path} ({type(e).__name__})。無ければ kagi init") from None
     return parse_table(text, str(path))
 
 
@@ -372,7 +372,7 @@ def key_fingerprints(table: Table) -> tuple[dict[str, str], list[str]]:
     return fps, problems
 
 
-# ---- 写し ----
+# ---- コピー ----
 
 
 @dataclass
@@ -407,7 +407,7 @@ class Facts:
 
 def parse_facts(text: str) -> Facts:
     if not text.lstrip().startswith(HEAD):
-        raise Refused("機械の写しとして読めない（kagi machine script の出力を渡す）")
+        raise Refused("サーバーのコピーとして読めない（kagi machine script の出力を渡す）")
     facts = Facts()
     cur: list[str] | None = None
     for line in text.splitlines():
@@ -422,7 +422,7 @@ def load_facts(path: Path) -> Facts:
     try:
         return parse_facts(Path(path).read_text("utf-8", errors="replace"))
     except OSError as e:
-        raise Refused(f"機械の写しを読めない: {path} ({type(e).__name__})") from None
+        raise Refused(f"サーバーのコピーを読めない: {path} ({type(e).__name__})") from None
 
 
 def latest_facts(d: Path, host: str) -> Path | None:
@@ -431,7 +431,7 @@ def latest_facts(d: Path, host: str) -> Path | None:
 
 
 def ssh_command(alias: str, paths: list[str] | None = None) -> list[str]:
-    """人の ssh で、鍵でだけ、確かめ済みの機械にだけ入る。尋ねられる形（パスワード、初めての機械）は全部落ちる。"""
+    """人の ssh で、鍵でだけ、確かめ済みのサーバーにだけ入る。尋ねられる形（パスワード、初めてのサーバー）は全部落ちる。"""
     if not NAME.match(alias):
         raise Refused("ssh の名として読めない")
     return [
@@ -455,9 +455,9 @@ def _args(paths: list[str] | None) -> list[str]:
 
 
 def collect(alias: str | None, runner=None, timeout: int = 90, paths: list[str] | None = None) -> str:
-    """写しを取る。alias が None ならこの機械で。機械には SCRIPT を標準入力で渡すだけ（置かない、変えない）。
+    """コピーを取る。alias が None ならこの PC で。サーバーには SCRIPT を標準入力で渡すだけ（置かない、変えない）。
 
-    paths は大きさを測るデータの置き場（機械の表の data）。測るのに時間が掛かるので待つ時間を延ばす。
+    paths は大きさを測るデータの置き場（サーバーの表の data）。測るのに時間が掛かるので待つ時間を延ばす。
     """
     cmd = ["sh", "-s", *_args(paths)] if alias is None else ssh_command(alias, paths)
     if paths:
@@ -471,11 +471,11 @@ def collect(alias: str | None, runner=None, timeout: int = 90, paths: list[str] 
     if not r.stdout.lstrip().startswith(HEAD):
         why = (r.stderr or "").strip().splitlines()[-1:] or ["出力が無い"]
         hint = (
-            "。鍵で入れる事と、機械の鍵を自分で確かめて known_hosts に入れた事を見る（skills/kagi/04-機械を見る.md）"
+            "。鍵で入れる事と、ホストの鍵を自分で確かめて known_hosts に入れた事を見る（skills/kagi/04-サーバーを見る.md）"
             if alias is not None
             else ""
         )
-        raise Refused(f"写しが取れなかった（{why[0][:200]}）{hint}")
+        raise Refused(f"コピーが取れなかった（{why[0][:200]}）{hint}")
     return r.stdout
 
 
@@ -485,7 +485,7 @@ def save_facts(d: Path, host: str, text: str, now: dt.datetime | None = None) ->
     out.mkdir(parents=True, exist_ok=True)
     p = out / f"{host}-{now.strftime('%Y%m%d-%H%M%S')}.txt"
     p.write_text(text, "utf-8")
-    p.chmod(0o600)  # アカウントの名と口が入る
+    p.chmod(0o600)  # アカウントの名とポートが入る
     return p
 
 
@@ -508,40 +508,40 @@ class Finding:
         return self.how + ([*STAGE2_HEAD, *self.later] if self.later else [])
 
 
-# 連載 2-02 の「重要な仕事は人が確認する」八つに当たる直す物の見出し（認証、鍵、権限、口を開ける・閉じる）。
+# 連載 2-02 の「重要な仕事は人が確認する」八つに当たる直す物の見出し（認証、鍵、権限、ポートを開ける・閉じる）。
 # 当たらない物: 更新（自動の更新を入れるのは新しいソフトだが、apt の unattended-upgrades で連載 第 5 章が勧める
-# 形そのものなので、こちら）、時計、サービス、盤、控え、データ、鍵の表（机の側の表を書く物）。
+# 形そのものなので、こちら）、時計、サービス、ディスク、控え、データ、鍵の表（机の側の表を書く物）。
 CONFIRM_WHAT = frozenset(
-    {"認証（ssh）", "機械の鍵", "入っている鍵", "アカウント", "管理者", "防火壁", "口", "入口"}
+    {"認証（ssh）", "ホストの鍵", "入っている鍵", "アカウント", "管理者", "防火壁", "ポート", "入口"}
 )
 
 
 def _needs_confirm(f: Finding) -> bool:
     if not f.fix or f.what not in CONFIRM_WHAT:
         return False
-    # 表にあって開いていない口は、サービスを起こす側の物（口を開ける手ではない）
-    return not (f.what == "口" and f.result.startswith("表にあって開いていない"))
+    # 表にあって開いていないポートは、サービスを起こす側の物（ポートを開ける手ではない）
+    return not (f.what == "ポート" and f.result.startswith("表にあって開いていない"))
 
 
-# 防火壁で出る向きを閉じる時の手。手元の口（32768 以上）から出ている繋がりの、相手の口を数える
+# 防火壁で出る向きを閉じる時の手。手元のポート（32768 以上）から出ている繋がりの、相手のポートを数える
 OUT_PORTS_NOW = (
     'ss -Htn state established | awk \'{n=split($3,l,":"); m=split($4,r,":"); if (l[n]+0>=32768) print r[m]}\''
     " | sort -n | uniq -c | sort -rn"
 )
 UFW_ALLOW_NOTE = (
     "# 2. 要る通信を許可する。DNS(53)、時刻合わせ(123)、Web(80,443)。"
-    "1 で出た口のうち要る物も足す（ssh と git の push は 22: sudo ufw allow out 22/tcp）"
+    "1 で出たポートのうち要る物も足す（ssh と git の push は 22: sudo ufw allow out 22/tcp）"
 )
 UFW_UNDO_TIMER = "sudo systemd-run --unit=ufw-modosu --on-active=10min /usr/sbin/ufw default allow outgoing"
 UFW_UNDO_CANCEL = "sudo systemctl stop ufw-modosu.timer"
 # 外へ出る通信を閉じる手。閉じると更新や名前解決が止まりうるので、入る向きの後に、要る外への道を確かめてから
 OUT_CLOSE = [
-    "# 1. 先に、この機械が今、外のどの口へ通信しているかを数える（sudo は要らない）",
+    "# 1. 先に、このサーバーが今、外部のどのポートへ通信しているかを数える（sudo は要らない）",
     OUT_PORTS_NOW,
     UFW_ALLOW_NOTE,
-    "# 67/udp は網の番地をもらい直す要求（DHCP）。無いと番地が切れた時に網から落ちる",
+    "# 67/udp はネットワークの番地をもらい直す要求（DHCP）。無いと番地が切れた時にネットワークから落ちる",
     "sudo ufw allow out 53 && sudo ufw allow out 123/udp && sudo ufw allow out 80,443/tcp && sudo ufw allow out 67/udp",
-    "# 家の網の機械（NAS、データベースの機械）へ出るなら: sudo ufw allow out to <LAN>",
+    "# 家のネットワークの機器（NAS、データベースのサーバー）へ出るなら: sudo ufw allow out to <LAN>",
     "# 3. 10 分後に自動で外向き許可に戻すタイマーを仕掛ける（許可し忘れで何かが止まっても、待てば戻る）",
     UFW_UNDO_TIMER,
     "# 4. 外向きの通信を原則禁止にする",
@@ -569,7 +569,7 @@ NOLOGIN = ("nologin", "/false", "/sync")
 
 
 def _sshd(facts: Facts) -> tuple[dict[str, str], bool, list[str]]:
-    """sshd の設定（最初に出た値が効く）。root の写しなら実際に効いている値。"""
+    """sshd の設定（最初に出た値が効く）。root のコピーなら実際に効いている値。"""
     vals: dict[str, str] = {}
     effective, unreadable = False, []
     for line in facts.lines("sshd"):
@@ -587,11 +587,11 @@ def _sshd(facts: Facts) -> tuple[dict[str, str], bool, list[str]]:
 def _check_sshd(facts: Facts, allowed: set[str], out: list[Finding]) -> None:
     vals, effective, unreadable = _sshd(facts)
     if not facts.lines("sshd"):
-        out.append(Finding(False, "認証（ssh）", "sshd の設定が写しに無い"))
+        out.append(Finding(False, "認証（ssh）", "sshd の設定がコピーに無い"))
         return
     src = "実際に効いている値" if effective else "設定のファイルから（Match の中は見ていない）"
     for f in unreadable:
-        out.append(Finding(False, "認証（ssh）", f"読めなかった設定: {f}（root の写しで見る）"))
+        out.append(Finding(False, "認証（ssh）", f"読めなかった設定: {f}（root のコピーで見る）"))
     pa = vals.get("passwordauthentication")
     if pa != "no":
         out.append(
@@ -614,7 +614,7 @@ def _check_sshd(facts: Facts, allowed: set[str], out: list[Finding]) -> None:
             Finding(
                 False,
                 "認証（ssh）",
-                "KbdInteractiveAuthentication を書いていない（root の写しで効いている値を見る）",
+                "KbdInteractiveAuthentication を書いていない（root のコピーで効いている値を見る）",
             )
         )
     prl = vals.get("permitrootlogin")
@@ -653,7 +653,7 @@ def _check_keys(
     want: dict[str, str] = {}  # 指紋 → id
     for kid in m.get("keys", []):
         if table.key(kid) is None:
-            out.append(Finding(True, "鍵の表", f"機械の keys の {kid} が [[key]] に無い"))
+            out.append(Finding(True, "鍵の表", f"サーバーの keys の {kid} が [[key]] に無い"))
         elif kid in fps:
             want[fps[kid]] = kid
         if inventory_ids is not None and kid not in inventory_ids:
@@ -668,23 +668,23 @@ def _check_keys(
                 )
             )
 
-    # 機械の鍵（この機械が本物かを確かめる指紋）
+    # ホストの鍵（このサーバーが本物かを確かめる指紋）
     ed = [ln.split() for ln in facts.lines("hostkeys") if "ED25519" in ln.upper()]
     got = ed[0][1] if ed and len(ed[0]) >= 2 else None
     if got is None:
-        out.append(Finding(False, "機械の鍵", "ed25519 の機械の鍵が写しに無い"))
+        out.append(Finding(False, "ホストの鍵", "ed25519 のホストの鍵がコピーに無い"))
     elif "hostkey" not in m:
         out.append(
-            Finding(False, "機械の鍵", f'表に指紋が無い。機械の画面で確かめてから書く: hostkey = "{got}"')
+            Finding(False, "ホストの鍵", f'表に指紋が無い。サーバーの画面で確かめてから書く: hostkey = "{got}"')
         )
     elif m["hostkey"] != got:
         out.append(
             Finding(
                 True,
-                "機械の鍵",
-                f"表と違う（表 {m['hostkey']}、機械 {got}）。入れ直したのでなければ、別の機械か、間に誰か居る",
+                "ホストの鍵",
+                f"表と違う（表 {m['hostkey']}、サーバー {got}）。入れ直したのでなければ、別のサーバーか、間に誰か居る",
                 [
-                    f"# {host} の画面で: ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub  を見て、表か機械のどちらが正しいか決める"
+                    f"# {host} の画面で: ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub  を見て、表かサーバーのどちらが正しいか決める"
                 ],
             )
         )
@@ -721,11 +721,11 @@ def _check_keys(
             )
     for fp, kid in want.items():
         if fp not in seen:
-            who = "" if facts.root else "（root でない写しなので、他の人の分は見えていない）"
-            out.append(Finding(False, "入っている鍵", f"表の鍵 {kid} が機械に見当たらない{who}"))
+            who = "" if facts.root else "（root でないコピーなので、他の人の分は見えていない）"
+            out.append(Finding(False, "入っている鍵", f"表の鍵 {kid} がサーバーに見当たらない{who}"))
     if not facts.root:
         out.append(
-            Finding(False, "入っている鍵", "root でない写し。見えたのは写しを取った人の authorized_keys だけ")
+            Finding(False, "入っている鍵", "root でないコピー。見えたのはコピーを取った人の authorized_keys だけ")
         )
 
 
@@ -757,7 +757,7 @@ def _check_people(m: dict, facts: Facts, out: list[Finding]) -> None:
                 )
             )
         for u in sorted(allowed - set(login)):
-            out.append(Finding(False, "アカウント", f"表にあって機械に無い: {u}"))
+            out.append(Finding(False, "アカウント", f"表にあってサーバーに無い: {u}"))
     members: set[str] = set()
     for line in facts.lines("admins"):
         cols = line.split()
@@ -808,13 +808,13 @@ class Site:
     def what(self) -> str:
         to = "、".join(self.upstreams) or ("置いてあるファイル" if self.static else "通す先が見えない")
         guard = "、".join(dict.fromkeys(self.gate)) or (
-            "網で絞る行がある" if self.lan else "Caddy の側の認証は無い"
+            "ネットワークで絞る行がある" if self.lan else "Caddy の側の認証は無い"
         )
         return f"→ {to}。{guard}"
 
 
 def parse_caddy(lines: list[str]) -> tuple[list[Site], bool]:
-    """写しの caddy の節 → 入口の一覧。（snippet）と全体の設定（名の無い { }）は入口でない。"""
+    """コピーの caddy の節 → 入口の一覧。（snippet）と全体の設定（名の無い { }）は入口でない。"""
     sites: list[Site] = []
     group: list[Site] = []  # 「a, b {」は同じ中身の入口
     matcher_auth = responded = unreadable = False
@@ -859,14 +859,14 @@ def _check_doors(table: Table, host: str, facts: Facts, out: list[Finding]) -> N
     sites, unreadable = parse_caddy(facts.lines("caddy"))
     doors = [d for d in table.doors if d["host"] == host]
     if unreadable:
-        out.append(Finding(False, "入口", "Caddy の設定が読めなかった（root の写しで見る）"))
+        out.append(Finding(False, "入口", "Caddy の設定が読めなかった（root のコピーで見る）"))
     if not sites:
         for d in doors:
             out.append(Finding(False, "入口", f"表にあって、Caddy の設定に見当たらない: {d['site']}"))
         return
     if not doors:
         names = "、".join(st.name for st in sites)
-        out.append(Finding(False, "入口", f"入口の表にこの機械が無い（入口 {len(sites)}: {names}）"))
+        out.append(Finding(False, "入口", f"入口の表にこのサーバーが無い（入口 {len(sites)}: {names}）"))
         return
     by = {d["site"]: d for d in doors}
     for st in sites:
@@ -903,7 +903,7 @@ def _check_doors(table: Table, host: str, facts: Facts, out: list[Finding]) -> N
                 Finding(
                     True,
                     "入口",
-                    f"網で絞っていない: {st.name}（表は lan。Caddy の設定に remote_ip が無い。{who}）",
+                    f"ネットワークで絞っていない: {st.name}（表は lan。Caddy の設定に remote_ip が無い。{who}）",
                     ["# Caddyfile のこの入口に @inside remote_ip <LAN> を書き、それ以外は respond 403"],
                 )
             )
@@ -922,7 +922,7 @@ def _check_doors(table: Table, host: str, facts: Facts, out: list[Finding]) -> N
                 )
             )
         else:
-            label = {"public": "誰でも", "gate": "Caddy が確かめる", "lan": "網で絞る"}[d["auth"]]
+            label = {"public": "誰でも", "gate": "Caddy が確かめる", "lan": "ネットワークで絞る"}[d["auth"]]
             out.append(Finding(False, "入口", f"{st.name}: {label}（{st.what()}。{who}）"))
     seen = {st.name for st in sites}
     for d in doors:
@@ -947,22 +947,22 @@ def check(
     inventory_ids: set[str] | None = None,
     now: dt.datetime | None = None,
 ) -> list[Finding]:
-    """機械の写しを、機械の表・口の表・在庫表と突き合わせる。"""
+    """サーバーのコピーを、サーバーの表・ポートの表・在庫表と突き合わせる。"""
     m = table.machine(host)
     out: list[Finding] = []
     now = now or dt.datetime.now(dt.UTC)
 
     when = facts.collected
     if when is None:
-        out.append(Finding(False, "写し", "取った時が読めない"))
+        out.append(Finding(False, "コピー", "取った時が読めない"))
     elif (now - when).days >= OLD_FACTS_DAYS:
-        out.append(Finding(False, "写し", f"{(now - when).days} 日前の写し（集め直す）"))
+        out.append(Finding(False, "コピー", f"{(now - when).days} 日前のコピー（集め直す）"))
     if not facts.root:
         out.append(
             Finding(
                 False,
-                "写し",
-                "root でない写し。見えない物: 実際に効いている sshd の値、他の人の authorized_keys、他の人の口のプロセスの名、パスワードの状態、sudoers",
+                "コピー",
+                "root でないコピー。見えない物: 実際に効いている sshd の値、他の人の authorized_keys、他の人のポートのプロセスの名、パスワードの状態、sudoers",
             )
         )
 
@@ -971,9 +971,9 @@ def check(
     if "os" in m and os_.get("ID"):
         got = f"{os_['ID']}-{os_.get('VERSION_ID', '')}".rstrip("-")
         if got != m["os"]:
-            out.append(Finding(False, "OS", f"表は {m['os']}、機械は {got}"))
+            out.append(Finding(False, "OS", f"表は {m['os']}、サーバーは {got}"))
     if os_.get("HOSTNAME") and os_["HOSTNAME"].split(".")[0] != host:
-        out.append(Finding(False, "OS", f"機械の名が表と違う（機械は {os_['HOSTNAME']}）"))
+        out.append(Finding(False, "OS", f"サーバーの名が表と違う（サーバーは {os_['HOSTNAME']}）"))
 
     ld = facts.pairs("load")
     if ld:
@@ -1030,7 +1030,7 @@ def check(
                 )
             )
     else:
-        out.append(Finding(False, "更新", "apt が無い機械。更新は見ていない"))
+        out.append(Finding(False, "更新", "apt が無いサーバー。更新は見ていない"))
 
     _check_sshd(facts, set(m.get("users", [])) | set(m.get("admins", [])), out)
     _check_keys(table, m, facts, inventory_ids, out)
@@ -1089,11 +1089,11 @@ def check(
             out.append(
                 Finding(
                     True,
-                    "口",
-                    f"表に無い口: {l.port}（{l.bind} {l.process}）".replace(" ）", "）"),
+                    "ポート",
+                    f"表に無いポート: {l.port}（{l.bind} {l.process}）".replace(" ）", "）"),
                     [
                         f"sudo ss -ltnp | grep ':{l.port} '   # 何が開けているかを見る",
-                        "# 要る口なら ports.toml に足す。要らなければ、そのサービスを止める",
+                        "# 要るポートなら ports.toml に足す。要らなければ、そのサービスを止める",
                     ],
                 )
             )
@@ -1101,19 +1101,19 @@ def check(
             out.append(
                 Finding(
                     True,
-                    "口",
+                    "ポート",
                     f"表にあって開いていない: {p['port']}（{p.get('service', '')}）",
-                    ["# そのサービスが動いているかを見る。もう要らない口なら ports.toml から消す"],
+                    ["# そのサービスが動いているかを見る。もう要らないポートなら ports.toml から消す"],
                 )
             )
         for l, want in diff.outward:
             out.append(
                 Finding(
                     True,
-                    "口",
-                    f"外向きで表と違う: {l.port}（機械は {l.bind}、表は {want}）",
+                    "ポート",
+                    f"外向きで表と違う: {l.port}（サーバーは {l.bind}、表は {want}）",
                     [
-                        "# そのサービスの設定で 127.0.0.1 に縛る。外から使うなら、前に門（token を確かめる口）を置く"
+                        "# そのサービスの設定で 127.0.0.1 に縛る。外から使うなら、前に門（token を確かめるインターフェース）を置く"
                     ],
                 )
             )
@@ -1122,8 +1122,8 @@ def check(
         out.append(
             Finding(
                 False,
-                "口",
-                f"口の表にこの機械が無い（開いている口 {len(nums)}: {', '.join(map(str, nums))}）",
+                "ポート",
+                f"ポートの表にこのサーバーが無い（開いているポート {len(nums)}: {', '.join(map(str, nums))}）",
             )
         )
 
@@ -1167,7 +1167,7 @@ def check(
     for line in facts.lines("disk"):
         cols = line.split()
         if len(cols) == 2 and cols[1].rstrip("%").isdigit() and int(cols[1].rstrip("%")) >= DISK_FULL:
-            out.append(Finding(True, "盤", f"{cols[0]} が {cols[1]}"))
+            out.append(Finding(True, "ディスク", f"{cols[0]} が {cols[1]}"))
     active = {ln.strip().removesuffix(".timer") for ln in facts.lines("timers")}
     want_t = m.get("timers", [])
     for u in want_t:
@@ -1200,7 +1200,7 @@ def check(
     er = facts.pairs("errors")
     if er.get("err7d", "").isdigit():
         tail = f"、ssh の失敗 {er['sshfail7d']}" if er.get("sshfail7d", "").isdigit() else ""
-        who = "" if facts.root else "（root でない写しで読めた分）"
+        who = "" if facts.root else "（root でないコピーで読めた分）"
         out.append(Finding(False, "記録", f"この 7 日のエラーの行 {er['err7d']}{tail}{who}"))
     for line in facts.lines("data"):
         cols = line.split()
@@ -1210,36 +1210,36 @@ def check(
                     True,
                     "データ",
                     f"置き場が無い: {cols[1]}",
-                    ["# 盤が繋がっているか、道が合っているかを見る（mount、ls）"],
+                    ["# ディスクが繋がっているか、道が合っているかを見る（mount、ls）"],
                 )
             )
         elif cols[0] == "path" and len(cols) >= 3 and cols[2].isdigit():
             size = _size(int(cols[2]))
             rest = (
-                f"（その盤は {cols[3]} 使用、残り {_size(int(cols[4]))}）"
+                f"（そのディスクは {cols[3]} 使用、残り {_size(int(cols[4]))}）"
                 if len(cols) == 5 and cols[4].isdigit()
                 else ""
             )
             out.append(Finding(False, "データ", f"{cols[1]}: {size}{rest}"))
     disks = [ln.split() for ln in facts.lines("disk")]
     if disks:
-        out.append(Finding(False, "盤", "、".join(f"{c[0]} {c[1]}" for c in disks if len(c) == 2)))
+        out.append(Finding(False, "ディスク", "、".join(f"{c[0]} {c[1]}" for c in disks if len(c) == 2)))
     crypt = facts.pairs("crypt").get("crypt")
     if crypt == "0" and m.get("encrypt") is True:
         out.append(
             Finding(
                 True,
-                "盤",
-                "表は暗号化する機械（encrypt = true）だが、暗号化されていない",
+                "ディスク",
+                "表は暗号化するサーバー（encrypt = true）だが、暗号化されていない",
                 [
                     "# 後からは難しい。入れ直す時に暗号化 LVM を選ぶ（kagi machine install の手順）。それまで守る物を置かない"
                 ],
             )
         )
     elif crypt == "0":
-        out.append(Finding(False, "盤", "暗号化されていない（持ち出す機械なら入れ直す時に。K-08）"))
+        out.append(Finding(False, "ディスク", "暗号化されていない（持ち出すコンピューターなら入れ直す時に。K-08）"))
     elif crypt and crypt.isdigit() and m.get("encrypt") is True:
-        out.append(Finding(False, "盤", "暗号化されている（表の通り）"))
+        out.append(Finding(False, "ディスク", "暗号化されている（表の通り）"))
     for f in out:
         f.confirm = f.confirm or _needs_confirm(f)
     return out
@@ -1253,7 +1253,7 @@ def _size(kb: int) -> str:
 
 
 def changes(before: list[Finding], after: list[Finding]) -> tuple[list[Finding], list[Finding]]:
-    """前の写しから（増えた直す物、消えた直す物）。連載 第 11 章の「先週の出力と比べる」。"""
+    """前のコピーから（増えた直す物、消えた直す物）。連載 第 11 章の「先週の出力と比べる」。"""
     b = {(f.what, f.result) for f in before if f.fix}
     a = {(f.what, f.result) for f in after if f.fix}
     return [f for f in after if f.fix and (f.what, f.result) not in b], [
@@ -1273,9 +1273,9 @@ def fixes(findings: list[Finding]) -> int:
 def head(host: str, facts: Facts, findings: list[Finding]) -> str:
     when = facts.collected
     stamp = when.strftime("%Y-%m-%d %H:%M") if when else "時が読めない"
-    who = "root の写し" if facts.root else "root でない写し"
+    who = "root のコピー" if facts.root else "root でないコピー"
     n = fixes(findings)
-    return f"機械 {host}（{stamp}、{who}）: " + (f"直す物 {n}。" if n else "直す物は無い。")
+    return f"サーバー {host}（{stamp}、{who}）: " + (f"直す物 {n}。" if n else "直す物は無い。")
 
 
 def table(host: str, facts: Facts, findings: list[Finding]) -> str:
@@ -1288,12 +1288,12 @@ def table(host: str, facts: Facts, findings: list[Finding]) -> str:
 
 
 def fix_script(host: str, facts: Facts, findings: list[Finding]) -> str:
-    """直す手を sh の文にする。kagi は走らせない。人が読んで、機械で、一つずつ。"""
+    """直す手を sh の文にする。kagi は走らせない。人が読んで、サーバーで、一つずつ。"""
     out = [
         "#!/bin/sh",
         f"# {head(host, facts, findings)}",
-        "# kagi はこれを走らせない。人が機械の端末で一つずつ打つ。",
-        "# 印のある手は、一行ずつ読んで確かめてから。印の無い手は打って、写しを取り直して確かめる。",
+        "# kagi はこれを走らせない。人がサーバーの端末で一つずつ打つ。",
+        "# 印のある手は、一行ずつ読んで確かめてから。印の無い手は打って、コピーを取り直して確かめる。",
         "",
     ]
     done: set[tuple[str, ...]] = set()
@@ -1329,7 +1329,7 @@ def _toml(v) -> str:
 
 
 def append_row(path: Path, kind: str, row: dict) -> None:
-    """機械の表に [[machine]] か [[key]] を一件足す。足した形を読めるか確かめてから書く。空の欄は書かない。"""
+    """サーバーの表に [[machine]] か [[key]] を一件足す。足した形を読めるか確かめてから書く。空の欄は書かない。"""
     if kind not in ("machine", "key", "door"):
         raise Refused("足せるのは machine か key か door")
     path = Path(path)
@@ -1337,14 +1337,14 @@ def append_row(path: Path, kind: str, row: dict) -> None:
     try:
         old = path.read_text("utf-8") if path.exists() else ""
     except (OSError, UnicodeDecodeError) as e:
-        raise Refused(f"機械の表を読めない: {path} ({type(e).__name__})") from None
+        raise Refused(f"サーバーの表を読めない: {path} ({type(e).__name__})") from None
     new = old.rstrip("\n") + ("\n\n" if old.strip() else "") + f"[[{kind}]]\n{body}"
     parse_table(new, str(path))
     path.write_text(new, "utf-8")
 
 
 def key_rows(table: Table, inventory: list[dict] | None = None) -> list[list[str]]:
-    """鍵ごとの一行: id、持つ人、指紋、入れてよい機械、在庫表。"""
+    """鍵ごとの一行: id、持つ人、指紋、入れてよいサーバー、在庫表。"""
     fps, _problems = key_fingerprints(table)
     inv = {str(s.get("id")): s for s in (inventory or [])}
     rows = []
@@ -1362,12 +1362,12 @@ def key_rows(table: Table, inventory: list[dict] | None = None) -> list[list[str
 
 
 def key_table(table: Table, inventory: list[dict] | None = None) -> str:
-    """鍵の一覧: 持つ人、指紋、入れてよい機械、在庫表の期限。値は無い（指紋は公開の物）。"""
+    """鍵の一覧: 持つ人、指紋、入れてよいサーバー、在庫表の期限。値は無い（指紋は公開の物）。"""
     _fps, problems = key_fingerprints(table)
     lines = [
         f"鍵 {len(table.keys)} 件。",
         "",
-        "| id | 持つ人 | 指紋 | 入れてよい機械 | 在庫表 |",
+        "| id | 持つ人 | 指紋 | 入れてよいサーバー | 在庫表 |",
         "|---|---|---|---|---|",
     ]
     lines += ["| " + " | ".join(r) + " |" for r in key_rows(table, inventory)]

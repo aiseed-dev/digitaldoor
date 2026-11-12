@@ -1,4 +1,4 @@
-"""疑似の Sesame を錠のドライバの口で動かす FakeSesameLock の試験(実機にも Bluetooth にも触れない)。
+"""疑似の Sesame を錠のドライバのインターフェースで動かす FakeSesameLock の試験(実機にも Bluetooth にも触れない)。
 
 要求仕様の番号は、実演の道具 tools/jitsuen.py の試験(tests/jitsuen)が確かめる。ここは部品の動きだけ。
 """

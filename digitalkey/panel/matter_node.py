@@ -25,7 +25,7 @@ class AvahiMissing(RuntimeError):
 
 
 def avahi_problem() -> str | None:
-    """盤を起動する前の確かめ。avahi-publish-service が無ければ、利用者に見せる文を返す(CircuitMatter は無いと FileNotFoundError で落ちる)。"""
+    """パネルを起動する前の確かめ。avahi-publish-service が無ければ、利用者に見せる文を返す(CircuitMatter は無いと FileNotFoundError で落ちる)。"""
     return None if shutil.which(AVAHI_COMMAND) else AVAHI_MISSING
 
 

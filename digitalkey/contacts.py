@@ -1,4 +1,4 @@
-"""錠のドライバで動く接点 — 扉のコントローラの接点の口を、digitalkey.locks の錠のドライバにつなぐ。
+"""錠のドライバで動く接点 — 扉のコントローラの接点のインターフェースを、digitalkey.locks の錠のドライバにつなぐ。
 
 扉のコントローラ(digitaldoor_controller)が見る錠は、`fire()`、`mains()`、`door_open()`、`bolt_out()`、`set_lock(locked)` の
 束だけ(扉コントローラ仕様書 R-CT-03)。この接点は `set_lock` を、非同期の錠のドライバ(`unlock()` / `lock()`。
@@ -7,7 +7,7 @@
 - 火災・電源・扉の開閉は、SimContacts と同じく属性(`_fire`、`_mains`、`_door_open`)で持つ。HTTP の `/event` が書き換え、
   基板の入力に替えるときはここだけを差し替える。
 - 非同期のドライバは、この接点が持つ専用のイベントループ(別のスレッド)で動かす。扉の側の呼びは同期で、
-  HTTP の口の複数のスレッドから呼ばれてよい。同じループを使うほかの非同期の処理(鍵の台帳の `Keyring.open` など)は `run()` で渡す。
+  HTTP のインターフェースの複数のスレッドから呼ばれてよい。同じループを使うほかの非同期の処理(鍵の台帳の `Keyring.open` など)は `run()` で渡す。
 
 錠に届かないとき(ドライバが例外を出す、`timeout_s` の内に終わらない):
 - `set_lock` は例外を出さず、錠の位置の記録(`bolt_out()`)を動かさない。位置は「届いて確かめた最後の側」で、起動のときは施錠側。
@@ -52,7 +52,7 @@ class LockDriverContacts:
     _thread: threading.Thread | None = field(default=None, init=False, repr=False)
     _start: threading.Lock = field(default_factory=threading.Lock, init=False, repr=False)
 
-    # ---- 接点の口(Contacts) ----
+    # ---- 接点のインターフェース(Contacts) ----
     def fire(self) -> bool:
         return self._fire
 

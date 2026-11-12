@@ -7,7 +7,7 @@ Two backends:
   * a JSON file       – desktop / CLI use (権限 600)
   * a "kv" backend    – anything with async get(key)/set(key, value)/remove(key).
                         スマートフォンでは端末の保管庫(Flet の SecureStorage。securestore.py)。
-                        今までの版は SharedPreferences に置いたので、`migrate_kv` が保管庫へ移す
+                        今までのバージョンは SharedPreferences に置いたので、`migrate_kv` が保管庫へ移す
 
 鍵ごとに役(role)を持つ: "admin"(管理者)か "user"(利用者)。役の欄が無い今までの鍵は、その端末で登録した物として
 管理者で引き継ぐ。役の欄はあるが読めない値のときは、利用者として読む(迷ったら権限の小さい側)。
@@ -86,7 +86,7 @@ def format_secret_hex(secret_hex: str, group: int = 4) -> str:
 
 
 class AsyncKV(Protocol):
-    """文字列を key で出し入れする口。`set` は失敗したとき False を返してよい(None は成功として扱う)。"""
+    """文字列を key で出し入れするインターフェース。`set` は失敗したとき False を返してよい(None は成功として扱う)。"""
     async def get(self, key: str): ...
     async def set(self, key: str, value) -> bool: ...
     async def remove(self, key: str): ...
@@ -196,7 +196,7 @@ def _write_private(path: Path, text: str) -> None:
 
 
 class JsonFileKV:
-    """文字列を key で出し入れする JSON のファイル(PC 用。`AsyncKV` の口)。設定と控えを置く。"""
+    """文字列を key で出し入れする JSON のファイル(PC 用。`AsyncKV` のインターフェース)。設定と控えを置く。"""
 
     def __init__(self, path: Path | str) -> None:
         self._path = Path(path)
@@ -329,7 +329,7 @@ async def migrate_kv(old: AsyncKV, new: AsyncKV, *, key: str = DEFAULT_KEY, mark
         except Exception:
             had_moved = False
         if had_moved and raw_new in (None, ""):
-            return Migration("lost", "new", "保管庫が空です。以前に移した鍵が失われた可能性があります。PC に写した鍵があれば取り込めます")
+            return Migration("lost", "new", "保管庫が空です。以前に移した鍵が失われた可能性があります。PC にコピーした鍵があれば取り込めます")
         return Migration("none", "new")
 
     merged = dict(new_rows)

@@ -1,17 +1,17 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""命令 `digitalkey kanri`(設計書 19.12、20.12、21.12、22.9)。鍵の管理の置き場を、網を使わず、置き場のファイルだけで扱います(R-AC-19)。
+"""命令 `digitalkey kanri`(設計書 19.12、20.12、21.12、22.9)。鍵の管理の置き場を、ネットワークを使わず、置き場のファイルだけで扱います(R-AC-19)。
 
     digitalkey kanri init --dir /srv/kanri --admin adm --admin-name 管理者A
     digitalkey kanri request --dir /srv/kanri --by adm --role 名簿の係 --subject s1 --door 玄関 --from 2026-12-01T09:00 ...
     digitalkey kanri device add --dir /srv/kanri --by adm --role 管理者 --name ルーター1 --kind ルーター --state 使用
     digitalkey kanri device findings --dir /srv/kanri
 
-名簿と扉と権限のほかに、網の区画(segment)、機器の台帳(device)、機器の管理者の口の削除(access)、
+名簿と扉と権限のほかに、ネットワークの区画(segment)、機器の台帳(device)、機器の管理者のインターフェースの削除(access)、
 業者と連携先に渡している物の目録(vendor)を扱います。機器の権限は request と issue の --device で申請と発行をし、
-entity issue --route 管理者の口 --account <口の名> で出します。パスワードと鍵の値は、どの命令でも受けず、書きません。
+entity issue --route 管理者のインターフェース --account <インターフェースの名> で出します。パスワードと鍵の値は、どの命令でも受けず、書きません。
 
 失効の一覧(revocation)は、発行者の鍵で署名した一覧です。revoke で署名つき資格情報を止めると同じ命令で一枚でき、
-revoke --out か revocation show --out でファイルに出します。網の届かない扉へは、人か利用者の端末が運びます。
+revoke --out か revocation show --out でファイルに出します。ネットワークの届かない扉へは、人か利用者の端末が運びます。
 扉が受けた事は、扉の GET /revocation の応答や画面を見て revocation delivered で書きます。扉ごとの失効が効くまでの
 最長の時間は door add --revocation-max-min に、扉に入れた --revocation-max-age の秒を分で書きます。
 
@@ -20,8 +20,8 @@ revoke --out か revocation show --out でファイルに出します。網の�
 
 窓口(お問い合わせと照会の頁)で本人が自分の権限と鍵を見るために、portal で名簿の主体と窓口の番号を結びます。
 本人が頁に出る番号を名簿の係に伝え、名簿の係は本人を対面かビデオ通話で確かめてから portal link を書きます。
-portal export --out は、結んだ人の照会用の写し(本人が見てよい物だけ。呼び名、仮名、理由は入らない)を権限 600 の
-ファイルに出します。この命令は網を使わず、写しを窓口へ置きに行くのは digitalkey madoguchi push です。
+portal export --out は、結んだ人の照会用のコピー(本人が見てよい物だけ。呼び名、仮名、理由は入らない)を権限 600 の
+ファイルに出します。この命令はネットワークを使わず、コピーを窓口へ置きに行くのは digitalkey madoguchi push です。
 
     digitalkey kanri portal link --dir /srv/kanri --by ros --role 名簿の係 --subject s1 --account k3x9m2p7q1w8e5r --how 対面
     digitalkey kanri portal export --dir /srv/kanri --out /media/usb/shoukai.json
@@ -360,7 +360,7 @@ def _portal_export(u, a):
     out = _out_path(a)
     items = u.portal_export(at=a.at)
     write_private(out, (json.dumps(items, ensure_ascii=False) + "\n").encode("utf-8"))
-    _emit(a, [f"写し {len(items)} 人", f"ファイル {out}"], {"人数": len(items), "ファイル": str(out)})
+    _emit(a, [f"コピー {len(items)} 人", f"ファイル {out}"], {"人数": len(items), "ファイル": str(out)})
     return 0
 
 
@@ -416,7 +416,7 @@ def build() -> argparse.ArgumentParser:
         t = p.add_mutually_exclusive_group(required=True)
         t.add_argument("--door", help="扉の名前")
         t.add_argument("--group", help="群の名前")
-        t.add_argument("--device", help="機器の名前(その機器の管理者の口に入る権限。対象の種類 機器)")
+        t.add_argument("--device", help="機器の名前(その機器の管理者のインターフェースに入る権限。対象の種類 機器)")
         p.add_argument("--from", dest="start", required=True, help="開始(年-月-日T時:分、地方時)")
         p.add_argument("--until", default="", help="終了(省けば期限なし。業者と連携先には要る)")
 
@@ -470,10 +470,10 @@ def build() -> argparse.ArgumentParser:
     s = group("setting", "管理者が決める値")
     p = cmd(s, "set", _setting_set, "設定を書く(管理者)")
     p.add_argument("--item", required=True,
-                   help="項目(業者の最長の日数、自己承認、点検の間の日数、更新の期限の知らせの日数)")
+                   help="項目(業者の最長の日数、自己承認、点検の間の日数、更新の期限の通知の日数)")
     p.add_argument("--value", default="",
                    help="値(自己承認 は 許す か 許さない、ほかは 1 以上の整数か空。点検の間の日数 と "
-                        "更新の期限の知らせの日数 が空の間は、その知らせを出さない)")
+                        "更新の期限の通知の日数 が空の間は、その通知を出さない)")
     p.add_argument("--reason", required=True, help="理由")
 
     cmd(sub, "trust-entry", _trust_entry, "扉の信頼の一覧に入れる形(いつも JSON)", write=False)
@@ -508,12 +508,12 @@ def build() -> argparse.ArgumentParser:
     s = group("entity", "経路の実体")
     p = cmd(s, "issue", _entity_issue, "発行済みの権限から経路の実体を出す(管理者。物理キーは名簿の係も)")
     p.add_argument("--permission", required=True, help="権限の番号(権限_申請の番号)")
-    p.add_argument("--route", required=True, help="経路(署名つき資格情報、門番を通す錠、物理キー、管理者の口)")
+    p.add_argument("--route", required=True, help="経路(署名つき資格情報、門番を通す錠、物理キー、管理者のインターフェース)")
     p.add_argument("--until", help="実体の終了(権限の終了より後にはできない)")
     p.add_argument("--once", action="store_true", help="一回限り(署名つき資格情報だけ)")
     p.add_argument("--key-number", default="", help="物理キーの鍵の番号")
     p.add_argument("--account", default="",
-                   help="管理者の口の口の名(アカウントの名や鍵の名。パスワードや鍵の値は書かない)。管理者の口では要る")
+                   help="管理者のインターフェースの名(アカウントの名や鍵の名。パスワードや鍵の値は書かない)。管理者のインターフェースでは要る")
     p.add_argument("--out", help="署名つき資格情報の JSON を書くファイル(権限 600。署名つき資格情報では要る)")
     at(p)
     p = cmd(s, "list", lambda u, a: _items(a, u.entities(a.subject)), "実体の一覧(一人の全経路)", write=False)
@@ -548,40 +548,40 @@ def build() -> argparse.ArgumentParser:
     p.add_argument("--subject", required=True, help="主体の識別")
     at(p)
 
-    s = group("segment", "網の区画(R-NW-02)")
+    s = group("segment", "ネットワークの区画(R-NW-02)")
     p = cmd(s, "add", _segment_add, "区画を書く(管理者)。同じ名前の二枚目が今の値になる")
     p.add_argument("--name", required=True, help="区画の名前(扉の系統、事務、来客、設備 など。「,」は使わない)")
     p.add_argument("--note", default="", help="説明(どの機器をつなぐか、ほかの区画とどう分けているか)")
     p.add_argument("--retire", action="store_true", help="廃止にする(新しく機器を載せない)")
     cmd(s, "list", lambda u, a: _items(a, u.segments()), "区画の一覧(廃止した区画も入る)", write=False)
 
-    s = group("device", "機器の台帳(登録、変更、紛失と廃棄、確かめ、更新、知らせ)")
+    s = group("device", "機器の台帳(登録、変更、紛失と廃棄、確かめ、更新、通知)")
 
     def device_items(p):
         p.add_argument("--owner", help="責任者(名簿の主体の識別。更新、点検、交換をする人)")
         p.add_argument("--place", help="置き場(部屋や建物)")
         p.add_argument("--segment", help="区画の名前(使用の区画)")
-        p.add_argument("--door", help="この機器が付く扉の名前(扉、錠、読取機の時)")
+        p.add_argument("--door", help="この機器が付く扉の名前(扉、錠、リーダーの時)")
         p.add_argument("--maker", help="製造者")
         p.add_argument("--model", help="型")
         p.add_argument("--serial", help="製造番号")
-        p.add_argument("--net-id", help="網の番号(MAC アドレスなど)")
-        p.add_argument("--version", help="今の版")
+        p.add_argument("--net-id", help="ネットワークの番号(MAC アドレスなど)")
+        p.add_argument("--version", help="今のバージョン")
         p.add_argument("--support-until", help="製造者が更新を出す期限(年-月-日)")
         p.add_argument("--update-mode", choices=["自動", "人"], help="更新の当て方")
         p.add_argument("--secret-ref", help="秘密の在庫表(kagi/)の番号。パスワードや鍵の値は書かない")
-        p.add_argument("--log-to", help="記録の送り先(機械の外のどこへ送っているか)")
+        p.add_argument("--log-to", help="記録の送り先(コンピューターの外のどこへ送っているか)")
         p.add_argument("--holds", help="中に残る物(個人の情報、鍵、設定など、廃棄や返却の時に消す物)")
 
-    p = cmd(s, "add", _device_add, "機器を台帳に載せる(管理者)。足りない項目は空のまま載せ、知らせに挙げる")
+    p = cmd(s, "add", _device_add, "機器を台帳に載せる(管理者)。足りない項目は空のまま載せ、通知に挙げる")
     p.add_argument("--name", required=True, help="機器の名前(台帳の中で一つ。廃棄した機器の名前も使い直さない)")
-    p.add_argument("--kind", required=True, help="種類(PC、サーバー、プリンター、ルーター、網の機器、錠 など。様式のとおり)")
+    p.add_argument("--kind", required=True, help="種類(PC、サーバー、プリンター、ルーター、ネットワークの機器、錠 など。様式のとおり)")
     p.add_argument("--state", required=True, choices=["準備", "使用", "休止"], help="状態")
-    p.add_argument("--door-system", action="store_true", help="扉の系統(錠、扉のコントローラ、小さなサーバー、読取機)に入る")
+    p.add_argument("--door-system", action="store_true", help="扉の系統(錠、扉のコントローラ、小さなサーバー、リーダー)に入る")
     device_items(p)
 
     p = cmd(s, "change", _device_change,
-            "機器の項目を変える(管理者)。渡した項目だけが変わる。紛失か廃棄にすると、その機器の権限と管理者の口を止める")
+            "機器の項目を変える(管理者)。渡した項目だけが変わる。紛失か廃棄にすると、その機器の権限と管理者のインターフェースを止める")
     p.add_argument("--name", required=True, help="変える機器の名前")
     p.add_argument("--reason", required=True, help="理由")
     p.add_argument("--kind", help="種類")
@@ -602,26 +602,26 @@ def build() -> argparse.ArgumentParser:
     p.add_argument("--scene", required=True, choices=["据え付け", "点検", "廃棄"], help="場面")
     p.add_argument("--item", type=_item, action="append",
                    help="項目=結果(結果は 良い、悪い、当たらない)。何度でも書ける。項目は " + "、".join(CHECK_ITEMS) +
-                        "。据え付けは 初めのパスワード、ルーターの点検は 外からの口 と 見覚えのない設定とアカウント、"
-                        "廃棄は 中に残る物 と 網から外した が要る")
+                        "。据え付けは 初めのパスワード、ルーターの点検は 外部からのアクセス経路 と 見覚えのない設定とアカウント、"
+                        "廃棄は 中に残る物 と ネットワークから外した が要る")
     p.add_argument("--note", default="", help="所見(見た事、直した事、次にする事)")
     p.add_argument("--at", type=_at, help="確かめた日時(省けば今)")
 
     p = cmd(s, "update", _device_update, "更新を当てた事、当てられなかった事を書く(管理者、運用、本人。本人は責任者だけ)")
     p.add_argument("--name", required=True, help="機器の名前")
-    p.add_argument("--version", required=True, help="当てた版か、当てようとした版")
+    p.add_argument("--version", required=True, help="当てたバージョンか、当てようとしたバージョン")
     p.add_argument("--failed", action="store_true", help="当てられなかった(--reason が要る)")
     p.add_argument("--reason", default="", help="理由")
     p.add_argument("--at", type=_at, help="当てた日時(省けば今)")
 
     p = cmd(s, "findings", lambda u, a: _items(a, u.device_findings(at=a.at)),
-            "台帳だけでできる照らし合わせの知らせ(機器、知らせ、詳細)。知らせがあっても終了コードは 0", write=False)
+            "台帳だけでできる照らし合わせの通知(機器、通知、詳細)。通知があっても終了コードは 0", write=False)
     at(p)
 
-    s = group("access", "機器の管理者の口")
+    s = group("access", "機器の管理者のインターフェース")
     p = cmd(s, "remove", _access_remove,
-            "人が機器の中で管理者の口を消した事を書く(管理者、運用、本人。本人は機器の責任者だけ)。ソフトは機器を変えない")
-    p.add_argument("--entity", required=True, help="実体_発行の番号(経路 管理者の口)")
+            "人が機器の中で管理者のインターフェースを消した事を書く(管理者、運用、本人。本人は機器の責任者だけ)。ソフトは機器を変えない")
+    p.add_argument("--entity", required=True, help="実体_発行の番号(経路 管理者のインターフェース)")
     p.add_argument("--result", default="消した", help="消した、パスワードを替えた、機器を初期化、機器が無い")
     p.add_argument("--note", default="", help="備考")
 
@@ -633,7 +633,7 @@ def build() -> argparse.ArgumentParser:
     s = group("revocation", "失効の一覧(扉へ運ぶ署名つきの一覧と、扉に届いた記録)")
     p = cmd(s, "publish", _revocation_publish,
             "失効の一覧を一枚作る(管理者、運用)。止めてあって期限の過ぎていない署名つき資格情報の全部を入れる。"
-            "失効が無くても、扉の知らせを新しく保つために作れる")
+            "失効が無くても、扉の通知を新しく保つために作れる")
     p.add_argument("--out", help="署名つきの一覧の JSON を書くファイル(既にあれば何もせずに拒否)")
     at(p)
     p = cmd(s, "show", _revocation_show,
@@ -650,7 +650,7 @@ def build() -> argparse.ArgumentParser:
     p.add_argument("--note", default="", help="備考(運び方など)")
     p.add_argument("--at", type=_at, help="扉が受けたと確かめた日時(省けば今)")
 
-    s = group("portal", "窓口の照会(名簿の主体と窓口の番号の結び、照会用の写し)")
+    s = group("portal", "窓口の照会(名簿の主体と窓口の番号の結び、照会用のコピー)")
     p = cmd(s, "link", _portal_link,
             "主体に窓口の番号を結ぶ(名簿の係)。本人を対面かビデオ通話で確かめてから書く。結び直すと後の番号が今の結び")
     p.add_argument("--subject", required=True, help="名簿の主体の識別")
@@ -662,9 +662,9 @@ def build() -> argparse.ArgumentParser:
     p.add_argument("--reason", required=True, help="理由")
     cmd(s, "list", _portal_list, "今の結び。一件一行 <主体> <窓口の番号> <確かめ方> <伝票>", write=False)
     p = cmd(s, "export", _portal_export,
-            "照会用の写しをファイルに出す。結んだ主体のうち有効と停止の人の分。網は使わない。"
+            "照会用のコピーをファイルに出す。結んだ主体のうち有効と停止の人の分。ネットワークは使わない。"
             "窓口へ置くのは digitalkey madoguchi push", write=False)
-    p.add_argument("--out", required=True, help="写しの JSON を書くファイル(権限 600 で新しく作る。既にあれば拒否)")
+    p.add_argument("--out", required=True, help="コピーの JSON を書くファイル(権限 600 で新しく作る。既にあれば拒否)")
     at(p)
 
     cmd(sub, "verify", _verify, "台帳の連鎖を検べる", write=False)

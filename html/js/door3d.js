@@ -146,7 +146,7 @@ box(.78, .88, .012, M.glass, 1.35, 1.45, .012);
 for (let i = 0; i < 8; i++) box(.012, 1.0, .012, M.alu, 1.0 + i * .1, 1.45, .055);
 box(.86, .016, .016, M.alu, 1.35, 1.78, .055); box(.86, .016, .016, M.alu, 1.35, 1.12, .055);
 
-// ドアホン(読取機を兼ねる)と表札
+// ドアホン(リーダーを兼ねる)と表札
 const readerBody = box(.11, .17, .028, M.reader, -.66, 1.38, .014, null, { edge: true });
 cyl(.012, .006, M.dark, -.66, 1.435, .03);
 cyl(.011, .006, M.metal, -.66, 1.318, .03);
@@ -336,7 +336,7 @@ lab('ドアポスト', () => tmp.set(-.3, .9, 0), 'note', bpShow);
 lab('メーターボックス', () => tmp.set(-1.45, 1.2, 0), 'note', bpShow);
 lab('面格子', () => tmp.set(1.35, 1.45, 0), 'note', bpShow);
 const L = {
-  reader: lab('ドアホン(読取機)', () => tmp.copy(readerPos), '', x3),
+  reader: lab('ドアホン(リーダー)', () => tmp.copy(readerPos), '', x3),
   lock: lab('電子錠', () => lockCase.getWorldPosition(tmp), '', () => Math.max(x3(), insideK)),
   ctrl: lab('扉のコントローラ', () => tmp.copy(ctrlPos), '', () => Math.max(x3(), insideK)),
   issue: lab('鍵の発行(管理者の手元)', () => tmp.copy(issuePos), 'b', () => (t >= 1 ? Math.max(xray, linkOp) : 0)),
@@ -369,7 +369,7 @@ function hudReset(show, head) {
   hud.querySelectorAll('li').forEach(li => { li.dataset.s = ''; li.hidden = false; });
 }
 function setNet(on) {
-  netOn = on; const n = $('#net'); n.dataset.s = on ? '' : 'off'; n.textContent = on ? '網 つながっています' : '網 切れています';
+  netOn = on; const n = $('#net'); n.dataset.s = on ? '' : 'off'; n.textContent = on ? 'ネットワーク つながっています' : 'ネットワーク 切れています';
   L.issue.classList.toggle('off', !on); L.biz.classList.toggle('off', !on);
 }
 let seq = 140; const entries = [];
@@ -512,12 +512,12 @@ const scenes = {
   },
   async offline() {
     await begin(); setNet(false);
-    await approach('網が切れています', 'ルーターも、発行する側の機械も、今は届きません', false);
+    await approach('ネットワークが切れています', 'ルーターも、発行する側のサーバーも、今は届きません', false);
     await check(); setRing('ok'); setLed('ok');
-    await unlock(RING.ok); status('解錠', 'ok', '網なしで、扉だけで確かめました');
+    await unlock(RING.ok); status('解錠', 'ok', 'ネットワークなしで、扉だけで確かめました');
     log('認証', '成功', '署名つき資格情報'); log('操作', '解錠', '成功');
     await doorTo(92, 1200); await wait(1900); await relock();
-    status('施錠', '', '記録は扉に残り、網が戻ると届きます');
+    status('施錠', '', '記録は扉に残り、ネットワークが戻ると届きます');
   },
   async revoked() {
     await begin();

@@ -112,7 +112,7 @@ def section_door() -> str:
     from digitaldoor_controller import controller
     from digitalkey import contacts, door_serve
     out = ["## 扉のコントローラの動作", "", doc(controller).replace("判断 — ", ""), ""]
-    out += ["### 鍵と資格情報を作る命令", "", "発行者と管理者の側で使う三つの命令です。置き場を使わず、網も要りません。", ""]
+    out += ["### 鍵と資格情報を作る命令", "", "発行者と管理者の側で使う三つの命令です。置き場を使わず、ネットワークも要りません。", ""]
     for cmd in ("keygen", "issue", "trust-change"):
         out += [f"#### digitaldoor-controller {cmd}", "", "```", help_of(door_cli.main, (cmd, "--help")), "```", ""]
     out += ["### 錠のドライバで動く接点", "", "```", doc(contacts), "```", ""]

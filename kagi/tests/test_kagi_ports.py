@@ -64,7 +64,7 @@ def test_cli(tmp_path, capsys):
     )
     out = capsys.readouterr().out
     assert rc == 1
-    assert "表に無い口" in out and "開いていない" in out and "外向き" in out and "ollama" in out
+    assert "表に無いポート" in out and "開いていない" in out and "外向き" in out and "ollama" in out
 
 
 def test_cli_no_difference(tmp_path, capsys):
