@@ -1,17 +1,18 @@
 = デジタルドア ニュース 2026-11-12
 :日付: 2026-11-12
 
-== Apple が LG と共同で作った、Matter と Aliro に対応する電子錠を、12 月から米国などで売ります
+== Apple が、LG と共同で開発した Matter と Aliro に対応する電子錠を、米国とカナダで売ります
 :分野: 電子錠
 :国・地域: 米国
-:種別: 報道
+:種別: 発表
 
-9to5Mac の Marcus Mendes 記者が 2026-10-13 に、Apple が LG Electronics と Schneider Electric と共同で作った「Apple Home Collection」を発表したと書いています。この中の LG Smart Deadbolt Lock は、Matter と Aliro に対応し、インターネットに接続できなくても、錠の基本の機能が動くと伝えています。iPhone や Apple Watch に家の鍵を入れておくと、UWB で近づいたことを検知して、かざさずに開きます。暗証番号のキーパッドと、非常用の物理鍵の差込口も付いています。
+Apple は 2026-10-13 に、LG Electronics と Schneider Electric と共同で設計したスマートホームの機器の一式「Apple Home Collection」を発表しました。この中の電子錠 LG Smart Deadbolt Lock について、Apple は、Matter に対応し Aliro をサポートすること、インターネットに接続できなくても錠の基本の機能が機器の中で動くことを書いています。iPhone や Apple Watch に家の鍵を入れておくと、UWB で近づいたことを検知して開きます。暗証番号のキーパッドと、隠れた非常用の鍵の差込口も付いています。
 
-価格は 349.95 米ドルからで、発売は 2026 年 12 月からです。製品によっては 2027 年の初めになります。日本での発売日と価格は、日本語の報道(スマートウォッチライフ、2026-10-14)の時点で発表されていません。Apple の発表の頁そのものは開けなかったため、9to5Mac の記事を出典とし、報道として扱います。
+価格は 349.95 米ドルからで、米国とカナダで、Apple の店舗と Web の店で売ります。一式の売り始めは 2026 年 12 月からで、一部の機器は 2027 年の初めになります。錠がどちらに入るかは、発表には書かれていません。LG も同じ日に発表を出し、製品の企画の初めの段階から Apple と共同で開発したと書いています。LG の発表には、Aliro の名前はありません。どちらの発表にも、日本での発売は書かれていません。
 
-出典: Apple unveils Apple Home Collection smart home accessories developed with LG and Schneider(9to5Mac、2026-10-13)、https://9to5mac.com/2026/10/13/apple-unveils-apple-home-collection-smart-home-accessories-developed-with-lg-and-schneider/ 、2026-11-12 に確かめました +
-出典: Apple Home Collection が登場(スマートウォッチライフ、2026-10-14 公開、2026-11-06 更新)、https://www.smartwatchlife.jp/83789/ 、2026-11-12 に確かめました
+出典: Introducing Apple Home Collection, a new lineup of smart home accessories(Apple、2026-10-13)、https://www.apple.com/newsroom/2026/10/introducing-apple-home-collection-a-new-lineup-of-smart-home-accessories/ 、2026-11-12 に確かめました +
+出典: LG Electronics Announces New Smart Home Accessories, Designed in Collaboration With Apple for the Apple Home Collection(LG Electronics、2026-10-13)、https://www.lg.com/global/newsroom/news/corporate/lg-electronics-announces-new-smart-home-accessories-designed-in-collaboration-with-apple/ 、2026-11-12 に確かめました +
+出典: Apple unveils Apple Home Collection smart home accessories developed with LG and Schneider(9to5Mac、2026-10-13)、https://9to5mac.com/2026/10/13/apple-unveils-apple-home-collection-smart-home-accessories-developed-with-lg-and-schneider/ 、2026-11-12 に確かめました
 
 == チャットロックが、粘着テープを使わずに固定する後付けの電子錠 Chatlock T30 を発表しました
 :分野: 電子錠
