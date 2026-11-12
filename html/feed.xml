@@ -4,7 +4,7 @@
 <link>https://door.aiseed.dev/</link>
 <description>扉と鍵の話を、層に分けて書く</description>
 <language>ja</language>
-<lastBuildDate>Thu, 12 Nov 2026 05:44:35 +0900</lastBuildDate>
+<lastBuildDate>Thu, 12 Nov 2026 09:30:20 +0900</lastBuildDate>
 <item>
 <title>スマートフォンを会員証にする</title>
 <link>https://door.aiseed.dev/guide/membership-card-on-phone/</link>
@@ -51,7 +51,7 @@
 <guid>https://door.aiseed.dev/blog/drawing-to-3d/</guid>
 <category>ブログ</category>
 <pubDate>Wed, 11 Nov 2026 00:00:00 +0900</pubDate>
-<description>集合住宅の玄関ドアの姿図を、つまみ一つで立体に変え、扉が署名と期限を確かめて開ける様子、ネットワークが切れた時、止めた鍵、火災の信号の時の動きを見られる頁を作りました。図面も写真も使わず、文章の指示から AI が書いた物です。</description>
+<description>玄関ドアの姿図を、つまみ一つで立体に変え、扉が署名と期限を確かめて開ける様子、ネットワークが切れた時、止めた鍵、火災の信号の時の動きを見られる頁を作りました。図面も写真も使わず、文章の指示から AI が書いた物です。</description>
 </item>
 <item>
 <title>AI で自社のシステムを確かめる</title>
