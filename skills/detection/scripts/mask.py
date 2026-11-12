@@ -4,7 +4,7 @@
     python3 mask.py --names names.txt < 元の記録.txt > 伏せた記録.txt
     python3 mask.py --names names.txt --table 対応表.tsv < 元の記録.txt > 伏せた記録.txt
 
-- IPv4 と IPv6 の番地、メールアドレス、names.txt に一行ずつ書いた名前(人、アカウント、機械)を、
+- IPv4 と IPv6 の番地、メールアドレス、names.txt に一行ずつ書いた名前(人、アカウント、コンピューター)を、
   同じ物には同じ印(IP-1、MAIL-1、NAME-1 …)に置き換えます。同じ番地は同じ印になるので、
   「同じ所から何度も」は伏せた後でも読めます。
 - 鍵やトークンらしい長い文字列(英数字と記号の 32 字以上の並び)は KEY に置き換えます。
@@ -59,7 +59,7 @@ class Masker:
 
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="記録の名前とアドレスを伏せる")
-    p.add_argument("--names", help="伏せる名前を一行ずつ書いたファイル(人、アカウント、機械)")
+    p.add_argument("--names", help="伏せる名前を一行ずつ書いたファイル(人、アカウント、コンピューター)")
     p.add_argument("--table", help="印と元の値の対応を書き出すファイル(手元だけに置く)")
     a = p.parse_args(argv)
     names: list[str] = []

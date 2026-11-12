@@ -4,22 +4,22 @@
 <link>https://door.aiseed.dev/</link>
 <description>扉と鍵の話を、層に分けて書く</description>
 <language>ja</language>
-<lastBuildDate>Thu, 12 Nov 2026 04:39:55 +0900</lastBuildDate>
+<lastBuildDate>Thu, 12 Nov 2026 05:44:35 +0900</lastBuildDate>
 <item>
-<title>電話を会員証にする</title>
+<title>スマートフォンを会員証にする</title>
 <link>https://door.aiseed.dev/guide/membership-card-on-phone/</link>
 <guid>https://door.aiseed.dev/guide/membership-card-on-phone/</guid>
 <category>解説</category>
 <pubDate>Thu, 12 Nov 2026 00:00:00 +0900</pubDate>
-<description>会員証は入る権利の証で、扉の鍵と同じ形をしています。電話に載せる道には、財布のふつうのパス、かざす NFC のパス、入館の鍵の三つの段があります。どの段を選ぶかは、貸し借りと写しをどこまで防ぎたいかと、入った記録を誰が信用できる必要があるかで決まります。Apple と Google が会員証について書いている事を整理し、場面ごとに向く段、認証と権限を分ける形、記録が両方に通用するための条件を示します。</description>
+<description>会員証は入る権利の証で、扉の鍵と同じ形をしています。スマートフォンに載せる道には、ウォレットのふつうのパス、かざす NFC のパス、入館の鍵の三つの段があります。どの段を選ぶかは、貸し借りとコピーをどこまで防ぎたいかと、入った記録を誰が信用できる必要があるかで決まります。Apple と Google が会員証について書いている事を整理し、場面ごとに向く段、認証と権限を分ける形、記録が両方に通用するための条件を示します。</description>
 </item>
 <item>
-<title>宿と貸室で、電話の鍵をどう渡すか</title>
+<title>宿と貸室で、スマートフォンの鍵をどう渡すか</title>
 <link>https://door.aiseed.dev/guide/keys-for-lodging-and-rental-rooms/</link>
 <guid>https://door.aiseed.dev/guide/keys-for-lodging-and-rental-rooms/</guid>
 <category>解説</category>
 <pubDate>Thu, 12 Nov 2026 00:00:00 +0900</pubDate>
-<description>宿と、時間や日で貸す部屋の鍵は、住宅や事務所の鍵と違います。使う人は一度きりで、期限は時刻で決まり、アプリは入れてもらえません。予約ごとに期限つきの鍵を出し、扉が自分の時計で期限を確かめる形、客に鍵を渡す四つの道、厚生労働省と国土交通省が書いている本人確認の決まり、鍵を出す側と使う側の両方が信用できる記録の条件、時間で貸す部屋の扱いを示します。</description>
+<description>宿と、時間や日で貸す部屋の鍵は、住宅や事務所の鍵と違います。使う人は一度きりで、期限は時刻で決まり、アプリは入れてもらえません。予約ごとに期限つきの鍵を出し、扉が自分の時計で期限を確かめる形、客に鍵を渡す三つの道、厚生労働省と国土交通省が書いている本人確認の決まり、鍵を出す側と使う側の両方が信用できる記録の条件、時間で貸す部屋の扱いを示します。</description>
 </item>
 <item>
 <title>Google Wallet に戸建ての家の鍵が入る</title>
@@ -30,12 +30,12 @@
 <description>2026年11月9日付の Google Play services v26.44 のリリースノートに、Matter と Aliro に対応した戸建て住宅の鍵を、Google Home から Google Wallet に足せるという一行が載りました。言葉の意味、ここまでの流れ、管理会社が出す住まいの鍵との違い、層ごとの位置、錠を作る側の認証の道筋(CSA の Interop Test Lab)、Apple との比べ、まだ分かっていない事を、会社の発表と報道を分けて整理し、扉のコントローラが鍵を持つかという問いから読みます。</description>
 </item>
 <item>
-<title>戸建てと事務所で、電話の鍵をどう持つか</title>
+<title>戸建てと事務所で、スマートフォンの鍵をどう持つか</title>
 <link>https://door.aiseed.dev/guide/phone-keys-for-houses-and-offices/</link>
 <guid>https://door.aiseed.dev/guide/phone-keys-for-houses-and-offices/</guid>
 <category>解説</category>
 <pubDate>Wed, 11 Nov 2026 00:00:00 +0900</pubDate>
-<description>電話で扉を開ける道は、家の仕組みのアプリ、財布、財布を通さないアプリ、カードの四つです。どれを選ぶかは、誰が鍵を出し、誰が止めるかで決まります。戸建ては家の仕組みのアプリで足り、扉の側で予備の管理者の鍵、登録先の扱い、更新の決め方を整えます。事務所では、情報システム部門がカードと自社のアプリで鍵を出し、財布の社員証は後から足す物として扱います。Apple Wallet Access Program、NFC &amp; SE Platform、Google Wallet の社員証について会社が書いている事を整理し、認証と権限を分ける形と、誰が何の記録をとるかを示します。</description>
+<description>スマートフォンで扉を開ける道は、ホームアプリ、ウォレット、ウォレットを通さないアプリの三つです。どれを選ぶかは、誰が鍵を出し、誰が止めるかで決まります。戸建てはホームアプリで足り、扉の側で予備の管理者の鍵、登録先の扱い、更新の決め方を整えます。事務所では、情報システム部門が自社のアプリで鍵を出し、ウォレットの社員証は後から足す物として扱います。Apple Wallet Access Program、NFC &amp; SE Platform、Google Wallet の社員証について会社が書いている事を整理し、認証と権限を分ける形と、誰が何の記録をとるかを示します。</description>
 </item>
 <item>
 <title>今日、デジタルドアを始めました</title>
@@ -51,7 +51,7 @@
 <guid>https://door.aiseed.dev/blog/drawing-to-3d/</guid>
 <category>ブログ</category>
 <pubDate>Wed, 11 Nov 2026 00:00:00 +0900</pubDate>
-<description>集合住宅の玄関ドアの姿図を、つまみ一つで立体に変え、扉が署名と期限を確かめて開ける様子、網が切れた時、止めた鍵、火災の信号の時の動きを見られる頁を作りました。図面も写真も使わず、文章の指示から AI が書いた物です。</description>
+<description>集合住宅の玄関ドアの姿図を、つまみ一つで立体に変え、扉が署名と期限を確かめて開ける様子、ネットワークが切れた時、止めた鍵、火災の信号の時の動きを見られる頁を作りました。図面も写真も使わず、文章の指示から AI が書いた物です。</description>
 </item>
 <item>
 <title>AI で自社のシステムを確かめる</title>
@@ -67,7 +67,7 @@
 <guid>https://door.aiseed.dev/guide/resist-attacks/</guid>
 <category>解説</category>
 <pubDate>Tue, 20 Oct 2026 00:00:00 +0900</pubDate>
-<description>扉は、攻撃されると「開いてはいけないのに開く」と「開くべきなのに開かない」の両方が起こりえる機械です。デジタルドアは、サイバー攻撃に耐えられることが前提です。入られる前提で、入る口を減らし、中で動く物が本物かを確かめ、入られたら気づいて機械の外に知らせ、切り離して戻す、という重ね方を説明し、要求仕様に足した R-EL-25〜28 と R-RS-11〜15 を紹介します。</description>
+<description>扉は、攻撃されると「開いてはいけないのに開く」と「開くべきなのに開かない」の両方が起こりえる機器です。デジタルドアは、サイバー攻撃に耐えられることが前提です。入られる前提で、侵入の経路を減らし、中で動く物が本物かを確かめ、入られたら気づいて機器の外に知らせ、切り離して戻す、という重ね方を説明し、要求仕様に足した R-EL-25〜28 と R-RS-11〜15 を紹介します。</description>
 </item>
 <item>
 <title>デジタルキーは管理者が自分で持つ</title>
@@ -83,7 +83,7 @@
 <guid>https://door.aiseed.dev/guide/doors-and-cyber-defense/</guid>
 <category>解説</category>
 <pubDate>Tue, 20 Oct 2026 00:00:00 +0900</pubDate>
-<description>デジタルドアの鍵の管理と、サイバー攻撃対策は、同じ問いを扉の側とシステムの側から見ています。一番上の鍵を誰が持つか、人の出入りをどう管理するか、委託をどう扱うか、網が止まったらどうするか。関係は両方向で、サイバーの侵入は物理の侵入になり、物理の侵入はサイバーの侵入になります。サイバー攻撃対策は自社で地道に続けるしかなく、デジタルドアはその目に見える教材になります。要求の確かめ方から、日課と年課の表を作ります。</description>
+<description>デジタルドアの鍵の管理と、サイバー攻撃対策は、同じ問いを扉の側とシステムの側から見ています。一番上の鍵を誰が持つか、人の出入りをどう管理するか、委託をどう扱うか、ネットワークが止まったらどうするか。関係は両方向で、サイバーの侵入は物理の侵入になり、物理の侵入はサイバーの侵入になります。サイバー攻撃対策は自社で地道に続けるしかなく、デジタルドアはその目に見える教材になります。要求の確かめ方から、日課と年課の表を作ります。</description>
 </item>
 <item>
 <title>デジタルドアが遅れている理由</title>
@@ -91,7 +91,7 @@
 <guid>https://door.aiseed.dev/guide/why-digital-doors-lag/</guid>
 <category>解説</category>
 <pubDate>Tue, 20 Oct 2026 00:00:00 +0900</pubDate>
-<description>電子錠も読取機も買える部品になり、スマートフォンを鍵にする規格も出ました。それでも、会社や建物の扉の多くは機械の鍵のままです。遅れている理由は扉の側ではなく、鍵を管理する仕組みと、それを持つ人の側にあります。顧客、サーバー、Web、PC の管理の中に扉の管理を含める仕組みは、扉を作るよりも難しい仕事です。</description>
+<description>電子錠もリーダーも買える部品になり、スマートフォンを鍵にする規格も出ました。それでも、会社や建物の扉の多くは機械の鍵のままです。遅れている理由は扉の側ではなく、鍵を管理する仕組みと、それを持つ人の側にあります。顧客、サーバー、Web、PC の管理の中に扉の管理を含める仕組みは、扉を作るよりも難しい仕事です。</description>
 </item>
 <item>
 <title>扉のコントローラを Rust で書く</title>
@@ -123,7 +123,7 @@
 <guid>https://door.aiseed.dev/guide/japanese-smart-lock-apps/</guid>
 <category>解説</category>
 <pubDate>Sun, 18 Oct 2026 00:00:00 +0900</pubDate>
-<description>日本で使われている六社のスマートロックのアプリを、ストアの数字、利用者の多い不満、会社の答え方、障害と終了の発表、網やクラウドが止まったときの動きで並べます。共通する課題は、近くで開ける無線の不安定さ、クラウドとアカウントへの依存、錠より短いアプリの寿命、選べない利用者、直したことの伝わらなさです。</description>
+<description>日本で使われている六社のスマートロックのアプリを、ストアの数字、利用者の多い不満、会社の答え方、障害と終了の発表、ネットワークやクラウドが止まったときの動きで並べます。共通する課題は、近くで開ける無線の不安定さ、クラウドとアカウントへの依存、錠より短いアプリの寿命、選べない利用者、直したことの伝わらなさです。</description>
 </item>
 <item>
 <title>業者に預けた鍵と権限</title>
@@ -131,7 +131,7 @@
 <guid>https://door.aiseed.dev/guide/vendor-held-keys/</guid>
 <category>解説</category>
 <pubDate>Sun, 18 Oct 2026 00:00:00 +0900</pubDate>
-<description>ConnectWise Cloud Backup、OpenCode Console、CVE-2026-99999(PwnEscape)、Commvault Metallic、Salesloft Drift の五つの件を、業者が顧客の鍵や権限を預かる形と、他人と同じ機械を使う形の二つに分けて並べます。共通するのは、預けた物が一か所に集まり、顧客の側では防げず、止める手段が大きいことです。クラウド型のスマートロックに当てはめ、このサイトの要求仕様が何を求めているかを示します。</description>
+<description>ConnectWise Cloud Backup、OpenCode Console、CVE-2026-99999(PwnEscape)、Commvault Metallic、Salesloft Drift の五つの件を、業者が顧客の鍵や権限を預かる形と、他人と同じサーバーを使う形の二つに分けて並べます。共通するのは、預けた物が一か所に集まり、顧客の側では防げず、止める手段が大きいことです。クラウド型のスマートロックに当てはめ、このサイトの要求仕様が何を求めているかを示します。</description>
 </item>
 <item>
 <title>自分で持つべき人と物</title>
@@ -139,7 +139,7 @@
 <guid>https://door.aiseed.dev/guide/people-and-keys-to-keep/</guid>
 <category>解説</category>
 <pubDate>Sun, 18 Oct 2026 00:00:00 +0900</pubDate>
-<description>デジタルの扉は、売ったら終わりの物ではありません。鍵の発行と失効、更新、脆弱性への対応を、扉が付いている間ずっと続けます。扉の製造者が社内に置くべき役と、民泊などの運営者が手元に持つべき物を並べ、AI に任せられる所と人が決める所を分けます。サーバーを借りず、自社でも役割ごとに小さな機械へ分ける置き方と、人の育て方も書きます。</description>
+<description>デジタルの扉は、売ったら終わりの物ではありません。鍵の発行と失効、更新、脆弱性への対応を、扉が付いている間ずっと続けます。扉の製造者が社内に置くべき役と、民泊などの運営者が手元に持つべき物を並べ、AI に任せられる所と人が決める所を分けます。サーバーを借りず、自社でも役割ごとに小さなコンピューターへ分ける置き方と、人の育て方も書きます。</description>
 </item>
 <item>
 <title>AI の時代に、委託をやめて自社で育てる</title>
@@ -155,7 +155,7 @@
 <guid>https://door.aiseed.dev/guide/plant-defense/</guid>
 <category>解説</category>
 <pubDate>Sun, 18 Oct 2026 00:00:00 +0900</pubDate>
-<description>植物は、動きまわる免疫の細胞も獲得免疫も持たず、一つひとつの細胞が自分で守ります。感染した所の細胞は自ら死んで病原体を閉じ込め、攻撃の知らせは信号として全身と隣の植物に伝わります。一方、同じ株ばかりを植えた畑は、一つの病気で全滅します。植物の守り方を、扉と情報システムの守り方に当てはめ、似ている所と似ていない所を整理します。</description>
+<description>植物は、動きまわる免疫の細胞も獲得免疫も持たず、一つひとつの細胞が自分で守ります。感染した所の細胞は自ら死んで病原体を閉じ込め、攻撃の通知は信号として全身と隣の植物に伝わります。一方、同じ株ばかりを植えた畑は、一つの病気で全滅します。植物の守り方を、扉と情報システムの守り方に当てはめ、似ている所と似ていない所を整理します。</description>
 </item>
 <item>
 <title>ルーターは全部の前にある</title>
@@ -171,7 +171,7 @@
 <guid>https://door.aiseed.dev/guide/on-site/</guid>
 <category>解説</category>
 <pubDate>Sun, 18 Oct 2026 00:00:00 +0900</pubDate>
-<description>AI の時代に人に残るのは、何を作るかを決めることと、出来た物を見て判断すること、と言われてきました。この言い方は画面の中の仕事しか数えていませんでした。作るのが安くなれば作られる物が増え、一つずつを建物に入れて動かす人が要ります。攻撃が増えれば、線を抜き、区画を止め、戻す人が要ります。網が止まれば、外の AI は届きません。人に残るのは、現場で物に触れ、動かし、確かめ、止め、戻すことです。</description>
+<description>AI の時代に人に残るのは、何を作るかを決めることと、出来た物を見て判断すること、と言われてきました。この言い方は画面の中の仕事しか数えていませんでした。作るのが安くなれば作られる物が増え、一つずつを建物に入れて動かす人が要ります。攻撃が増えれば、線を抜き、区画を止め、戻す人が要ります。ネットワークが止まれば、外の AI は届きません。人に残るのは、現場で物に触れ、動かし、確かめ、止め、戻すことです。</description>
 </item>
 <item>
 <title>Matterとは何か</title>
@@ -179,7 +179,7 @@
 <guid>https://door.aiseed.dev/guide/matter/</guid>
 <category>解説</category>
 <pubDate>Thu, 17 Sep 2026 00:00:00 +0900</pubDate>
-<description>Matterは、家庭用のスマートホーム機器をメーカーを問わず接続するための共通規格です。登録の手順、電子錠(Door Lockクラスタ)の属性と命令、版の変遷、実装の例を説明し、業務用の扉に適用しにくい三つの理由を解説します。</description>
+<description>Matterは、家庭用のスマートホーム機器をメーカーを問わず接続するための共通規格です。登録の手順、電子錠(Door Lockクラスタ)の属性と命令、バージョンの変遷、実装の例を説明し、業務用の扉に適用しにくい三つの理由を解説します。</description>
 </item>
 <item>
 <title>Aliroとは何か</title>
@@ -187,7 +187,7 @@
 <guid>https://door.aiseed.dev/guide/aliro/</guid>
 <category>解説</category>
 <pubDate>Thu, 17 Sep 2026 00:00:00 +0900</pubDate>
-<description>Aliroは、スマートフォンやスマートウォッチを鍵として電子錠のリーダーに提示するための規格です。2026年2月に1.0が公開されました。規定している範囲と規定していない範囲、役割と鍵の仕組み、Matterでのリーダーの設定、認証と財布の状況、実装の例を解説します。</description>
+<description>Aliroは、スマートフォンやスマートウォッチを鍵として電子錠のリーダーに提示するための規格です。2026年2月に1.0が公開されました。規定している範囲と規定していない範囲、役割と鍵の仕組み、Matterでのリーダーの設定、認証とウォレットの状況、実装の例を解説します。</description>
 </item>
 <item>
 <title>スマートドアに求められる条件</title>

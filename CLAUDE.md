@@ -12,7 +12,7 @@
 - README、docs、サイトの説明文は、一般的な技術用語と です・ます調で書く。記事も普通の解説とブログの文体で書く
 - `html/guide/`、`html/blog/`、`html/news/`、`sitemap.xml`、`feed.xml` はビルドで作る。直すときは `articles/`、`news/`、テンプレートを直してビルドし直す
 - アクセス計測を入れるときは本人が決め、プライバシーポリシーの頁と一緒に入れる
-- ニュースは aiai と同じ作り方にする。開発機の AI の CLI が `news/SKILL.md`(手引き)と `news/好み.adoc`(分野、まず見る所、件数)に沿って、元の記事を開いて確かめ、`news/YYYY-MM-DD.adoc` を 1 日 1 つ書く(`news/tsukuru.py`)。人が読んで直し、commit した物だけが載る。サーバーと GitHub Actions では作らず、API キーも置かない。分野や件数を変えるときは `好み.adoc`、書く決まり(発表と報道を分ける、製品名と会社名は原文のまま、確かめた日つきの出典)は `SKILL.md` を直す
+- ニュースは aiai と同じ作り方にする。開発機の AI の CLI が `news/SKILL.md`(ガイド)と `news/好み.adoc`(分野、まず見る所、件数)に沿って、元の記事を開いて確かめ、`news/YYYY-MM-DD.adoc` を 1 日 1 つ書く(`news/tsukuru.py`)。人が読んで直し、commit した物だけが載る。サーバーと GitHub Actions では作らず、API キーも置かない。分野や件数を変えるときは `好み.adoc`、書く決まり(発表と報道を分ける、製品名と会社名は原文のまま、確かめた日つきの出典)は `SKILL.md` を直す
 
 - 要求を足すときは、理由に出どころ(Issue の番号か、使う人の困りごとの文)を書く。番号は変えない。製造者の制約と代わりの案は、同じ番号の下に残す(docs/つなぐ.md)
 - SKILL.md は、各社の AI に読ませる入口。文書やコードの置き場や進め方を変えたら SKILL.md も直す
@@ -26,8 +26,8 @@
 - 扉のコントローラは `controller/`(別パッケージ `digitaldoor_controller`、Apache-2.0。`controller/LICENSE`)。仕様は docs/ が正で、実装を変えるときは仕様書を先に直す。`digitalkey/site` は pip で入れて使う。テストは `.venv/bin/python -m pytest -q controller`。AGPL のコードを `controller/` に写さない
 - 判断は扉のコントローラが持つ。panel(Matter のブリッジと画面)は翻訳と表示を担当する
 - 錠の銘柄は接点の層(door)か錠ドライバ(digitalkey.locks の登録簿。機器ごとのドライバは drivers/ の別パッケージで、entry point で登録する)の中に閉じる
-- 署名の口(Signer)は後で STSAFE に差し替える
-- 機器は買う。書くのは駆動の差し替え口まで
+- 署名のインターフェース(Signer)は後で STSAFE に差し替える
+- 機器は買う。書くのは駆動の差し替え用のインターフェースまで
 - Matter の機器はプロセスに一つ(UDP 5541)。画面の接続をまたいで共有する
 - 起動確認の後は avahi-publish-service の子プロセスと UDP 5541 / TCP 8797 / 8798 を `fuser -k` で空ける
 - テストの個人情報(画像・名簿)は、バイト列や架空の名前で代用する

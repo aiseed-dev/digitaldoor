@@ -8,7 +8,7 @@
 
 
 <title>Matterとは何か — 解説 | デジタルドア</title>
-<meta name="description" content="Matterは、家庭用のスマートホーム機器をメーカーを問わず接続するための共通規格です。登録の手順、電子錠(Door Lockクラスタ)の属性と命令、版の変遷、実装の例を説明し、業務用の扉に適用しにくい三つの理由を解説します。">
+<meta name="description" content="Matterは、家庭用のスマートホーム機器をメーカーを問わず接続するための共通規格です。登録の手順、電子錠(Door Lockクラスタ)の属性と命令、バージョンの変遷、実装の例を説明し、業務用の扉に適用しにくい三つの理由を解説します。">
 <link rel="canonical" href="https://door.aiseed.dev/guide/matter/">
 <link rel="alternate" hreflang="ja" href="https://door.aiseed.dev/guide/matter/">
 
@@ -17,14 +17,14 @@
 <meta property="og:site_name" content="デジタルドア">
 <meta property="og:locale" content="ja_JP">
 <meta property="og:title" content="Matterとは何か">
-<meta property="og:description" content="Matterは、家庭用のスマートホーム機器をメーカーを問わず接続するための共通規格です。登録の手順、電子錠(Door Lockクラスタ)の属性と命令、版の変遷、実装の例を説明し、業務用の扉に適用しにくい三つの理由を解説します。">
+<meta property="og:description" content="Matterは、家庭用のスマートホーム機器をメーカーを問わず接続するための共通規格です。登録の手順、電子錠(Door Lockクラスタ)の属性と命令、バージョンの変遷、実装の例を説明し、業務用の扉に適用しにくい三つの理由を解説します。">
 <meta property="og:url" content="https://door.aiseed.dev/guide/matter/">
 <meta property="og:image" content="https://door.aiseed.dev/images/og-default.jpg">
 <meta property="article:section" content="解説">
 <meta property="article:published_time" content="2026.09.17">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Matterとは何か">
-<meta name="twitter:description" content="Matterは、家庭用のスマートホーム機器をメーカーを問わず接続するための共通規格です。登録の手順、電子錠(Door Lockクラスタ)の属性と命令、版の変遷、実装の例を説明し、業務用の扉に適用しにくい三つの理由を解説します。">
+<meta name="twitter:description" content="Matterは、家庭用のスマートホーム機器をメーカーを問わず接続するための共通規格です。登録の手順、電子錠(Door Lockクラスタ)の属性と命令、バージョンの変遷、実装の例を説明し、業務用の扉に適用しにくい三つの理由を解説します。">
 <meta name="twitter:image" content="https://door.aiseed.dev/images/og-default.jpg">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="alternate" type="application/rss+xml" title="デジタルドア" href="/feed.xml">
@@ -837,14 +837,14 @@ article img {
 <li>仕様は公開されており、参照実装(SDK)もオープンソースで公開されています。</li>
 <li>Matter対応製品として販売するには、CSAの認証を取得する必要があります。各機器は製造者の証明書(DAC)を持ち、登録時に検証されます。</li>
 </ul>
-<p>(2026年11月11日に、登録の手順、Door Lockクラスタの中身、版の表、実装の例を足し、版の説明の誤りを直しました。)</p>
-<h2>版の変遷</h2>
-<p>版は年に1〜2回出ています。下の表の「中身」は、CSAの発表文に書かれている物のうち、扉と錠とカメラに関わる物です。</p>
+<p>(2026年11月11日に、登録の手順、Door Lockクラスタの中身、バージョンの表、実装の例を足し、バージョンの説明の誤りを直しました。)</p>
+<h2>バージョンの変遷</h2>
+<p>バージョンは年に1〜2回出ています。下の表の「中身」は、CSAの発表文に書かれている物のうち、扉と錠とカメラに関わる物です。</p>
 <p>[cols=&quot;1,2,4&quot;]</p>
 <table class="comparison-table fade-in">
 <thead>
 <tr>
-<th>版</th>
+<th>バージョン</th>
 <th>公開</th>
 <th>中身</th>
 </tr>
@@ -853,7 +853,7 @@ article img {
 <tr>
 <td>1.0</td>
 <td>2022年10月4日</td>
-<td>最初の版。電子錠(Door Lock)を含む</td>
+<td>最初のバージョン。電子錠(Door Lock)を含む</td>
 </tr>
 <tr>
 <td>1.1</td>
@@ -898,11 +898,11 @@ article img {
 <tr>
 <td>1.6</td>
 <td>2026年6月17日</td>
-<td>NFCによる登録、複数の管理者が一つの網を共有する仕組み(Joint Fabric)</td>
+<td>NFCによる登録、複数の管理者が一つのネットワークを共有する仕組み(Joint Fabric)</td>
 </tr>
 </tbody>
 </table>
-<p>電子錠でのAliroの鍵の登録は、1.4の発表文には書かれていません。規格のデータモデル(Matterの参照実装connectedhomeipの <code>data_model</code> の下にある版ごとの定義)を見ると、1.4のDoor Lockクラスタ(改訂8)で、Aliroの機能、属性、命令が入っています。この記事の前の版は「1.4の発表で電子錠向けのAliro資格情報に対応した」と書いていましたが、発表文にはその記述が無く、規格の本文の側で入った物です。</p>
+<p>電子錠でのAliroの鍵の登録は、1.4の発表文には書かれていません。規格のデータモデル(Matterの参照実装connectedhomeipの <code>data_model</code> の下にあるバージョンごとの定義)を見ると、1.4のDoor Lockクラスタ(改訂8)で、Aliroの機能、属性、命令が入っています。この記事の前の版は「1.4の発表で電子錠向けのAliro資格情報に対応した」と書いていましたが、発表文にはその記述が無く、規格の本文の側で入った物です。</p>
 <h2>仕組み</h2>
 <p>Matter機器は、「ファブリック」と呼ばれる管理者のネットワークに登録して使います。管理者となるのは、Apple Home、Google Home、Amazon Alexa、Samsung SmartThingsなどのアプリや、Home Assistantのように自分で運用するコントローラーです。1台の機器を複数の管理者に登録することもできます。たとえば、同じ電子錠をApple HomeとGoogle Homeの両方から操作できます。</p>
 <h3>登録(コミッショニング)の手順</h3>
@@ -913,19 +913,19 @@ article img {
 <li>機器の基本の情報を読み、設置する国の設定を書く</li>
 <li>機器の認証。機器の中にある製造者の証明書(DAC)と、その上の証明書(PAI)を取り出し、管理者が出した問いかけに機器の秘密鍵で署名させて、本物のMatter機器か確かめる</li>
 <li>機器に鍵の対を作らせ(CSR)、管理者の根の証明書と、このファブリックでの機器の証明書(NOC)を入れる</li>
-<li>Wi-FiかThreadの網の情報を渡す</li>
-<li>機器が網に入ったら、証明書どうしで暗号の通り道を作り直す(CASE)。以後の操作はこの通り道を通る</li>
+<li>Wi-FiかThreadのネットワークの情報を渡す</li>
+<li>機器がネットワークに入ったら、証明書どうしで暗号の通り道を作り直す(CASE)。以後の操作はこの通り道を通る</li>
 </ol>
 <p>QRコードの中身は「MT:」で始まる文字列で、製造者の番号(VID)、製品の番号(PID)、見つけ方、見分けの番号(discriminator)、パスコードが入っています。手入力のコードは11桁(長い形は21桁)です。</p>
 <h3>電子錠(Door Lockクラスタ)</h3>
 <p>電子錠は、機器種別Door Lock(0x000A)に、Door Lockクラスタ(0x0101)を載せた物です。以下の名前と番号は、connectedhomeipのデータモデルによる物です。</p>
 <p><strong>必須の属性。</strong> 錠の状態(LockState)、錠の種類(LockType)、駆動部が動くか(ActuatorEnabled)、動作のモード(OperatingMode)、対応するモード(SupportedOperatingModes)。モードは、通常、不在、プライバシー、遠隔操作の禁止、通行の五つです。</p>
-<p><strong>機能のビット。</strong> 錠ごとに、持っている機能をビットで示します。暗証番号(PIN)、カード(RID)、指紋(FGP)、扉の開閉の検知(DPS)、顔(FACE)、網を通した資格情報(COTA)、利用者(USR)、曜日・日付・休日の予定、ラッチの解除(UBOLT)、Aliro(ALIRO と、BLEとUWBの ALBU)です。記録(LOG)と通知(NOT)のビットは1.3まであり、1.4で無くなりました。</p>
-<p><strong>命令と権限。</strong> 施錠(LockDoor)、解錠(UnlockDoor)、時間つき解錠(UnlockWithTimeout)は「操作」の権限で送れます。利用者と資格情報の登録(SetUser、SetCredential)と、Aliroの読取機の設定(SetAliroReaderConfig)は「管理」の権限が要ります。施解錠と登録の命令はどれも、Timed Invokeという、決めた時間内に届かなければ無効にする送り方を求めます。命令を途中で止め、遅らせて届ける攻撃を防ぐためです。暗証番号を持つ錠は、遠隔の操作に暗証番号を求める設定(RequirePINforRemoteOperation)も持てます。</p>
+<p><strong>機能のビット。</strong> 錠ごとに、持っている機能をビットで示します。暗証番号(PIN)、カード(RID)、指紋(FGP)、扉の開閉の検知(DPS)、顔(FACE)、ネットワークを通した資格情報(COTA)、利用者(USR)、曜日・日付・休日の予定、ラッチの解除(UBOLT)、Aliro(ALIRO と、BLEとUWBの ALBU)です。記録(LOG)と通知(NOT)のビットは1.3まであり、1.4で無くなりました。</p>
+<p><strong>命令と権限。</strong> 施錠(LockDoor)、解錠(UnlockDoor)、時間つき解錠(UnlockWithTimeout)は「操作」の権限で送れます。利用者と資格情報の登録(SetUser、SetCredential)と、Aliroのリーダーの設定(SetAliroReaderConfig)は「管理」の権限が要ります。施解錠と登録の命令はどれも、Timed Invokeという、決めた時間内に届かなければ無効にする送り方を求めます。命令を途中で止め、遅らせて届ける攻撃を防ぐためです。暗証番号を持つ錠は、遠隔の操作に暗証番号を求める設定(RequirePINforRemoteOperation)も持てます。</p>
 <p><strong>出来事(イベント)。</strong> 警報(DoorLockAlarm)、操作(LockOperation)、操作の失敗(LockOperationError)は必須です。操作の出来事には、どこから(暗証番号、遠隔、Aliroなど)、どの利用者が、どの管理者のファブリックから行ったかが入ります。扉の開閉(DoorStateChange)と利用者の変更(LockUserChange)は、その機能を持つ錠で必須です。</p>
 <p><strong>資格情報の種類。</strong> 暗証番号、カード、指紋、指の静脈、顔に加えて、1.4からAliroの鍵が三種類あります(発行者の鍵、入れ替えられる端末の鍵、入れ替えない端末の鍵)。</p>
 <h3>通信の方式</h3>
-<p>錠は電池で動くことが多いので、Wi-FiよりもThreadが多く使われます。Threadは低い電力の無線の網で、家の中にあるボーダールーター(Apple TV、HomePod、Google Nest Hubなど)を通してIPの網とつながります。</p>
+<p>錠は電池で動くことが多いので、Wi-FiよりもThreadが多く使われます。Threadは低い電力の無線のネットワークで、家の中にあるボーダールーター(Apple TV、HomePod、Google Nest Hubなど)を通してIPのネットワークとつながります。</p>
 <h2>日本で買える錠</h2>
 <ul>
 <li>美和ロック PiACK HOME PG。2024年12月26日に発売し、2025年1月14日に美和ロックが発表しました。国内の錠前の会社として初めてMatterに対応した錠で、Threadを使います(美和ロックの発表)。CSAの認証の番号は、発表文と報道では確かめられませんでした</li>
@@ -934,14 +934,14 @@ article img {
 <h2>実装の例</h2>
 <p>参照実装には次の物があります。</p>
 <ul>
-<li>connectedhomeip(CSA、Apache-2.0)の <code>examples/lock-app</code>。Linux、ESP32、nRF Connect、Silicon Labsなど多くの基板に対応しています。Aliroの属性と命令も持ちますが、読取機の設定は保存するだけで、NFCやBLEでの読み取りは含みません</li>
+<li>connectedhomeip(CSA、Apache-2.0)の <code>examples/lock-app</code>。Linux、ESP32、nRF Connect、Silicon Labsなど多くの基板に対応しています。Aliroの属性と命令も持ちますが、リーダーの設定は保存するだけで、NFCやBLEでの読み取りは含みません</li>
 <li>matter.js(Apache-2.0)。JavaScriptで書かれ、電子錠のサーバーは施解錠、利用者、資格情報、予定を持ちます。Pythonから使われてきたpython-matter-serverは開発を終え、matter.jsを元にしたサーバーに移りました</li>
 <li>CircuitMatter(Adafruit、MIT)。Pythonで書かれた趣味向けの実装で、認証は取っていません。電子錠のクラスタはありません</li>
 </ul>
 <p>このサイトの扉は、CircuitMatterの上に電子錠のクラスタを自前で定義して、扉のコントローラーをMatterの電子錠として見せています(<code>digitalkey/panel/door_lock.py</code>)。</p>
 <ul>
 <li>必須の属性五つと扉の開閉(DoorState)を持ち、施錠と解錠の命令だけを受けます</li>
-<li>命令は、扉のコントローラーのHTTPの口(同じ機械の中だけ)に渡します。火災中の施錠のように扉が拒んだときは、錠の状態の属性を変えません。判断は扉が持ちます</li>
+<li>命令は、扉のコントローラーのHTTPのインターフェース(同じコンピューターの中だけ)に渡します。火災中の施錠のように扉が拒んだときは、錠の状態の属性を変えません。判断は扉が持ちます</li>
 <li>暗証番号、利用者、予定は出しません。鍵の発行と失効は、発行者の台帳が持つからです</li>
 <li>必須の出来事とTimed Invokeは、CircuitMatterに仕組みが無いため持っていません。誰がいつ開けたかの記録は、扉の監査の記録(署名つき、連鎖)が正です。認証を受けた製品にするには、connectedhomeipやmatter.jsのように、これらを扱える実装に載せ替えます</li>
 </ul>

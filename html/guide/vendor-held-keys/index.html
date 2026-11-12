@@ -8,7 +8,7 @@
 
 
 <title>業者に預けた鍵と権限 — 解説 | デジタルドア</title>
-<meta name="description" content="ConnectWise Cloud Backup、OpenCode Console、CVE-2026-99999(PwnEscape)、Commvault Metallic、Salesloft Drift の五つの件を、業者が顧客の鍵や権限を預かる形と、他人と同じ機械を使う形の二つに分けて並べます。共通するのは、預けた物が一か所に集まり、顧客の側では防げず、止める手段が大きいことです。クラウド型のスマートロックに当てはめ、このサイトの要求仕様が何を求めているかを示します。">
+<meta name="description" content="ConnectWise Cloud Backup、OpenCode Console、CVE-2026-99999(PwnEscape)、Commvault Metallic、Salesloft Drift の五つの件を、業者が顧客の鍵や権限を預かる形と、他人と同じサーバーを使う形の二つに分けて並べます。共通するのは、預けた物が一か所に集まり、顧客の側では防げず、止める手段が大きいことです。クラウド型のスマートロックに当てはめ、このサイトの要求仕様が何を求めているかを示します。">
 <link rel="canonical" href="https://door.aiseed.dev/guide/vendor-held-keys/">
 <link rel="alternate" hreflang="ja" href="https://door.aiseed.dev/guide/vendor-held-keys/">
 
@@ -17,14 +17,14 @@
 <meta property="og:site_name" content="デジタルドア">
 <meta property="og:locale" content="ja_JP">
 <meta property="og:title" content="業者に預けた鍵と権限">
-<meta property="og:description" content="ConnectWise Cloud Backup、OpenCode Console、CVE-2026-99999(PwnEscape)、Commvault Metallic、Salesloft Drift の五つの件を、業者が顧客の鍵や権限を預かる形と、他人と同じ機械を使う形の二つに分けて並べます。共通するのは、預けた物が一か所に集まり、顧客の側では防げず、止める手段が大きいことです。クラウド型のスマートロックに当てはめ、このサイトの要求仕様が何を求めているかを示します。">
+<meta property="og:description" content="ConnectWise Cloud Backup、OpenCode Console、CVE-2026-99999(PwnEscape)、Commvault Metallic、Salesloft Drift の五つの件を、業者が顧客の鍵や権限を預かる形と、他人と同じサーバーを使う形の二つに分けて並べます。共通するのは、預けた物が一か所に集まり、顧客の側では防げず、止める手段が大きいことです。クラウド型のスマートロックに当てはめ、このサイトの要求仕様が何を求めているかを示します。">
 <meta property="og:url" content="https://door.aiseed.dev/guide/vendor-held-keys/">
 <meta property="og:image" content="https://door.aiseed.dev/images/og-default.jpg">
 <meta property="article:section" content="解説">
 <meta property="article:published_time" content="2026.10.18">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="業者に預けた鍵と権限">
-<meta name="twitter:description" content="ConnectWise Cloud Backup、OpenCode Console、CVE-2026-99999(PwnEscape)、Commvault Metallic、Salesloft Drift の五つの件を、業者が顧客の鍵や権限を預かる形と、他人と同じ機械を使う形の二つに分けて並べます。共通するのは、預けた物が一か所に集まり、顧客の側では防げず、止める手段が大きいことです。クラウド型のスマートロックに当てはめ、このサイトの要求仕様が何を求めているかを示します。">
+<meta name="twitter:description" content="ConnectWise Cloud Backup、OpenCode Console、CVE-2026-99999(PwnEscape)、Commvault Metallic、Salesloft Drift の五つの件を、業者が顧客の鍵や権限を預かる形と、他人と同じサーバーを使う形の二つに分けて並べます。共通するのは、預けた物が一か所に集まり、顧客の側では防げず、止める手段が大きいことです。クラウド型のスマートロックに当てはめ、このサイトの要求仕様が何を求めているかを示します。">
 <meta name="twitter:image" content="https://door.aiseed.dev/images/og-default.jpg">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="alternate" type="application/rss+xml" title="デジタルドア" href="/feed.xml">
@@ -834,7 +834,7 @@ article img {
 <p>件を二つの型に分けます。</p>
 <ul>
 <li><strong>預かり型。</strong> 業者が、多くの顧客の鍵や権限を預かって常に持っている形です。顧客は、連携の手間を省くために、業者のサービスに自分の環境へ入る権限や、他社のサービスの鍵を渡しています。</li>
-<li><strong>相乗り型。</strong> 他人と同じ機械の上で、自分の仕組みを動かしている形です。クラウド、VPS、レンタルサーバーが当たります。</li>
+<li><strong>相乗り型。</strong> 他人と同じサーバーの上で、自分の仕組みを動かしている形です。クラウド、VPS、レンタルサーバーが当たります。</li>
 </ul>
 <p>それぞれの件について、預けていた物、起きたこと、顧客の側で防げたか、業者がどう止めたかを見ます。</p>
 <h2>一覧</h2>
@@ -859,8 +859,8 @@ article img {
 </tr>
 <tr>
 <td>CVE-2026-99999、PwnEscape(2026年10月)</td>
-<td>相乗り型。同じ機械の上の仮想マシン</td>
-<td>仮想マシンから、その機械(ホスト)のメモリを読み書きできる不具合</td>
+<td>相乗り型。同じサーバーの上の仮想マシン</td>
+<td>仮想マシンから、そのサーバー(ホスト)のメモリを読み書きできる不具合</td>
 </tr>
 <tr>
 <td>Commvault Metallic(2025年5月)</td>
@@ -885,7 +885,7 @@ article img {
 <h3>CVE-2026-99999(PwnEscape)</h3>
 <p><strong>発表。</strong> Linux カーネルの IPv4 の処理の不具合で、CVE の記録は2026年10月15日に公開されました。Red Hat と Linux のカーネルの CVE チームは Critical としています。</p>
 <p><strong>研究者の説明。</strong> 仮想マシンが細工したパケットを送ると、ホストのカーネルのメモリを読み、書き換えられます。研究者は、自分の KVM の実験環境で、ホストの root での実行まで示しました。各社の本番の環境で root を取ったとは主張していません。</p>
-<p><strong>告知。</strong> AlmaLinux の告知(2026年10月16日)は、最も危ないのは他人の仮想マシンを動かす機械、つまりクラウド、VPS の事業者、コードを動かすサンドボックスだとしています。Vercel が本番のサンドボックスでメモリの漏れを示し、他の事業者に知らせたとも書いています。回避の手段は無く、直したカーネルに替えるしかありません。ホストの再起動は、その上の全部の仮想マシンを止めます。</p>
+<p><strong>告知。</strong> AlmaLinux の告知(2026年10月16日)は、最も危ないのは他人の仮想マシンを動かすサーバー、つまりクラウド、VPS の事業者、コードを動かすサンドボックスだとしています。Vercel が本番のサンドボックスでメモリの漏れを示し、他の事業者に知らせたとも書いています。回避の手段は無く、直したカーネルに替えるしかありません。ホストの再起動は、その上の全部の仮想マシンを止めます。</p>
 <h3>Commvault Metallic</h3>
 <p><strong>発表。</strong> 米国の CISA は2025年5月22日に、Commvault の Microsoft 365 のバックアップのサービス(Metallic、Azure の上で動く)の秘密情報が盗まれたおそれがあると警告しました。既定の設定と強い権限を持つ SaaS を狙う、より広い攻撃の一部と見ています。Commvault は、影響を受けたのは少数の顧客で、バックアップのデータは見られておらず、該当の顧客の秘密情報を作り直したとしています(The Record、2025年5月23日)。</p>
 <h3>Salesloft Drift</h3>
@@ -893,15 +893,15 @@ article img {
 <h2>共通する形</h2>
 <ol>
 <li><strong>預けた物が一か所に集まる。</strong> 一社が、多くの顧客の環境に入る権限や、他社の鍵をまとめて持っています。そこを一度破れば、全部の顧客に届きます。</li>
-<li><strong>顧客の側では防げない。</strong> ConnectWise の認証情報は業者のテナントにあり、OpenCode の鍵は業者のサービスに保存され、PwnEscape を直せるのは機械を持つ事業者です。顧客にできるのは、知らされた後の対応だけです。</li>
+<li><strong>顧客の側では防げない。</strong> ConnectWise の認証情報は業者のテナントにあり、OpenCode の鍵は業者のサービスに保存され、PwnEscape を直せるのはサーバーを持つ事業者です。顧客にできるのは、知らされた後の対応だけです。</li>
 <li><strong>止める手段が大きい。</strong> 業者はサービスごと止める(ConnectWise のバックアップの停止)か、全員に鍵の作り直しを頼みます(OpenCode、Commvault)。相乗り型では、直すための再起動で全部の仮想マシンが止まります。</li>
 <li><strong>預けた権限は、用途より広い。</strong> バックアップのためにメールの全部を読む権限を、連携のために顧客の記録を読むトークンを、便利さのために請求の起きる鍵を、業者に渡しています。</li>
 </ol>
 <h2>扉に当てはめると</h2>
 <ul>
 <li><strong>クラウド型のスマートロックは、預かり型そのもの。</strong> 業者のクラウドが、全部の顧客の扉に鍵を出し、遠隔で開ける権限を常に持っています(<a href="/guide/japanese-smart-lock-apps/">日本のスマートロックのアプリの現状と課題</a>)。業者が破られると、メールや請求ではなく、多くの建物の扉が開きえます。業者が被害を止めるためにサービスを止めれば、アプリで開ける扉が全部止まります。</li>
-<li><strong>判定が扉の中で完結しても、発行者の鍵が一か所に集まれば同じ。</strong> <a href="/guide/aliro/">Aliro</a> のように、スマートフォンと読取機だけで判定する方式でも、鍵を作る発行者の秘密鍵を一つの業者が全顧客の分まとめて持てば、その鍵一つで全部の扉の鍵が作れます。</li>
-<li><strong>鍵の台帳を共有の機械に置くと、相乗り型の危険を負う。</strong> 発行者の秘密鍵や鍵の台帳を VPS やレンタルサーバーに置くと、隣の仮想マシンから抜かれうる不具合の影響を受けます。</li>
+<li><strong>判定が扉の中で完結しても、発行者の鍵が一か所に集まれば同じ。</strong> <a href="/guide/aliro/">Aliro</a> のように、スマートフォンとリーダーだけで判定する方式でも、鍵を作る発行者の秘密鍵を一つの業者が全顧客の分まとめて持てば、その鍵一つで全部の扉の鍵が作れます。</li>
+<li><strong>鍵の台帳を共有のサーバーに置くと、相乗り型の危険を負う。</strong> 発行者の秘密鍵や鍵の台帳を VPS やレンタルサーバーに置くと、隣の仮想マシンから抜かれうる不具合の影響を受けます。</li>
 <li><strong>分譲マンションでは、住戸の錠の鍵を出すのは区分所有者。</strong> 法律上の持ち主と、鍵を出す実際の力を持つ業者がずれると、預かり型の危険が住戸にまで及びます。</li>
 </ul>
 <h2>このサイトの要求仕様</h2>
@@ -927,24 +927,24 @@ article img {
 </tr>
 <tr>
 <td>R-AC-11</td>
-<td>発行者の秘密鍵は取り出せない場所に置き、他人と同じ機械を共有する環境に置かない</td>
+<td>発行者の秘密鍵は取り出せない場所に置き、他人と同じサーバーを共有する環境に置かない</td>
 <td>相乗り型</td>
 </tr>
 <tr>
 <td>R-AC-12</td>
-<td>錠と読取機が信頼する発行者の変更は、管理者の認証済みの操作だけで行い、記録に残す</td>
+<td>錠とリーダーが信頼する発行者の変更は、管理者の認証済みの操作だけで行い、記録に残す</td>
 <td>顧客の側で防げない</td>
 </tr>
 </tbody>
 </table>
-<p>扉のコントローラの側では、発行者が署名した資格情報を、扉が網も発行者のサーバーも使わずに自分で確かめる形を、<a href="/guide/open-specification/">扉コントローラ仕様書</a> の 5.2a に書きました。仕様を確かめる疑似の扉(digitaldoor-controller)で、この形の試験が通っています。</p>
+<p>扉のコントローラの側では、発行者が署名した資格情報を、扉がネットワークも発行者のサーバーも使わずに自分で確かめる形を、<a href="/guide/open-specification/">扉コントローラ仕様書</a> の 5.2a に書きました。仕様を確かめる疑似の扉(digitaldoor-controller)で、この形の試験が通っています。</p>
 <h2>使う人ができること</h2>
 <ul>
 <li>業者に預けている鍵と権限を一覧にします。どの業者に、何への、どれだけの権限を渡しているかです。</li>
 <li>渡す権限を用途に要る分だけにし、期限を付けられる物は付けます。</li>
 <li>業者が止まったとき、止めたときにも使える手段を手元に残します。扉なら、錠に登録した暗証番号、カード、物理鍵です。</li>
 <li>預けた鍵を作り直す手順を、事前に決めておきます。</li>
-<li>秘密鍵を、他人と共有する機械に置きません。</li>
+<li>秘密鍵を、他人と共有するサーバーに置きません。</li>
 </ul>
 <h2>出典</h2>
 <ul>

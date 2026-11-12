@@ -8,7 +8,7 @@
 |---|---|---|---|
 | Matter | CSA | 錠(Door Lock、1.0 から)。1.5(2025年11月)でカメラと開閉機器、1.6(2026年6月17日)で NFC による設定と複数エコシステムの共同管理 | 確定した仕様は CSA の頁から無料。SDK(connectedhomeip)は Apache-2.0。草案と作業部会は Participant(年21,500ドル)以上 |
 | Aliro 1.0 | CSA | スマートフォンとウォッチの鍵。NFC、Bluetooth LE、Bluetooth LE と UWB。2026年2月26日公開 | 仕様は CSA の頁から無料。試験の道具と模擬の装置が GitHub の aliro-access-control に Apache-2.0 で公開。認証は CSA が認めた試験所 |
-| OSDP | SIA | 読取機と制御盤の間。IEC 60839-11-5 | 実装に libosdp(Apache-2.0)。適合確認は SIA の会員 |
+| OSDP | SIA | リーダーと制御盤の間。IEC 60839-11-5 | 実装に libosdp(Apache-2.0)。適合確認は SIA の会員 |
 | ONVIF Profile C、A | ONVIF | 扉の監視と制御、資格情報と規則 | 会員制 |
 | ECHONET Lite | エコーネットコンソーシアム | 電気錠の機器の種類(クラスコード 0x026F) | 仕様は公開 |
 | JEM-A(JEM1427) | 日本電機工業会 | インターホンと電気錠の連動の接点 | 公開の本文は見つからない。各社の取扱説明書に極性と配線の制限 |

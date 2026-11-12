@@ -12,7 +12,7 @@ category.ja: お知らせ
 category.en: Announcements
 title.ja: 今日、デジタルドアを始めました
 title.en: Digital Door starts today
-subtitle.ja: 扉と鍵の技術を層に分けて解説し、自社で確かめて守るための手引きと道具を置きます
+subtitle.ja: 扉と鍵の技術を層に分けて解説し、自社で確かめて守るためのガイドと道具を置きます
 subtitle.en: Door and key technology explained layer by layer, with guides and tools for checking and protecting your own systems
 description.ja: 2026 年 11 月 11 日、電子錠、ドアホン、扉のコントローラ、鍵の発行、業務システムとの連携を、層に分けて解説するサイトを始めました。解説、始め方、マニュアル、ニュース、立体図、相談と教室の頁があります。
 description.en: A site that explains door and key technology layer by layer — door locks, doorbells, door controllers, key issuing and links to business systems — with guides, a getting-started guide, a manual, news, a 3D view, and a consultation page.
@@ -32,7 +32,7 @@ ifdef::lang-ja[]
 * link:/3d/[立体図]。集合住宅の玄関ドアを、図面から立体にして、扉が鍵を確かめて開ける様子を見られる頁です(link:/blog/drawing-to-3d/[次の記事])。
 * link:/check/[始め方]。自社のシステムと納められたコードを、AI で確かめるときの始め方です。
 * link:/manual/[マニュアル]。参照実装のソフトウェア(事業所サーバー、スマートフォンのアプリ、扉のコントローラ、命令)の使い方で、コードから作っています。
-* link:/news/[ニュース]。扉と鍵に関するニュースです。AI が手引きに沿って元の記事を開いて確かめて書き、人が読んで直した物を、出典と確かめた日を付けて載せます。
+* link:/news/[ニュース]。扉と鍵に関するニュースです。AI がガイドに沿って元の記事を開いて確かめて書き、人が読んで直した物を、出典と確かめた日を付けて載せます。
 * link:/consult/[相談と教室]。システムを確かめる相談と、AI 教室の案内です。
 
 仕様と参照実装のコードは、GitHub(https://github.com/aiseed-dev/digitaldoor)で公開しています。仕様の文書は CC BY 4.0、扉のコントローラの参照実装は Apache-2.0 です。
@@ -43,7 +43,7 @@ ifdef::lang-ja[]
 
 == 置き場所
 
-このサイトは、運営者の手元の小さな機械で配っています。前には Cloudflare を置いています。サイトは静的なファイルだけでできていて、変更を GitHub に上げると、その機械が取りに行き、点検してから入れ替えます。配る機械では、アクセスの記録を書いていません。
+このサイトは、運営者の手元の小さなサーバーで配っています。前には Cloudflare を置いています。サイトは静的なファイルだけでできていて、変更を GitHub に上げると、そのサーバーが取りに行き、点検してから入れ替えます。配るサーバーでは、アクセスの記録を書いていません。
 endif::[]
 
 // ===== article: 002-drawing-to-3d =====
@@ -57,7 +57,7 @@ title.ja: 扉の図面を立体にして見せる頁を作りました
 title.en: A page that turns a door drawing into 3D
 subtitle.ja: 姿図の線が厚みを持ち、扉が鍵を確かめて開ける様子を回して見られます
 subtitle.en: The lines of the elevation drawing gain depth, and you can turn the door to watch it check a key and open
-description.ja: 集合住宅の玄関ドアの姿図を、つまみ一つで立体に変え、扉が署名と期限を確かめて開ける様子、網が切れた時、止めた鍵、火災の信号の時の動きを見られる頁を作りました。図面も写真も使わず、文章の指示から AI が書いた物です。
+description.ja: 集合住宅の玄関ドアの姿図を、つまみ一つで立体に変え、扉が署名と期限を確かめて開ける様子、ネットワークが切れた時、止めた鍵、火災の信号の時の動きを見られる頁を作りました。図面も写真も使わず、文章の指示から AI が書いた物です。
 description.en: A page that turns the elevation drawing of an apartment entrance door into 3D with one slider, and shows how the door checks a key, works without the network, refuses a revoked key, and releases on a fire signal. It was written by AI from text instructions alone.
 ---
 ifdef::lang-ja[]
@@ -74,7 +74,7 @@ ifdef::lang-ja[]
 「鍵をかざす」の欄から、四つの場面を選べます。
 
 * 住人が帰る。スマートフォンをかざすと、扉が鍵の署名と期限を確かめて開けます。
-* 網が切れている時。ルーターが止まっていても、扉だけで確かめて開けます。
+* ネットワークが切れている時。ルーターが止まっていても、扉だけで確かめて開けます。
 * 止めた鍵。退去した人や、なくした端末の鍵は、扉が拒みます。
 * 火災の信号。報知器の信号で、避難のために錠を解放します。
 
@@ -88,5 +88,5 @@ ifdef::lang-ja[]
 
 製品の図面と写真があれば、その寸法と色で、一品ずつこの頁と同じ物を作れます。扉の会社がカタログの一品ごとに見せる使い方を考えています。
 
-WebGL が使えないブラウザでは、立体を描けないという知らせだけが出ます。画面の動きを減らす設定にしているときは、開いた時に図面から立体へ自動で移らないので、つまみで移してください。
+WebGL が使えないブラウザでは、立体を描けないという通知だけが出ます。画面の動きを減らす設定にしているときは、開いた時に図面から立体へ自動で移らないので、つまみで移してください。
 endif::[]

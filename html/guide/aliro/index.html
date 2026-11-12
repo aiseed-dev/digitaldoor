@@ -8,7 +8,7 @@
 
 
 <title>Aliroとは何か — 解説 | デジタルドア</title>
-<meta name="description" content="Aliroは、スマートフォンやスマートウォッチを鍵として電子錠のリーダーに提示するための規格です。2026年2月に1.0が公開されました。規定している範囲と規定していない範囲、役割と鍵の仕組み、Matterでのリーダーの設定、認証と財布の状況、実装の例を解説します。">
+<meta name="description" content="Aliroは、スマートフォンやスマートウォッチを鍵として電子錠のリーダーに提示するための規格です。2026年2月に1.0が公開されました。規定している範囲と規定していない範囲、役割と鍵の仕組み、Matterでのリーダーの設定、認証とウォレットの状況、実装の例を解説します。">
 <link rel="canonical" href="https://door.aiseed.dev/guide/aliro/">
 <link rel="alternate" hreflang="ja" href="https://door.aiseed.dev/guide/aliro/">
 
@@ -17,14 +17,14 @@
 <meta property="og:site_name" content="デジタルドア">
 <meta property="og:locale" content="ja_JP">
 <meta property="og:title" content="Aliroとは何か">
-<meta property="og:description" content="Aliroは、スマートフォンやスマートウォッチを鍵として電子錠のリーダーに提示するための規格です。2026年2月に1.0が公開されました。規定している範囲と規定していない範囲、役割と鍵の仕組み、Matterでのリーダーの設定、認証と財布の状況、実装の例を解説します。">
+<meta property="og:description" content="Aliroは、スマートフォンやスマートウォッチを鍵として電子錠のリーダーに提示するための規格です。2026年2月に1.0が公開されました。規定している範囲と規定していない範囲、役割と鍵の仕組み、Matterでのリーダーの設定、認証とウォレットの状況、実装の例を解説します。">
 <meta property="og:url" content="https://door.aiseed.dev/guide/aliro/">
 <meta property="og:image" content="https://door.aiseed.dev/images/og-default.jpg">
 <meta property="article:section" content="解説">
 <meta property="article:published_time" content="2026.09.17">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Aliroとは何か">
-<meta name="twitter:description" content="Aliroは、スマートフォンやスマートウォッチを鍵として電子錠のリーダーに提示するための規格です。2026年2月に1.0が公開されました。規定している範囲と規定していない範囲、役割と鍵の仕組み、Matterでのリーダーの設定、認証と財布の状況、実装の例を解説します。">
+<meta name="twitter:description" content="Aliroは、スマートフォンやスマートウォッチを鍵として電子錠のリーダーに提示するための規格です。2026年2月に1.0が公開されました。規定している範囲と規定していない範囲、役割と鍵の仕組み、Matterでのリーダーの設定、認証とウォレットの状況、実装の例を解説します。">
 <meta name="twitter:image" content="https://door.aiseed.dev/images/og-default.jpg">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="alternate" type="application/rss+xml" title="デジタルドア" href="/feed.xml">
@@ -833,14 +833,14 @@ article img {
 <h2>概要</h2>
 <p>Aliroは、Matterと同じConnectivity Standards Alliance(CSA)が策定する規格で、バージョン1.0は2026年2月26日に公開されました。策定には、Apple、Google、Samsungといったスマートフォン側の企業と、ASSA ABLOY、Allegion、HIDといった錠・リーダー側の企業が参加しており、参加企業は220社を超えます。</p>
 <p>それまで、スマートフォンを鍵にする仕組みは企業ごとに分かれていました。たとえばAppleのHome Keyは、iOS 15(2021年)でNFCによる鍵をWalletに追加し、iOS 18(2024年)でUWBによる近接解錠に対応しましたが、Home Key対応の錠でしか使えませんでした。Aliroは、この部分を共通化する規格です。</p>
-<p>(2026年11月11日に、役割と鍵の仕組み、Matterでの設定、認証と財布の状況、実装の例を足し、確かめられなかった暗号の細部の記述を改めました。同じ日に、Google Walletの戸建て住宅の鍵の件を足しました。)</p>
+<p>(2026年11月11日に、役割と鍵の仕組み、Matterでの設定、認証とウォレットの状況、実装の例を足し、確かめられなかった暗号の細部の記述を改めました。同じ日に、Google Walletの戸建て住宅の鍵の件を足しました。)</p>
 <h2>規定している範囲</h2>
 <ul>
 <li>スマートフォンとリーダーの間の相互認証。非対称鍵の暗号を使います(CSAの発表)。Aliro 1.0の仕様の第6章は、資格情報の文書の署名にP-256の楕円曲線の鍵を使うと定めています。</li>
 <li>入館の資格を示す文書(Access Document)と、失効の一覧の文書(Revocation Document)の形。</li>
 <li>通信方式は三つ。NFC(かざす)、Bluetooth LE(利用者の操作で少し離れて)、Bluetooth LEとUWB(手を触れずに通る)。認証ではNFCが必須とされています(Silicon Labsの文書)。</li>
 <li>認証はリーダーの中で完結します。インターネットに接続していなくても、スマートフォンとリーダーの二者だけで解錠できます。</li>
-<li>オフラインでの資格情報の失効。網につながらないリーダーには、スマートフォンが発行者の署名つきの失効の一覧を運びます。</li>
+<li>オフラインでの資格情報の失効。ネットワークにつながらないリーダーには、スマートフォンが発行者の署名つきの失効の一覧を運びます。</li>
 </ul>
 <p>この記事の前の版は、AES-256-GCM、圧縮X.509証明書、mdocという細部を挙げていました。CSAの公開の資料ではこれらを確かめられなかったため、外しました。有志の研究者による解析(kormax/aliro、非公式)は、その場限りの鍵どうしのECDH、HKDF-SHA256などによる鍵の導出、ECDSAの署名、AES-GCMの暗号化を挙げています。</p>
 <h2>規定していない範囲</h2>
@@ -876,8 +876,8 @@ article img {
 </tr>
 </tbody>
 </table>
-<p>スマートフォンには、端末ごとに一つの鍵の対(Access Credential)があり、資格の文書はその公開鍵を含みます。リーダーは毎回違う問いかけへの、端末の鍵の署名を確かめるので、文書の写しを別の端末に移しても開きません。失効の一覧には発行者ごとの世代の番号(ValidityIteration)があり、古い世代で新しい失効を取り消すことはできません。</p>
-<p>端末とリーダーへの資格の載せ方と、その後の管理は、仕様の外です。CSAの手引きは会員向けに公開を待つとされています。このため、載せ方を業者に任せると、業者が発行者の秘密鍵まで持つ形になりやすい点に注意が要ります。このサイトの要求仕様は、発行者の秘密鍵を管理者が持ち、業者は署名済みの文書を運ぶだけとする要求(R-AC-20)を置いています。</p>
+<p>スマートフォンには、端末ごとに一つの鍵の対(Access Credential)があり、資格の文書はその公開鍵を含みます。リーダーは毎回違う問いかけへの、端末の鍵の署名を確かめるので、文書のコピーを別の端末に移しても開きません。失効の一覧には発行者ごとの世代の番号(ValidityIteration)があり、古い世代で新しい失効を取り消すことはできません。</p>
+<p>端末とリーダーへの資格の載せ方と、その後の管理は、仕様の外です。CSAのガイドは会員向けに公開を待つとされています。このため、載せ方を業者に任せると、業者が発行者の秘密鍵まで持つ形になりやすい点に注意が要ります。このサイトの要求仕様は、発行者の秘密鍵を管理者が持ち、業者は署名済みの文書を運ぶだけとする要求(R-AC-20)を置いています。</p>
 <h2>取引の流れ</h2>
 <p>Nordic Semiconductorの開発者向けの文書は、取引を次の三つに分けて説明しています。</p>
 <ul>
@@ -887,11 +887,11 @@ article img {
 </ul>
 <p>Matterと組み合わせた錠は、時刻をMatterの時刻の同期から取ります。期限の判定に時計が要るためです。</p>
 <h2>Matterでのリーダーの設定</h2>
-<p>リーダーに「どの読取機として名乗るか」と「どの発行者を信じるか」を入れる道の一つが、MatterのDoor Lockクラスタです。Matter 1.4のデータモデル(Door Lockクラスタの改訂8)で入りました。名前と番号は、connectedhomeipのデータモデルによる物です。</p>
+<p>リーダーに「どのリーダーとして名乗るか」と「どの発行者を信じるか」を入れる道の一つが、MatterのDoor Lockクラスタです。Matter 1.4のデータモデル(Door Lockクラスタの改訂8)で入りました。名前と番号は、connectedhomeipのデータモデルによる物です。</p>
 <ul>
 <li><strong>機能のビット。</strong> ALIRO(Aliroの設定)と、ALBU(BLEとUWB。ALIROが前提)。</li>
 <li><strong>リーダーの設定の命令(SetAliroReaderConfig)。</strong> 欄は四つです。リーダーの署名の秘密鍵(32バイト)、その公開鍵(非圧縮の65バイト)、リーダーの組の識別(16バイト)、BLEとUWBのための組の鍵(16バイト。ALBUの錠で必須)。「管理」の権限とTimed Invokeが要ります。消すのはClearAliroReaderConfigです。</li>
-<li><strong>属性。</strong> リーダーの公開鍵、組の識別、対応する手順の版などです。鍵に関わる属性は「管理」の権限でだけ読めます。入れられる発行者の鍵と端末の鍵の数は誰でも読めます。</li>
+<li><strong>属性。</strong> リーダーの公開鍵、組の識別、対応する手順のバージョンなどです。鍵に関わる属性は「管理」の権限でだけ読めます。入れられる発行者の鍵と端末の鍵の数は誰でも読めます。</li>
 <li><strong>発行者の鍵の登録。</strong> 資格情報の登録(SetCredential)の種類に、Aliroの発行者の鍵、入れ替えられる端末の鍵、入れ替えない端末の鍵の三つがあります。</li>
 </ul>
 <p>AppleのMatterの開発用の枠組みと、Google Homeの開発用のAPIにも、この命令と属性が載っています。EspressifのAliroの解説(2026年7月16日)も、Matterの管理者がこの命令でリーダーを設定する形を説明しています。</p>
@@ -902,10 +902,10 @@ article img {
 <li>ULTRALOQ(Xthings)は、5機種でAliro 1.0の認証を取ったと報じられています(Matter Alpha、2026年5月4日)。</li>
 <li>日本向けのAliro対応の錠の発表は、2026年11月11日の時点で見つかりませんでした。Aqara U400(UWBとAliro)の販売地域に日本は含まれていないと報じられています。</li>
 </ul>
-<h2>財布(Wallet)との関係</h2>
+<h2>ウォレット(Wallet)との関係</h2>
 <ul>
-<li>Googleは、2025年3月のGoogle Playサービスの更新で、Google WalletがNFCの読取機向けにAliroに対応したと報じられています(9to5Google)。2026年11月9日付のGoogle Playサービス v26.44のリリースノートには、MatterとAliroに対応した戸建て住宅の鍵を、Google HomeからGoogle Walletに足せるという行が載りました。対象はスマートフォンで、国と地域、対応する錠は書かれていません(<a href="/guide/google-wallet-home-key/">Google Wallet に戸建ての家の鍵が入る</a>)。</li>
-<li>Samsungは2026年3月2日に、Samsung Walletのデジタルホームキーを発表しました。SmartThingsで錠をMatterの機器として登録する途中で、財布に鍵を足す流れです。最初はNFCで、UWBは2026年4月からとされています(Samsungの発表)。</li>
+<li>Googleは、2025年3月のGoogle Playサービスの更新で、Google WalletがNFCのリーダー向けにAliroに対応したと報じられています(9to5Google)。2026年11月9日付のGoogle Playサービス v26.44のリリースノートには、MatterとAliroに対応した戸建て住宅の鍵を、Google HomeからGoogle Walletに足せるという行が載りました。対象はスマートフォンで、国と地域、対応する錠は書かれていません(<a href="/guide/google-wallet-home-key/">Google Wallet に戸建ての家の鍵が入る</a>)。</li>
+<li>Samsungは2026年3月2日に、Samsung Walletのデジタルホームキーを発表しました。SmartThingsで錠をMatterの機器として登録する途中で、ウォレットに鍵を足す流れです。最初はNFCで、UWBは2026年4月からとされています(Samsungの発表)。</li>
 <li>Appleは2026年10月13日に、LGのスマートデッドボルト錠を含む家庭用の機器の一式を発表しました。Matterに対応し、Aliroに対応し、UWBで近づいて開けられるとしています。錠を売るのは米国とカナダで、日本は含まれていません(Appleの発表)。Appleのホームキーと Aliro の関係を、Apple自身が説明した文は見つかりませんでした。</li>
 </ul>
 <h2>扉の側から見た利点</h2>
@@ -924,14 +924,14 @@ article img {
 <p>公開されている物は次のとおりです。</p>
 <ul>
 <li>CSAの公開の置き場(aliro-access-control)。認証の試験の道具と、リーダーと利用者の端末を模擬する道具が、Apache-2.0で公開されています。</li>
-<li>Espressifのesp-aliro(Apache-2.0)。最初の版はNFCだけで、BLEとUWBは今後とされています。</li>
+<li>Espressifのesp-aliro(Apache-2.0)。最初のバージョンはNFCだけで、BLEとUWBは今後とされています。</li>
 <li>有志の研究(kormax/aliro)と、PythonでNFCのリーダーを試す例(kormax/python-aliro-reader、Apache-2.0)。どちらも非公式です。</li>
 <li>connectedhomeipの電子錠の例(examples/lock-app)は、MatterでのAliroの属性と命令を持ちますが、リーダーの設定を保存するだけで、端末との取引は含みません。</li>
 </ul>
 <p>このサイトのソフトウェアには、MatterでAliroのリーダーを設定する値を作る例があります(<code>digitalkey/aliro.py</code>、<code>digitalkey aliro</code>)。</p>
 <ul>
 <li><code>reader-config</code> は、リーダーのP-256の鍵の対と組の識別を作り、権限600のファイルに書きます。画面には公開の欄だけを出します。</li>
-<li><code>issuer-key</code> は、発行者の鍵の対を作ります。リーダーに入れるのは公開鍵(65バイト)だけで、秘密鍵は管理者の機械に残します。</li>
+<li><code>issuer-key</code> は、発行者の鍵の対を作ります。リーダーに入れるのは公開鍵(65バイト)だけで、秘密鍵は管理者のコンピューターに残します。</li>
 <li><code>matter-fields</code> は、リーダーの設定の命令と、発行者の鍵を登録する命令の欄を、16進の値で出します。管理者のアプリやコントローラー(connectedhomeipのchip-tool、matter.jsなど)から送るときに使います。送る前に、長さと、鍵の対が合っていることと、公開鍵が曲線の上にあることを確かめます。</li>
 </ul>
 <p>端末とリーダーの間の取引は作りません。リーダーは、Aliroの認証を受けた製品を買います。このサイトの扉がMatterの電子錠として見せている部分(<code>digitalkey/panel/door_lock.py</code>)は、Timed Invokeを扱わない実装の上にあるため、Aliroの機能を出していません。</p>
