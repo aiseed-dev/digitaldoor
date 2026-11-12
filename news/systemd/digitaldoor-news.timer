@@ -1,0 +1,38 @@
+# digitaldoor-news.timer — 毎朝、digitaldoor-news.service を動かす(systemd のユーザーの単位の見本)
+#
+# 決めた時刻に、開発機の AI の CLI に今日のニュースの下書きを書かせます(service の先頭の説明)。
+# Persistent=true なので、その時刻に開発機が止まっていたり眠っていたりした日は、
+# 次に起きたときに一度動きます。
+#
+# 入れ方(service と一緒に):
+#   cp news/systemd/digitaldoor-news.service news/systemd/digitaldoor-news.timer ~/.config/systemd/user/
+#   systemctl --user daemon-reload
+#   systemctl --user enable --now digitaldoor-news.timer
+#
+# 確かめ方:
+#   systemctl --user list-timers                # 次に動く時刻と、前に動いた時刻
+#   journalctl --user -u digitaldoor-news       # 動いたときの出力
+#
+# 止め方:
+#   systemctl --user disable --now digitaldoor-news.timer
+#
+# 時刻を変えるときは、~/.config/systemd/user/ に写した timer の OnCalendar を直し、
+# systemctl --user daemon-reload を行います。
+#
+# ログインしていない間も動かすには loginctl enable-linger が要ります。
+# 開発機で、ふだんログインして使っているなら、ふつう要りません。
+
+[Unit]
+Description=digitaldoor: 毎朝、今日のニュースの下書きを書かせる
+
+[Timer]
+# 毎朝の時刻。値は例です。決めるのは運営者です。タイムゾーンは開発機の設定(Asia/Tokyo)に従います。
+OnCalendar=*-*-* 07:00:00
+# 止まっていた日や眠っていた日は、次に起きたときに一度動きます。
+Persistent=true
+# 時刻を少しずらします。値は例です。
+RandomizedDelaySec=10min
+Unit=digitaldoor-news.service
+
+[Install]
+WantedBy=timers.target

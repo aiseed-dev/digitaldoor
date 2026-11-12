@@ -1,0 +1,39 @@
+# digitaldoor-news.service — 開発機で、今日のニュースの下書きを 1 回書かせる(systemd のユーザーの単位の見本)
+#
+# news/tsukuru.py --ai claude を動かし、開発機の Claude Code(claude -p)に
+# news/YYYY-MM-DD.adoc(日本時間の今日)を書かせます。API キーは使わず、
+# この PC の CLI のログインを使います。できた下書きは人が読んで直し、
+# news/tsukuru.py --check で形を確かめてから commit します。commit した物だけがサイトに載ります。
+# 今日のファイルがすでにある日、書く物が無かった日、途中で止まった日は 1 で終わり、journal に残ります。
+# サーバー(deb2)と GitHub Actions では動かしません。
+#
+# 毎日の時刻は digitaldoor-news.timer で決めます。この service は timer から動かします。
+#
+# 入れ方(timer と一緒に):
+#   cp news/systemd/digitaldoor-news.service news/systemd/digitaldoor-news.timer ~/.config/systemd/user/
+#   systemctl --user daemon-reload
+#   systemctl --user enable --now digitaldoor-news.timer
+#
+# 確かめ方:
+#   systemctl --user list-timers                # 次に動く時刻と、前に動いた時刻
+#   journalctl --user -u digitaldoor-news       # 動いたときの出力
+#   systemctl --user start digitaldoor-news     # 時刻を待たずに 1 回動かす
+#
+# 止め方:
+#   systemctl --user disable --now digitaldoor-news.timer
+#
+# ログインしていない間も動かすには loginctl enable-linger が要ります。
+# 開発機で、ふだんログインして使っているなら、ふつう要りません。
+
+[Unit]
+Description=digitaldoor: 今日のニュースの下書きを AI の CLI に書かせる
+
+[Service]
+Type=oneshot
+# リポジトリの置き場。%h はホームのディレクトリです。置き場が違えば直します。
+WorkingDirectory=%h/dev/digitaldoor
+# claude(~/.local/bin/claude)を見つけるため、PATH に %h/.local/bin を入れます。
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=%h/dev/digitaldoor/.venv/bin/python news/tsukuru.py --ai claude
+# 書き終わるまで数分から十数分かかります。値は例です。決めるのは運営者です。
+TimeoutStartSec=45min

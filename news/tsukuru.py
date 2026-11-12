@@ -15,6 +15,8 @@ workspace writes. Afterwards the file is checked for the shape the site
 reads (title, date, headings, 分野, 種別, sources with a checked-on date).
 No API key is used: each CLI runs with the login of the PC it runs on.
 Only the standard library is used.
+Samples to run it every day on the development PC (a systemd user
+service and timer) are in news/systemd/.
 """
 import argparse
 import datetime

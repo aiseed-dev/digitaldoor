@@ -81,3 +81,5 @@ python news/tsukuru.py --ai codex      # Codex CLI
 python news/tsukuru.py --prompt-only   # 頼み文だけを出す(CLI の無い AI に貼る)
 python news/tsukuru.py --check news/2026-11-11.adoc   # 書いた adoc の形を確かめる
 ```
+
+毎日動かすときは、`news/systemd/` の見本(systemd のユーザーの単位の service と timer)を使います。
