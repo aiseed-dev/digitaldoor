@@ -90,3 +90,49 @@ ifdef::lang-ja[]
 
 WebGL が使えないブラウザでは、立体を描けないという通知だけが出ます。画面の動きを減らす設定にしているときは、開いた時に図面から立体へ自動で移らないので、つまみで移してください。
 endif::[]
+
+// ===== article: 003-phone-opens-the-door =====
+---
+slug: phone-opens-the-door
+date: 2026.11.14
+label: ブログ
+category.ja: お知らせ
+category.en: Announcements
+title.ja: 扉がスマートフォンで開く。難しいのは、守りだけです
+title.en: Doors will open with a phone. The only hard part is security
+subtitle.ja: 解説 25 を書きました。技術は使う物で、課題は会社として守りを作れるかどうかです
+subtitle.en: A new guide on how a door maker becomes a wallet key issuer. The technology is there to use; the question is security
+description.ja: 扉を作る会社が、ウォレットの鍵を出す会社になるための解説 25 を書きました。扉はスマートフォンで開く所に行き着き、鍵を発行できる会社は数社に絞られ、その上で建物の管理者や導入する会社がアプリを作る形が良い、という運営者の見方を書きます。
+description.en: We published guide 25 on how a door maker can become a company that issues wallet keys. This post gives the site operator's view: doors are heading toward phones, only a few companies will issue keys, and others should build apps on top of them.
+---
+ifdef::lang-ja[]
+= 扉がスマートフォンで開く。難しいのは、守りだけです
+
+解説 25「link:/guide/door-maker-and-wallet-keys/[扉を作る会社が、ウォレットの鍵を出す会社になるには]」を書きました。扉がスマートフォンのウォレットの鍵で開くために作る技術は、Apple、Google、CSA が作った物を使うだけで、難しくありません。課題は、会社としてセキュリティ対策ができるかどうかです。解説では、その理由と、会社の形と、始める順を書いています。
+
+ここでは、運営者の見方を書きます。
+
+== 話は素直です
+
+扉は、開ける人が持っている物で開けるしかありません。今、誰もが持っているのはスマートフォンです。扉の鍵はスマートフォンの最も守られた部分に入り、そこに入れるには Apple と Google の審査を通るしかありません。話は素直で、扉がスマートフォンで開く、の一つに行き着くと見ています。
+
+== 鍵を発行できる会社は、数社に絞られる
+
+携帯電話の会社が 3 社と少しになったのと同じように、ウォレットの鍵を発行できる会社も、数社に絞られると見ています。入るのに要るのは、資金と、扉を作れることです。違うのは、選ぶのが国ではなく、Apple と Google だという事です。だから、国内の付き合いでは通れず、会社の場所や大きさも物差しに入らないと見ています。
+
+その数社の上で、建物の管理者や導入する会社が、自由にアプリを作れる形が良いと考えています。回線を持つ会社と、回線を借りて売る会社の関係と同じです。
+
+== 扉を作れる会社は、一番難しい所を持っている
+
+扉を作れる会社は、一番難しい所を既に持っていると見ています。海外では、錠の大手が扉を作る会社を買っています。Allegion は、米国証券取引委員会に出した四半期の報告(2026年9月30日までの期間)で、2026年3月2日に中空の金属の扉と枠を作る Door Components, Inc.(DCI)を、2026年10月2日に防音、防弾、金庫などの扉を作る Overly Door Company を買ったと書いています。
+
+変える物は少なくて済みます。新しく作る部門は、本社の鍵の部門と、営業所の鍵の管理の二つです。扉を作るのも、売るのも、今のままです。
+
+詳しくは、link:/guide/door-maker-and-wallet-keys/[解説 25] を読んでください。
+
+== 出典
+
+2026年11月14日に確かめました。
+
+* https://www.sec.gov/Archives/edgar/data/0001579241/000157924126000034/alle-20260930.htm[Allegion plc: Form 10-Q(2026年9月30日までの四半期)。注記 3「Acquisitions」(DCI を 2026年3月2日、Overly Door Company を 2026年10月2日に取得)]
+endif::[]

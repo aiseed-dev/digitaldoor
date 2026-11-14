@@ -4,7 +4,23 @@
 <link>https://door.aiseed.dev/</link>
 <description>扉と鍵の話を、層に分けて書く</description>
 <language>ja</language>
-<lastBuildDate>Thu, 12 Nov 2026 09:30:20 +0900</lastBuildDate>
+<lastBuildDate>Sat, 14 Nov 2026 15:42:44 +0900</lastBuildDate>
+<item>
+<title>扉を作る会社が、ウォレットの鍵を出す会社になるには</title>
+<link>https://door.aiseed.dev/guide/door-maker-and-wallet-keys/</link>
+<guid>https://door.aiseed.dev/guide/door-maker-and-wallet-keys/</guid>
+<category>解説</category>
+<pubDate>Sat, 14 Nov 2026 00:00:00 +0900</pubDate>
+<description>扉は、スマートフォンのウォレットの鍵で開く所に行き着きます。そのために作る技術は、Apple、Google、CSA が作った物を使うだけで、難しくありません。課題は、会社としてセキュリティ対策ができるかどうかです。Apple と Google がウォレットの鍵の制度に入る会社に求めている事、鍵を発行する会社が管理の受け付けを一手に引き受ける理由、本社の鍵の部門と営業所の鍵の管理という新しく作る二つの部門、防火区画と同じ考え方で区画を分けて守る形、利用者の情報を持たない Aliro の作り、始める順を示します。</description>
+</item>
+<item>
+<title>扉がスマートフォンで開く。難しいのは、守りだけです</title>
+<link>https://door.aiseed.dev/blog/phone-opens-the-door/</link>
+<guid>https://door.aiseed.dev/blog/phone-opens-the-door/</guid>
+<category>ブログ</category>
+<pubDate>Sat, 14 Nov 2026 00:00:00 +0900</pubDate>
+<description>扉を作る会社が、ウォレットの鍵を出す会社になるための解説 25 を書きました。扉はスマートフォンで開く所に行き着き、鍵を発行できる会社は数社に絞られ、その上で建物の管理者や導入する会社がアプリを作る形が良い、という運営者の見方を書きます。</description>
+</item>
 <item>
 <title>スマートフォンを会員証にする</title>
 <link>https://door.aiseed.dev/guide/membership-card-on-phone/</link>
