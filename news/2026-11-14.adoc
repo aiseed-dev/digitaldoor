@@ -1,0 +1,28 @@
+= デジタルドア ニュース 2026-11-14
+:日付: 2026-11-14
+
+== Google Wallet の家の鍵が使える錠は、最初は Aqara、Schlage、Nuki の 3 機種だと報じられました
+:分野: 電子錠
+:国・地域: 米国、欧州
+:種別: 報道
+
+2026-11-11 のニュースで、Google Wallet に Aliro の家の鍵を入れられるようになったことを書きました。その続きです。9to5Google の Abner Li 氏は 11 月 11 日に、Google の Google Home コミュニティへの投稿をもとに、最初に使える錠は Aqara u400(UWB と NFC)、Schlage Sense Pro(最初は NFC だけで、UWB は後から)、Nuki Keypad 2 NFC だと伝えました。まず Google Home アプリの Public Preview の参加者に配り、ほかの利用者には「数週間のうちに」広げるとしています。Android Authority の Karandeep Singh Oberoi 氏も同じ日に、Thread のボーダールーターを備えた Matter 対応の Google のハブ(Nest Hub 第 2 世代、Nest Hub Max、Nest Wifi Pro、Google TV Streamer)が要ると書いています。
+
+2 つの記事によると、かざして開けるには NFC のある Android 9 以降のスマートフォンが要ります。近づくだけで開ける機能は UWB に対応した錠とスマートフォン(Pixel 10 Pro 以降と、一部の Samsung Galaxy)が要り、最初は切ってあります。鍵は Google Home の家ごとに 1 つで、同じ家の対応する錠のどれにも使えます。Wear OS の腕時計は、最初は使えません。matter-smarthome.de の Frank-Oliver Grün 氏は 11 月 12 日に、Nuki Keypad 2 NFC は NFC でかざす使い方だけで、UWB で近づいて開ける使い方には対応しないと書いています。Google の投稿そのものは、ここでは中身を開いて確かめられなかったため、報道として扱います。どの記事にも、使える国や地域は書かれていません。
+
+出典: Google Wallet rolling out digital Google Home keys with supported locks on Android(9to5Google、2026-11-11)、https://9to5google.com/2026/11/11/google-wallet-home-key/ 、2026-11-14 に確かめました +
+出典: Google Wallet adds digital home keys to open your front door smart lock with a tap(Android Authority、2026-11-11)、https://www.androidauthority.com/google-wallet-digital-home-keys-nfc-uwb-unlocking-3734133/ 、2026-11-14 に確かめました +
+出典: Aliro Comes to Google. And Nuki is Ready.(matter-smarthome.de、2026-11-12)、https://matter-smarthome.de/en/products/aliro-comes-to-google-and-nuki-is-ready/ 、2026-11-14 に確かめました
+
+== Apple Home Collection のうち、LG のビデオドアホンとカメラ 2 機種の注文が始まりました
+:分野: ドアホン
+:国・地域: 米国
+:種別: 報道
+
+MacRumors の Joe Rossignol 氏と 9to5Mac の Ryan Christoffel 氏は 2026-11-13 に、Apple Home Collection のうち、LG Video Doorbell(249.95 米ドル)、LG Indoor Cam(199.95 米ドル)、LG Outdoor Cam(299.95 米ドル)の 3 機種を、Apple のオンラインストアで注文できるようになったと伝えました。9to5Mac は、届くのは 12 月の半ばの見込みだと書いています。Apple のオンラインストアの LG Video Doorbell Wired の頁は開いて、品物が載っていることを確かめました。頁の注記によると、録画を保存する HomeKit Secure Video には iCloud+ の契約と、HomeView、HomePod、Apple TV 4K などのホームハブが要ります。
+
+2026-11-12 のニュースで書いた電子錠 LG Smart Deadbolt Lock は、今回の 3 機種に入っていません。MacRumors は、残りの LG と Schneider Home の機器は 2027 年の初めまでに出ると書き、9to5Mac は、錠やサーモスタットは年明けまで待つことになるかもしれないと書いています。どちらの記事にも、注文できる国と、日本での発売は書かれていません。
+
+出典: Select 'Apple Home Collection' Accessories Now Available to Order(MacRumors、2026-11-13)、https://www.macrumors.com/2026/11/13/apple-home-collection-orders-begin/ 、2026-11-14 に確かめました +
+出典: Apple Home's new video doorbell, smart cameras now available to order(9to5Mac、2026-11-13)、https://9to5mac.com/2026/11/13/apple-homes-new-video-doorbell-smart-cameras-now-available-to-order/ 、2026-11-14 に確かめました +
+出典: LG Video Doorbell Wired – Essence Silver(Apple のオンラインストアの製品の頁、日付なし)、https://www.apple.com/shop/product/hsn92zm/a/lg-video-doorbell-wired-essence-silver 、2026-11-14 に確かめました
