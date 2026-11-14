@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'">
+
+
+<title>デジタルキーの普及予測。早ければ 2028 年、遅れれば 2031 年 — ブログ | デジタルドア</title>
+<meta name="description" content="日本、世界(米国と欧州)、自動車のデジタルキーの節目を、早い場合と遅い場合の年で予測します。国内の扉の製造者がウォレットの鍵で開く玄関ドアを出すのは、早ければ 2028 年、遅れれば 2031 年です。新築の戸建てについて、物理の鍵、独自のデジタルキー、ウォレットの鍵の割合を 2035 年まで予測します。早い方の年にするために誰が何をするか、2027 年のうちに済ませる事、扉を作る会社にとっての意味を書き、AI(Gemini)に書かせた予測を元の発表で確かめた結果を添えます。">
+<link rel="canonical" href="https://door.aiseed.dev/blog/digital-key-forecast/">
+<link rel="alternate" hreflang="ja" href="https://door.aiseed.dev/blog/digital-key-forecast/">
+
+<link rel="alternate" hreflang="x-default" href="https://door.aiseed.dev/blog/digital-key-forecast/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="デジタルドア">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="デジタルキーの普及予測。早ければ 2028 年、遅れれば 2031 年">
+<meta property="og:description" content="日本、世界(米国と欧州)、自動車のデジタルキーの節目を、早い場合と遅い場合の年で予測します。国内の扉の製造者がウォレットの鍵で開く玄関ドアを出すのは、早ければ 2028 年、遅れれば 2031 年です。新築の戸建てについて、物理の鍵、独自のデジタルキー、ウォレットの鍵の割合を 2035 年まで予測します。早い方の年にするために誰が何をするか、2027 年のうちに済ませる事、扉を作る会社にとっての意味を書き、AI(Gemini)に書かせた予測を元の発表で確かめた結果を添えます。">
+<meta property="og:url" content="https://door.aiseed.dev/blog/digital-key-forecast/">
+<meta property="og:image" content="https://door.aiseed.dev/images/og-default.jpg">
+<meta property="article:section" content="ブログ">
+<meta property="article:published_time" content="2026.11.14">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="デジタルキーの普及予測。早ければ 2028 年、遅れれば 2031 年">
+<meta name="twitter:description" content="日本、世界(米国と欧州)、自動車のデジタルキーの節目を、早い場合と遅い場合の年で予測します。国内の扉の製造者がウォレットの鍵で開く玄関ドアを出すのは、早ければ 2028 年、遅れれば 2031 年です。新築の戸建てについて、物理の鍵、独自のデジタルキー、ウォレットの鍵の割合を 2035 年まで予測します。早い方の年にするために誰が何をするか、2027 年のうちに済ませる事、扉を作る会社にとっての意味を書き、AI(Gemini)に書かせた予測を元の発表で確かめた結果を添えます。">
+<meta name="twitter:image" content="https://door.aiseed.dev/images/og-default.jpg">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="alternate" type="application/rss+xml" title="デジタルドア" href="/feed.xml">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+
+<!-- フォントは Web 配信せず、すべて端末のローカルフォントで賄う。
+     和文: UDデジタル教科書体 → BIZ UDP明朝(いずれも Windows 標準搭載の
+     モリサワ UD 書体) → ヒラギノ明朝・游明朝などのシステム明朝。
+     等幅: 端末のシステム等幅フォント。 -->
+
+<style>
+/* ============================================================
+   LOCAL FONT: UDデジタル教科書体(モリサワ)
+   Windows・教育向け端末に無償搭載。端末にあれば local() で拾い、
+   なければ BIZ UDP明朝(同じく Windows 標準搭載)→ システム明朝へ
+   フォールバックする。R と B は別ファミリー名なので、太字(700)を
+   B 書体に明示的にマッピングして疑似ボールドを避ける。
+   ============================================================ */
+@font-face {
+  font-family: "UD Digital Kyokasho";
+  font-weight: 400;
+  src: local("UD デジタル 教科書体 NK-R"), local("UD Digital Kyokasho NK-R"),
+       local("UD デジタル 教科書体 NP-R"), local("UD Digital Kyokasho NP-R"),
+       local("UD デジタル 教科書体 N-R"), local("UD Digital Kyokasho N-R");
+}
+@font-face {
+  font-family: "UD Digital Kyokasho";
+  font-weight: 700;
+  src: local("UD デジタル 教科書体 NK-B"), local("UD Digital Kyokasho NK-B"),
+       local("UD デジタル 教科書体 NP-B"), local("UD Digital Kyokasho NP-B"),
+       local("UD デジタル 教科書体 N-B"), local("UD Digital Kyokasho N-B");
+}
+
+/* ============================================================
+   COLOR & DESIGN TOKENS
+   aiseed.dev 全体のスタイルに合わせる場合は、ここの変数を
+   既存サイトのCSS変数に差し替える。
+   ============================================================ */
+:root {
+  --ink: #1a1a1a;
+  --paper: #f4f1ea;
+  --paper-deep: #ebe6d8;
+  --accent: #c8442a;
+  --rule: #d4cdb8;
+  --whisper: #6b665a;
+  --highlight: #f7e9c8;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+/* 本文: 端末にあれば UDデジタル教科書体を最優先、次に BIZ UDP明朝
+   (Windows 標準搭載)、どちらもなければヒラギノ明朝等のシステム明朝 */
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "UD Digital Kyokasho",
+               "BIZ UDPMincho", "BIZ UDP明朝",
+               "Hiragino Mincho ProN", "ヒラギノ明朝 ProN",
+               "Yu Mincho", "游明朝", "YuMincho",
+               "Noto Serif CJK JP", "Noto Serif JP", serif;
+  font-size: 17px;
+  line-height: 1.9;
+  letter-spacing: 0.02em;
+  font-feature-settings: "palt";
+  overflow-x: hidden;
+}
+
+/* グレインテクスチャ(紙の質感) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image: radial-gradient(rgba(0,0,0,0.04) 1px, transparent 1px);
+  background-size: 3px 3px;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+}
+
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 32px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ============================================================
+   MASTHEAD(シリーズ名・章番号)
+   ============================================================ */
+.masthead {
+  border-bottom: 3px double var(--ink);
+  padding: 24px 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--whisper);
+}
+.masthead-left  { font-weight: 700; color: var(--ink); }
+.masthead-left a { color: inherit; text-decoration: none; }
+.masthead-left a:hover { color: var(--accent); }
+.masthead-home { color: var(--whisper); }
+.masthead-sep { margin: 0 10px; color: var(--whisper); font-weight: 400; }
+.masthead-right { font-style: italic; }
+
+/* ============================================================
+   HERO(タイトル領域)
+   ============================================================ */
+.hero {
+  padding: 80px 0 60px;
+}
+.hero-meta {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  color: var(--accent);
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.hero-meta::before {
+  content: "";
+  width: 40px;
+  height: 1px;
+  background: var(--accent);
+}
+.hero-title {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 800;
+  font-size: clamp(32px, 5.5vw, 56px);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin-bottom: 24px;
+}
+.hero-title .accent {
+  color: var(--accent);
+}
+.hero-subtitle {
+  font-size: 18px;
+  line-height: 1.85;
+  color: var(--whisper);
+  max-width: 580px;
+  border-left: 2px solid var(--accent);
+  padding-left: 20px;
+  margin-top: 32px;
+}
+.hero-byline {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--whisper);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ============================================================
+   ARTICLE BODY
+   ============================================================ */
+article p {
+  margin-bottom: 24px;
+}
+
+article h2 {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1.4;
+  margin: 72px 0 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--ink);
+  position: relative;
+}
+article h2::before {
+  content: "§";
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  color: var(--accent);
+  margin-right: 16px;
+  font-size: 22px;
+}
+
+article h3 {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 600;
+  font-size: 19px;
+  margin: 40px 0 16px;
+  color: var(--ink);
+}
+article h3::before {
+  content: "—";
+  color: var(--accent);
+  margin-right: 12px;
+  font-weight: 400;
+}
+
+article strong {
+  font-weight: 700;
+  background: linear-gradient(to top, var(--highlight) 35%, transparent 35%);
+  padding: 0 2px;
+}
+
+article em {
+  font-style: normal;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+article a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: color 0.2s;
+}
+article a:hover {
+  color: var(--accent);
+}
+
+/* ============================================================
+   BLOCKQUOTE
+   ============================================================ */
+blockquote {
+  margin: 40px 0;
+  padding: 32px 40px;
+  background: var(--paper-deep);
+  border-left: 4px solid var(--accent);
+  position: relative;
+  font-size: 18px;
+  line-height: 1.85;
+  font-style: normal;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "「";
+  position: absolute;
+  top: 4px;
+  left: 8px;
+  font-size: 48px;
+  color: var(--accent);
+  opacity: 0.3;
+  font-family: "Hiragino Mincho ProN", serif;
+}
+blockquote p {
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 32px 0;
+  font-size: 15px;
+  line-height: 1.7;
+}
+article thead th {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 700;
+  text-align: left;
+  padding: 14px 16px;
+  border-bottom: 2px solid var(--ink);
+  color: var(--ink);
+}
+article tbody td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+article tbody tr:last-child td {
+  border-bottom: none;
+}
+@media (max-width: 720px) {
+  article table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ============================================================
+   ORDERED LIST(番号付きリスト)
+   ============================================================ */
+article ol {
+  margin: 32px 0;
+  counter-reset: item;
+  padding: 0;
+}
+article ol li {
+  list-style: none;
+  position: relative;
+  padding: 16px 0 16px 56px;
+  border-bottom: 1px dashed var(--rule);
+  counter-increment: item;
+}
+article ol li::before {
+  content: counter(item, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 16px;
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 14px;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+/* 通常のul(章末の関連リンクなど) */
+article ul {
+  margin: 24px 0;
+  padding-left: 1.5em;
+}
+article ul li {
+  margin-bottom: 8px;
+}
+
+/* ============================================================
+   CODE BLOCK(疑似ターミナル風)
+   ============================================================ */
+article pre {
+  margin: 40px 0;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 24px 28px;
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 13px;
+  line-height: 1.8;
+  position: relative;
+  overflow-x: auto;
+}
+article pre::before {
+  content: "● ● ●";
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  font-size: 8px;
+  color: var(--whisper);
+  letter-spacing: 4px;
+}
+article pre code {
+  display: block;
+  padding-top: 16px;
+  white-space: pre;
+}
+
+/* インラインコード */
+article code {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 0.9em;
+  background: var(--paper-deep);
+  padding: 2px 6px;
+  border-radius: 2px;
+  color: var(--ink);
+}
+article pre code {
+  background: transparent;
+  padding: 16px 0 0 0;
+  color: var(--paper);
+}
+
+/* ============================================================
+   HORIZONTAL RULE(本文中の区切り)
+   ============================================================ */
+article hr {
+  border: none;
+  text-align: center;
+  margin: 64px 0;
+  height: 1em;
+}
+article hr::before {
+  content: "◆ ◆ ◆";
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 14px;
+  color: var(--accent);
+  letter-spacing: 0.5em;
+}
+
+/* ============================================================
+   RELATED LINKS(章末の関連記事)
+   ============================================================ */
+.related-links {
+  margin-top: 64px;
+  padding: 32px 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.related-links h3 {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  color: var(--whisper);
+  margin: 0 0 20px;
+  font-weight: 600;
+}
+.related-links h3::before {
+  content: none;
+}
+.related-links ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.related-links li {
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--rule);
+  margin-bottom: 0;
+}
+.related-links li:last-child {
+  border-bottom: none;
+}
+.related-links a {
+  text-decoration: none;
+  color: var(--ink);
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+}
+.related-links .related-tag {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.related-links a:hover .related-title {
+  color: var(--accent);
+}
+
+/* ============================================================
+   FOOTER(サイト内メニュー+奥付)
+   ============================================================ */
+.site-footer {
+  margin-top: 96px;
+  border-top: 3px double var(--ink);
+  padding-top: 48px;
+}
+.footer-nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 32px 48px;
+}
+.footer-col h4 {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--whisper);
+  font-weight: 700;
+  margin: 0 0 14px;
+}
+.footer-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.footer-col li {
+  padding: 6px 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.footer-col a {
+  color: var(--ink);
+  text-decoration: none;
+}
+.footer-col a:hover { color: var(--accent); }
+
+.colophon {
+  margin-top: 48px;
+  padding: 32px 0 40px;
+  border-top: 1px solid var(--rule);
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--whisper);
+  text-align: center;
+  line-height: 2;
+}
+.colophon-mark {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "Hiragino Mincho ProN", serif;
+  font-size: 32px;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+/* ============================================================
+   SERIES TOC(全章一覧・折りたたみ式)
+   ============================================================ */
+.series-toc {
+  margin: 24px 0 40px;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 8px 0;
+}
+.series-toc details {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+}
+.series-toc summary {
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--whisper);
+  font-weight: 700;
+  padding: 8px 0;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.series-toc summary::-webkit-details-marker { display: none; }
+.series-toc summary::before {
+  content: "▸";
+  color: var(--accent);
+  font-size: 10px;
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+.series-toc details[open] summary::before { transform: rotate(90deg); }
+.series-toc ol {
+  list-style: none;
+  margin: 12px 0 8px;
+  padding: 0;
+  counter-reset: none;
+}
+.series-toc li {
+  list-style: none;
+  padding: 9px 0;
+  border-bottom: 1px dashed var(--rule);
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: 14px;
+  line-height: 1.55;
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+}
+.series-toc li::before { content: none; }
+.series-toc li:last-child { border-bottom: none; }
+.series-toc li a {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+  text-decoration: none;
+  color: var(--ink);
+  flex: 1;
+}
+.series-toc li a:hover .toc-title { color: var(--accent); }
+.series-toc .toc-num {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 5em;
+}
+.series-toc li.current {
+  background: var(--paper-deep);
+  margin: 0 -12px;
+  padding: 9px 12px;
+}
+.series-toc li.current .toc-title {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ============================================================
+   IMAGES
+   ============================================================ */
+article img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 32px auto;
+}
+
+/* ============================================================
+   CUSTOM BLOCKS(:::chain / :::highlight / :::quote / :::compare)
+   ============================================================ */
+.chain-diagram {
+  background: var(--paper-deep);
+  border-left: 4px solid var(--accent);
+  padding: 24px 28px;
+  margin: 32px 0;
+  font-size: 15px;
+  line-height: 2.2;
+}
+.chain-diagram .arrow {
+  color: var(--accent);
+  font-weight: 700;
+  margin: 0 0.3em;
+}
+.highlight-box {
+  background: var(--paper-deep);
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--accent);
+  padding: 24px 28px;
+  margin: 32px 0;
+}
+.highlight-box p { margin-bottom: 12px; }
+.highlight-box p:last-child { margin-bottom: 0; }
+.quote-block {
+  margin: 40px 0;
+  padding: 32px 40px;
+  background: var(--paper-deep);
+  border-left: 4px solid var(--accent);
+}
+.quote-block .quote-text {
+  font-size: 18px;
+  line-height: 1.85;
+  margin: 0;
+}
+
+/* ============================================================
+   CHAPTER NAV(前後の記事へのリンク)
+   ============================================================ */
+.chapter-nav {
+  margin-top: 64px;
+  padding: 24px 0;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  font-size: 14px;
+}
+.chapter-nav a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+  text-underline-offset: 4px;
+}
+.chapter-nav a:hover { color: var(--accent); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 640px) {
+  .container { padding: 0 20px; }
+  .hero { padding: 48px 0 40px; }
+  blockquote { padding: 24px 20px 24px 28px; }
+  article pre { padding: 20px 16px; font-size: 12px; }
+  article ol li { padding-left: 48px; }
+  .series-toc .toc-num { min-width: 4em; font-size: 10px; }
+  .series-toc li { font-size: 13px; gap: 12px; }
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-meta, .hero-title, .hero-subtitle, .hero-byline {
+  animation: rise 0.8s ease-out backwards;
+}
+.hero-meta     { animation-delay: 0.1s; }
+.hero-title    { animation-delay: 0.25s; }
+.hero-subtitle { animation-delay: 0.45s; }
+.hero-byline   { animation-delay: 0.65s; }
+.mermaid {
+  text-align: center;
+  margin: 2.5rem 0;
+  background: var(--paper-warm, #f5f1ea);
+  padding: 1.5rem 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+.mermaid svg { max-width: 100%; height: auto; }
+
+/* ============================================================
+   WIDE LAYOUT(広い画面では目次を左サイドバーに常時展開)
+   ============================================================ */
+@media (min-width: 1200px) {
+  body.has-toc .container {
+    max-width: 1320px;
+    display: grid;
+    grid-template-columns: 280px minmax(0, 880px);
+    column-gap: 64px;
+    justify-content: center;
+  }
+  body.has-toc .masthead,
+  body.has-toc .hero {
+    grid-column: 1 / -1;
+  }
+  /* グリッドアイテム自体は行いっぱいに伸ばし、内側の details を sticky に
+     する(sticky なグリッドアイテムはグリッドエリアではなくコンテナ全体で
+     制約されるブラウザ挙動があり、フッターに重なってしまうため)。 */
+  body.has-toc .series-toc {
+    grid-column: 1;
+    grid-row: 3 / span 2;
+    margin: 0;
+    padding: 0;
+    border-top: none;
+    border-bottom: none;
+  }
+  body.has-toc .series-toc details {
+    position: sticky;
+    top: 32px;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+    padding: 0 12px 12px 0;
+  }
+  /* サイドバーでは折りたたみを無効化し、見出しとして表示 */
+  body.has-toc .series-toc summary {
+    pointer-events: none;
+    cursor: default;
+  }
+  body.has-toc .series-toc summary::before { content: none; }
+  body.has-toc .series-toc li { font-size: 13.5px; }
+  body.has-toc article    { grid-column: 2; grid-row: 3; }
+  body.has-toc .chapter-nav { grid-column: 2; grid-row: 4; }
+  body.has-toc .site-footer { grid-column: 1 / -1; grid-row: 5; }
+}
+
+/* ============================================================
+   DARK MODE(OS の配色設定に追従して自動で暗色に切り替え)
+   ============================================================ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --ink: #e8e3d6;
+    --paper: #16140f;
+    --paper-deep: #211d16;
+    --accent: #e8765a;
+    --rule: #393428;
+    --whisper: #a39b88;
+    --highlight: rgba(220, 168, 78, 0.30);
+  }
+  /* 紙の質感(グレイン)を暗色背景向けに反転 */
+  body::before {
+    background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+    mix-blend-mode: screen;
+    opacity: 0.4;
+  }
+  /* コードブロックは両モードとも暗いターミナル調を維持 */
+  article pre {
+    background: #0d0c0a;
+    color: #e8e3d6;
+  }
+  article pre code {
+    color: #e8e3d6;
+  }
+  /* Mermaid 図の枠を暗色に */
+  .mermaid {
+    background: #211d16;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; opacity: 1 !important; }
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- MASTHEAD(ホーム › シリーズ目次) -->
+  <header class="masthead">
+    <div class="masthead-left"><a href="/" class="masthead-home">デジタルドア</a><span class="masthead-sep">›</span><a href="/blog/">ブログ</a></div>
+    <div class="masthead-right">№ 004 / ブログ</div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-meta">業界 · 2026.11.14</div>
+
+    <h1 class="hero-title">デジタルキーの普及予測。早ければ 2028 年、遅れれば 2031 年</h1>
+
+    <p class="hero-subtitle">国内の扉の製造者が、ウォレットの鍵で開く玄関ドアを出す年です。早い方の年に間に合わせるには、2027 年のうちに準備が要ります</p>
+
+    <div class="hero-byline">
+      <span>2026.11.14</span>
+      
+    </div>
+  </section>
+
+  <!-- SERIES TOC(全章一覧・現在の章をハイライト) -->
+  
+
+  <!-- ARTICLE BODY -->
+  <article>
+    <p>運営者が、Google の AI の Gemini に、デジタルキーの普及予測を書かせ、それを元の発表と調査の数字で確かめました。その上で、運営者の予測を、早い場合と遅い場合の二つの年で書きます。このサイトは、ウォレットの家の鍵が日本で使えるようにしていくために作っています。</p>
+<h2>予測</h2>
+<p>ここからの年は、運営者の見方です。早い場合の年は、扉の製造者が、2027 年のうちに準備を済ませた時の年です。遅い場合の年は、国内の扉の製造者が、2031 年まで出てこない時の年です。その間も、後付けの錠は売られ、住む人はホームアプリから鍵を入れられます。</p>
+<h3>日本</h3>
+<h4>節目</h4>
+<p>[cols=&quot;4,1,1&quot;]</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>節目</th>
+<th>早ければ</th>
+<th>遅れれば</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Aliro の認証を受けた錠が、日本で売られる(後付けの錠)</td>
+<td>2027 年</td>
+<td>2028 年</td>
+</tr>
+<tr>
+<td>国内の扉の製造者が、ウォレットの鍵で開く玄関ドアを出す</td>
+<td>2028 年</td>
+<td>2031 年</td>
+</tr>
+<tr>
+<td>新築の戸建ての半分を超える玄関ドアが、ウォレットの鍵で開く</td>
+<td>2031 年</td>
+<td>2034 年</td>
+</tr>
+</tbody>
+</table>
+<p><strong>日本の新築の戸建ては、錠がもう扉の中に入っています。</strong></p>
+<p>[cols=&quot;2,3,2&quot;]</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>版</th>
+<th>建った時期</th>
+<th>電気錠の取付率(戸数比)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2022 年 3 月版</td>
+<td>—</td>
+<td>52.1%</td>
+</tr>
+<tr>
+<td>2023 年 3 月版</td>
+<td>2021 年 8 月〜2022 年の調査の時まで</td>
+<td>57.1%</td>
+</tr>
+<tr>
+<td>2024 年 3 月版</td>
+<td>2022 年 8 月〜2023 年の調査の時まで</td>
+<td>60.6%</td>
+</tr>
+<tr>
+<td>2025 年 3 月版</td>
+<td>2023 年 8 月〜2024 年夏</td>
+<td>65%</td>
+</tr>
+<tr>
+<td>2026 年 3 月版</td>
+<td>2024 年 8 月〜2025 年夏</td>
+<td>70%</td>
+</tr>
+</tbody>
+</table>
+<p>日本サッシ協会の「住宅用建材使用状況調査」の数字です。調査の対象は木造とプレハブの住宅で、表は戸建ての玄関ドア(開戸)に電気錠システムが付いている割合です(2026 年 3 月版の戸建ては 3,291 件)。4 年で 18 ポイント上がりました(52.1% から 70%)。</p>
+<p>この電気錠は、扉の製造者が、錠と取っ手と鍵と電源を扉の製品として作り、扉と一緒に出している物です。扉の製造者が錠を自分の製品にした分野では、ここまで速く進むと、運営者は読んでいます。だから日本で変わるのは錠ではなく、扉に載せるリーダーと、鍵の発行です。扉の製造者が決めれば、新築の扉は数年で入れ替わります。</p>
+<p><strong>日本は、世界から 2 年ほど遅れて来ました。</strong> Aqara は、Apple のホームキーに対応した後付けの錠 U200 を、2024 年 7 月 9 日に世界で売り始めました。日本向けの J200 は、2026 年 3 月に Makuake で先行の予約を受け付け(家電 Watch、2026 年 3 月 24 日)、2026 年 6 月 4 日に発売されました(スマートウォッチライフ、2026 年 6 月 4 日)。Aqara の Aliro の錠 U400 は、2026 年 3 月 24 日に CSA の認証を受けています。同じ 2 年の遅れなら日本は 2028 年、縮めれば 2027 年です。</p>
+<p><strong>扉の製造者は、2028 年に出せます。</strong> 扉の電気錠の型は、数年ごとに替わります。国内の扉の製造者は今、自社のアプリで鍵を持つ形を出しています(<a href="/guide/door-maker-and-wallet-keys/">解説 25</a>)。そのアプリへの投資を使い切ってから替えるなら 2031 年です。一社が先に出せば、ほかは 1〜2 年で続きます。電気錠の割合が毎年揃って上がってきたのは、各社が揃って進めてきたからだと、運営者は読んでいます。</p>
+<p><strong>鍵は、住む人が入れます。</strong> 戸建ての家の鍵は、住む人がホームアプリから入れます(<a href="/guide/phone-keys-for-houses-and-offices/">解説 22</a>)。</p>
+<p><strong>建っている家は、別の話です。</strong> 新築で進んでも、建っている家の全体は少しずつしか変わりません。そこで効くのは、扉を替えずに、電気錠のリーダーと制御の部品だけを替える方法です。</p>
+<h4>製品が出れば、すぐに広がる</h4>
+<p>広がる速さを決めるのは、使う側ではなく、製品が出る年です。</p>
+<ul>
+<li><strong>欲しい人は、もういます。</strong> 新築の戸建ての 70% が電気錠を選び、問題の多い独自の鍵でも、毎年 3.5〜5 ポイントずつ増えてきました。</li>
+<li><strong>選ばない理由がありません。</strong> ウォレットの鍵で開く扉は、今の電気錠の扉に、ウォレットの鍵が足された物です(独自の鍵も併せて持ちます)。アプリを入れてもらう手間も無くなります。</li>
+<li><strong>だから、製品が出てから 2〜3 年で、新築の半分を超えます。</strong> 新築は、扉の型が替わる速さで入れ替わります。</li>
+<li><strong>早い場合と遅い場合の差は、広がる速さの差ではなく、製品が出る年の差です</strong>(2028 年と 2031 年)。</li>
+</ul>
+<p>自動車では、車の型が替わるのに年数がかかり、自動車の会社がアプリの鍵の料金を持っているので、広がりがゆっくりです。扉は、扉に載せるリーダーの部品を替えるだけで済むので、速く広がります。</p>
+<h4>新築の戸建ての、鍵の割合</h4>
+<p>新築の戸建てを、玄関ドアが受け付ける鍵で三つに分けます。</p>
+<ul>
+<li><strong>物理の鍵だけ</strong></li>
+<li><strong>独自のデジタルキーまで</strong>(リモコン、カード、タグ、暗証番号、自社のアプリ)</li>
+<li><strong>ウォレットの鍵で開く</strong>(独自の鍵も併せて持つ)</li>
+</ul>
+<p>数字は、その年に新しく建つ戸建ての中の割合(%)です。2025 年は今の数字、2028 年から先は運営者の予測です。今も 0 ではありません。Apple のホームキーに対応した後付けの錠は、2026 年 6 月から日本で売られています。ただ、新築の戸建てに初めから付く物としては、まだ数えるほどなので、2025 年は 0 と置いています。</p>
+<p><strong>新築の戸建て(早い場合)</strong></p>
+<p>[cols=&quot;1,1,1,1&quot;]</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>年</th>
+<th>物理</th>
+<th>独自</th>
+<th>ウォレット</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2025 年(今)</td>
+<td>30</td>
+<td>70</td>
+<td>0</td>
+</tr>
+<tr>
+<td>2028 年</td>
+<td>20</td>
+<td>78</td>
+<td>2</td>
+</tr>
+<tr>
+<td>2030 年</td>
+<td>16</td>
+<td>44</td>
+<td>40</td>
+</tr>
+<tr>
+<td>2032 年</td>
+<td>13</td>
+<td>17</td>
+<td>70</td>
+</tr>
+<tr>
+<td>2035 年</td>
+<td>10</td>
+<td>5</td>
+<td>85</td>
+</tr>
+</tbody>
+</table>
+<p><strong>新築の戸建て(遅い場合)</strong></p>
+<p>[cols=&quot;1,1,1,1&quot;]</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>年</th>
+<th>物理</th>
+<th>独自</th>
+<th>ウォレット</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2025 年(今)</td>
+<td>30</td>
+<td>70</td>
+<td>0</td>
+</tr>
+<tr>
+<td>2028 年</td>
+<td>20</td>
+<td>79</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2030 年</td>
+<td>16</td>
+<td>81</td>
+<td>3</td>
+</tr>
+<tr>
+<td>2032 年</td>
+<td>13</td>
+<td>72</td>
+<td>15</td>
+</tr>
+<tr>
+<td>2035 年</td>
+<td>10</td>
+<td>25</td>
+<td>65</td>
+</tr>
+</tbody>
+</table>
+<p>今の数字の出どころは、日本サッシ協会の 2026 年 3 月版の電気錠 70% です。</p>
+<p><strong>戸数にすると。</strong> 着工の戸数を 2025 年のまま、持家と分譲の一戸建て 317,220 戸で置くと(運営者の計算)、ウォレットの鍵で開く新築の戸建ては、次のとおりです。</p>
+<ul>
+<li>2028 年:早ければ年に約 6 千戸。遅れれば約 3 千戸</li>
+<li>2030 年:早ければ約 13 万戸。遅れれば約 1 万戸</li>
+<li>2032 年:早ければ約 22 万戸。遅れれば約 5 万戸</li>
+<li>2035 年:早ければ約 27 万戸。遅れれば約 21 万戸</li>
+</ul>
+<p>この表から読み取れる事は五つです。</p>
+<ul>
+<li><strong>製品が出てから 2〜3 年で、新築の半分を超えます。</strong></li>
+<li><strong>早い場合と遅い場合の差は、製品が出る年の差です。</strong> 2030 年に、早い場合は新築の戸建ての 4 割がウォレットの鍵で開き、遅い場合は、後付けの錠の分だけで 3% にとどまります。</li>
+<li><strong>物理の鍵だけの戸建ては、どちらの場合も同じ速さで減り続けます。</strong> 減る速さは、ウォレットの鍵ではなく、電気錠の広がりで決まります。</li>
+<li><strong>独自の鍵だけの扉の割合は、早い場合は 2028 年が頂点で、そこから急に減ります。</strong> 遅い場合は、2030 年ごろまで上がり続けます。</li>
+<li><strong>物理の鍵のままの扉は、独自の鍵を経ずに、ウォレットの鍵へ直に進めます。</strong> 独自の鍵のうち、自社のアプリとクラウドで開ける部分は、近くで開ける無線が不安定で、クラウドとアカウントに頼る所が大きく、アプリの寿命が錠より短い、という課題を抱えています(<a href="/guide/japanese-smart-lock-apps/">解説 08</a>)。独自の鍵をまだ入れていない所は、その扉と仕組みを後に残さずに済みます。替えるための投資を使い切るのを待つ理由もありません。</li>
+</ul>
+<h3>世界(米国と欧州)</h3>
+<p>[cols=&quot;4,1,1&quot;]</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>節目</th>
+<th>早ければ</th>
+<th>遅れれば</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>新しく売られる中級以上の電子錠の半分以上が、Aliro に対応する</td>
+<td>2028 年</td>
+<td>2030 年</td>
+</tr>
+<tr>
+<td>事務所と宿泊で新しく付けるリーダーの半分以上が、Aliro に対応する</td>
+<td>2030 年</td>
+<td>2034 年</td>
+</tr>
+</tbody>
+</table>
+<p><strong>住宅は速く進んでいます。</strong> CSA が Aliro 1.0 を公開したのは 2026 年 2 月 26 日です。そこから 9 か月で、三つのウォレットが揃いました(Samsung は 2026 年 3 月 2 日、Google は 2026 年 11 月 9 日付のリリースノート)。認証を受けた錠も、もう売られています。自動車は、Apple が iPhone の車の鍵を発表した 2020 年 6 月から、CCC の認証の最初の合格(BMW と NXP、2024 年 7 月 17 日)まで 4 年かかりました。</p>
+<p><strong>事務所と宿泊は、遅れます。</strong> 錠の最大手の ASSA ABLOY は、2026 年 11 月 13 日に CSA の認証の一覧を見た時、Aliro の認証を受けた製品がありませんでした。事務所と宿泊では、既にある会社が自分の方式の鍵を持っていて、替える理由が弱いからです。</p>
+<p><strong>安い錠は、長く残ります。</strong> 暗証番号、指紋、Bluetooth だけの錠は、値段で選ばれ続けます。Aliro の錠は、Apple Home Collection の LG の錠で 349.95 ドルからです。だから節目は、全部の錠ではなく、中級以上で書いています。</p>
+<h3>自動車</h3>
+<p>[cols=&quot;4,1,1&quot;]</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>節目</th>
+<th>早ければ</th>
+<th>遅れれば</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>世界の新車の 7 割に、デジタルキーが載る</td>
+<td>2030 年</td>
+<td>2033 年</td>
+</tr>
+<tr>
+<td>そのうち、ウォレットの鍵(CCC の規格)が半分を超える</td>
+<td>2029 年</td>
+<td>2032 年</td>
+</tr>
+</tbody>
+</table>
+<p><strong>出荷の数字があります。</strong> 調査会社の ABI Research は 2024 年 12 月 11 日の発表で、デジタルキーを載せた車は 2023 年に出荷の約 22%、2031 年に約 70%(約 6,000 万台)になり、2024〜2031 年に年 17.2% で伸びると書いています。BLE と NFC に UWB を足した型が年 34% で一番速く伸び、Tesla と一部の中国の会社を除いて、ほぼ全ての会社が共通の規格に向かっている、とも書いています。この数字を延ばすと、2026 年は 3〜4 割です(運営者の計算)。</p>
+<p><strong>遅れる側の話もあります。</strong> 調査会社の TechInsights は 2026 年 6 月 4 日の記事で、GM は 2025 年 12 月に Cadillac の一部の車で限られた試験を始めたばかりで、トヨタは 2025 年の型で BLE のデジタルキーを広げたが UWB は広く使っていないと書き、費用、裏の仕組みの備え、まわりの成熟が足かせだとしています。ABI Research も、自動車の会社がデジタルキーを初めの 1 年は無料にし、その後は年ごとの料金にしていると書いています。アプリの鍵が料金とつながっている事が、ウォレットへ移るのを遅らせます。</p>
+<h3>独自のデジタルキーの市場。今と、これから</h3>
+<p>ここで言う独自のデジタルキーは、各社が自分の方式で出している鍵です。リモコン、カード、タグ、自社のアプリの鍵が入ります。</p>
+<h4>今</h4>
+<p>今、扉のデジタルキーは、ほぼ全部が独自の鍵です。Aliro の認証を受けた錠が出たのは 2026 年です。</p>
+<ul>
+<li><strong>日本の新築の戸建ての玄関ドア。</strong> 電気錠が 70% に入っています(日本サッシ協会、2026 年 3 月版)。その鍵は、全部が扉の製造者の独自の鍵です。国土交通省の建築着工統計(令和 7 年計、2026 年 1 月 30 日公表)では、2025 年の持家は 201,285 戸、分譲の一戸建ては 115,935 戸で、合わせて 317,220 戸です。これに 70% を掛けると、独自の鍵の玄関ドアが、年に約 22 万枚、新しく付いています(運営者の計算)。</li>
+<li><strong>日本の後付けの錠。</strong> 利用者の多い三つのアプリの評価は、どれも 2 点台です。Qrio Lock(Q-SL2)の販売は、2026 年 3 月に終わりました(<a href="/guide/japanese-smart-lock-apps/">解説 08</a>)。SwitchBot は、2026 年 10 月 22 日の発表で、日本国内のユーザー数 200 万世帯、累計販売台数 500 万台を超えたと書いています。これは錠だけでなく、同社の機器全体の数です。</li>
+<li><strong>日本の事務所。</strong> フォトシンスは、2024 年 12 月期の決算の説明で、ARR(年あたりに直した継続の売上)が 28.9 億円、1 社あたり月 42,405 円、解約率が 1.16%、Akerun の契約は 5,600 社を超えたと述べています(ログミーファイナンス)。事務所では、月々の料金は「誰にいつ鍵を出すか」の管理に払われていて、解約が少ない事が分かります。</li>
+<li><strong>世界の事務所。</strong> HID と IFSEC Global の調査(2023 年 11 月〜2024 年 1 月、1,200 人超)では、スマートフォンの鍵を使っている組織は約 39% でした(Security Today、2024 年 8 月 7 日)。HID の 2026 年の調査では、スマートフォンの鍵を入れた後も、使う人の 84% がカードなどの物の鍵を併せて持っています(International Security Journal、2026 年 2 月 19 日)。</li>
+<li><strong>宿泊。</strong> ホテルのチェーンは自社のアプリの鍵を広げてきましたが、CNBC は 2024 年 9 月 1 日の記事で、J.D. Power の調べとして、ブランドのホテルの客でデジタルキーを使ったのは 14%、ブランドのアプリを入れている客でも 30% だと伝えています。</li>
+<li><strong>自動車。</strong> ABI Research によると、デジタルキーは 2023 年に出荷の約 22% に載っています。自動車の会社は、初めの 1 年を無料にし、その後は年ごとの料金にしています(ABI Research)。トヨタは、デジタルキーを専用のアプリで出し、4 年目からは月 550 円(税込)です。</li>
+<li><strong>市場の額。</strong> 富士経済は 2025 年 6 月 6 日の発表で、日本のスマートロックの市場を 2029 年に 386 億円(2024 年比 84.7% 増)と見込んでいます。新建ハウジング(2025 年 6 月 13 日)は、同じ調べで 2025 年を 237 億円(前年比 13.4% 増)と伝え、伸びを引っ張るのは事務所を中心としたビルだとしています。237 億円は 1 ドル 160 円で約 1.5 億ドルです。IMARC Group の 1.74 億ドルに近く、Mordor Intelligence の 4.51 億ドルは大きすぎます。それでも、額より扉の枚数で見る方が確かです。</li>
+</ul>
+<h4>これから</h4>
+<p>独自のデジタルキーの市場の売上は、三つに分かれます。錠とリーダー(物)、鍵そのもの(スマートフォンの鍵の料金)、管理(誰にいつ出し、いつ止めるか)です。ウォレットの鍵で、この三つは別々の道を行きます。</p>
+<p>[cols=&quot;4,1,1&quot;]</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>節目</th>
+<th>早ければ</th>
+<th>遅れれば</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>日本の新築の住宅で、独自の鍵だけの扉の出荷が減り始める</td>
+<td>2028 年</td>
+<td>2031 年</td>
+</tr>
+<tr>
+<td>住宅で、スマートフォンの鍵そのものに料金を取る形が、新しい製品からなくなる</td>
+<td>2029 年</td>
+<td>2033 年</td>
+</tr>
+<tr>
+<td>安い後付けの錠が、独自の鍵のまま売られ続ける</td>
+<td>2035 年でも続く</td>
+<td>2035 年でも続く</td>
+</tr>
+</tbody>
+</table>
+<p><strong>独自の鍵の市場は、すぐには縮みません。日本では 2028 年までは伸びます。</strong> 新築の電気錠の割合がまだ毎年上がっていて、ウォレットの鍵の扉が出るのは早くても 2028 年だからです。製品が出た年から、独自の鍵だけの扉は 2〜3 年で半分を切ります。</p>
+<p><strong>先になくなるのは、鍵そのものの料金です。</strong> 戸建てでは、住む人がホームアプリから家の鍵を入れられ、それに料金はかかりません(<a href="/guide/phone-keys-for-houses-and-offices/">解説 22</a>)。スマートフォンで開ける事に料金を取る形は、住宅では続きません。</p>
+<p><strong>自動車では、鍵の料金が残ります。</strong> 自動車の会社が、自分で鍵を発行する側だからです。鍵の料金を持ち続けられるのは、発行する側に立った会社です。扉でも同じです。</p>
+<p><strong>遅い場合は、独自の鍵の扉が積み上がります。</strong> 遅い場合は、独自の鍵の玄関ドアが、毎年約 22 万枚ずつ増え続けます。扉は十年単位で使われ、その間、製造者は自社のアプリと鍵の仕組みを保ち続ける事になります。アプリは毎年の OS の更新に追われ、錠より寿命が短い物です(<a href="/guide/japanese-smart-lock-apps/">解説 08</a>)。早く替えるほど、後に残る独自の鍵の扉が少なくて済みます。</p>
+<p><strong>安い後付けの錠は、独自の鍵のまま残ります。</strong> 守られた部品と認証の費用を、値段に乗せられないからです。</p>
+<h2>早い方の年にするために要る事</h2>
+<p>製品が出れば、新築は 2〜3 年で入れ替わります。だから、2028 年に製品がある事が要ります。遅い方の年(2031 年)まで待つと、その間に付く錠は、海外の後付けの錠になります。ウォレットの鍵で開く新築の戸建ては、2030 年に、早ければ年に約 13 万戸、遅れれば約 1 万戸です。早い方の年は、待っていれば来る年ではありません。誰が何をするかで決まります。</p>
+<ul>
+<li><strong>扉を作る会社。</strong> 扉に Aliro のリーダーを載せます。会社として守りを作り、Apple と Google に申し込みます(<a href="/guide/door-maker-and-wallet-keys/">解説 25</a>)。新しく作る部門は、本社の鍵の部門と、営業所の鍵の管理の二つです。</li>
+<li><strong>錠とリーダーを作る会社。</strong> 認証を受けた製品を、日本で売ります。</li>
+<li><strong>このサイト。</strong> 要求仕様、参照実装(扉のコントローラ、鍵の発行と台帳)、守りの手引き(<a href="/guide/check-your-systems-with-ai/">解説 20</a>、<a href="/check/">始め方</a>)、解説 25 の進め方を、無料で公開しています。扉と錠の会社は、ここにある仕様と参照実装を土台にして、自分の AI と一緒に自社のソフトウェアを作れます。準備の 2 年を縮めるのが、このサイトの仕事です。</li>
+</ul>
+<p>遅い方の年になるのは、扉の製造者が自社のアプリへの投資を使い切るまで替えず、錠の最大手が Aliro に入らず、認証を受けた錠の値段が下がらない時です。</p>
+<h3>2027 年のうちに済ませる事</h3>
+<p>2028 年に製品を出すには、2027 年のうちに次の事を済ませます。</p>
+<ul>
+<li><strong>扉を作る会社。</strong> 鍵の扱いと脆弱性の扱いについて、方針と手順を文書にします。開発環境を作り、Apple と Google に申し込みます。Aliro のリーダーを載せた扉の型を決めます。</li>
+<li><strong>錠とリーダーを作る会社。</strong> 日本向けの製品で、Aliro の認証を受けます。その結果として、CSA の認証の一覧に国内の会社の名前が並びます。</li>
+<li><strong>このサイト。</strong> 扉のコントローラと、鍵の発行と台帳の参照実装を、各社が自社の範囲に持ち込める形に仕上げます。</li>
+</ul>
+<h2>扉を作る会社にとっての意味</h2>
+<ul>
+<li>準備には 2 年かかります。早い場合の 2028 年に間に合わせるには、2027 年の初めには始めている必要があります。</li>
+<li>遅い場合の 2031 年になっても、早く始めて失う物は、小さな部門を 2〜3 年早く持つ分だけです。新しく作る部門は二つです(<a href="/guide/door-maker-and-wallet-keys/">解説 25</a>)。</li>
+<li>独自の鍵の扉は、売った後も十年単位で保ち続ける事になります。替える年が 1 年遅れるごとに、その扉が約 22 万枚ずつ増えます。</li>
+<li>独自の鍵をまだ出していない会社は、遅れているのではなく、身軽です。保ち続ける独自の鍵の扉が無いので、初めからウォレットの鍵で作れます。</li>
+<li>製品が出れば、新築は 2〜3 年で入れ替わります。その時に製品を持っていない会社は、新築の注文を失います。</li>
+<li>様子を見てから始めると、早い場合には 2 年遅れて着きます。ウォレットの鍵を発行できる会社は数社に絞られると、運営者は見ています(<a href="/blog/phone-opens-the-door/">前のブログ</a>)。遅れて着くと、席が残っていないおそれがあります。</li>
+</ul>
+<p>どちらの場合でも、始めるのは今です。</p>
+<h2>AI の予測を確かめた結果</h2>
+<p>運営者が Gemini に書かせた予測を、元の発表と調査会社の頁で確かめました。AI の文章はそのまま載せず、要点だけを並べます。</p>
+<p>[cols=&quot;3,4&quot;]</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>AI が書いた事</th>
+<th>確かめた結果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CCC の Digital Key の版 4 で、OS と車種をまたいで使えるようになった</td>
+<td>言い過ぎ。仕様はあり、相互接続の試験が続いている</td>
+</tr>
+<tr>
+<td>2026 年に世界の新車の約 6 割が載せる</td>
+<td>多すぎる。ABI Research の数字では 2023 年に約 22%、2031 年に約 70%。2026 年は 3〜4 割</td>
+</tr>
+<tr>
+<td>2030〜2032 年に新車の 8〜9 割</td>
+<td>早い場合よりも早い</td>
+</tr>
+<tr>
+<td>2030 年に UWB が 4 割、UWB の義務化</td>
+<td>割合の出どころは無い。義務にする決まりも無い。ただ、UWB を足した型が一番速く伸びている(ABI Research、年 34%)</td>
+</tr>
+<tr>
+<td>自動車の市場は 2034 年に 78.5 億ドル(年 12.8%)</td>
+<td>Fortune Business Insights の数字と合う。ただし調査会社で 2 倍以上違う</td>
+</tr>
+<tr>
+<td>物理の鍵が有料のオプションになり、メーカーのアプリは 2028〜2030 年に消える</td>
+<td>独自の鍵は、鍵そのものの料金から先になくなる(「独自のデジタルキーの市場」の節)</td>
+</tr>
+<tr>
+<td>Aliro 1.0 は 2026 年 3 月</td>
+<td>少しずれる。CSA の公開は 2026 年 2 月 26 日</td>
+</tr>
+<tr>
+<td>Google が Apple と Samsung に並んだ</td>
+<td>合う。Google は 2026 年 11 月に始めた</td>
+</tr>
+<tr>
+<td>主な錠の会社は ASSA ABLOY(Yale など)、Schlage、Aqara、Level、LG</td>
+<td>ASSA ABLOY は違う。11 月 13 日に CSA の一覧を見た時、Aliro の認証は無かった。Aqara は認証を受けている</td>
+</tr>
+<tr>
+<td>世界の住宅の市場は 2030 年に 168 億ドル</td>
+<td>どの調査会社の頁にも無い。額は調査会社で大きく違うので、判断には使えない</td>
+</tr>
+<tr>
+<td>日本の市場は 2025 年 4.5 億ドルから 2030 年 6.6 億ドル</td>
+<td>Mordor Intelligence の数字と合うが、大きすぎる。富士経済の 2025 年 237 億円は約 1.5 億ドルで、IMARC Group の 1.74 億ドルに近い</td>
+</tr>
+<tr>
+<td>リンクを押すだけでウォレットに鍵が入る形に揃う</td>
+<td>道はある(Apple の App Clip)。リンクで入れる形は、鍵を出す側が作る</td>
+</tr>
+<tr>
+<td>日々の解錠はクラウドを通らない</td>
+<td>合う。Aliro の仕様の範囲と同じ</td>
+</tr>
+<tr>
+<td>2026〜27 年、2028〜29 年、2030 年以降の 3 段階で広がる</td>
+<td>米国と欧州の早い場合としては合う。日本は 2 年ほど遅れる</td>
+</tr>
+</tbody>
+</table>
+<h3>合っていた事</h3>
+<p><strong>自動車の鍵は、業務の用途に進んでいます。</strong> CCC は、各社が持ち寄った機器をつないで試す集まり(Plugfest)を続けています。2025 年 7 月 14 日に始まった第 13 回は Apple が会場で、版 4 の仕様を実際の機器で試し、OS をまたいだ使い方と版をまたいだ使い方をさらに良くするのが目的だと、CCC は発表しています。2026 年 10 月 12〜16 日の第 20 回(Google が会場)の発表では、版 4 で鍵の使い道を、社用車などをまとめて管理する用途、貸し出し、整備などのサービスに広げると書き、そのための試験の項目が初めて入りました。AI の言う「作る価値は業務との連携に移る」は、この向きと合っています。</p>
+<p><strong>認証を受けた製品は増えています。</strong> CCC は 2026 年 1 月 6 日の発表で、2025 年に 115 の製品が Digital Key の認証を受けたと書いています。自動車の会社 16 社の車と、半導体の会社 4 社の部品で、中国の会社の車(Nio、Xpeng、Geely のグループの各社など)が初めて入りました。</p>
+<p><strong>住宅の鍵は、三つのウォレットに入りました。</strong> Samsung は 2026 年 3 月 2 日に、Aliro の上に作った Samsung Wallet の Digital Home Key を発表しました。SmartThings で Matter の錠を登録する途中で鍵を足します。Google は 2026 年 11 月 9 日付のリリースノートで、Matter と Aliro に対応した戸建て住宅の鍵を Google Home から Google Wallet に足せると書き、9to5Google は 11 月 11 日に、まず Google Home アプリの Public Preview の参加者から配ると伝えています(<a href="/guide/google-wallet-home-key/">解説 21</a>)。解錠はスマートフォンとリーダーの間で済み、ネットワークが無くても開けられます(<a href="/guide/aliro/">Aliroとは何か</a>)。</p>
+<p><strong>錠は、扉の中に入っていきます。</strong> Allegion が 2026 年に扉を作る会社を 2 社買った事は、<a href="/blog/phone-opens-the-door/">前のブログ</a> に書きました。Nuki は 2026 年 11 月 5 日に、扉の中に組み込む Smart Module を欧州で売り始めたと発表し、扉の製造者が今の作り方を変えずに工場で組み込めるよう、製造者と組んでいると書いています。</p>
+<h3>合っていなかった事</h3>
+<p><strong>版 4 は、試験の途中です。</strong> CCC の Digital Key の頁は、仕様書として v3.1.6 と v4.1.0 を案内しています。仕様はありますが、2026 年 6 月の第 18 回(ドイツの DEKRA の試験場)でも第 20 回でも、版 4 の機器の一覧(Interoperability Device List)に載せる候補を選んでいる段階です。</p>
+<p><strong>市場の額は、調査会社で 2 倍以上違います。</strong></p>
+<p>[cols=&quot;2,2,2,1&quot;]</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>調査会社</th>
+<th>起点</th>
+<th>2034 年の見込み</th>
+<th>年の伸び</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fortune Business Insights</td>
+<td>2026 年 29.9 億ドル</td>
+<td>78.5 億ドル</td>
+<td>12.8%</td>
+</tr>
+<tr>
+<td>Market Data Forecast</td>
+<td>2026 年 32.1 億ドル</td>
+<td>84.8 億ドル</td>
+<td>12.9%</td>
+</tr>
+<tr>
+<td>The Insight Partners</td>
+<td>2025 年 32 億ドル</td>
+<td>196.9 億ドル</td>
+<td>22.37%</td>
+</tr>
+</tbody>
+</table>
+<p>自動車の市場の 2034 年の見込みは、78.5 億ドルから 196.9 億ドルまで開いています。住宅の電子錠の世界の市場も、Fortune Business Insights は 2034 年に 173 億ドル(年 19.95%)、Grand View Research は 2033 年に 143 億ドル(年 20.1%)、IMARC Group は 2034 年に 106 億ドル(年 14.65%)です。日本の市場の額は、「独自のデジタルキーの市場」の節に書きました。額は判断に使えません。使えるのは、この記事の初めに書いた節目の年です。</p>
+<p><strong>リンクで鍵が入るかは、出す側の作り次第です。</strong> Apple のセキュリティのガイドは、鍵の種類によっては、App Clip を使い、提携先のアプリを入れずに鍵を入れられると書いています。家の鍵は今、Apple の「ホーム」アプリ、Google Home、SmartThings から入れます。</p>
+<h2>結び</h2>
+<p>2028 年に製品がある事が要ります。始めるのは今です。扉を作る会社が鍵を出す側に立つ進め方は <a href="/guide/door-maker-and-wallet-keys/">解説 25</a> に、戸建てと事務所で鍵をどう持つかは <a href="/guide/phone-keys-for-houses-and-offices/">解説 22</a> に、自社のシステムを AI で確かめる始め方は <a href="/check/">始め方</a> に書いています。仕様と参照実装は、GitHub(<a href="https://github.com/aiseed-dev/digitaldoor">https://github.com/aiseed-dev/digitaldoor</a>)にあります。</p>
+<h2>出典</h2>
+<p>2026年11月14日に確かめました。</p>
+<p><strong>規格の団体と会社が発表した物</strong></p>
+<ul>
+<li><a href="https://www.automotiveworld.com/news-releases/industry-leaders-gather-for-thirteenth-plugfest-to-advance-ccc-digital-key-interoperability/">CCC: Industry Leaders Gather for Thirteenth Plugfest to Advance CCC Digital Key Interoperability(2025年7月14日。Automotive World に載った発表文)</a></li>
+<li><a href="https://www.financialcontent.com/article/bizwire-2026-6-8-car-connectivity-consortium-advances-digital-key-version-4-testing-at-plugfest-18">CCC: Car Connectivity Consortium Advances Digital Key Version 4 Testing at Plugfest #18(2026年6月8日。FinancialContent に載った Business Wire の発表文)</a></li>
+<li><a href="https://carconnectivity.org/google-hosts-cccs-20th-plugfest/">CCC: Google Hosts CCC's 20th Plugfest as CCC Digital Key Version 4 Testing Expands to New Mobility Use Cases(2026年10月12日)</a></li>
+<li><a href="https://carconnectivity.org/digital-key/">CCC: Digital Key(仕様書 v3.1.6 と v4.1.0 の案内)</a></li>
+<li><a href="https://www.cityam.com/?p=2389966">CCC: CCC Digital Key Certifications Surged in 2025, Reinforcing the Global Standard for Secure Vehicle Access(2026年1月6日。City A.M. に載った Business Wire の発表文)</a></li>
+<li><a href="https://carconnectivity.org/?p=3081">CCC: BMW Group and NXP Become the First Manufacturers to Achieve CCC Digital Key Certification(2024年7月17日)</a></li>
+<li><a href="https://www.apple.com/newsroom/2020/06/apple-reimagines-the-iphone-experience-with-ios-14/">Apple: Apple reimagines the iPhone experience with iOS 14(2020年6月22日。車の鍵)</a></li>
+<li><a href="https://toyota.jp/pages/contents/alphard/004_p_001/pdf/list_tcservice_202610.pdf">トヨタ: T-Connect サービス料金一覧(アルファードの頁の PDF。デジタルキーの料金)</a></li>
+<li><a href="https://csa-iot.org/newsroom/introducing-aliro-1-0-a-unified-standard-to-transform-the-access-control-ecosystem/">CSA: Introducing Aliro 1.0(2026年2月26日)</a></li>
+<li><a href="https://csa-iot.org/csa_product/aqara-smart-lock-u400/">CSA の認証製品の一覧: Aqara Smart Lock U400(Aliro 1.0、2026年3月24日)</a></li>
+<li><a href="https://news.samsung.com/us/samsung-wallet-launches-digital-home-key-smart-door-locks">Samsung: Samsung Wallet Launches Digital Home Key for Smart Door Locks(2026年3月2日)</a></li>
+<li><a href="https://support.google.com/product-documentation/answer/14343500">Google: Google System Release Notes。Google Play services v26.44(2026年11月9日)の Google Wallet の項</a></li>
+<li><a href="https://support.apple.com/guide/security/sec30bdef041/web">Apple Platform Security: Access key types(App Clip で、提携先のアプリを入れずに鍵を入れる)</a></li>
+<li><a href="https://nuki.io/en/company/press-releases/launch-smart-module-and-kp2nfc-white">Nuki: Nuki Launches Smart Module &amp; Keypad 2 NFC White(2026年11月5日)</a></li>
+<li><a href="https://www.mactech.com/2024/07/10/aqara-announces-global-availability-of-smart-lock-u200">Aqara: Smart Lock U200 の世界での発売(2024年7月。MacTech に載った発表)</a></li>
+<li><a href="https://www.jsma.or.jp/Portals/0/images/statistics/pdf/chousagaiyou2603.pdf">日本サッシ協会: 2026年3月版「住宅用建材使用状況調査」の結果概要(2026年5月。玄関ドアの電気錠システムの取付率 70%)</a></li>
+<li><a href="https://www.fuji-keizai.co.jp/press/detail.html?cid=25058">富士経済: スマートロックなどの市場の調査の発表(2025年6月6日。2029年 386億円)</a></li>
+<li><a href="https://www.jsma.or.jp/Portals/0/images/statistics/pdf/chousagaiyou2503.pdf">日本サッシ協会: 2025年3月版「住宅用建材使用状況調査」の結果概要(玄関ドアの電気錠システムの取付率 65%)</a></li>
+<li><a href="https://www.jsma.or.jp/Portals/0/images/statistics/pdf/chousagaiyou2403.pdf">日本サッシ協会: 2024年3月版「住宅用建材使用状況調査」の概要(60.6%、前回 57.1%)</a></li>
+<li><a href="https://www.mlit.go.jp/report/press/content/kencha25.pdf">国土交通省: 建築着工統計調査報告(令和7年計)(2026年1月30日。持家 201,285 戸、分譲の一戸建て 115,935 戸)</a></li>
+<li><a href="https://www.techno-edge.net/release/prtimes2/20261022/25069.html">SwitchBot: 2026年10月22日の発表(TechnoEdge に載った PR TIMES の発表文。国内 200 万世帯、累計 500 万台)</a></li>
+<li><a href="https://www.jsma.or.jp/Portals/0/images/statistics/pdf/chousagaiyou2303.pdf">日本サッシ協会: 2023年3月版「住宅用建材使用状況調査」の概要(57.1%。2022年3月版の 52.1% は、この概要に前回の数字として載っています)</a></li>
+</ul>
+<p><strong>報道と調査会社の記事</strong></p>
+<ul>
+<li><a href="https://www.automotiveworld.com/?p=457451">Automotive World: Digital key certifications surge in 2025, CCC says(2026年1月8日)</a></li>
+<li><a href="https://9to5google.com/2026/11/11/google-wallet-home-key/">9to5Google、Abner Li: Google Wallet rolling out digital Google Home keys with supported locks on Android(2026年11月11日)</a></li>
+<li><a href="https://www.s-housing.jp/archives/387891">新建ハウジング(2025年6月13日)。富士経済の調べ(スマートロックの市場 2025年 237億円、2029年 386億円)</a></li>
+<li><a href="https://kaden.watch.impress.co.jp/docs/news/2095424.html">家電 Watch: Aqara J200 の Makuake での先行予約(2026年3月24日)</a></li>
+<li><a href="https://www.smartwatchlife.jp/69776/">スマートウォッチライフ: Aqara の新製品 3 機種の発売(2026年6月4日)</a></li>
+<li><a href="https://www.abiresearch.com/press/digital-car-key-capabilities-set-to-ship-in-60-million-vehicles-by-2031-unlocking-ongoing-revenue-for-auto-oems">ABI Research: Digital Car Key Capabilities Set to Ship in 60 Million Vehicles by 2031(2024年12月11日)</a></li>
+<li><a href="https://finance.logmi.jp/articles/381201">ログミーファイナンス: フォトシンス 2024年12月期 決算説明(ARR、ARPU、解約率、契約社数)</a></li>
+<li><a href="https://securitytoday.com/articles/2024/08/07/new-state-of-physical-access-control-report-highlights-five-trends.aspx">Security Today: New State of Physical Access Control Report Highlights Five Trends(2024年8月7日。HID と IFSEC Global の調査)</a></li>
+<li><a href="https://internationalsecurityjournal.com/hid-2026-security-identity-report/">International Security Journal: HID reveals its 2026 State of Security and Identity Report(2026年2月19日)</a></li>
+<li><a href="https://www.nbcchicago.com/news/business/money-report/apple-and-google-wallets-want-to-help-make-the-hotel-room-key-card-obsolete/3536858/">CNBC、Kevin Williams: Apple and Google wallets want to help make the hotel room key card obsolete(2024年9月1日。NBC Chicago に載った写し。J.D. Power の調べ)</a></li>
+<li><a href="https://www.techinsights.com/ja/node/61757">TechInsights: GM and Toyota Late to Automotive Digital Keys(2026年6月4日)</a></li>
+</ul>
+<p><strong>調査会社の見込み</strong></p>
+<ul>
+<li><a href="https://www.fortunebusinessinsights.com/automotive-digital-key-market-105490">Fortune Business Insights: Automotive Digital Key Market</a></li>
+<li><a href="https://www.marketdataforecast.com/market-reports/automotive-digital-key-market">Market Data Forecast: Automotive Digital Key Market</a></li>
+<li><a href="https://www.theinsightpartners.com/reports/automotive-digital-key-market">The Insight Partners: Automotive Digital Key Market</a></li>
+<li><a href="https://www.fortunebusinessinsights.com/industry-reports/smart-lock-system-market-100371">Fortune Business Insights: Smart Locks Market</a></li>
+<li><a href="https://www.grandviewresearch.com/industry-analysis/smart-lock-market">Grand View Research: Smart Lock Market</a></li>
+<li><a href="https://www.imarcgroup.com/smart-lock-market">IMARC Group: Smart Lock Market</a></li>
+<li><a href="https://www.mordorintelligence.com/industry-reports/japan-smart-lock-market">Mordor Intelligence: Japan Smart Lock Market(頁の更新は2025年1月31日)</a></li>
+<li><a href="https://www.imarcgroup.com/japan-smart-lock-market">IMARC Group: Japan Smart Lock Market</a></li>
+</ul>
+
+  </article>
+
+  <!-- CHAPTER NAV(前後の記事) -->
+  <nav class="chapter-nav">
+  <a href="/blog/phone-opens-the-door/" rel="prev">&larr; 前: 扉がスマートフォンで開く。難しいのは、守りだけです</a>
+  <a href="/blog/">Blog トップ &rarr;</a>
+</nav>
+
+  <!-- FOOTER(サイト内メニュー+奥付) -->
+  <footer class="site-footer">
+    <nav class="footer-nav" aria-label="サイト内リンク">
+      <div class="footer-col">
+        <h4>解説</h4>
+        <ul>
+          <li><a href="/guide/matter/">Matterとは何か</a></li>
+          <li><a href="/guide/aliro/">Aliroとは何か</a></li>
+          <li><a href="/guide/what-a-smart-door-needs/">スマートドアに求められる条件</a></li>
+          <li><a href="/guide/layers/">玄関まわりの技術の層</a></li>
+          <li><a href="/guide/open-specification/">仕様と参照実装の公開</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>サイト</h4>
+        <ul>
+          <li><a href="/guide/">解説</a></li>
+          <li><a href="/3d/">立体図</a></li>
+          <li><a href="/check/">始め方</a></li>
+          <li><a href="/manual/">マニュアル</a></li>
+          <li><a href="/news/">ニュース</a></li>
+          <li><a href="/blog/">ブログ</a></li>
+          <li><a href="/consult/">相談と教室</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="colophon">
+      <div class="colophon-mark">§</div>
+      ブログ № 004<br>
+      Tokushima · 2026.11.14<br>
+      <a href="/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">デジタルドア</a> · <a href="/#about" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">このサイトについて</a> · <a href="/contact/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">お問い合わせ</a> · <a href="/privacy/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">プライバシーポリシー</a> · <a href="/license/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">ライセンス</a> · <a href="/feed.xml" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">RSS</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">CC BY 4.0</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // 広い画面ではサイドバー目次を常時展開する(狭い画面では折りたたみに戻す)
+  (function () {
+    var toc = document.querySelector(".series-toc details");
+    if (!toc) return;
+    var mq = window.matchMedia("(min-width: 1200px)");
+    function sync() { toc.open = mq.matches; }
+    sync();
+    if (mq.addEventListener) mq.addEventListener("change", sync);
+    else mq.addListener(sync);
+  })();
+
+  // Mermaid loads only on pages that contain a .mermaid block.
+  // Self-hosted (no third-party CDN dependency); SRI verified.
+  if (document.querySelector(".mermaid")) {
+    const s = document.createElement("script");
+    s.src = "/js/vendor/mermaid-11.14.0.min.js";
+    s.integrity = "sha384-1CMXl090wj8Dd6YfnzSQUOgWbE6suWCaenYG7pox5AX7apTpY3PmJMeS2oPql4Gk";
+    s.crossOrigin = "anonymous";
+    s.onload = () => {
+      const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      mermaid.initialize({ startOnLoad: false, theme: prefersDark ? "dark" : "default" });
+      mermaid.run();
+    };
+    document.head.appendChild(s);
+  }
+</script>
+
+
+</body>
+</html>
