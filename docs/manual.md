@@ -2,7 +2,7 @@
 
 このマニュアルは、ソフトウェアのコードから自動で生成しています。対象は、事業所のサーバーを運用する管理者、受付の担当者、鍵を使う利用者、保守の担当者です。
 
-生成日: 2026-11-14
+生成日: 2026-11-15
 
 ## 事業所サーバー
 
@@ -54,12 +54,12 @@ max_hours = 24
 [[token]]
 name = "管理者"
 role = "管理者"
-token_sha256 = "41ae579e41d775889171c1721f767af23a3e655bc5deef73addbc25c16ac3fc3"
+token_sha256 = "ae82105c4e779707aeaecffba9049ac084c1ad46dfd8075b75767183be4d0008"
 
 [[token]]
 name = "受付"
 role = "受付"
-token_sha256 = "c18dbb871c8341e6f94c79d6abb271cea6e8107d2b4a15efc4eca68a318faa26"
+token_sha256 = "04814a0fc73b254101c3402e1e3fa01077bb88b61ddcfe4e48ec1071ac009713"
 ```
 
 ### 役割

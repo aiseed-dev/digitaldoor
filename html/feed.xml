@@ -4,7 +4,15 @@
 <link>https://door.aiseed.dev/</link>
 <description>扉と鍵の話を、層に分けて書く</description>
 <language>ja</language>
-<lastBuildDate>Sat, 14 Nov 2026 22:25:04 +0900</lastBuildDate>
+<lastBuildDate>Sun, 15 Nov 2026 19:16:38 +0900</lastBuildDate>
+<item>
+<title>会社に情報を集めるから、流出が起こる</title>
+<link>https://door.aiseed.dev/guide/keys-without-collecting/</link>
+<guid>https://door.aiseed.dev/guide/keys-without-collecting/</guid>
+<category>解説</category>
+<pubDate>Sun, 15 Nov 2026 00:00:00 +0900</pubDate>
+<description>会社に情報を集めるから、情報の流出が起こります。ウォレットの鍵は、会社に情報を集めない仕組みです。それでも、仕事は回ります。扉が、安全のために欠かせない物だからです。個人情報保護委員会の年次報告にある漏えいの報告の件数、Apple が書いているホームキーの置き場所と消え方、開け閉めの記録が残る所、売った側が名簿を持てなくなる事、連絡が住む人の方から来る仕事の形、会社のシステムの変わり方を示します。</description>
+</item>
 <item>
 <title>扉を作る会社が、ウォレットの鍵を出す会社になるには</title>
 <link>https://door.aiseed.dev/guide/door-maker-and-wallet-keys/</link>
