@@ -166,6 +166,11 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://door.aiseed.dev/guide/work-for-builders/</loc>
+    <lastmod>2026-11-15</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://door.aiseed.dev/check/</loc>
     <lastmod>2026-11-14</lastmod>
     <priority>0.6</priority>

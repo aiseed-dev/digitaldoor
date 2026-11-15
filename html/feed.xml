@@ -4,7 +4,7 @@
 <link>https://door.aiseed.dev/</link>
 <description>扉と鍵の話を、層に分けて書く</description>
 <language>ja</language>
-<lastBuildDate>Sun, 15 Nov 2026 19:16:38 +0900</lastBuildDate>
+<lastBuildDate>Sun, 15 Nov 2026 19:51:29 +0900</lastBuildDate>
 <item>
 <title>会社に情報を集めるから、流出が起こる</title>
 <link>https://door.aiseed.dev/guide/keys-without-collecting/</link>
@@ -12,6 +12,14 @@
 <category>解説</category>
 <pubDate>Sun, 15 Nov 2026 00:00:00 +0900</pubDate>
 <description>会社に情報を集めるから、情報の流出が起こります。ウォレットの鍵は、会社に情報を集めない仕組みです。それでも、仕事は回ります。扉が、安全のために欠かせない物だからです。個人情報保護委員会の年次報告にある漏えいの報告の件数、Apple が書いているホームキーの置き場所と消え方、開け閉めの記録が残る所、売った側が名簿を持てなくなる事、連絡が住む人の方から来る仕事の形、会社のシステムの変わり方を示します。</description>
+</item>
+<item>
+<title>家を建てる会社と工務店に、新しい仕事が生まれる</title>
+<link>https://door.aiseed.dev/guide/work-for-builders/</link>
+<guid>https://door.aiseed.dev/guide/work-for-builders/</guid>
+<category>解説</category>
+<pubDate>Sun, 15 Nov 2026 00:00:00 +0900</pubDate>
+<description>玄関の扉がスマートフォンのウォレットの鍵で開くようになると、鍵と鍵を配る仕組みは Apple と Google と規格の団体が作り、家を建てる会社と工務店には現場の仕事が残ります。設計の段で取る電源と線の通り道、据付で試しに登録した物を消す事、鍵の束の代わりに登録を住む人に渡す引き渡し、連絡が住む人から来る住んでいる間の交換、住む人が替わる時の消し方、今ある家への取り付け、電源の取り方と電気の工事の資格、現地に行く人と鍵を登録する人の分け方、始め方を、段ごとに示します。</description>
 </item>
 <item>
 <title>扉を作る会社が、ウォレットの鍵を出す会社になるには</title>
