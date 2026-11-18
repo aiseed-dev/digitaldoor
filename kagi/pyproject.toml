@@ -15,7 +15,7 @@ dependencies = []
 
 [project.optional-dependencies]
 # 机の画面(kagi app)だけが使う。本体は標準ライブラリだけで動く
-app = ["flet>=1.0"]
+app = ["flet>=1.1"]
 dev = ["pytest"]
 
 [project.urls]
