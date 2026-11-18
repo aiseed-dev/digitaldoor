@@ -1,5 +1,9 @@
 """In-process fake Sesame (device side of the protocol) for tests and for a
-GUI demo mode without hardware (`python main.py --fake`)."""
+GUI demo mode without hardware (`python main.py --fake`).
+
+疑似の機器の登録の状態は処理のメモリの中にあり、別のファイルには保存しません。処理を起動し直したときは、
+疑似の鍵の置き場(sesame-keys-fake.json)にその機器の鍵があれば、その鍵で登録済みとして始まります(`_fake_device`)。
+未登録の疑似の機器にログインが来たときは、INVALID_ACTION を返します(疑似の側で選んだ応答。`FakeSesame.write`)。"""
 from __future__ import annotations
 
 import asyncio
@@ -66,6 +70,12 @@ class FakeSesame:
             self._respond(item, p.ResultCode.SUCCESS, payload, encrypt=False)
         elif item == p.ItemCode.LOGIN:
             assert seg == p.SegmentType.PLAIN
+            if self.secret is None:
+                # 未登録の機器へのログインは、登録済みの機器に登録が来たときと同じく INVALID_ACTION を平文で返す。
+                # これは疑似の側で選んだ応答で、実機の未登録の Sesame が何を返すかは確かめていない。
+                # SesameDevice.login はこれを SesameError にするので、画面と命令行は普通の「ログイン失敗」として扱う。
+                self._respond(item, p.ResultCode.INVALID_ACTION, encrypt=False)
+                return
             expected = p.aes_cmac(self.secret, self.token)
             if data != expected[:4]:
                 self._respond(item, p.ResultCode.INVALID_SIG, encrypt=False)
@@ -107,9 +117,21 @@ _INITIALLY_REGISTERED = {str(a.device_uuid): a.is_registered for a in _FAKE_ADVS
 
 
 def _fake_device(adv: p.Advertisement) -> FakeSesame:
+    """その広告の疑似の機器を返す。処理の中で初めてのときに作る。
+
+    疑似の鍵の置き場(`keystore.fake_path()`、sesame-keys-fake.json)にその UUID の鍵があれば、その鍵で登録済みとして始まる。
+    実機の Sesame が登録を電源を切っても覚えているのと同じで、前の回に `--fake register` した機器は、処理を起動し直しても
+    登録済みのまま、置き場の鍵でログインできる。疑似の機器の状態を別のファイルには保存しない(置き場の鍵を読むだけ)。
+    置き場に鍵が無い(ファイルが無い、読めない、その UUID の行が無い)ときは、始めの状態(`_INITIALLY_REGISTERED`。
+    Sesame 6 Pro は未登録、Sesame 5 は 16 バイトの 0 で登録済み)で始まる。
+    """
+    from .keystore import fake_path, read_secret_sync
     key = str(adv.device_uuid)
     if key not in _FAKE_DEVICES:
-        _FAKE_DEVICES[key] = FakeSesame(registered_secret=bytes(16) if _INITIALLY_REGISTERED.get(key, adv.is_registered) else None)
+        secret = read_secret_sync(fake_path(), key)
+        if secret is None and _INITIALLY_REGISTERED.get(key, adv.is_registered):
+            secret = bytes(16)
+        _FAKE_DEVICES[key] = FakeSesame(registered_secret=secret)
     return _FAKE_DEVICES[key]
 
 

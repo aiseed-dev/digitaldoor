@@ -170,6 +170,22 @@ def fake_path() -> Path:
     return default_path().with_name("sesame-keys-fake.json")
 
 
+def read_secret_sync(path: Path | str, device_uuid: str) -> Optional[bytes]:
+    """JSON の鍵の置き場から、一つの Sesame の鍵(16 バイト)を同期で読む。疑似の機器(fake.py)が、起動したときに
+    登録済みかを決めるために使う(`KeyStore` は async なので、同期の関数から呼べる道として置く)。
+
+    ファイルが無い、読めない、形が違う、その UUID の行が無い、鍵が 16 バイトでない、のどれでも None を返し、例外は出さない。
+    鍵は返り値にだけ入れ、ログにも文にも出さない(R-CM-12)。
+    """
+    try:
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+        rows = {str(k).lower(): v for k, v in data.items()}
+        secret = device_key_from_dict(rows[device_uuid.lower()]).secret
+    except Exception:
+        return None
+    return secret if len(secret) == 16 else None
+
+
 def default_path() -> Path:
     env = os.environ.get("SESAME_KEYSTORE")
     if env:

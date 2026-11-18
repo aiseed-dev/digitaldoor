@@ -509,6 +509,30 @@ async def test_start_on_the_desktop_with_the_fake_sesame_uses_json_files(monkeyp
     assert not (keys / "sesame-keys.json").exists()                  # 本物の鍵のファイルには触れない
 
 
+async def test_a_new_fake_screen_logs_in_with_the_key_left_by_the_previous_run(monkeypatch, tmp_path, caplog):
+    """R-CM-12: 前の回の鍵が疑似の鍵の置き場に残っているとき、新しく起動した疑似の画面で機器につなぐと、その鍵でログインできる。記録欄と logging に鍵は出ない。"""
+    caplog.set_level(logging.DEBUG)
+    monkeypatch.setattr(appmod, "FAKE_MODE", True)
+    monkeypatch.setattr(appmod.SesameApp, "_close_dialog", lambda self, dlg: setattr(dlg, "open", False))
+    keys = tmp_path / "keys"
+    keys.mkdir()
+    (keys / "sesame-keys-fake.json").write_text(json.dumps({UNREGISTERED: {
+        "device_uuid": UNREGISTERED, "model_id": "sesame_6_pro", "secret_hex": TEST_SECRET, "name": "玄関",
+        "address": "", "registered_at": 1.0, "role": ROLE_ADMIN}}), encoding="utf-8")
+    assert fake._FAKE_DEVICES == {}                                     # 新しい処理: 疑似の機器はまだ無い
+    page = Page()
+    page.platform = ft.PagePlatform.LINUX
+    app = appmod.SesameApp(page)
+    await app.start()
+    await app.connect_key(UNREGISTERED)
+    assert app.conn is not None and app.conn.device.logged_in
+    log = " ".join(c.value for c in app.log_view.controls)
+    assert "login failed" not in log
+    await app.on_unlock()
+    assert fake._FAKE_DEVICES[UNREGISTERED].locked is False
+    assert no_secret(app_everything(app, caplog), TEST_SECRET)
+
+
 async def test_the_phone_moves_keys_into_the_vault_on_first_start_and_keeps_working_if_it_cannot(monkeypatch, tmp_path, caplog):
     """R-CM-16: スマートフォンの起動で、今までの保存領域の鍵が保管庫に移る。保管庫が書けないときは、鍵を失わず今までの置き場で動き、利用者に知らせる。"""
     from digitalkey_sesame import securestore

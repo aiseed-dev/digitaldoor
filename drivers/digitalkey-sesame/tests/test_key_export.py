@@ -12,7 +12,7 @@ import stat
 import pytest
 
 from digitalkey_sesame import cli, fake
-from digitalkey_sesame.device import SesameDevice
+from digitalkey_sesame.device import SesameDevice, SesameError
 from digitalkey_sesame.fake import FakeSesame
 from digitalkey_sesame.keystore import KeyStore, format_secret_hex, parse_secret_hex
 
@@ -193,3 +193,40 @@ def test_import_takes_the_key_from_a_hidden_prompt_not_the_arguments(monkeypatch
     asked = []
     monkeypatch.setattr(cli, "getpass", lambda prompt="": asked.append(prompt) or ZERO_KEY)
     assert cli.read_secret() == ZERO_KEY and asked and "画面に出ません" in asked[0]
+
+
+# ---- 5. 疑似の機器を起動し直したとき ----
+def test_fake_sesame_starts_registered_from_the_fake_keystore_after_a_restart(home, capsys):
+    """R-CM-12: `--fake register` の後に処理を起動し直しても(疑似の機器のメモリを空にする)、疑似の鍵の置き場の鍵でログインして開く。標準出力・標準エラーに鍵は出ない。"""
+    assert cli.main(["--fake", "register", UNREGISTERED]) == 0
+    stored = fake_keys(home)[UNREGISTERED]["secret_hex"]
+    fake._FAKE_DEVICES.clear()                       # 起動し直し: 疑似の機器の状態は処理のメモリの中にだけある
+    assert cli.main(["--fake", "unlock", UNREGISTERED]) == 0
+    dev = fake._FAKE_DEVICES[UNREGISTERED]
+    assert dev.locked is False and dev.secret == bytes.fromhex(stored)
+    out = capsys.readouterr()
+    assert stored not in (out.out + out.err).lower()
+    assert sorted(p.name for p in home.iterdir()) == ["sesame-keys-fake.json"]   # 疑似の機器のための別のファイルは作らない
+
+
+async def test_login_to_an_unregistered_fake_sesame_fails_as_a_sesame_error():
+    """R-CM-12: 未登録の疑似の機器へのログインは、例外で落ちずに失敗の応答になり、SesameError になる。例外の文に試した鍵は入らない。"""
+    sim = FakeSesame()
+    dev = SesameDevice(sim.write)
+    sim.app = dev
+    sim.publish_initial()
+    with pytest.raises(SesameError) as ei:
+        await dev.login(bytes.fromhex(TEST_SECRET))
+    assert "INVALID_ACTION" in str(ei.value) and TEST_SECRET not in str(ei.value).lower()
+    assert not dev.logged_in and sim.secret is None
+
+
+@pytest.mark.parametrize("content", [None, "", "{壊れた", "[]", json.dumps({REGISTERED: {"device_uuid": REGISTERED}}),
+                                     json.dumps({UNREGISTERED: {"device_uuid": UNREGISTERED, "model_id": "x", "secret_hex": "zz"}})])
+async def test_fake_sesame_without_a_readable_key_keeps_its_initial_state(home, content):
+    """疑似の鍵の置き場が無い、壊れている、その UUID の行が無い、鍵が読めない、のどれでも落ちず、疑似の機器は始めの状態で始まる。"""
+    if content is not None:
+        (home / "sesame-keys-fake.json").write_text(content, encoding="utf-8")
+    devices = {str(a.device_uuid): fake._fake_device(a) for a in fake._FAKE_ADVS}
+    assert devices[UNREGISTERED].secret is None
+    assert devices[REGISTERED].secret == bytes(16)
