@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'">
+
+
+<title>守りの検査が、法律と取引の条件になる — 解説 | デジタルドア</title>
+<meta name="description" content="欧州のサイバーレジリエンス法は、ネットワークにつながる製品を作る会社に、弱点の無い状態で出す事、5 年以上直し続ける事、組み込んだ部品を確かめる事、悪用された弱点を 24 時間以内に知らせる事を求めます。スマートドアロックと入退室のリーダーは、重要な製品に入ります。会社に掛かる NIS2、英国の決まり、日本の個人情報保護法、会社法の役員の責任と裁判の例、JC-STAR と SCS 評価制度を、法律の本文と役所の頁で確かめて並べ、扉と錠を作る会社、部品を納める会社が何を備えるかを示します。">
+<link rel="canonical" href="https://door.aiseed.dev/guide/security-laws-for-makers/">
+<link rel="alternate" hreflang="ja" href="https://door.aiseed.dev/guide/security-laws-for-makers/">
+
+<link rel="alternate" hreflang="x-default" href="https://door.aiseed.dev/guide/security-laws-for-makers/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="デジタルドア">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="守りの検査が、法律と取引の条件になる">
+<meta property="og:description" content="欧州のサイバーレジリエンス法は、ネットワークにつながる製品を作る会社に、弱点の無い状態で出す事、5 年以上直し続ける事、組み込んだ部品を確かめる事、悪用された弱点を 24 時間以内に知らせる事を求めます。スマートドアロックと入退室のリーダーは、重要な製品に入ります。会社に掛かる NIS2、英国の決まり、日本の個人情報保護法、会社法の役員の責任と裁判の例、JC-STAR と SCS 評価制度を、法律の本文と役所の頁で確かめて並べ、扉と錠を作る会社、部品を納める会社が何を備えるかを示します。">
+<meta property="og:url" content="https://door.aiseed.dev/guide/security-laws-for-makers/">
+<meta property="og:image" content="https://door.aiseed.dev/images/og-default.jpg">
+<meta property="article:section" content="解説">
+<meta property="article:published_time" content="2026.11.20">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="守りの検査が、法律と取引の条件になる">
+<meta name="twitter:description" content="欧州のサイバーレジリエンス法は、ネットワークにつながる製品を作る会社に、弱点の無い状態で出す事、5 年以上直し続ける事、組み込んだ部品を確かめる事、悪用された弱点を 24 時間以内に知らせる事を求めます。スマートドアロックと入退室のリーダーは、重要な製品に入ります。会社に掛かる NIS2、英国の決まり、日本の個人情報保護法、会社法の役員の責任と裁判の例、JC-STAR と SCS 評価制度を、法律の本文と役所の頁で確かめて並べ、扉と錠を作る会社、部品を納める会社が何を備えるかを示します。">
+<meta name="twitter:image" content="https://door.aiseed.dev/images/og-default.jpg">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="alternate" type="application/rss+xml" title="デジタルドア" href="/feed.xml">
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+
+<!-- フォントは Web 配信せず、すべて端末のローカルフォントで賄う。
+     和文: UDデジタル教科書体 → BIZ UDP明朝(いずれも Windows 標準搭載の
+     モリサワ UD 書体) → ヒラギノ明朝・游明朝などのシステム明朝。
+     等幅: 端末のシステム等幅フォント。 -->
+
+<style>
+/* ============================================================
+   LOCAL FONT: UDデジタル教科書体(モリサワ)
+   Windows・教育向け端末に無償搭載。端末にあれば local() で拾い、
+   なければ BIZ UDP明朝(同じく Windows 標準搭載)→ システム明朝へ
+   フォールバックする。R と B は別ファミリー名なので、太字(700)を
+   B 書体に明示的にマッピングして疑似ボールドを避ける。
+   ============================================================ */
+@font-face {
+  font-family: "UD Digital Kyokasho";
+  font-weight: 400;
+  src: local("UD デジタル 教科書体 NK-R"), local("UD Digital Kyokasho NK-R"),
+       local("UD デジタル 教科書体 NP-R"), local("UD Digital Kyokasho NP-R"),
+       local("UD デジタル 教科書体 N-R"), local("UD Digital Kyokasho N-R");
+}
+@font-face {
+  font-family: "UD Digital Kyokasho";
+  font-weight: 700;
+  src: local("UD デジタル 教科書体 NK-B"), local("UD Digital Kyokasho NK-B"),
+       local("UD デジタル 教科書体 NP-B"), local("UD Digital Kyokasho NP-B"),
+       local("UD デジタル 教科書体 N-B"), local("UD Digital Kyokasho N-B");
+}
+
+/* ============================================================
+   COLOR & DESIGN TOKENS
+   aiseed.dev 全体のスタイルに合わせる場合は、ここの変数を
+   既存サイトのCSS変数に差し替える。
+   ============================================================ */
+:root {
+  --ink: #1a1a1a;
+  --paper: #f4f1ea;
+  --paper-deep: #ebe6d8;
+  --accent: #c8442a;
+  --rule: #d4cdb8;
+  --whisper: #6b665a;
+  --highlight: #f7e9c8;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+/* 本文: 端末にあれば UDデジタル教科書体を最優先、次に BIZ UDP明朝
+   (Windows 標準搭載)、どちらもなければヒラギノ明朝等のシステム明朝 */
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "UD Digital Kyokasho",
+               "BIZ UDPMincho", "BIZ UDP明朝",
+               "Hiragino Mincho ProN", "ヒラギノ明朝 ProN",
+               "Yu Mincho", "游明朝", "YuMincho",
+               "Noto Serif CJK JP", "Noto Serif JP", serif;
+  font-size: 17px;
+  line-height: 1.9;
+  letter-spacing: 0.02em;
+  font-feature-settings: "palt";
+  overflow-x: hidden;
+}
+
+/* グレインテクスチャ(紙の質感) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image: radial-gradient(rgba(0,0,0,0.04) 1px, transparent 1px);
+  background-size: 3px 3px;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+}
+
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 32px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ============================================================
+   MASTHEAD(シリーズ名・章番号)
+   ============================================================ */
+.masthead {
+  border-bottom: 3px double var(--ink);
+  padding: 24px 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--whisper);
+}
+.masthead-left  { font-weight: 700; color: var(--ink); }
+.masthead-left a { color: inherit; text-decoration: none; }
+.masthead-left a:hover { color: var(--accent); }
+.masthead-home { color: var(--whisper); }
+.masthead-sep { margin: 0 10px; color: var(--whisper); font-weight: 400; }
+.masthead-right { font-style: italic; }
+
+/* ============================================================
+   HERO(タイトル領域)
+   ============================================================ */
+.hero {
+  padding: 80px 0 60px;
+}
+.hero-meta {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  color: var(--accent);
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.hero-meta::before {
+  content: "";
+  width: 40px;
+  height: 1px;
+  background: var(--accent);
+}
+.hero-title {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 800;
+  font-size: clamp(32px, 5.5vw, 56px);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin-bottom: 24px;
+}
+.hero-title .accent {
+  color: var(--accent);
+}
+.hero-subtitle {
+  font-size: 18px;
+  line-height: 1.85;
+  color: var(--whisper);
+  max-width: 580px;
+  border-left: 2px solid var(--accent);
+  padding-left: 20px;
+  margin-top: 32px;
+}
+.hero-byline {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--rule);
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--whisper);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ============================================================
+   ARTICLE BODY
+   ============================================================ */
+article p {
+  margin-bottom: 24px;
+}
+
+article h2 {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1.4;
+  margin: 72px 0 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--ink);
+  position: relative;
+}
+article h2::before {
+  content: "§";
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  color: var(--accent);
+  margin-right: 16px;
+  font-size: 22px;
+}
+
+article h3 {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 600;
+  font-size: 19px;
+  margin: 40px 0 16px;
+  color: var(--ink);
+}
+article h3::before {
+  content: "—";
+  color: var(--accent);
+  margin-right: 12px;
+  font-weight: 400;
+}
+
+article strong {
+  font-weight: 700;
+  background: linear-gradient(to top, var(--highlight) 35%, transparent 35%);
+  padding: 0 2px;
+}
+
+article em {
+  font-style: normal;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+article a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: color 0.2s;
+}
+article a:hover {
+  color: var(--accent);
+}
+
+/* ============================================================
+   BLOCKQUOTE
+   ============================================================ */
+blockquote {
+  margin: 40px 0;
+  padding: 32px 40px;
+  background: var(--paper-deep);
+  border-left: 4px solid var(--accent);
+  position: relative;
+  font-size: 18px;
+  line-height: 1.85;
+  font-style: normal;
+  color: var(--ink);
+}
+blockquote::before {
+  content: "「";
+  position: absolute;
+  top: 4px;
+  left: 8px;
+  font-size: 48px;
+  color: var(--accent);
+  opacity: 0.3;
+  font-family: "Hiragino Mincho ProN", serif;
+}
+blockquote p {
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 32px 0;
+  font-size: 15px;
+  line-height: 1.7;
+}
+article thead th {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 700;
+  text-align: left;
+  padding: 14px 16px;
+  border-bottom: 2px solid var(--ink);
+  color: var(--ink);
+}
+article tbody td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+article tbody tr:last-child td {
+  border-bottom: none;
+}
+@media (max-width: 720px) {
+  article table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ============================================================
+   ORDERED LIST(番号付きリスト)
+   ============================================================ */
+article ol {
+  margin: 32px 0;
+  counter-reset: item;
+  padding: 0;
+}
+article ol li {
+  list-style: none;
+  position: relative;
+  padding: 16px 0 16px 56px;
+  border-bottom: 1px dashed var(--rule);
+  counter-increment: item;
+}
+article ol li::before {
+  content: counter(item, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 16px;
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 14px;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+/* 通常のul(章末の関連リンクなど) */
+article ul {
+  margin: 24px 0;
+  padding-left: 1.5em;
+}
+article ul li {
+  margin-bottom: 8px;
+}
+
+/* ============================================================
+   CODE BLOCK(疑似ターミナル風)
+   ============================================================ */
+article pre {
+  margin: 40px 0;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 24px 28px;
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 13px;
+  line-height: 1.8;
+  position: relative;
+  overflow-x: auto;
+}
+article pre::before {
+  content: "● ● ●";
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  font-size: 8px;
+  color: var(--whisper);
+  letter-spacing: 4px;
+}
+article pre code {
+  display: block;
+  padding-top: 16px;
+  white-space: pre;
+}
+
+/* インラインコード */
+article code {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 0.9em;
+  background: var(--paper-deep);
+  padding: 2px 6px;
+  border-radius: 2px;
+  color: var(--ink);
+}
+article pre code {
+  background: transparent;
+  padding: 16px 0 0 0;
+  color: var(--paper);
+}
+
+/* ============================================================
+   HORIZONTAL RULE(本文中の区切り)
+   ============================================================ */
+article hr {
+  border: none;
+  text-align: center;
+  margin: 64px 0;
+  height: 1em;
+}
+article hr::before {
+  content: "◆ ◆ ◆";
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 14px;
+  color: var(--accent);
+  letter-spacing: 0.5em;
+}
+
+/* ============================================================
+   RELATED LINKS(章末の関連記事)
+   ============================================================ */
+.related-links {
+  margin-top: 64px;
+  padding: 32px 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.related-links h3 {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  color: var(--whisper);
+  margin: 0 0 20px;
+  font-weight: 600;
+}
+.related-links h3::before {
+  content: none;
+}
+.related-links ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.related-links li {
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--rule);
+  margin-bottom: 0;
+}
+.related-links li:last-child {
+  border-bottom: none;
+}
+.related-links a {
+  text-decoration: none;
+  color: var(--ink);
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+}
+.related-links .related-tag {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.related-links a:hover .related-title {
+  color: var(--accent);
+}
+
+/* ============================================================
+   FOOTER(サイト内メニュー+奥付)
+   ============================================================ */
+.site-footer {
+  margin-top: 96px;
+  border-top: 3px double var(--ink);
+  padding-top: 48px;
+}
+.footer-nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 32px 48px;
+}
+.footer-col h4 {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--whisper);
+  font-weight: 700;
+  margin: 0 0 14px;
+}
+.footer-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.footer-col li {
+  padding: 6px 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.footer-col a {
+  color: var(--ink);
+  text-decoration: none;
+}
+.footer-col a:hover { color: var(--accent); }
+
+.colophon {
+  margin-top: 48px;
+  padding: 32px 0 40px;
+  border-top: 1px solid var(--rule);
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--whisper);
+  text-align: center;
+  line-height: 2;
+}
+.colophon-mark {
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "Hiragino Mincho ProN", serif;
+  font-size: 32px;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+/* ============================================================
+   SERIES TOC(全章一覧・折りたたみ式)
+   ============================================================ */
+.series-toc {
+  margin: 24px 0 40px;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 8px 0;
+}
+.series-toc details {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+}
+.series-toc summary {
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--whisper);
+  font-weight: 700;
+  padding: 8px 0;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.series-toc summary::-webkit-details-marker { display: none; }
+.series-toc summary::before {
+  content: "▸";
+  color: var(--accent);
+  font-size: 10px;
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+.series-toc details[open] summary::before { transform: rotate(90deg); }
+.series-toc ol {
+  list-style: none;
+  margin: 12px 0 8px;
+  padding: 0;
+  counter-reset: none;
+}
+.series-toc li {
+  list-style: none;
+  padding: 9px 0;
+  border-bottom: 1px dashed var(--rule);
+  font-family: "UD Digital Kyokasho", "BIZ UDPMincho", "BIZ UDP明朝", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: 14px;
+  line-height: 1.55;
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+}
+.series-toc li::before { content: none; }
+.series-toc li:last-child { border-bottom: none; }
+.series-toc li a {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+  text-decoration: none;
+  color: var(--ink);
+  flex: 1;
+}
+.series-toc li a:hover .toc-title { color: var(--accent); }
+.series-toc .toc-num {
+  font-family: "SF Mono", Menlo, Consolas, "BIZ UDGothic", "BIZ UDゴシック", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 5em;
+}
+.series-toc li.current {
+  background: var(--paper-deep);
+  margin: 0 -12px;
+  padding: 9px 12px;
+}
+.series-toc li.current .toc-title {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ============================================================
+   IMAGES
+   ============================================================ */
+article img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 32px auto;
+}
+
+/* ============================================================
+   CUSTOM BLOCKS(:::chain / :::highlight / :::quote / :::compare)
+   ============================================================ */
+.chain-diagram {
+  background: var(--paper-deep);
+  border-left: 4px solid var(--accent);
+  padding: 24px 28px;
+  margin: 32px 0;
+  font-size: 15px;
+  line-height: 2.2;
+}
+.chain-diagram .arrow {
+  color: var(--accent);
+  font-weight: 700;
+  margin: 0 0.3em;
+}
+.highlight-box {
+  background: var(--paper-deep);
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--accent);
+  padding: 24px 28px;
+  margin: 32px 0;
+}
+.highlight-box p { margin-bottom: 12px; }
+.highlight-box p:last-child { margin-bottom: 0; }
+.quote-block {
+  margin: 40px 0;
+  padding: 32px 40px;
+  background: var(--paper-deep);
+  border-left: 4px solid var(--accent);
+}
+.quote-block .quote-text {
+  font-size: 18px;
+  line-height: 1.85;
+  margin: 0;
+}
+
+/* ============================================================
+   CHAPTER NAV(前後の記事へのリンク)
+   ============================================================ */
+.chapter-nav {
+  margin-top: 64px;
+  padding: 24px 0;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  font-size: 14px;
+}
+.chapter-nav a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+  text-underline-offset: 4px;
+}
+.chapter-nav a:hover { color: var(--accent); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 640px) {
+  .container { padding: 0 20px; }
+  .hero { padding: 48px 0 40px; }
+  blockquote { padding: 24px 20px 24px 28px; }
+  article pre { padding: 20px 16px; font-size: 12px; }
+  article ol li { padding-left: 48px; }
+  .series-toc .toc-num { min-width: 4em; font-size: 10px; }
+  .series-toc li { font-size: 13px; gap: 12px; }
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-meta, .hero-title, .hero-subtitle, .hero-byline {
+  animation: rise 0.8s ease-out backwards;
+}
+.hero-meta     { animation-delay: 0.1s; }
+.hero-title    { animation-delay: 0.25s; }
+.hero-subtitle { animation-delay: 0.45s; }
+.hero-byline   { animation-delay: 0.65s; }
+.mermaid {
+  text-align: center;
+  margin: 2.5rem 0;
+  background: var(--paper-warm, #f5f1ea);
+  padding: 1.5rem 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+.mermaid svg { max-width: 100%; height: auto; }
+
+/* ============================================================
+   WIDE LAYOUT(広い画面では目次を左サイドバーに常時展開)
+   ============================================================ */
+@media (min-width: 1200px) {
+  body.has-toc .container {
+    max-width: 1320px;
+    display: grid;
+    grid-template-columns: 280px minmax(0, 880px);
+    column-gap: 64px;
+    justify-content: center;
+  }
+  body.has-toc .masthead,
+  body.has-toc .hero {
+    grid-column: 1 / -1;
+  }
+  /* グリッドアイテム自体は行いっぱいに伸ばし、内側の details を sticky に
+     する(sticky なグリッドアイテムはグリッドエリアではなくコンテナ全体で
+     制約されるブラウザ挙動があり、フッターに重なってしまうため)。 */
+  body.has-toc .series-toc {
+    grid-column: 1;
+    grid-row: 3 / span 2;
+    margin: 0;
+    padding: 0;
+    border-top: none;
+    border-bottom: none;
+  }
+  body.has-toc .series-toc details {
+    position: sticky;
+    top: 32px;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+    padding: 0 12px 12px 0;
+  }
+  /* サイドバーでは折りたたみを無効化し、見出しとして表示 */
+  body.has-toc .series-toc summary {
+    pointer-events: none;
+    cursor: default;
+  }
+  body.has-toc .series-toc summary::before { content: none; }
+  body.has-toc .series-toc li { font-size: 13.5px; }
+  body.has-toc article    { grid-column: 2; grid-row: 3; }
+  body.has-toc .chapter-nav { grid-column: 2; grid-row: 4; }
+  body.has-toc .site-footer { grid-column: 1 / -1; grid-row: 5; }
+}
+
+/* ============================================================
+   DARK MODE(OS の配色設定に追従して自動で暗色に切り替え)
+   ============================================================ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --ink: #e8e3d6;
+    --paper: #16140f;
+    --paper-deep: #211d16;
+    --accent: #e8765a;
+    --rule: #393428;
+    --whisper: #a39b88;
+    --highlight: rgba(220, 168, 78, 0.30);
+  }
+  /* 紙の質感(グレイン)を暗色背景向けに反転 */
+  body::before {
+    background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+    mix-blend-mode: screen;
+    opacity: 0.4;
+  }
+  /* コードブロックは両モードとも暗いターミナル調を維持 */
+  article pre {
+    background: #0d0c0a;
+    color: #e8e3d6;
+  }
+  article pre code {
+    color: #e8e3d6;
+  }
+  /* Mermaid 図の枠を暗色に */
+  .mermaid {
+    background: #211d16;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; opacity: 1 !important; }
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- MASTHEAD(ホーム › シリーズ目次) -->
+  <header class="masthead">
+    <div class="masthead-left"><a href="/" class="masthead-home">デジタルドア</a><span class="masthead-sep">›</span><a href="/guide/">解説</a></div>
+    <div class="masthead-right">No. 28 / 解説</div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-meta">解説 № 28 · 2026</div>
+
+    <h1 class="hero-title">守りの検査が、法律と取引の条件になる</h1>
+
+    <p class="hero-subtitle">欧州は、作った者が自分の製品を検査して直し続ける事を法律にした。日本でも、会社の守りが取引の条件になり、役員の責任が問われる</p>
+
+    <div class="hero-byline">
+      <span>2026.11.20</span>
+      
+    </div>
+  </section>
+
+  <!-- SERIES TOC(全章一覧・現在の章をハイライト) -->
+  
+
+  <!-- ARTICLE BODY -->
+  <article>
+    <p>製品の守りは、これまで作る会社の心がけでした。欧州では、それが法律になりました。ネットワークにつながる製品を欧州で売るには、作った会社が自分の製品を検査し、弱点を直し続け、記録を出せなければなりません。会社の守りも、取引先に求める条件になりつつあります。日本でも、会社の守りの段階を示す制度が 2027年3月に受付を始めます。守りを怠った会社の責任は、裁判で問われてきました。</p>
+<p>この記事は、製品を作って海外に売る会社、部品を納める会社、扉と錠を作る会社の、経営の人と技術の人に向けて書きます。事実として書くのは、法律の本文と役所の頁で 2026年11月20日に確かめた事だけです。報道や解説の頁から取った事は、誰が書いたかを添えます。それ以外は、このサイトの考えです。</p>
+<h2>欧州:製品に掛かる法律(サイバーレジリエンス法)</h2>
+<p>サイバーレジリエンス法(Cyber Resilience Act、CRA と略されます。規則 (EU) 2024/2847)は、ネットワークにつながる製品の守りを、作る会社の義務にした欧州の法律です。</p>
+<h3>何が対象か</h3>
+<ul>
+<li>機器やネットワークに、直接か間接にデータでつながる「デジタルの要素を持つ製品」で、欧州の市場に出される物です。ソフトウェアもハードウェアも入ります(2 条 1 項)。</li>
+<li>別に市場に出す部品も入ります(欧州委員会の要約の頁)。</li>
+<li>商売として出さない物は、対象の外です(同じ要約の頁)。</li>
+<li>医療機器、自動車の型式の規則が掛かる物、航空、船の装備、国の安全と防衛だけのための物、取り替える部品と同じ仕様で作った予備の部品は、対象の外です(2 条 2〜7 項)。</li>
+</ul>
+<p>欧州の外で作る会社にも及びます。認証機関の Nemko は、日本の会社に向けた解説の頁で、欧州の輸入者や販売者から、日本の作る会社に、技術の情報や適合の証しが求められ得る、と書いています。</p>
+<h3>いつから</h3>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>日付</th>
+<th>何が始まるか</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2024年12月10日</td>
+<td>法律が効力を持つ(欧州委員会の頁)</td>
+</tr>
+<tr>
+<td>2026年6月11日</td>
+<td>審査をする機関についての章が始まる</td>
+</tr>
+<tr>
+<td>2026年9月11日</td>
+<td>報告の義務(14 条)が始まる</td>
+</tr>
+<tr>
+<td>2027年12月11日</td>
+<td>全体が始まる(71 条)</td>
+</tr>
+</tbody>
+</table>
+<p>2027年12月11日より前に市場に出した製品は、大きく変えた時だけ対象になります。ただし、報告の義務は全部の製品に当たります(要約の頁)。報告の義務は、もう始まっています。欧州委員会は、2026年7月27日に実施の手引きを出しました(欧州委員会の頁)。</p>
+<h3>作る会社に求められる事</h3>
+<p>作る会社は、危険を見積もり、附属書 I の要件を満たし、技術の文書を持ち、適合を確かめて宣言し、CE の印を付けます。支える期間がいつ終わるかの年月を、買う時に示します(13 条、要約の頁)。</p>
+<p>附属書 I の第 1 部は、製品の性質です。</p>
+<ul>
+<li>知られている、悪用できる弱点が無い状態で出す。</li>
+<li>安全な初期の設定で出し、元の状態に戻せる。</li>
+<li>更新で弱点を直せる。</li>
+<li>許されていない者が入れない。</li>
+<li>データの秘密を守り、データ、命令、プログラム、設定が書き換えられないように守る。</li>
+<li>要るデータだけを扱う。</li>
+<li>攻められる面(外への口)を小さくする。</li>
+<li>中の動きを記録し、見張る。</li>
+<li>利用者が、データと設定を全部消せる。</li>
+</ul>
+<p>第 2 部は、弱点の扱いです。</p>
+<ul>
+<li>部品と弱点を調べて、文書にする。</li>
+<li>部品の一覧を、機械が読める形で作る。これを SBOM(Software Bill of Materials、ソフトウェアの部品表)と呼びます。少なくとも、一番上の階層の依存までを書きます。</li>
+<li>弱点を、遅れずに直す。</li>
+<li>効き目のある検査と見直しを、決まった形で続ける。</li>
+<li>直した弱点を公表する。</li>
+<li>弱点の知らせを受け付ける決まりと、連絡先を持つ。</li>
+<li>更新を、安全に、遅れずに、無料で配る。</li>
+</ul>
+<p>支える期間と、記録を保つ期間も、条文に書いてあります。</p>
+<ul>
+<li>支える期間は、使われると見込まれる長さに合わせ、「少なくとも 5 年」とします(13 条 8 項)。使われる期間がそれより短い製品は、その期間です。</li>
+<li>支える期間に出した更新は、10 年か、支える期間の残りの、長い方の間、手に入るようにしておきます(13 条 9 項)。</li>
+<li>技術の文書と適合の宣言は、10 年か支える期間の、長い方の間、保ちます(13 条 13 項と 18 項)。</li>
+</ul>
+<h3>報告の期限</h3>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>何が起きたか</th>
+<th>早い知らせ</th>
+<th>通知</th>
+<th>最終の報告</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>悪用されている弱点</td>
+<td>知ってから 24 時間以内</td>
+<td>72 時間以内</td>
+<td>直す手立てが出来てから 14 日以内</td>
+</tr>
+<tr>
+<td>重い事故</td>
+<td>24 時間以内</td>
+<td>72 時間以内</td>
+<td>通知から 1 か月以内</td>
+</tr>
+</tbody>
+</table>
+<p>(14 条)。届け先は、単一の報告の窓口を通して、主な拠点のある加盟国の CSIRT(コンピューターの事故に対応する組織)と、ENISA(欧州連合のサイバーセキュリティの機関)です(要約の頁)。</p>
+<h3>製品の区分と審査</h3>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>区分</th>
+<th>例(関係する物)</th>
+<th>適合の確かめ方(32 条)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ふつうの製品</td>
+<td>下の三つに入らない物</td>
+<td>自分で確かめる手続き(モジュール A)を選べる</td>
+</tr>
+<tr>
+<td>重要な製品 クラス I(附属書 III)</td>
+<td>認証と入退室のリーダー(生体のリーダーを含む)を含む、身元と権限の管理のソフトウェアとハードウェア。VPN の機能を持つ製品。OS。ルーター、インターネットにつなぐモデム、スイッチ。守りの機能を持つマイクロプロセッサーとマイクロコントローラー。守りの機能を持つスマートホームの製品(スマートドアロック、防犯カメラ、ベビーモニター、警報の装置を含む。第 17 項)</td>
+<td>整合規格(法律に合わせて作られる欧州の規格)、共通仕様、認証の仕組みを当てはめれば、自分で確かめられる。当てはめていない時は、第三者の手続き</td>
+</tr>
+<tr>
+<td>重要な製品 クラス II(附属書 III)</td>
+<td>ハイパーバイザーとコンテナの実行環境、ファイアウォール、侵入の検知と防止の仕組み、耐タンパーのマイクロプロセッサーとマイクロコントローラー</td>
+<td>第三者の手続きか、認証</td>
+</tr>
+<tr>
+<td>重大な製品(附属書 IV)</td>
+<td>セキュリティボックスを持つハードウェア、スマートメーターのゲートウェイなど、スマートカードとセキュアエレメント</td>
+<td>認証。条件が揃わない時は、クラス II と同じ</td>
+</tr>
+</tbody>
+</table>
+<h3>罰</h3>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>違反</th>
+<th>罰金の上限(64 条)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>附属書 I の要件、13 条、14 条</td>
+<td>1,500 万ユーロか、前の年度の全世界の売上の 2.5% の、高い方</td>
+</tr>
+<tr>
+<td>輸入する者や売る者の義務など</td>
+<td>1,000 万ユーロか 2% の、高い方</td>
+</tr>
+<tr>
+<td>当局に誤った情報を出した</td>
+<td>500 万ユーロか 1% の、高い方</td>
+</tr>
+</tbody>
+</table>
+<p>ごく小さい会社と小さい会社は、24 時間の期限を守れなかった事では、罰金を受けません(64 条 10 項)。</p>
+<h3>輸入する者と売る者</h3>
+<p>輸入する者と売る者は、作る者が義務を果たし、CE の印と書類が揃っている事を確かめます。合っていない製品は、市場に出しません(要約の頁)。欧州の輸入者が、日本の作る会社に書類を求めるのは、このためです。</p>
+<h2>部品とドライバー</h2>
+<h3>条文に書いてある事</h3>
+<ul>
+<li>他社の部品を組み込む時は、その部品が製品の守りを損なわないように、きちんと確かめます(13 条 5 項。原文は due diligence)。無償で公開されているソフトウェアの部品も含みます。</li>
+<li>部品に弱点を見つけたら、その部品を作った者か保守する者に知らせ、直します(13 条 6 項)。</li>
+<li>支える期間は、少なくとも 5 年です(13 条 8 項)。</li>
+<li>部品の一覧(SBOM)を作ります(附属書 I 第 2 部)。</li>
+</ul>
+<h3>このサイトの考え</h3>
+<p>部品を買って組み込んでも、責任は製品を市場に出した会社に残ります。チップの会社がソースを出さないドライバーや、ファームウェアの塊は、自分で読む事も、直す事もできません。それでも、その部品の弱点を確かめ、知らせ、直し、5 年以上支えるのは、製品を出した会社の義務です。部品の会社が先に支えるのをやめれば、穴は製品を出した会社の手元に残ります。</p>
+<p>打つ手は三つです。</p>
+<ol>
+<li><strong>ソースが公開されている部品を選ぶ。</strong> ソースがあれば、自分で検査でき、部品の会社が手を引いても自分で直せます。</li>
+<li><strong>支える期間と、弱点の知らせを、契約で約束させる。</strong> 部品の会社が何年更新を出すか、弱点を見つけた時にいつまでに知らせるかを、製品の支える期間より長く、契約に書きます。部品の一覧(SBOM)を出す事も、契約に入れます。</li>
+<li><strong>閉じたドライバーは、一つの区画に入れ、判断を持たせない。</strong> 扉を開けるかどうかを決めるのは、自分で検査できる判断の核にします。銘柄ごとの錠のドライバーは、接点の下に隠し、判断の核から見えるのは、施錠と解錠の出力、扉の開閉、デッドボルトの位置だけにします。こうすれば、閉じた部品に弱点があっても、そこから扉の判断は書き換えられず、部品を替える時も核はそのまま使えます。このサイトの扉のコントローラは、この分け方で作っています(<a href="/guide/controller-in-rust/">扉のコントローラを Rust で書く</a> の「核と入出力を分ける」、<a href="/guide/layers/">玄関まわりの技術を層に分けて見る</a>)。</li>
+</ol>
+<h2>欧州:機械と無線の機器</h2>
+<h3>機械規則</h3>
+<p>機械規則(規則 (EU) 2023/1230)は、機械の安全の法律に、守りの条項を入れました。</p>
+<ul>
+<li>機械にほかの機器をつなぐ事が、危ない状態につながらないように、設計して作ります(附属書 III 1.1.9、改変からの保護)。</li>
+<li>制御の仕組みは、第三者の悪意ある試みのうち、合理的に予見できる物が、危ない状態につながらないように耐えます(附属書 III 1.2.1)。</li>
+</ul>
+<p>適用の日は、EUR-Lex の本文(54 条)では 2027年1月14日です。IBF Solutions などの解説は、2027年1月20日としています。</p>
+<p>CE の印の手続きを扱う会社 IBF Solutions の解説によると、業界の団体が、守りの条項を 2027年12月11日まで先送りするように、欧州委員会に求めました(2026年1月。3月に更新)。労働組合の連合は、2025年11月に反対しました。</p>
+<h3>無線の機器</h3>
+<p>無線機器指令の委任規則(規則 (EU) 2022/30)は、インターネットにつながる無線の機器に、次の事を求めます。</p>
+<ul>
+<li>網を害さない事(無線機器指令 3 条 3 項 (d))。</li>
+<li>個人のデータを扱う物(子供の世話の機器、玩具、身に着ける機器を含む)は、個人のデータを守る事((e))。</li>
+<li>お金や電子の通貨を動かせる物は、詐欺から守る事((f))。</li>
+</ul>
+<p>本文の適用の日は 2024年8月1日でしたが、2025年8月1日に延ばされました(認証機関 TÜV SÜD の解説)。今は効いています。</p>
+<h2>欧州:会社に掛かる法律(NIS2)</h2>
+<p>NIS2(指令 (EU) 2022/2555)は、製品ではなく、会社の守りに掛かる欧州の法律です。指令なので、加盟国が自分の国の法律にして使います。</p>
+<h3>条文に書いてある事</h3>
+<ul>
+<li>加盟国は、2024年10月17日までに国内の法律にし、10月18日から適用します(41 条)。</li>
+<li>対象の分野(附属書 II)に、製造業があります。医療機器、コンピューターと電子と光学の製品、電気機器、機械と装置、自動車とトレーラー、その他の輸送用の機器です。</li>
+<li>経営陣が、守りの手立てを承認し、実施を見張ります。違反の責任を問われ得ます。経営陣は研修を受けます(20 条)。</li>
+<li>守りの手立てには、取引のつながりの守りが入ります。じかの納入者や、サービスの提供者との関係の守りも含みます(21 条 2 項 (d))。納入者ごとの弱点と、その守りのやり方の質を、考えに入れます(21 条 3 項)。</li>
+<li>重い事故は、知ってから 24 時間以内に早い知らせ、72 時間以内に通知、通知から 1 か月以内に最終の報告です(23 条)。</li>
+<li>罰金の上限は、必須の事業者で、少なくとも 1,000 万ユーロか全世界の売上の 2% の高い方、重要な事業者で、700 万ユーロか 1.4% の高い方です(34 条)。</li>
+</ul>
+<h3>このサイトの考え</h3>
+<p>NIS2 は欧州の会社に掛かる法律ですが、21 条で、その会社は自分の納入者の守りを見なければなりません。見る手段は、契約です。欧州の会社に部品や製品を納める日本の会社には、守りの質問票、検査の結果、事故の時に知らせる期限が、取引の条件として降りて来ます。法律の対象でなくても、取引の相手が対象なら、同じ水準を求められます。</p>
+<h2>英国</h2>
+<p>英国は、欧州連合とは別に、消費者向けのつながる製品の決まりを持っています(英国政府の頁)。</p>
+<ul>
+<li>Product Security and Telecommunications Infrastructure Act 2022 の第 1 部と、2023 年の規則です。2024年4月29日から効いています。</li>
+<li>消費者向けのつながる製品の、作る者、輸入する者、売る者に当たります。</li>
+<li>パスワードは、製品ごとに違うか、利用者が決めます。</li>
+<li>弱点を知らせる方法を公表します。</li>
+<li>更新を出す、最も短い期間を公表します。</li>
+<li>執行するのは Office for Product Safety and Standards(製品の安全と規格の役所)です。</li>
+</ul>
+<h2>日本</h2>
+<h3>個人情報保護法の報告</h3>
+<p>個人情報の保護に関する法律 26 条は、個人データの漏えいなどで、個人の権利利益を害するおそれが大きい事態が起きた時に、個人情報保護委員会に報告し、本人に通知する事を求めています。委員会の頁によると、当たる事態は四つです。</p>
+<ul>
+<li>要配慮個人情報が含まれる</li>
+<li>財産の被害のおそれがある</li>
+<li>不正の目的のおそれがある</li>
+<li>1,000 人を超える</li>
+</ul>
+<p>速報は、発覚から 3〜5 日以内が目安です。確報は 30 日以内、不正の目的のおそれがある時は 60 日以内です。</p>
+<h3>会社法の役員の責任</h3>
+<ul>
+<li>会社と役員の関係は、委任の規定に従います(330 条)。</li>
+<li>取締役は、会社のために忠実に職務を行います(355 条)。</li>
+<li>役員が任務を怠った時は、会社に損害を賠償します(423 条 1 項)。</li>
+<li>「役員等がその職務を行うについて悪意又は重大な過失があったときは、当該役員等は、これによって第三者に生じた損害を賠償する責任を負う。」(429 条 1 項)</li>
+<li>大会社である取締役会設置会社は、業務の適正を確保する体制の整備を、取締役会で決めなければなりません(362 条 4 項 6 号と 5 項)。</li>
+</ul>
+<h3>裁判の例</h3>
+<p>東京地方裁判所の平成26年1月23日の判決(平成23年(ワ)第32060号)です。判決文そのものは読んでいません。弁護士法人みずほ中央法律事務所の解説(2017年4月3日)と、ソフトウェア情報センターの資料によると、次の通りです。</p>
+<ul>
+<li>通信販売の会社が、受注のシステムの設計と保守を、開発の会社に頼んだ。</li>
+<li>SQL インジェクション(入力欄から、データベースへの命令を紛れ込ませる攻撃)で、クレジットカードの情報が最大 7,316 件、ほかの個人情報が最大 9,482 件、漏れたおそれが出た。</li>
+<li>裁判所は、その時の技術の水準に沿った守りを入れる合意があった、とした。</li>
+<li>経済産業省(平成18年2月20日)と IPA(情報処理推進機構。平成19年4月)が対策を呼び掛けていて、対策は容易だった。システムの全体に対策(バインド機構の使用、エスケープ処理)をしなかった事は、重過失に当たる、とした。</li>
+<li>賠償を契約の金額までに限る特約は、重過失の時には当てはまらない、とした。</li>
+<li>損害は 3,231 万 9,568 円。頼んだ側にも過失があった(カードの情報を持っている事と問題を知っていて、開発の会社から指摘と改修の提案を受けたのに、放置した)として 3 割を引き、2,262 万 3,697 円とした。</li>
+</ul>
+<h3>任意の制度</h3>
+<p><strong>JC-STAR。</strong> IPA が 2025年3月25日に運用を始めた、つながる製品の守りを示す任意の制度です(IPA の発表)。★1 は、共通して求められる最低限の要件を満たす事を、作る会社が自分で宣言します。</p>
+<p><strong>SCS 評価制度(サプライチェーン強化に向けたセキュリティ対策評価制度)。</strong> 経済産業省と内閣官房の国家サイバー統括室が、2026年3月27日に構築の方針を公表しました(@IT の 2026年5月21日の記事)。運営は IPA で、会社の守りを ★3、★4、★5 で示します。委託元が、取引の契約などで委託先に段階を示して、対策を促し、状況を確かめる使い方を想定しています(IPA の頁)。</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>段階</th>
+<th>確かめ方</th>
+<th>要求事項</th>
+<th>有効な期間</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>★3</td>
+<td>会社が自己評価を書き、専門家が文書で確かめて署名し、経営層が宣言する。実地の審査と技術の検証は無い</td>
+<td>26</td>
+<td>1 年</td>
+</tr>
+<tr>
+<td>★4</td>
+<td>評価機関が、文書の確認に加えて、実地の審査と技術の検証(範囲の中の機器とシステムへの弱点の検査)を行う</td>
+<td>43</td>
+<td>3 年</td>
+</tr>
+</tbody>
+</table>
+<p>受付の開始は 2027年3月です(IPA の頁)。</p>
+<h2>どの法律にも共通している事</h2>
+<p>ここは、このサイトの考えです。</p>
+<p>欧州の製品の法律も、会社の法律も、英国の決まりも、日本の報告の決まりも、求めている事は同じ形をしています。</p>
+<ul>
+<li><strong>作った者、持つ者が、自分で検査し、直し、記録を出す。</strong> 誰かに任せた事は、言い訳になりません。部品を買っても、システムを頼んでも、責任は出した側、持つ側に残ります。</li>
+<li><strong>期限は、時間と日で数える。</strong> 24 時間、72 時間、14 日、1 か月、3〜5 日、30 日。年に一度の点検では間に合いません。弱点を知る仕組みと、知ったらすぐ動ける人が、常に要ります。</li>
+<li><strong>ソースと設定が手元に無いと、果たせない。</strong> 部品の一覧も、弱点の検査も、24 時間の知らせも、何が入っていて、どう設定されているかを知らなければ書けません。</li>
+</ul>
+<p>星を取る事と、穴が無い事は、別の事です。SCS 評価制度の ★3 は、文書の確かめです。★4 になって初めて、機器とシステムへの弱点の検査が入ります。文書が揃っていても、穴は残ります。このサイトは、検査を先にする立場です。自分の製品とシステムを検査し、見つけた穴を直し、その記録から文書を書けば、星はその後から付いて来ます。</p>
+<p><strong>誰が、いつ検査するか。</strong> SCS 評価制度の ★4 では、外の評価機関が実地の審査と弱点の検査を行い、有効な期間は 3 年です(IPA の頁)。欧州のサイバーレジリエンス法は、作る会社自身に、決まった形で検査と見直しを続ける事(附属書 I 第 2 部)と、支える期間じゅう弱点を直し続ける事を求めています(13 条 8 項)。ふつうの製品は、作る会社が自分で確かめて宣言できます(32 条)。ここまでが事実です。</p>
+<p>このサイトは、検査を、システムを持つ者が、変えるたびに自分で続ける物だと考えます。システムは毎日変わり、新しい弱点は毎日見つかります。欧州の法律は、検査する力を作る者の中に置く作りになっています。外の機関に検査を頼む形だけでは、検査する力は会社の中に育ちません。星を取った次の日に見つかった弱点を、自分で見つける事ができません。外の評価は、自分で続けている検査を確かめてもらう機会として使います。</p>
+<h2>扉と錠を作る会社にとって</h2>
+<h3>条文に書いてある事</h3>
+<ul>
+<li>スマートドアロックは、守りの機能を持つスマートホームの製品として、重要な製品のクラス I に入ります(附属書 III 第 17 項)。</li>
+<li>認証と入退室のリーダーは、生体のリーダーを含めて、身元と権限の管理のハードウェアとして、クラス I に入ります(附属書 III)。原文は &quot;authentication and access control readers, including biometric readers&quot; です。</li>
+<li>ルーターも、クラス I に入ります。</li>
+<li>クラス I は、整合規格などを当てはめて自分で確かめるか、第三者の審査を受けます(32 条)。</li>
+<li>セキュアエレメントは、重大な製品(附属書 IV)です。</li>
+</ul>
+<h3>このサイトの考え</h3>
+<p>層の名前で並べると、欧州で売る時の重さは次のように見えます。</p>
+<table class="comparison-table fade-in">
+<thead>
+<tr>
+<th>層</th>
+<th>見えている事</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ドアホン</td>
+<td>カメラと警報を持つドアホンは、防犯カメラや警報の装置と同じ、スマートホームの製品に近いと考えます。インターネットにつながる無線の機器なら、無線の機器の決まりは今もう効いています</td>
+</tr>
+<tr>
+<td>電子錠</td>
+<td>スマートドアロックとして、クラス I。整合規格に沿って自分で確かめるか、第三者の審査を受けます</td>
+</tr>
+<tr>
+<td>扉のコントローラ</td>
+<td>入退室のリーダーとつながり、開けるかどうかを決めます。どの区分に入るかは、製品の作り次第です。どの区分でも、附属書 I の要件と、5 年以上の支えと、24 時間の知らせは同じです</td>
+</tr>
+<tr>
+<td>鍵の発行</td>
+<td>身元と権限の管理のソフトウェアに近いと考えます。中で使うセキュアエレメントは、重大な製品です</td>
+</tr>
+<tr>
+<td>業務システムとの連携</td>
+<td>扉を使う会社の側の守りとして、NIS2 の取引のつながりの守りと、日本の SCS 評価制度に関わります</td>
+</tr>
+</tbody>
+</table>
+<p>扉は 20 年、30 年使われます。錠とリーダーも、5 年より長く使われると考えます。支える期間を、扉の使われる長さに合わせて考えると、5 年では足りません。錠を扉より先に替えられる作りにし、錠の更新を長く出せる部品を選ぶ事が、法律の求めに応える道になります。ルーターについては <a href="/guide/routers/">ルーターは全部の前にある</a> に書きました。</p>
+<h2>自分で検査できるようになった事と、責任</h2>
+<p>ここは、このサイトの考えです。法律の結論を言うものではありません。</p>
+<p>AI で、自分のシステムと製品を、自分で検査できるようになりました。コードを読ませて穴を探す事は、申し込まなくても今日から始められます(<a href="/guide/check-your-systems-with-ai/">AI で自社のシステムを確かめる</a>)。それまでは「そこまでは調べようがなかった」で済みました。これからは、確かめられるのに確かめていない、という状態になります。</p>
+<p>会社法 429 条 1 項は、役員の第三者への責任に「悪意又は重大な過失」を求めています。検査できるのにしなかった事が重大な過失に当たるかどうかは、裁判所が事件ごとに決める事です。</p>
+<p>ただ、上の裁判の例では、役所が対策を呼び掛けていた事と、対策が容易だった事が、重過失の理由になりました。検査が手の届く物になれば、同じ問いが、システムを作った会社だけでなく、頼んだ側と、その役員にも向く、とこのサイトは考えます。あの事件で頼んだ側は、指摘と改修の提案を受けながら放置したとして、3 割を引かれています。</p>
+<p>欧州の法律は、検査と見直しを続ける事を、作る会社の義務にしました(附属書 I 第 2 部)。日本の SCS 評価制度の ★4 は、弱点の検査を求めます。検査をする事は、もう作る会社の工夫ではなく、取引の前提です。</p>
+<p>だから、検査する人を自社に置きます。委託先に任せきりにすると、24 時間で知らせる事も、部品の弱点を確かめる事もできません(<a href="/guide/ai-and-in-house/">AI の時代に、委託をやめて自社で育てる</a>)。始めるのは、次の順です。</p>
+<ol>
+<li>自社が出している製品と、使っているシステムの一覧を作り、ソースと設定が手元にあるかを確かめる。</li>
+<li>部品の一覧(SBOM)を作る。</li>
+<li>AI でコードを読み、穴を探して直す。何を確かめ、何が見つかり、どう直したかを記録に残す。</li>
+<li>弱点の知らせを受ける連絡先と、24 時間で知らせる手順を決める。</li>
+<li>部品を納める会社と、支える期間と弱点の知らせの約束を結び直す。</li>
+</ol>
+<h2>分かっていない事</h2>
+<p>2026年11月20日の時点で、次の事はまだ確かめていません。</p>
+<ul>
+<li>機械規則の適用の日の訂正の文書。守りの条項の先送りが採られたかどうか</li>
+<li>NIS2 の対象になる会社の大きさ(2 条)と、加盟国ごとの国内の法律の中身</li>
+<li>サイバーレジリエンス法の整合規格が出来上がったかどうか。スマートドアロックの技術の定義(実施規則 2025/2392 は読んでいません)</li>
+<li>扉のコントローラや鍵の発行の仕組みが、どの区分に入るか</li>
+<li>米国の決まり(つながる製品の印、防衛の調達での納入者の審査)</li>
+<li>合同会社や小さな会社の、役員の責任の条文</li>
+<li>上の裁判の例の、判決文そのもの</li>
+</ul>
+<h2>出典</h2>
+<p>確かめた日は、どれも 2026年11月20日です。</p>
+<p><strong>欧州</strong></p>
+<ul>
+<li><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=OJ:L_202402847">EUR-Lex: 規則 (EU) 2024/2847(サイバーレジリエンス法)。2 条、13 条(5、6、8、9、13、18 項)、14 条、32 条、64 条、71 条、附属書 I、III、IV</a></li>
+<li><a href="https://digital-strategy.ec.europa.eu/en/policies/cyber-resilience-act">欧州委員会: Cyber Resilience Act の頁。発効の日、実施の手引き</a></li>
+<li><a href="https://digital-strategy.ec.europa.eu/en/policies/cra-summary">欧州委員会: Cyber Resilience Act の要約。部品、対象の外、前に出した製品、報告の届け先、輸入する者と売る者</a></li>
+<li><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32023R1230">EUR-Lex: 規則 (EU) 2023/1230(機械規則)。附属書 III 1.1.9、1.2.1、54 条</a></li>
+<li><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32022R0030">EUR-Lex: 委任規則 (EU) 2022/30(無線の機器)</a></li>
+<li><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32022L2555">EUR-Lex: 指令 (EU) 2022/2555(NIS2)。20 条、21 条、23 条、34 条、41 条、附属書 II</a></li>
+</ul>
+<p><strong>英国</strong></p>
+<ul>
+<li><a href="https://www.gov.uk/government/publications/the-uk-product-security-and-telecommunications-infrastructure-product-security-regime">英国政府: The UK Product Security and Telecommunications Infrastructure (Product Security) regime</a></li>
+</ul>
+<p><strong>日本</strong></p>
+<ul>
+<li><a href="https://laws.e-gov.go.jp/law/415AC0000000057">e-Gov 法令検索: 個人情報の保護に関する法律。26 条</a></li>
+<li><a href="https://www.ppc.go.jp/personalinfo/legal/leakAction/">個人情報保護委員会: 漏えい等の対応。報告の対象と期限</a></li>
+<li><a href="https://laws.e-gov.go.jp/law/417AC0000000086">e-Gov 法令検索: 会社法。330 条、355 条、362 条 4 項 6 号と 5 項、423 条 1 項、429 条 1 項</a></li>
+<li><a href="https://www.ipa.go.jp/pressrelease/2024/press20250325.html">IPA: JC-STAR の運用開始の発表(2025年3月25日)</a></li>
+<li><a href="https://www.ipa.go.jp/security/scs/index.html">IPA: SCS 評価制度の頁</a></li>
+<li><a href="https://www.ipa.go.jp/security/scs/details.html">IPA: SCS 評価制度の詳細(最終更新 2026年11月4日)。★3 と ★4 の確かめ方、要求事項の数、有効な期間、受付の開始</a></li>
+</ul>
+<p><strong>解説と報道</strong></p>
+<ul>
+<li><a href="https://www.nemko.com/ja/blog/%E7%AC%AC1%E5%9B%9E%E3%81%AA%E3%81%9C%E6%97%A5%E6%9C%AC%E3%81%AE%E8%A3%BD%E9%80%A0%E6%A5%AD%E3%81%AB%E6%AC%A7%E5%B7%9Ecra%E3%81%A8ai%E6%B3%95%E3%81%8C%E9%96%A2%E4%BF%82%E3%81%99%E3%82%8B%E3%81%AE%E3%81%8B-eu%E5%9F%9F%E5%A4%96%E4%BC%81%E6%A5%AD%E3%81%AB%E3%82%82%E6%B1%82%E3%82%81%E3%82%89%E3%82%8C%E3%82%8B-%E8%A3%BD%E5%93%81%E3%81%AE%E4%BF%A1%E9%A0%BC%E6%80%A7-%E5%AF%BE%E5%BF%9C-">Nemko: なぜ日本の製造業に欧州 CRA と AI 法が関係するのか。欧州の外の会社への影響</a></li>
+<li><a href="https://www.ibf-solutions.com/en/news-and-knowledge/technical-papers-and-news-on-ce-marking/postponement-of-mr-requirements-for-cybersecurity-and-ai">IBF Solutions: 機械規則の守りと AI の要件の先送り。適用の日、先送りの求めと反対</a></li>
+<li><a href="https://www.tuvsud.com/en/knowledge-hub/technical-updates/consumer-products-and-retail-essentials/european-commission-to-extend-application-of-red-cybersecurity-requirements-to-1-august-2025">TÜV SÜD: 無線の機器の守りの要件の適用を 2025年8月1日に延ばす</a></li>
+<li><a href="https://atmarkit.itmedia.co.jp/ait/articles/2605/21/news047.html">@IT(2026年5月21日)。SCS 評価制度の構築の方針の公表</a></li>
+<li><a href="https://www.mc-law.jp/kigyohomu/25374">弁護士法人みずほ中央法律事務所: 東京地方裁判所 平成26年1月23日 判決の解説(2017年4月3日)</a></li>
+<li><a href="https://softic.or.jp/semi/2014/5_141113/rep2.pdf">ソフトウェア情報センター: 同じ判決についての資料</a></li>
+</ul>
+<p>裁判の例は、上の二つの解説に拠っています。判決文そのものは読んでいません。</p>
+
+  </article>
+
+  <!-- CHAPTER NAV(前後の記事) -->
+  <nav class="chapter-nav">
+  <a href="/guide/work-for-builders/" rel="prev">&larr; 前: 家を建てる会社と工務店に、新しい仕事が生まれる</a>
+  <a href="/guide/closed-software-and-developers/" rel="next">次: 閉じたソフトウェアは使えなくなり、開発者は製造業に移る &rarr;</a>
+</nav>
+
+  <!-- FOOTER(サイト内メニュー+奥付) -->
+  <footer class="site-footer">
+    <nav class="footer-nav" aria-label="サイト内リンク">
+      <div class="footer-col">
+        <h4>解説</h4>
+        <ul>
+          <li><a href="/guide/matter/">Matterとは何か</a></li>
+          <li><a href="/guide/aliro/">Aliroとは何か</a></li>
+          <li><a href="/guide/what-a-smart-door-needs/">スマートドアに求められる条件</a></li>
+          <li><a href="/guide/layers/">玄関まわりの技術の層</a></li>
+          <li><a href="/guide/open-specification/">仕様と参照実装の公開</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>サイト</h4>
+        <ul>
+          <li><a href="/guide/">解説</a></li>
+          <li><a href="/3d/">立体図</a></li>
+          <li><a href="/check/">始め方</a></li>
+          <li><a href="/manual/">マニュアル</a></li>
+          <li><a href="/news/">ニュース</a></li>
+          <li><a href="/blog/">ブログ</a></li>
+          <li><a href="/consult/">相談と教室</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="colophon">
+      <div class="colophon-mark">§</div>
+      解説 28<br>
+      Tokushima · 2026.11.20<br>
+      <a href="/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">デジタルドア</a> · <a href="/#about" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">このサイトについて</a> · <a href="/contact/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">お問い合わせ</a> · <a href="/privacy/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">プライバシーポリシー</a> · <a href="/license/" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">ライセンス</a> · <a href="/feed.xml" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">RSS</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" style="color: var(--whisper); text-decoration: underline; text-decoration-color: var(--rule);">CC BY 4.0</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // 広い画面ではサイドバー目次を常時展開する(狭い画面では折りたたみに戻す)
+  (function () {
+    var toc = document.querySelector(".series-toc details");
+    if (!toc) return;
+    var mq = window.matchMedia("(min-width: 1200px)");
+    function sync() { toc.open = mq.matches; }
+    sync();
+    if (mq.addEventListener) mq.addEventListener("change", sync);
+    else mq.addListener(sync);
+  })();
+
+  // Mermaid loads only on pages that contain a .mermaid block.
+  // Self-hosted (no third-party CDN dependency); SRI verified.
+  if (document.querySelector(".mermaid")) {
+    const s = document.createElement("script");
+    s.src = "/js/vendor/mermaid-11.14.0.min.js";
+    s.integrity = "sha384-1CMXl090wj8Dd6YfnzSQUOgWbE6suWCaenYG7pox5AX7apTpY3PmJMeS2oPql4Gk";
+    s.crossOrigin = "anonymous";
+    s.onload = () => {
+      const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      mermaid.initialize({ startOnLoad: false, theme: prefersDark ? "dark" : "default" });
+      mermaid.run();
+    };
+    document.head.appendChild(s);
+  }
+</script>
+
+
+</body>
+</html>
