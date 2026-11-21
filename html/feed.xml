@@ -4,7 +4,7 @@
 <link>https://door.aiseed.dev/</link>
 <description>扉と鍵の話を、層に分けて書く</description>
 <language>ja</language>
-<lastBuildDate>Fri, 20 Nov 2026 11:18:45 +0900</lastBuildDate>
+<lastBuildDate>Fri, 20 Nov 2026 11:32:08 +0900</lastBuildDate>
 <item>
 <title>守りの検査が、法律と取引の条件になる</title>
 <link>https://door.aiseed.dev/guide/security-laws-for-makers/</link>
@@ -20,6 +20,14 @@
 <category>解説</category>
 <pubDate>Fri, 20 Nov 2026 00:00:00 +0900</pubDate>
 <description>欧州のサイバーレジリエンス法は、製品を出した会社に、組み込んだ部品まで検査し、直し続け、24 時間で知らせる事を求めます。それには中が読める部品が要ります。読む、検査する、書き直す仕事は AI が出来るようになりました。閉じたソフトウェアを売る仕事と、書く時間を売る仕事が成り立たなくなり、検査と直しは製品を出す会社の中に移ります。法律、公開されたソフトウェア、AI、会社の四つをつなぎ、いつ広がるかを二つの年で示し、製造業の会社、組み込みの開発者、組み込みのソフトウェアの会社が今する事を並べます。</description>
+</item>
+<item>
+<title>有料のソフトウェアを売るのは、難しくなる</title>
+<link>https://door.aiseed.dev/guide/product-liability-and-paid-software/</link>
+<guid>https://door.aiseed.dev/guide/product-liability-and-paid-software/</guid>
+<category>解説</category>
+<pubDate>Fri, 20 Nov 2026 00:00:00 +0900</pubDate>
+<description>欧州の新しい製造物責任の指令は、2026年12月9日より後に出た製品に当たり、ソフトウェアを製品に含めます。被害を受けた個人に対する責任は契約で限れず、安全を保つ更新を出さなかった欠陥には、出した時には分からなかったという言い分が通りません。日本の製造物責任法ではソフトウェアは対象の外ですが、機械に組み込まれた物、欧州の変化、契約と不法行為の責任、日本での改正の議論の四つを見落とせません。守りの法律と賠償の法律が組になる事、有料のソフトウェアの売り方が合わなくなる事、残る三つの道を示します。</description>
 </item>
 <item>
 <title>会社に情報を集めるから、流出が起こる</title>

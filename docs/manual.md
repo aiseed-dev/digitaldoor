@@ -54,12 +54,12 @@ max_hours = 24
 [[token]]
 name = "管理者"
 role = "管理者"
-token_sha256 = "029d390cc78172520364676150653357ef9ec018b349cd57d3523a5202e10c06"
+token_sha256 = "fa3e67377b8c4e290ebce238f7b1d37ee9c7ba280d45f15ac625f1fd540b30d6"
 
 [[token]]
 name = "受付"
 role = "受付"
-token_sha256 = "f33ec7cf0b94d77fd57a25b68ef997ac643354bf969b78d994d892aae6684b8c"
+token_sha256 = "d33dca9eaebad847c7fe9ae3cd81c5325ab5866c793eae29a5e4c5ef3ad47d20"
 ```
 
 ### 役割
