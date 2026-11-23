@@ -57,7 +57,7 @@
 <p>この文書は、会社の情報システムを守る人が、Claude を使って自社のシステムの穴を探し、確かめ、直すところまでを、一人で始めて進めるための手順です。相談に来なくても進められる詳しさで書きます。</p>
 <ul>
 <li><strong>読む人。</strong> 会社の情報システム部門の人、情報システムを兼ねている総務や経理の人、業者から納められたシステムを受け入れる人。</li>
-<li><strong>確かめた日。</strong> Anthropic の制度(Cyber Verification Program)のサポートの頁は、2026年11月11日に取った原文と照らしました。料金の頁と、API の認証の文書も、同じ日に読みました。頁は更新されるので、申し込む前に原文をもう一度読んでください。頁は英語です。この文書では、頁の語を括弧に添えます。</li>
+<li><strong>確かめた日。</strong> Anthropic の制度(Cyber Verification Program)のサポートの頁は、2026年11月11日に取った原文と照らし、2026年11月23日に読み直して、変わった所を直しました。同じ日に、制度のセキュリティの決まりの頁(Security Requirements)と、データの保持の頁も読みました。料金の頁と、API の認証の文書は、2026年11月11日に読んだままです。頁は更新されるので、申し込む前に原文をもう一度読んでください。頁は英語です。この文書では、頁の語を括弧に添えます。</li>
 <li><strong>原文に無い事。</strong> 頁に書いてない事は「頁に書いてありません」と書きます。推測では埋めません。</li>
 <li><strong>扱わない事。</strong> 動いているシステムへの侵入の試験と、マルウェアの解析の手順は扱いません。侵入の試験は、別の枠(Red Team Access)の仕事です(11 章)。</li>
 <li><strong>値の決め方。</strong> 何回、何日ごと、誰が、といった値は、この文書では決めません。誰が決めるか、何の事実で決まるかを書きます。会社の大きさと、持っているシステムで決まるからです。</li>
@@ -105,8 +105,8 @@
 <tr>
 <td>契約</td>
 <td>Pro、Max、Ultra、Team、Enterprise、API</td>
-<td>Team、Enterprise、API</td>
-<td>Team、Enterprise、API</td>
+<td>Enterprise、API</td>
+<td>Enterprise、API</td>
 </tr>
 <tr>
 <td>承認される人数</td>
@@ -122,6 +122,7 @@
 </tr>
 </tbody>
 </table></div>
+<p>Red Team Access と Specialized Access の契約は、2026年11月の更新で、Enterprise と API だけになりました(Anthropic の記事の、2026年11月18日の更新の注)。Team の契約で使えるのは、Defense Access だけです。</p>
 <p>この文書で扱うのは Defense Access です。自社のコードを読んで穴を探し、見つけた穴を仕分け、確かめ、検知の仕組みを作り、事が起きた時に対応する仕事は、この枠に入ります。</p>
 <p>頁は、重要なインフラの運用者の多くには Defense Access が合う、と書いています。重要なインフラを運用しているだけでは、Specialized Access の対象にはなりません。</p>
 <h3>どの枠でも禁じられている事</h3>
@@ -144,9 +145,9 @@
 <h3>組織として出すか、個人として出すか</h3>
 <ul>
 <li><strong>組織(business)。</strong> 会社、非営利の団体、大学、政府の部署などのために出します。会社の仕事として自社のシステムを確かめるなら、こちらです。</li>
-<li><strong>個人(individual)。</strong> 自分のために出します。頁の例は、独立の研究者、オープンソースの保守者、バグ報奨金の参加者です。個人が出せるのは Defense Access だけです。</li>
+<li><strong>個人(individual)。</strong> 自分のために出します。頁の例は、独立の研究者、オープンソースの保守者、バグ報奨金の参加者です。個人が出せるのは Defense Access だけです。契約は、Pro、Max、Ultra、Team、Enterprise、API のどれでも出せます。</li>
 </ul>
-<p>頁は、どちらで確かめを受けるかが申し込みの扱いに響くので、よく選ぶように書いています。後で上の枠(Red Team Access)へ進むのは、組織として出した場合だけです(FAQ)。</p>
+<p>頁は、どちらで確かめを受けるかが申し込みの扱いに響くので、よく選ぶように書いています。後で上の枠(Red Team Access)へ進めるのは、Claude Console か Claude Enterprise の組織として出した場合だけです。Team の組織は、Defense Access までです(FAQ)。</p>
 <h3>どの契約で使うか</h3>
 <p>制度は、有料の契約で使えます。無料の契約(Free)では使えません。どこで Claude を使っているかで、使える枠と、入れ方が変わります。</p>
 <div class="table-wrap"><table>
@@ -165,8 +166,8 @@
 </tr>
 <tr>
 <td>Team</td>
-<td>全部</td>
-<td>組織の全員に効く。Red Team Access は 75 席、Specialized Access は 25 席までの組織に限られる。人ごとに分けられない</td>
+<td>Defense Access</td>
+<td>組織の全員に効く。人ごとに分けられない</td>
 </tr>
 <tr>
 <td>Enterprise</td>
@@ -204,6 +205,7 @@
 <ul>
 <li><strong>今、社員がどこで Claude を使っているか。</strong> 承認は、出した組織にだけ効きます。</li>
 <li><strong>確かめに使う人を絞りたいか。</strong> Team は全員に効きます。人を絞るなら、Enterprise の役か、Console の作業の場で分けます。</li>
+<li><strong>後で上の枠へ進むつもりがあるか。</strong> Team の契約からは、Red Team Access に申し込めません。進むつもりがあるなら、Console か Enterprise の組織から出します(11 章)。</li>
 <li><strong>同じ組織で客の仕事をしているか。</strong> 次の項を見てください。</li>
 </ul>
 <h3>使い道は社内の物に限る</h3>
@@ -219,6 +221,48 @@
 <li><strong>Team の契約では、社内の仕事だけに絞れません。</strong> 組織の全員に効くからです。頁は、社外の使い道の承認を得るまで、制度の入った組織から客にサービスを出さないように、と書いています。システムの開発や運用を請け負う会社は、この点を先に確かめます。</li>
 <li><strong>Console なら分けられます。</strong> 制度を割り当てた作業の場にだけ効くので、社内の仕事だけの作業の場に割り当て、客の通信は制度の無い別の作業の場に置きます。</li>
 </ul>
+<h3>社外の使い道の承認(請け負う会社の場合)</h3>
+<p>この文書が扱うのは、社内の使い道だけです。システムの開発、運用、検査を請け負う会社のために、頁に書いてある事を写しておきます。</p>
+<ul>
+<li>承認は、客に出すサービスや製品の一つごとに要ります。組織がどれかの枠で承認された後に、Verification Portal の「Cyber productization」を開き、「Register an offering」から出します。</li>
+<li>出せるのは、制度の承認を受けた組織の、Owner か Primary Owner(Claude のアカウント)、Admin(Console のアカウント)です。</li>
+<li>出す時に、規約に加えて、Anthropic の追加の契約(Anthropic Cyber Defender Partner Addendum)に同意します。</li>
+<li>出した後は、直すことも取り消すこともできません。</li>
+<li>返事の目安は、約 1 週間です。</li>
+</ul>
+<p>型は三つです。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>型</th>
+<th>中身</th>
+<th>受け付け</th>
+<th>用意する物</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>請け負いのサービス(managed service)</td>
+<td>自社の人が Claude を使って、客のためにセキュリティの仕事をする。客が受け取るのは、自社の人が見直した仕上がりの物だけ。客は、モデルに指示せず、モデルの生の出力も見ない</td>
+<td>受け付けている</td>
+<td>サービスの進め方、誰がモデルを使うか、客が何を受け取るか。セキュリティの連絡先。承認する役員の名前と役職</td>
+</tr>
+<tr>
+<td>縛りのある製品(constrained product)</td>
+<td>守りの仕事のために自社が作った物を、客が使う。客は、モデルに指示できず、生の出力も見られない</td>
+<td>Defense Access について受け付けている。データの保持が必須</td>
+<td>製品が何をするか、誰が使うか、客がどう使うか。製品へのリンク。セキュリティの連絡先。承認する役員の名前と役職</td>
+</tr>
+<tr>
+<td>縛りの無い製品(unconstrained product)</td>
+<td>そのほかの、客に出す製品。たとえば、客がモデルに指示できる物</td>
+<td>まだ受け付けていない</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p>FAQ は、セキュリティの会社が持つ枠は、それだけでは客の仕事に及ばない、と書いています。枠の承認と、社外の使い道の承認(ふつうは請け負いのサービスとして)の両方が要ります。</p>
+<p>客が自分の組織で申し込み、客の社員が自社のシステムを確かめるなら、それは客の側の社内の使い道です。やり方を教えるだけの会社に承認が要るかは、頁に書いてありません。</p>
 <h3>Claude と Console は別の組織</h3>
 <p>頁は、Claude のアカウントと Claude Console のアカウントは別の組織だ、と書いています。承認は、ほかの組織には引き継がれません。Claude のアプリと Claude Code を Team や Enterprise の席で使うのか、Console の API で使うのかを決め、使う方の組織から申し込みます。違う組織で承認された時は、使う組織からもう一度申し込むか、Anthropic の担当(account team)に相談します。</p>
 <p>一つの会社の中で部署ごとに別の枠にすることはできます。Claude の組織ごとに、別の申し込みが要ります。</p>
@@ -276,6 +320,7 @@
 <li>多要素認証(MFA)</li>
 <li>API の鍵を、少なくとも 7 日ごとに替えること</li>
 </ul>
+<p>決まりの全文は、別の頁「Cyber Verification Program Security Requirements」にあります。そこには、どの枠にも当たる決まり(セキュリティの連絡先を届ける、事故を期限の内に報告する、など)も書いてあります。申し込む前に、セキュリティの連絡先になる人を決めておきます(5 章)。</p>
 <h2 id="s4">4. 申し込みの手順と、返事の後</h2>
 <h3>出す人</h3>
 <p>Claude のアカウントでは Owner か Primary Owner、Console のアカウントでは Admin です(3 章)。</p>
@@ -302,7 +347,7 @@
 <li>7 日たてば、もう一度出せます。頁は、何かが変わった時や、強い証拠を出せる時に、これが一番よい道だと書いています。</li>
 <li>正しいアカウントから出したか、正しい種類(組織か個人か)の確かめを受けたかを見直します。</li>
 </ul>
-<p>通らなかった理由が知らされるかは、頁に書いてありません。</p>
+<p>通らなかった理由が知らされるかは、頁に書いてありません。Anthropic の記事(2026年11月22日に読みました)は、通らなかった申し込みの見直しの求めと、認められた仕事が止められた時の報告のためのフォームにリンクしています(<a href="https://claude.com/form/cyber-block-false-positive-report-cvp-rejection-appeal">https://claude.com/form/cyber-block-false-positive-report-cvp-rejection-appeal</a>)。フォームは開いて確かめていません。</p>
 <p>承認の後でも、方針に反する使い方があれば、Anthropic は自分の判断で、いつでも見直し、狭め、取り消すことがある、と書いてあります。</p>
 <h3>承認の後に有効にする</h3>
 <p>多くの製品では、承認だけでは制度は有効になりません。管理者が、役や作業の場に割り当てます。</p>
@@ -331,6 +376,10 @@
 <td>Verification Portal の制度の頁の「Access on linked accounts」で枠を有効にする</td>
 </tr>
 <tr>
+<td>Amazon Bedrock</td>
+<td>Enterprise Frontier Safeguards(EFS)が使えるようになってから。アカウントをつなぎ、「Access on linked accounts」で枠を有効にする</td>
+</tr>
+<tr>
 <td>Google Cloud Agent Platform</td>
 <td>project をつなぎ、枠を有効にし、データの共有を設定する</td>
 </tr>
@@ -357,19 +406,84 @@
 <li>作業の場の行に「Not set」「Not met」「Allowed」と出た欄があれば、選んで、示される直し方に従います。</li>
 <li>頁にある有効な作業の場の数(たとえば「1 of 2 workspaces active」)を見ます。決まりを満たすまで、作業の場は有効になりません。</li>
 </ol>
+<p>クラウドの事業者(AWS、Google Cloud、Azure)の上で Claude Mythos を使えるようになるのは、承認の約 5 営業日の後から、と書いてあります。</p>
 <p>承認されたのに止められる時は、頁の FAQ の通り、管理者が割り当てたか、Console なら制度の入った作業の場に居るか、仕事が枠の中か、を順に確かめます。</p>
 <h2 id="s5">5. 運用の決まり</h2>
-<h3>多要素認証(MFA)</h3>
-<p>Defense Access では、組織が多要素認証を入れていると表明できる必要があります。どのアカウントに要るか(Claude のアカウントだけか、社内の全部か)は、頁に書いてありません。</p>
-<h3>2026年12月15日からの決まり</h3>
-<p>頁は、2026年12月15日から、Defense Access に次が要ると書いています。</p>
+<h3>決まりのある場所</h3>
+<p>決まりの全文は、サポートの頁「Cyber Verification Program Security Requirements」にあります(2026年11月23日に読みました)。この章は、そのうち Defense Access に当たる所を写した物です。申し込みの時に出る規約と合わせて、原文を読んでください。決まりは、承認された人(Approved Users)と、制度を割り当てた作業の場(Granted Workspace)に当たります。</p>
+<h3>どの枠にも当たる決まり</h3>
 <ul>
-<li><strong>フィッシングに強い多要素認証(phishing-resistant MFA)</strong></li>
-<li><strong>固定の API の鍵、長く使う API の鍵は不可</strong>(no longer allows static or long-lived API keys)</li>
+<li><strong>セキュリティの連絡先(Security Contact)。</strong> セキュリティと悪用の知らせを受けて、動ける人を、名前で Anthropic に届けます。</li>
+<li><strong>事故の報告(Incident Reporting)。</strong> 承認に関わる侵害や悪用の疑いは 72 時間以内に、セキュリティの事故は 24 時間以内に、Anthropic に報告します。宛先は <code>security@anthropic.com</code> か、Anthropic の担当(account team)です。</li>
+<li><strong>協力(Cooperation)。</strong> Anthropic が見つけた悪用は、48 時間以内に調べ、Anthropic と一緒に直します。悪用についての問い合わせには、7 日以内に答えます。</li>
+<li><strong>本人が使う(Personal Access)。</strong> 承認された人は、本人としてログインします。ログイン、席、セッション、仕組みの身元(workload identity)を人と共有することは、認められていません。セッションをほかの人に見せるブラウザーの拡張や中継の道具も、同じです。</li>
+<li><strong>誰が使ったかが分かること(Usage Attribution)。</strong> 作業の場で、利用者のプロフィール(user profiles)を有効にしておきます。依頼を、名前のある人か、仕組みの身元に結び付けるためです。どの画面で有効にするかは、この頁には書いてありません。</li>
+<li><strong>変わった時の知らせ(Notice of Changes)。</strong> セキュリティの体制、持ち主、本社、セキュリティの連絡先が大きく変わったら、30 日以内に Anthropic に知らせます。</li>
+<li><strong>続く見直し(Ongoing Review)。</strong> Anthropic は、決まりを守っている証拠を求めることがあります。</li>
+</ul>
+<p>事故の報告の期限があるので、事故の対応の手順(10 章の incident-response)で「知らせる」先に、Anthropic を入れておきます。何を「セキュリティの事故」と数えるかは、頁に書いてありません。</p>
+<h3>多要素認証(MFA)</h3>
+<p>Defense Access では、承認された時から、多要素認証が要ります。要るのは、制度を割り当てた作業の場にログインできるアカウントと、その作業の場の認証の情報を持つアカウントの全部です。</p>
+<h3>2026年12月15日からの決まり</h3>
+<p>頁は、2026年12月15日(期限の日。Cutoff Date)までに、Defense Access に次が要ると書いています。</p>
+<ul>
+<li><strong>フィッシングに強い多要素認証(phishing-resistant MFA)。</strong> 上に書いたアカウントの全部に要ります。</li>
+<li><strong>固定の認証の情報、長く使う認証の情報は不可。</strong> API の鍵を含みます。取り出した物、書き出した物も同じです。</li>
 </ul>
 <p>頁は、今のうちに Workload Identity Federation へ移ることを勧めています。</p>
-<p>Console の手順の所には、より具体的に書いてあります。2026年12月15日までは、Defense Access の作業の場で使える API の鍵は、7 日以内に切れる鍵だけです。その日の後は、API の鍵は使えません。</p>
-<p><strong>フィッシングに強い多要素認証とは。</strong> 偽の画面にだまされて入力しても、その結果が攻める側で使えない認証です。米国の CISA の資料(2022年10月)は、FIDO と WebAuthn による認証(パスキーや、USB や NFC のセキュリティキー)と、公開鍵の基盤(PKI)による認証(IC カード等)を、フィッシングに強い物として挙げています。認証のアプリの使い捨ての番号、プッシュの通知、SMS や音声の番号は、フィッシングに強い物には入っていません。CVP の頁が、どの方式を認めるかを名指ししているわけではありません。どの方式で満たすかは、5 章の終わりの「誰が決めるか」を見てください。</p>
+<p><strong>フィッシングに強い多要素認証とは。</strong> 偽の画面にだまされて入力しても、その結果が攻める側で使えない認証です。決まりの頁は、米国の CISA の資料「Implementing Phishing-Resistant MFA」と NIST SP 800-63B-4 に沿う物として、認める方式を三つ挙げています。</p>
+<ul>
+<li>FIDO2 / WebAuthn のセキュリティキー</li>
+<li>パスキー(端末の中の物でも、パスワードの管理の道具の中の物でもよい)</li>
+<li>IC カード(smartcard / PIV)</li>
+</ul>
+<p>SMS、音声、メールで届く番号、認証のアプリの番号、プッシュの承認は、認められません。メールのリンクでのログイン(email magic-link)は、切っておきます。どの方式で満たすかは、5 章の終わりの「誰が決めるか」を見てください。</p>
+<p><strong>認証の情報の決まり。</strong> 期限の日からは、承認された人も、仕組みも、使う場所の身元の仕組みが出す、短い間だけ有効な認証の情報で入ります。使う場所ごとに、次が不可です。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>使う場所</th>
+<th>不可の物</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Anthropic(API と Console)</td>
+<td>固定の API の鍵と、長く使う API の鍵。Claude Console、Claude for Enterprise、Claude Code を人が使う場合も同じ</td>
+</tr>
+<tr>
+<td>Google Vertex</td>
+<td>取り出した、サービスのアカウントの JSON の鍵のファイル</td>
+</tr>
+<tr>
+<td>Amazon Bedrock</td>
+<td>IAM の利用者のアクセスキーの組。12 時間か、Bedrock のセッションの長さの、短い方で切れる短い間の鍵は除く</td>
+</tr>
+<tr>
+<td>Microsoft Azure(Azure AI Foundry)</td>
+<td>API の鍵と、書き出したサービスプリンシパルの秘密や証明書</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>期限の日までの API の鍵(Interim API Keys)。</strong> 期限の日までは、次の四つを全部守る鍵だけが認められます。</p>
+<ol>
+<li>秘密の保管の仕組み(secrets manager)か、パスワードの管理の道具に置く。</li>
+<li>一人の人か、一つの仕組みに割り当てる。</li>
+<li>ソースコードに入れない。</li>
+<li>少なくとも 7 日ごとに替える。</li>
+</ol>
+<p>Anthropic は、Defense Access の下の API の鍵の長さを 7 日までに限ることがあり、期限の日から、作業の場の API の鍵を止めることがある、と書いています。Console の手順の所には、2026年12月15日までは 7 日以内に切れる鍵だけが使え、その日の後は API の鍵は使えない、と書いてあります。</p>
+<p><strong>人が机で Claude Code を使う時。</strong> 上の表の通り、Claude Code を人が使う場合も、固定の鍵は不可です。決まりの頁の個人向けの節には、Claude Code、Claude Console、claude.ai は OAuth で認証する、と書いてあります。ここから、期限の日からは、API の鍵を置いて Claude Code を動かす使い方はできず、アカウントでログインして使う形になる、と読めます。組織の席で使う場合の手順は、頁に書いてありません。</p>
+<h3>個人として承認を受けた時</h3>
+<p>決まりの頁には、個人向けの節があります。個人が持てるのは Defense Access だけです。</p>
+<ul>
+<li><strong>ログイン。</strong> 承認を持つ Anthropic のアカウントには、Google か、同じ働きの身元の発行元を通してだけログインします。</li>
+<li><strong>多要素認証。</strong> 承認された日から要ります。期限の日までに、フィッシングに強い方式(セキュリティキー、パスキー、IC カード)にします。メールのリンクでのログインは使いません。</li>
+<li><strong>API の鍵。</strong> 期限の日からは、固定の認証の情報は使えません。期限の日までは、鍵は 1 本だけです。パスワードの管理の道具か、端末の秘密の置き場に置き、人と共有せず、ソースコードに入れず、少なくとも 7 日ごとに替えます。</li>
+<li><strong>使えるのは本人だけです。</strong> ログインやセッションを、人と共有しません。</li>
+<li><strong>データの保持。</strong> 承認の下の通信は、全部が保持され、監視されます。保持しない扱い(ZDR)は使えません。</li>
+<li><strong>どの枠にも当たる決まり。</strong> 個人に当たるのは、事故の報告、協力、続く見直しの三つです。</li>
+</ul>
 <h3>API の鍵を 7 日以内に替える運用</h3>
 <p>ここは、Anthropic の API の認証の文書(2026年11月11日に閲覧)で確かめた事です。</p>
 <ul>
@@ -378,7 +492,7 @@
 <li>切れる前に、作った人にメールが来ます。長さが 14 日以上の鍵は切れる 7 日前に、7 日以上の鍵は切れる 1 日前に来ます。それより短い鍵は、通知無しで切れます。</li>
 <li>Console の鍵の表と、Admin API の <code>expires_at</code> で、各鍵の切れる時を見られます。</li>
 </ul>
-<p>7 日で回すには、鍵を誰が作り、どこに置き、どの仕組みが読み、誰が古い鍵を消すかを決めます。決める材料は、鍵を使う仕組みの数と、置き場(秘密の保管の仕組み)の有無です。頁の決まりは 2026年12月15日に「鍵は不可」へ変わるので、7 日の回し方を作り込むより、次の Workload Identity Federation へ移る準備に時間を使う方が、手戻りが少なく済みます。</p>
+<p>7 日で回すには、鍵を誰が作り、どこに置き、どの仕組みが読み、誰が古い鍵を消すかを決めます。決める材料は、鍵を使う仕組みの数と、置き場の有無です。置き場は、秘密の保管の仕組みか、パスワードの管理の道具に限られます(上の四つの決まり)。頁の決まりは 2026年12月15日に「鍵は不可」へ変わるので、7 日の回し方を作り込むより、次の Workload Identity Federation へ移る準備に時間を使う方が、手戻りが少なく済みます。</p>
 <h3>Workload Identity Federation とは</h3>
 <p>ここも、Anthropic の文書(2026年11月11日に閲覧)で確かめた事です。</p>
 <ul>
@@ -389,14 +503,21 @@
 <li><strong>移り方。</strong> 文書は、並べて設定する → どちらの身元が使われているかを確かめる → <code>ANTHROPIC_API_KEY</code> を全部の置き場から消す → 古い鍵を消す、の順を示しています。<code>ANTHROPIC_API_KEY</code> が残っていると、そちらが先に使われるので、消し忘れに気をつけます。</li>
 <li><strong>限り。</strong> 文書は、これだけで安全が完成するわけではなく、札を出す発行元の強さで決まる、と書いています。発行元の側の多要素認証、使える場所の制限、記録と組み合わせます。</li>
 </ul>
-<p>自社にクラウドや CI の身元の発行元がまだ無い時に、どう移るかは、確かめていません。人が自分の机で Claude Code を使う時に、この決まりがどう当たるか(Team や Enterprise の席で入って使う場合を含む)は、CVP の頁に書いてありません。申し込む前に、どの使い方をするかを決め、その使い方について Anthropic の最新の文書を読みます。</p>
+<p>自社にクラウドや CI の身元の発行元がまだ無い時に、どう移るかは、確かめていません。申し込む前に、どの使い方をするかを決め、その使い方について Anthropic の最新の文書を読みます。</p>
 <h3>データの保持</h3>
 <p>頁は、制度に入った者は全員、データの保持が必須だと書いています。サイバーの悪用を監視し、防ぐためです。</p>
 <ul>
 <li>保持しない扱い(ZDR)は、Claude Fable か Claude Mythos のモデルについてデータの保持の例外を持つ組織だけが、社内の使い道で使えます。</li>
 <li>Enterprise Frontier Safeguards(EFS)が広く使えるようになると、条件に合う組織は、自分が管理するクラウドにデータを置けるようになる、と書いてあります。</li>
 </ul>
-<p>何を、どのくらいの期間、どこに保持するかは、頁に書いてありません。保持の中身は、規約と Anthropic のほかの文書で決まります。申し込みの時に出る規約を読み、PDF で残します(4 章)。</p>
+<p>制度の頁には、何を、どのくらいの期間、どこに保持するかは、書いてありません。Mythos の級のモデルについては、別の頁「Data retention practices for Covered Models」(2026年11月23日に読みました)に、次の事が書いてあります。</p>
+<ul>
+<li>入力と出力は、モデルが出されているどの場所でも、30 日保持されます(2026年6月9日から)。</li>
+<li>30 日の後は、自動で消えます。自動の仕組みが害の恐れで印を付けた物と、法で残す必要がある物は、除きます。</li>
+<li>既定では、Anthropic の人は、保持された会話を読めません。人が見るのは、決められた道を通る時だけです(例は、自動の仕組みが印を付けた時)。見るのは承認された少数の人で、見た事は、消せない記録に残ります。</li>
+<li>個人向けの契約(Free、Pro、Max、Ultra)は、もとから入力と出力が保持されているので、この頁の変更は当たりません。期間は、個人向けの契約の決まりによります(この文書では確かめていません)。</li>
+</ul>
+<p>Opus と Sonnet を制度の下で使う時の保持の期間は、どちらの頁にも書いてありません。保持の中身は、規約と Anthropic のほかの文書で決まります。申し込みの時に出る規約を読み、PDF で残します(4 章)。</p>
 <p><strong>ここから言える事は一つです。AI に読ませた物は、Anthropic に送られ、保持される物として扱います。</strong> だから、渡す物を選びます(6 章)。</p>
 <h3>誰が決めるか</h3>
 <div class="table-wrap"><table>
@@ -409,9 +530,14 @@
 </thead>
 <tbody>
 <tr>
+<td>セキュリティの連絡先を誰にするか</td>
+<td>経営者と、情報システムの責任者</td>
+<td>知らせを受けて動ける人か。事故の報告の期限(24 時間、72 時間)に間に合う体制か</td>
+</tr>
+<tr>
 <td>どの方式で多要素認証を満たすか</td>
 <td>情報システムの責任者</td>
-<td>社員の端末、今使っている認証の仕組み、鍵を配れる人数</td>
+<td>社員の端末、今使っている認証の仕組み、鍵を配れる人数。認められる方式は三つ(上)</td>
 </tr>
 <tr>
 <td>API の鍵を使うか、Workload Identity Federation に移るか</td>
@@ -693,12 +819,25 @@ API_KEY: &quot;abc&quot;             →  API_KEY: &lt;伏せた&gt;
 <h2 id="s11">11. 次の枠へ進む時</h2>
 <p>動いているシステムに侵入して確かめる試験は、Red Team Access の枠の仕事です。頁から、条件を拾います。</p>
 <ul>
-<li>申し込めるのは組織だけで、契約は Team、Enterprise、API です。Defense Access を組織として持っていれば、上の枠に申し込めて、審査の間も Defense Access は使えます(FAQ)。</li>
+<li>申し込めるのは組織だけで、契約は Enterprise と API です。申し込みは、Claude Console か Claude Enterprise の組織から出します。Team の組織は、Defense Access までです。Console か Enterprise の組織として Defense Access を持っていれば、上の枠に申し込めて、審査の間も Defense Access は使えます(FAQ)。</li>
 <li>組織は、次を満たしていると表明できる必要があります。フィッシングに強い多要素認証、API の鍵を少なくとも 7 日ごとに替えること、会社のドメインのアカウント、組織が管理する端末、外向きの通信の制限、担当者の身元の確かめ(background checks)。</li>
+<li>決まりの頁(Security Requirements)には、中身がより細かく書いてあります。主な物を挙げます。
+<ul>
+<li>承認された時から、フィッシングに強い多要素認証が要ります(Defense Access のような期限までの猶予はありません)。守る相手は、作業の場のアカウントのほかに、自社の身元の発行元の上のアカウント、モデルを呼べるクラウドの身元、認証の情報を出す仕組みの管理の入口にも広がります。</li>
+<li>固定の API の鍵は、初めから不可です。Console の手順には、API の鍵を切っておく、と書いてあります。</li>
+<li>個人のアドレスや、Web メールのアカウントは不可です。</li>
+<li>承認される人は 75 人までで、その仕事を自分でするか、直に監督する人に限ります。人を足す、役を変える、認証の情報を作るのは、名前を届けた管理者だけです。</li>
+<li>漏れた認証の情報や身元は、24 時間以内に取り消せること。辞めた人、仕事が替わった人は、3 営業日以内に作業の場から外すこと。</li>
+<li>モデルが攻めの仕事や、自分で進める仕事をする場所では、外向きの通信を、許した宛先の一覧に限り、記録すること。</li>
+<li>端末は、会社が管理し、OS の更新が自動か定期で入る物だけ。個人の端末は不可です。</li>
+<li>承認される人は、請け負いの人も含めて、身元の確かめを受けていること。法が許す所では、犯罪歴の確かめも要ります。</li>
+<li>承認が危うくなった時や悪用の疑いの時の手順を、文書で持つこと(認証の情報の取り消しと、席の停止を含む)。</li>
+</ul>
+</li>
 <li>社内のレッドチームとして申し込むなら、全部が要ります。セキュリティの取り組みの証拠(年次の報告書のサイバーセキュリティの節、有効な ISO/IEC 27001 の証明書、SOC 2 Type II の報告書、12 か月以上続けている有料のバグ報奨金のどれか。重要なインフラの運用者は、業界のセキュリティの義務でもよい)。試験の部署の名、長、おおよその人数。試験ごとに、そのシステムに権限を持つ人が先に許していることの確認。それに加えて、攻めのセキュリティの資格(OSCP、GPEN、CREST Registered Tester など)を持つ人、公開された仕事(研究や講演)、伏せた所のある社内の試験の報告書の、どれか一つ。重要なインフラの運用者は、業界の登録簿の記載も要ります。</li>
 <li>条件に合っても、承認が約束されるわけではない、と書いてあります。</li>
 <li>外の試験の会社に頼る組織では、試験の会社の側が申し込みます。</li>
-<li>返事の目安は 2 週間です。今は申し込みが多く、延びています。</li>
+<li>返事の目安は 2 週間です。今は申し込みが多く、延びています。上の枠に申し込んで、下の枠の条件に合う時は、残りの審査の間、下の枠が使える、と書いてあります。</li>
 </ul>
 <p>ここで整える物(会社のドメインのアカウント、会社が管理する端末、外向きの通信の制限、フィッシングに強い多要素認証、担当者の身元の確かめ)は、鍵の管理を自社で持つ会社が整える物と同じです(解説「<a href="/guide/keys-belong-to-managers/">デジタルキーは管理者が自分で持つ</a>」「<a href="/guide/doors-and-cyber-defense/">デジタルドアはサイバー攻撃対策そのもの</a>」)。Defense Access で自社のコードを確かめながら、ネットワークと認証を整えていけば、それが次の枠の準備になります。</p>
 <h2 id="s12">12. 費用</h2>
@@ -746,13 +885,17 @@ API_KEY: &quot;abc&quot;             →  API_KEY: &lt;伏せた&gt;
 <h2 id="s13">13. 確かめていない事</h2>
 <ul>
 <li><strong>実例。</strong> この文書の手順を、会社が最初から最後まで通した記録は、まだありません。運営者自身が Defense Access に申し込み、このリポジトリのコードを確かめた記録を、後で足す予定です。</li>
-<li><strong>頁に書いてない事。</strong> データを何を、どのくらいの期間保持するか。制度そのものの料金。日本の書類のどれが組織の確かめに当たるか。申し込みを書く言葉。通らなかった時に理由が知らされるか。多要素認証がどのアカウントに要るか。個人の申し込みに 5 章の決まりがどう当たるか。人が机で Claude Code を使う時に、2026年12月15日からの API の鍵の決まりがどう当たるか。</li>
-<li><strong>確かめていない事。</strong> 身元の発行元を持たない会社が Workload Identity Federation に移る道。どの席でどのモデルが使えるか。Verification Portal の画面を、実際に開いて確かめてはいません。</li>
+<li><strong>頁に書いてない事。</strong> Opus と Sonnet を制度の下で使う時の、データの保持の期間。制度そのものの料金。日本の書類のどれが組織の確かめに当たるか。申し込みを書く言葉。通らなかった時に理由が知らされるか。何を「セキュリティの事故」と数えるか。利用者のプロフィールを、どの画面で有効にするか。組織の席で Claude Code を使う時の、2026年12月15日からの手順。やり方を教えるだけの会社に、社外の使い道の承認が要るか。</li>
+<li><strong>確かめていない事。</strong> 身元の発行元を持たない会社が Workload Identity Federation に移る道。どの席でどのモデルが使えるか。個人向けの契約での、データの保持の期間。Verification Portal の画面と、記事がリンクしているフォームを、実際に開いて確かめてはいません。料金の頁、API の認証の文書、スキルの頁、CISA の資料は、2026年11月11日に読んだままで、読み直していません。</li>
+<li><strong>2026年11月23日に答えが見つかった事。</strong> 前の版で「頁に書いてありません」とした事のうち、次は、決まりの頁とデータの保持の頁に書いてありました。多要素認証がどのアカウントに要るか。どの方式が認められるか。個人の申し込みに決まりがどう当たるか。人が机で Claude Code を使う時に、API の鍵の決まりがどう当たるか。Mythos の級のモデルの、データの保持の期間(どれも 5 章)。</li>
 </ul>
 <p>気づいた事、違っていた事は、<a href="https://github.com/aiseed-dev/digitaldoor/issues">Issues</a> で知らせてください。Issues は誰でも読めるので、会社の中の事は書かないでください。自社で始める相談は、<a href="/consult/">相談と教室</a>でも受けています。</p>
 <h2 id="sources">出典</h2>
 <ul>
-<li>Anthropic: Cyber Verification Program(サポートの頁)。<a href="https://support.claude.com/en/articles/14604842-cyber-verification-program">https://support.claude.com/en/articles/14604842-cyber-verification-program</a> 。2026年11月11日に取った原文で、申し込みが要らない仕事、三つの枠、禁じられている事、契約ごとの違い、データの保持、社内と社外の使い道、用意する物、Defense Access の決まりと2026年12月15日からの決まり、審査を速める証拠、申し込みの手順、返事の目安、通らなかった時、承認の後に有効にする手順、Red Team Access の条件、FAQ を確かめました(頁の更新の日付は 2026年10月6日)。</li>
+<li>Anthropic: Cyber Verification Program(サポートの頁)。<a href="https://support.claude.com/en/articles/14604842-cyber-verification-program">https://support.claude.com/en/articles/14604842-cyber-verification-program</a> 。2026年11月11日に取った原文で、申し込みが要らない仕事、三つの枠、禁じられている事、契約ごとの違い、データの保持、社内と社外の使い道、用意する物、Defense Access の決まりと2026年12月15日からの決まり、審査を速める証拠、申し込みの手順、返事の目安、通らなかった時、承認の後に有効にする手順、Red Team Access の条件、FAQ を確かめました(頁の更新の日付は 2026年10月6日)。2026年11月23日に読み直し、契約ごとの違い(Team は Defense Access まで)、上の枠へ進める組織、社外の使い道の型と申し込み、Amazon Bedrock とクラウドの上の Mythos を直しました(頁には「昨日更新」と出ていました)。</li>
+<li>Anthropic: Cyber Verification Program Security Requirements(サポートの頁)。<a href="https://support.claude.com/en/articles/17202708-cyber-verification-program-security-requirements">https://support.claude.com/en/articles/17202708-cyber-verification-program-security-requirements</a> 。2026年11月23日に閲覧。どの枠にも当たる決まり、Defense Access の決まり、個人向けの決まり、Red Team Access の決まり。</li>
+<li>Anthropic: Data retention practices for Covered Models(サポートの頁)。<a href="https://support.claude.com/en/articles/15425996-data-retention-practices-for-covered-models">https://support.claude.com/en/articles/15425996-data-retention-practices-for-covered-models</a> 。2026年11月23日に閲覧。Mythos の級のモデルの、データの保持の期間と、人が見る時の決まり。</li>
+<li>Anthropic: Expanding the Cyber Verification Program(記事)。<a href="https://www.anthropic.com/news/cyber-verification-program">https://www.anthropic.com/news/cyber-verification-program</a> 。2026年10月6日公開、2026年11月18日更新。2026年11月22日に閲覧。Red Team Access と Specialized Access の契約の変更の注、止められた時と通らなかった時のフォームへのリンク。</li>
 <li>Anthropic: Authentication(API の文書)。<a href="https://platform.claude.com/docs/en/manage-claude/authentication">https://platform.claude.com/docs/en/manage-claude/authentication</a> 。2026年11月11日に閲覧。API の鍵の種類、切れるまでの長さ、切れる前の通知。</li>
 <li>Anthropic: Workload Identity Federation(API の文書)。<a href="https://platform.claude.com/docs/en/manage-claude/workload-identity-federation">https://platform.claude.com/docs/en/manage-claude/workload-identity-federation</a> 。2026年11月11日に閲覧。仕組み、三つの物、鍵の長さ、移り方、限り。</li>
 <li>Anthropic: 料金の頁。<a href="https://claude.com/pricing">https://claude.com/pricing</a> 。2026年11月11日に閲覧。Pro、Max、Team、Enterprise の料金。</li>
